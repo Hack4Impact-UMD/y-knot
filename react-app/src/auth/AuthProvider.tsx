@@ -1,6 +1,11 @@
-import { getAuth, onIdTokenChanged, User, IdTokenResult } from "@firebase/auth";
-import React, { createContext, useContext, useEffect, useState } from "react";
-import app from "../config/firebase";
+import {
+  getAuth,
+  onIdTokenChanged,
+  type User,
+  type IdTokenResult,
+} from '@firebase/auth';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import app from '../config/firebase';
 
 interface Props {
   children: JSX.Element;
@@ -13,7 +18,7 @@ interface AuthContextType {
 }
 
 // The AuthContext that other components may subscribe to.
-let AuthContext = createContext<AuthContextType>(null!);
+const AuthContext = createContext<AuthContextType>(null!);
 
 // Updates the AuthContext and re-renders children when the user changes.
 // See onIdTokenChanged for what events trigger a change.

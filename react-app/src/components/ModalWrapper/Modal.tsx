@@ -1,14 +1,18 @@
-import styles from "./Modal.module.css";
+import styles from './Modal.module.css';
 
-type modalPropsType = {
+interface modalPropsType {
   open: boolean;
   onClose: any;
   children: React.ReactNode;
-};
+}
 
 const Modal = ({ open, onClose, children }: modalPropsType) => {
   return (
-    <div onClick={(e) => e.stopPropagation()}>
+    <div
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
+    >
       {open ? (
         <>
           <div className={styles.background} onClick={() => onClose()} />

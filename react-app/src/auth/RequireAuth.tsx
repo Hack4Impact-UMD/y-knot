@@ -1,7 +1,7 @@
-import React from "react";
-import { Navigate } from "react-router-dom";
-import Loading from "../loading-screen/Loading";
-import { AuthProvider, useAuth } from "./AuthProvider";
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+import Loading from '../loading-screen/Loading';
+import { AuthProvider, useAuth } from './AuthProvider';
 
 interface Props {
   children: JSX.Element;
