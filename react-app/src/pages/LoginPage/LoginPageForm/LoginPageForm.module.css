@@ -1,0 +1,11 @@
+@import '../../../index.css';
+
+.yknotlogo {
+    width: 80%
+}
+
+.inputBox {
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+}

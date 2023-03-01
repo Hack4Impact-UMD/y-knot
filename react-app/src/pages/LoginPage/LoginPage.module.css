@@ -1,12 +1,30 @@
 @import '../../index.css';
 
-.splitScreen {
-  display: 'flex';
-  flex-direction: column;
+.splitleft {
+    height: 100%;
+    width: 60%;
+    overflow: hidden;
+  }
+
+.splitright {
+    height: 100%;
+    width: 50%;
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    overflow-x: hidden;
+    padding-left: 50%;
 }
+
 .leftPane {
-  width: '60%';
+    margin: 0px 0px 0px -150px;
+    align-items: left;
+    left: 0;
 }
+
 .rightPane {
-  width: '40%';
+    align-items: right;
+    padding-left: 50%;
+    right: 0;
 }
+
