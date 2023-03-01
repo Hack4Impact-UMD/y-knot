@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import Loading from '../loading-screen/Loading';
+import Loading from '../components/LoadingScreen/Loading';
 import { AuthProvider, useAuth } from './AuthProvider';
 
 interface Props {

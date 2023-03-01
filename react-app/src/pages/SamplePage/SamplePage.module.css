@@ -1,0 +1,4 @@
+@import COLORS from ../../colors.ts';
+.thing {
+  color: COLORS.red;
+}
