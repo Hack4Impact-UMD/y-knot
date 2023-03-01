@@ -1,0 +1,12 @@
+@import '../../index.css';
+
+.splitScreen {
+  display: 'flex';
+  flex-direction: column;
+}
+.leftPane {
+  width: '60%';
+}
+.rightPane {
+  width: '40%';
+}
