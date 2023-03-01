@@ -1,3 +1,4 @@
+@import '../../index.css';
 .thing {
-  color: COLORS.red;
+  color: var(--color-red);
 }
