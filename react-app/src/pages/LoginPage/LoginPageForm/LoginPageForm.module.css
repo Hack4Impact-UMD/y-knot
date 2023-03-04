@@ -1,11 +1,40 @@
 @import '../../../index.css';
 
 .yknotlogo {
-    width: 80%
+  width: 80%;
 }
 
 .inputBox {
-    display: flex;
-    flex-direction: column;
-    align-items: baseline;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+}
+
+.inputField {
+  width: 400px;
+  height: 35px;
+  font-size: 1.4rem;
+  background-color: #d9d9d9;
+  border-style: none;
+  border-radius: 10px;
+  margin: 10px;
+  padding: 10px 5px 10px 25px;
+  color: #393939;
+}
+
+.signInButton {
+  margin-top: 15px;
+  width: 280px;
+  height: 45px;
+  border-style: none;
+  background-color: var(--color-orange);
+  border-radius: 30px;
+  font-size: 1.4rem;
+  color: #ffffff;
+}
+
+.forgotPassword {
+  color: blue;
+  font-size: 1rem;
+  text-decoration: underline;
 }

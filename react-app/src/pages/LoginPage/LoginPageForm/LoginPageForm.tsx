@@ -10,11 +10,20 @@ const LoginPageForm = () => {
       />
       <h1>Sign In</h1>
       <div className={styles.inputBox}>
-        <input type="text" placeholder="Email"></input>
-        <input type="text" placeholder="Password"></input>
+        <input
+          className={styles.inputField}
+          type="text"
+          placeholder="Email"
+        ></input>
+        <input
+          className={styles.inputField}
+          type="password"
+          placeholder="Password"
+        ></input>
       </div>
-      <p>Forgot Password?</p>
-      <button>Sign In</button>
+      <a className={styles.forgotPassword}>Forgot Password?</a>
+      <br />
+      <button className={styles.signInButton}>Sign In</button>
     </div>
   );
 };
