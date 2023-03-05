@@ -1,7 +1,15 @@
 @import '../../../index.css';
 
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: -20%;
+  margin-top: 30%;
+}
+
 .yknotlogo {
-  width: 80%;
+  width: 55%;
 }
 
 .inputBox {
@@ -37,4 +45,26 @@
   color: blue;
   font-size: 1rem;
   text-decoration: underline;
+  align-self: flex-start;
+  margin-left: 18%;
+}
+
+.signInText {
+  font-size: 40px;
+}
+
+.emailContainer {
+  display: flex;
+}
+
+.passwordContainer {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.showPasswordButton {
+  position: absolute;
+  display: flex;
+  margin-left:85%;
 }

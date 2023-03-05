@@ -1,25 +1,44 @@
 import styles from './LoginPageForm.module.css';
+import React, { useState } from 'react';
 
 const LoginPageForm = () => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <div>
+    <div className = {styles.formContainer}>
       <img
         className={styles.yknotlogo}
         src={require('../../../assets/yknot-logo.png')}
         alt="y-knot logo"
       />
-      <h1>Sign In</h1>
+      <h1 className={styles.signInText}>Sign In</h1>
       <div className={styles.inputBox}>
-        <input
+        
+        <div className={styles.emailContainer}>
+          <input
+            className={styles.inputField}
+            type="text"
+            placeholder="Email"
+          ></input>
+        </div>
+
+        <div className={styles.passwordContainer}>
+          <input
           className={styles.inputField}
-          type="text"
-          placeholder="Email"
-        ></input>
-        <input
-          className={styles.inputField}
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           placeholder="Password"
-        ></input>
+          ></input>
+
+          <button className={styles.showPasswordButton} onClick={toggleShowPassword}>
+            {showPassword ? "Hide" : "Show"}
+          </button>
+        </div>
+
+       
       </div>
       <a className={styles.forgotPassword}>Forgot Password?</a>
       <br />
@@ -27,5 +46,7 @@ const LoginPageForm = () => {
     </div>
   );
 };
+
+
 
 export default LoginPageForm;
