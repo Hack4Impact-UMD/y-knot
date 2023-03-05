@@ -12,7 +12,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<RequireAuth children={<SamplePage />} />} />
-          <Route path="/login" element={<LoginPage/>}/>
+          <Route path="/login" element={<LoginPage />} />
           <Route
             path="*"
             element={<RequireAuth children={<Sample404Page />} />}
