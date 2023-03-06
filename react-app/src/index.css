@@ -1,4 +1,5 @@
 @import-normalize; /* Reset Stylesheet */
+@import './fonts/poppins/poppins.css';
 
 :root {
   --color-red: #d00110;
