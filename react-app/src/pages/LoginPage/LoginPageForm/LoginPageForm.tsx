@@ -1,5 +1,7 @@
 import styles from './LoginPageForm.module.css';
 import React, { useState } from 'react';
+import eyeIcon from '../../../assets/eye.svg'
+import eyeSlashIcon from '../../../assets/eye-slash.svg'
 
 const LoginPageForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -9,7 +11,7 @@ const LoginPageForm = () => {
   };
 
   return (
-    <div className = {styles.formContainer}>
+    <div className={styles.formContainer}>
       <img
         className={styles.yknotlogo}
         src={require('../../../assets/yknot-logo.png')}
@@ -17,7 +19,6 @@ const LoginPageForm = () => {
       />
       <h1 className={styles.signInText}>Sign In</h1>
       <div className={styles.inputBox}>
-        
         <div className={styles.emailContainer}>
           <input
             className={styles.inputField}
@@ -28,17 +29,18 @@ const LoginPageForm = () => {
 
         <div className={styles.passwordContainer}>
           <input
-          className={styles.inputField}
-          type={showPassword ? 'text' : 'password'}
-          placeholder="Password"
+            className={styles.inputField}
+            type={showPassword ? 'text' : 'password'}
+            placeholder="Password"
           ></input>
 
-          <button className={styles.showPasswordButton} onClick={toggleShowPassword}>
-            {showPassword ? "Hide" : "Show"}
+          <button
+            className={styles.showPasswordButton}
+            onClick={toggleShowPassword}
+          >
+            <img className={styles.showPasswordIcon} src={showPassword ? eyeIcon : eyeSlashIcon} alt="Toggle password visibility" />
           </button>
         </div>
-
-       
       </div>
       <a className={styles.forgotPassword}>Forgot Password?</a>
       <br />
@@ -46,7 +48,5 @@ const LoginPageForm = () => {
     </div>
   );
 };
-
-
 
 export default LoginPageForm;

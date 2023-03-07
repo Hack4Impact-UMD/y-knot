@@ -67,4 +67,12 @@
   position: absolute;
   display: flex;
   margin-left:85%;
+  border: none;
+  background: none;
+  margin-left:390px;
+  cursor: pointer;
+}
+
+.showPasswordIcon{
+  width:25px
 }

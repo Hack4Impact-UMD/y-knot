@@ -20,10 +20,15 @@
   margin: 0px 0px 0px -150px;
   align-items: left;
   left: 0;
+  height: 100vh;
 }
 
 .rightPane {
   align-items: right;
   padding-left: 40%;
   right: 0;
+}
+
+.banner{
+  height:100vh;
 }
