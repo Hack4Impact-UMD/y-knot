@@ -13,7 +13,10 @@ const ForgotPassword = ({ open, onClose }: forgotModalType) => {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handlePasswordReset = () => {};
+  const handlePasswordReset = () => {
+    // placeholder for password reset logic
+    setSubmitted(!submitted);
+  };
 
   const handleOnClose = () => {
     onClose();
@@ -45,6 +48,7 @@ const ForgotPassword = ({ open, onClose }: forgotModalType) => {
             </div>
           ) : (
             <>
+              <h1 className={styles.title}>Reset Password</h1>
               <p className={styles.error}>{errorEmail ? errorEmail : ''}</p>
               <form
                 onSubmit={(event) => {
