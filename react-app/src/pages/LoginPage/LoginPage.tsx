@@ -1,8 +1,8 @@
 import styles from './LoginPage.module.css';
 import LoginPageForm from './LoginPageForm/LoginPageForm';
-import loginBanner from '../../assets/login-banner.png'
+import loginBanner from '../../assets/login-banner.png';
 
-const LoginPage = () => {
+const LoginPage: React.FC = () => {
   return (
     <div>
       <div className={styles.splitleft}>

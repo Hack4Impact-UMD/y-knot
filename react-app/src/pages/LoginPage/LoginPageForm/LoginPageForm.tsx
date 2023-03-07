@@ -1,7 +1,8 @@
 import styles from './LoginPageForm.module.css';
 import React, { useState } from 'react';
-import eyeIcon from '../../../assets/eye.svg'
-import eyeSlashIcon from '../../../assets/eye-slash.svg'
+import eyeIcon from '../../../assets/eye.svg';
+import eyeSlashIcon from '../../../assets/eye-slash.svg';
+import yKnotLogo from '../../../assets/yknot-logo.png';
 
 const LoginPageForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,11 +13,7 @@ const LoginPageForm = () => {
 
   return (
     <div className={styles.formContainer}>
-      <img
-        className={styles.yknotlogo}
-        src={require('../../../assets/yknot-logo.png')}
-        alt="y-knot logo"
-      />
+      <img className={styles.yknotlogo} src={yKnotLogo} alt="y-knot logo" />
       <h1 className={styles.signInText}>Sign In</h1>
       <div className={styles.inputBox}>
         <div className={styles.emailContainer}>
@@ -38,7 +35,11 @@ const LoginPageForm = () => {
             className={styles.showPasswordButton}
             onClick={toggleShowPassword}
           >
-            <img className={styles.showPasswordIcon} src={showPassword ? eyeIcon : eyeSlashIcon} alt="Toggle password visibility" />
+            <img
+              className={styles.showPasswordIcon}
+              src={showPassword ? eyeIcon : eyeSlashIcon}
+              alt="Toggle password visibility"
+            />
           </button>
         </div>
       </div>
