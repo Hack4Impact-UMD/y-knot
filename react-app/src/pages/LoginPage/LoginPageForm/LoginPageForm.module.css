@@ -1,11 +1,15 @@
 @import '../../../index.css';
 
+* {
+  font-family: 'Poppins';
+}
+
 .formContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-left: -20%;
-  margin-top: 30%;
+  margin-top: 25%;
 }
 
 .yknotlogo {
@@ -76,3 +80,4 @@
 .showPasswordIcon{
   width:25px
 }
+
