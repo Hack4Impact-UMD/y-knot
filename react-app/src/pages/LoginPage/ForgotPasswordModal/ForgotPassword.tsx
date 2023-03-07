@@ -15,7 +15,12 @@ const ForgotPassword = ({ open, onClose }: forgotModalType) => {
 
   const handlePasswordReset = () => {
     // placeholder for password reset logic
-    setSubmitted(!submitted);
+    if (submitted) {
+      handleOnClose();
+    } else {
+      setSubmitted(true);
+      setLoading(false);
+    }
   };
 
   const handleOnClose = () => {
