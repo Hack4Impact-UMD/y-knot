@@ -1,6 +1,4 @@
-import styles from './Sample404Page.module.css';
-
-const Sample404Page = () => {
+const Sample404Page = (): JSX.Element => {
   return <div>404</div>;
 };
 

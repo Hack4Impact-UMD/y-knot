@@ -15,7 +15,7 @@ const RequireAuth: React.FC<Props> = ({ children }) => {
     return <Navigate to="/login" />;
   }
 
-  return <AuthProvider children={children} />;
+  return <AuthProvider>{children}</AuthProvider>;
 };
 
 export default RequireAuth;

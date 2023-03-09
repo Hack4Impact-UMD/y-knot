@@ -1,0 +1,7 @@
+/.*
+/build
+/node_modules
+/public
+/*.json
+/src/reportWebVitals.ts
+/src/config/firebase.ts

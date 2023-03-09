@@ -22,7 +22,7 @@ const AuthContext = createContext<AuthContextType>(null!);
 
 // Updates the AuthContext and re-renders children when the user changes.
 // See onIdTokenChanged for what events trigger a change.
-export const AuthProvider: React.FC<Props> = ({ children }) => {
+export const AuthProvider = ({ children }: Props): React.ReactElement => {
   const [user, setUser] = useState<User | any>(null!);
   const [token, setToken] = useState<IdTokenResult>(null!);
   // The loading state is used by RequireAuth/RequireAdminAuth
@@ -33,9 +33,12 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     onIdTokenChanged(auth, (newUser) => {
       setUser(newUser);
       if (newUser != null) {
-        newUser.getIdTokenResult().then((newToken) => {
-          setToken(newToken);
-        });
+        newUser
+          .getIdTokenResult()
+          .then((newToken) => {
+            setToken(newToken);
+          })
+          .catch(() => {});
       }
       setLoading(false);
     });
