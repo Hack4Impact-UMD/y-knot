@@ -52,6 +52,8 @@
   align-self: flex-start;
   margin-left: 18%;
   cursor: pointer;
+  background: none;
+  border: none;
 }
 
 .signInText {

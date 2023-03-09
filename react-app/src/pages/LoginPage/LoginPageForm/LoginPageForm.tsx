@@ -45,12 +45,12 @@ const LoginPageForm = () => {
           </button>
         </div>
       </div>
-      <a
+      <button
         className={styles.forgotPassword}
         onClick={() => setOpenForgotModal(!openForgotModal)}
       >
         Forgot Password?
-      </a>
+      </button>
       <ForgotPassword
         open={openForgotModal}
         onClose={() => setOpenForgotModal(!openForgotModal)}

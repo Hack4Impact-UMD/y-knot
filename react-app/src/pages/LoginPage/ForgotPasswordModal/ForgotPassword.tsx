@@ -53,7 +53,7 @@ const ForgotPassword = ({ open, onClose }: forgotModalType) => {
             </div>
           ) : (
             <>
-              <h1 className={styles.title}>Reset Password</h1>
+              <h2 className={styles.title}>Reset Password</h2>
               <p className={styles.error}>{errorEmail ? errorEmail : ''}</p>
               <form
                 onSubmit={(event) => {
