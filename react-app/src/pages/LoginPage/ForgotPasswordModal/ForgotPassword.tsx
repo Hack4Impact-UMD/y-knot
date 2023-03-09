@@ -2,18 +2,21 @@ import { useState } from 'react';
 import Modal from '../../../components/ModalWrapper/Modal';
 import styles from './ForgotPassword.module.css';
 
-type forgotModalType = {
+interface forgotModalType {
   open: boolean;
   onClose: any;
-};
+}
 
-const ForgotPassword = ({ open, onClose }: forgotModalType) => {
+const ForgotPassword = ({
+  open,
+  onClose,
+}: forgotModalType): React.ReactElement => {
   const [email, setEmail] = useState<string>('');
   const [errorEmail, setErrorEmail] = useState<string>('');
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handlePasswordReset = () => {
+  const handlePasswordReset = (): void => {
     // placeholder for password reset logic
     if (submitted) {
       handleOnClose();
@@ -23,7 +26,7 @@ const ForgotPassword = ({ open, onClose }: forgotModalType) => {
     }
   };
 
-  const handleOnClose = () => {
+  const handleOnClose = (): void => {
     onClose();
     setSubmitted(false);
     setErrorEmail('');
@@ -33,7 +36,9 @@ const ForgotPassword = ({ open, onClose }: forgotModalType) => {
   return (
     <Modal
       open={open}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => handleOnClose()}
+      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+        handleOnClose();
+      }}
     >
       <>
         <div className={styles.header}>
@@ -54,7 +59,7 @@ const ForgotPassword = ({ open, onClose }: forgotModalType) => {
           ) : (
             <>
               <h2 className={styles.title}>Reset Password</h2>
-              <p className={styles.error}>{errorEmail ? errorEmail : ''}</p>
+              <p className={styles.error}>{errorEmail}</p>
               <form
                 onSubmit={(event) => {
                   event.preventDefault();

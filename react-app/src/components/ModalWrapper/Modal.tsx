@@ -6,7 +6,11 @@ interface modalPropsType {
   children: React.ReactNode;
 }
 
-const Modal = ({ open, onClose, children }: modalPropsType) => {
+const Modal = ({
+  open,
+  onClose,
+  children,
+}: modalPropsType): React.ReactElement => {
   return (
     <div
       onClick={(e) => {

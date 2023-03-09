@@ -7,7 +7,6 @@ import {
   type AuthError,
 } from 'firebase/auth';
 import app from '../config/firebase';
-import functions from '../config/firebase';
 
 /*
 Updates the logged-in user's email.
@@ -88,9 +87,8 @@ export async function updateUserPassword(
         if (code === 'auth/wrong-password') {
           status = 'Incorrect Password';
         } else if (code === 'auth/too-many-request') {
-          status =
-            'Access to this account has been temporarily disabled due to many failed \
-                      login attempts or due to too many failed password resets. Please try again later';
+          status = `Access to this account has been temporarily disabled due to many failed
+            login attempts or due to too many failed password resets. Please try again later`;
         } else {
           status = `Recieved error: ${code}`;
           console.error(code);
