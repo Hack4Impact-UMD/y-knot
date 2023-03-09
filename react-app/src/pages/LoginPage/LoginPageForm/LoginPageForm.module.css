@@ -51,6 +51,9 @@
   text-decoration: underline;
   align-self: flex-start;
   margin-left: 18%;
+  cursor: pointer;
+  background: none;
+  border: none;
 }
 
 .signInText {
@@ -70,14 +73,13 @@
 .showPasswordButton {
   position: absolute;
   display: flex;
-  margin-left:85%;
+  margin-left: 85%;
   border: none;
   background: none;
-  margin-left:390px;
+  margin-left: 390px;
   cursor: pointer;
 }
 
-.showPasswordIcon{
-  width:25px
+.showPasswordIcon {
+  width: 25px;
 }
-
