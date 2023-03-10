@@ -1,0 +1,23 @@
+.container {
+  width: 275px;
+  height: 215px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.background {
+  height: 65%;
+  background-color: #d9d9d9;
+}
+
+.description {
+  height: 35%;
+  background-color: #e3853a;
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 6px 0px 0px 6px;
+}
