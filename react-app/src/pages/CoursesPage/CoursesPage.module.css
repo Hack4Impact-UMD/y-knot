@@ -1,0 +1,31 @@
+@import '../../index.css';
+
+.rightPane {
+    height: 100%;
+    width: 75%;
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    overflow-x: hidden;
+    padding-left: 25%;
+}
+
+.courseSection {
+    margin-bottom: 0px;
+}
+
+.courseStatus {
+    margin-left: 50px;
+    margin-bottom: 50px;
+    margin-top: 50px;
+    font-weight: normal;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 8px;
+}
+
+.cardLayout {
+    display: flex;
+    margin-left: 50px;
+    margin-bottom: 30px;
+}
