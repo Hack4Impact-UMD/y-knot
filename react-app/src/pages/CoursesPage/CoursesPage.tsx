@@ -1,4 +1,4 @@
-import CourseCard from '../../components/CourseCard/CourseCard';
+import CourseCard from './CourseCard/CourseCard';
 import styles from './CoursesPage.module.css';
 
 const CoursesPage = (): JSX.Element => {
