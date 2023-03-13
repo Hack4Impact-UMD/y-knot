@@ -10,8 +10,6 @@ const CoursesPage = (): JSX.Element => {
         <CourseCard teacher="bob" course="1" section="1"/>
         <CourseCard teacher="bob" course="1" section="1" />
         <CourseCard teacher="bob" course="1" section="1" />
-      </div>
-      <div className={styles.cardLayout}>
         <CourseCard teacher="bob" course="1" section="1" />
         <CourseCard teacher="bob" course="1" section="1" />
     </div>
@@ -21,14 +19,15 @@ const CoursesPage = (): JSX.Element => {
         <CourseCard teacher="bob" course="1" section="1"/>
         <CourseCard teacher="bob" course="1" section="1" />
         <CourseCard teacher="bob" course="1" section="1" />
-      </div>
-      <div className={styles.cardLayout}>
         <CourseCard teacher="bob" course="1" section="1" />
         <CourseCard teacher="bob" course="1" section="1" />
       </div>
 
       <h1 className={styles.courseStatus}>Upcoming Courses</h1>
       <div className={styles.cardLayout}>
+        <CourseCard teacher="bob" course="1" section="1" />
+        <CourseCard teacher="bob" course="1" section="1" />
+        <CourseCard teacher="bob" course="1" section="1" />
         <CourseCard teacher="bob" course="1" section="1" />
         <CourseCard teacher="bob" course="1" section="1" />
       </div>

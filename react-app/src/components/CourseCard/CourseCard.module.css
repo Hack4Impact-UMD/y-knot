@@ -1,11 +1,12 @@
 .container {
-  width: 285px;
+  width: 275px;
   height: 215px;
   display: flex;
   flex-direction: column;
   border-radius: 15px;
   overflow: hidden;
-  margin-right: 80px;
+  margin-right: 50px;
+  margin-bottom: 40px;
 }
 
 .background {
