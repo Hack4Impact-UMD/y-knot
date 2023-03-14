@@ -1,4 +1,4 @@
-import { AuthError, User } from '@firebase/auth';
+import { type AuthError, type User } from '@firebase/auth';
 import {
   signInWithEmailAndPassword,
   getAuth,
@@ -7,11 +7,11 @@ import {
 } from 'firebase/auth';
 import app from '../config/firebase';
 
-export function authenticateUser(
+export async function authenticateUser(
   email: string,
   password: string,
 ): Promise<User> {
-  return new Promise((resolve, reject) => {
+  return await new Promise((resolve, reject) => {
     const auth = getAuth(app);
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -23,8 +23,8 @@ export function authenticateUser(
   });
 }
 
-export function logOut(): Promise<void> {
-  return new Promise((resolve, reject) => {
+export async function logOut(): Promise<void> {
+  await new Promise((resolve, reject) => {
     const auth = getAuth(app);
     signOut(auth)
       .then(() => {
@@ -36,8 +36,8 @@ export function logOut(): Promise<void> {
   });
 }
 
-export function sendResetEmail(email: string): Promise<void> {
-  return new Promise((resolve, reject) => {
+export async function sendResetEmail(email: string): Promise<void> {
+  await new Promise((resolve, reject) => {
     const auth = getAuth(app);
     sendPasswordResetEmail(auth, email)
       .then(() => {
