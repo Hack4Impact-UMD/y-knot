@@ -1,5 +1,4 @@
 export type Student = {
-  id?: string;
   firstName: string;
   middleName?: string;
   lastName: string;
@@ -10,13 +9,14 @@ export type Student = {
   zipCode: number;
   email: string;
   birthdate: Date;
+  child: boolean;
   gradeLevel?: number;
   schoolName?: string;
-  courseInformation: StudentCourses[];
+  courseInformation: StudentCourse[];
 };
 
-export type StudentCourses = {
-  id?: string;
+export type StudentCourse = {
+  id: string;
   startDate: Date;
   endDate: Date;
   attendance: StudentAttendance[];
