@@ -1,31 +1,31 @@
-export type Course = {
+export interface Course {
   name: string;
   startDate: Date;
   endDate: Date;
   meetingTime: string;
   students: string[];
   teachers: string[];
-  application?: boolean;
+  application: boolean;
   classType: ClassType;
-  prerequisites?: string[];
-  formId?: string;
+  prerequisites: string[];
+  formId: string;
   introEmail: IntroEmail;
   attendance: Attendance[];
   homeworks: Homework[];
-};
+}
 
-export type IntroEmail = {
+export interface IntroEmail {
   content: string;
-};
+}
 
-export type Attendance = {
+export interface Attendance {
   date: Date;
   notes: string;
-};
+}
 
-export type Homework = {
+export interface Homework {
   name: string;
   notes: string;
-};
+}
 
 export type ClassType = 'ADULT' | 'MINOR' | 'LEADERSHIP';
