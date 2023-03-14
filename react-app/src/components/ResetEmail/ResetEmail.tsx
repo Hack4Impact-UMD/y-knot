@@ -1,23 +1,21 @@
 import { useState } from 'react';
-import Modal from '../../../components/ModalWrapper/Modal';
-import styles from './ForgotPassword.module.css';
+import Modal from '../ModalWrapper/Modal';
+import styles from './ResetEmail.module.css';
 
-interface forgotModalType {
+interface modalType {
   open: boolean;
   onClose: any;
 }
 
-const ForgotPassword = ({
-  open,
-  onClose,
-}: forgotModalType): React.ReactElement => {
-  const [email, setEmail] = useState<string>('');
+const ResetEmail = ({ open, onClose }: modalType): React.ReactElement => {
+  const [newEmail, setNewEmail] = useState<string>('');
+  const [confirmNewEmail, setConfirmNewEmail] = useState<string>('');
   const [errorEmail, setErrorEmail] = useState<string>('');
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
   const handlePasswordReset = (): void => {
-    // placeholder for password reset logic
+    // placeholder for email reset logic
     if (submitted) {
       handleOnClose();
     } else {
@@ -29,13 +27,15 @@ const ForgotPassword = ({
   const handleOnClose = (): void => {
     onClose();
     setSubmitted(false);
+    setNewEmail('');
+    setConfirmNewEmail('');
     setErrorEmail('');
     setLoading(false);
   };
 
   return (
     <Modal
-      type="forgotPassword"
+      type="resetEmail"
       open={open}
       onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
         handleOnClose();
@@ -59,7 +59,7 @@ const ForgotPassword = ({
             </div>
           ) : (
             <>
-              <h2 className={styles.title}>Reset Password</h2>
+              <h2 className={styles.title}>Reset Email</h2>
               <p className={styles.error}>{errorEmail}</p>
               <form
                 onSubmit={(event) => {
@@ -69,11 +69,19 @@ const ForgotPassword = ({
                 }}
               >
                 <input
-                  className={styles.email}
+                  className={styles.textInput}
                   type="email"
-                  placeholder="Email"
+                  placeholder="New Email"
                   onChange={({ target: { value } }) => {
-                    setEmail(value);
+                    setNewEmail(value);
+                  }}
+                />
+                <input
+                  className={styles.textInput}
+                  type="email"
+                  placeholder="Re-enter New Email"
+                  onChange={({ target: { value } }) => {
+                    setConfirmNewEmail(value);
                   }}
                 />
               </form>
@@ -91,7 +99,7 @@ const ForgotPassword = ({
               disabled={loading}
             >
               {submitted ? (
-                'Back to Login'
+                'Close'
               ) : (
                 <div>
                   {loading ? (
@@ -109,4 +117,4 @@ const ForgotPassword = ({
   );
 };
 
-export default ForgotPassword;
+export default ResetEmail;

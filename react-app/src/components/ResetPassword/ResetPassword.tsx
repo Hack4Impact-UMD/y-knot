@@ -1,18 +1,17 @@
 import { useState } from 'react';
-import Modal from '../../../components/ModalWrapper/Modal';
-import styles from './ForgotPassword.module.css';
+import Modal from '../ModalWrapper/Modal';
+import styles from './ResetPassword.module.css';
 
-interface forgotModalType {
+interface modalType {
   open: boolean;
   onClose: any;
 }
 
-const ForgotPassword = ({
-  open,
-  onClose,
-}: forgotModalType): React.ReactElement => {
-  const [email, setEmail] = useState<string>('');
-  const [errorEmail, setErrorEmail] = useState<string>('');
+const ResetPassword = ({ open, onClose }: modalType): React.ReactElement => {
+  const [originalPassword, setOriginalPassword] = useState<string>('');
+  const [newPassword, setNewPassword] = useState<string>('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState<string>('');
+  const [errorPassword, setErrorPassword] = useState<string>('');
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -29,13 +28,16 @@ const ForgotPassword = ({
   const handleOnClose = (): void => {
     onClose();
     setSubmitted(false);
-    setErrorEmail('');
+    setOriginalPassword('');
+    setNewPassword('');
+    setConfirmNewPassword('');
+    setErrorPassword('');
     setLoading(false);
   };
 
   return (
     <Modal
-      type="forgotPassword"
+      type="resetPassword"
       open={open}
       onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
         handleOnClose();
@@ -60,7 +62,7 @@ const ForgotPassword = ({
           ) : (
             <>
               <h2 className={styles.title}>Reset Password</h2>
-              <p className={styles.error}>{errorEmail}</p>
+              <p className={styles.error}>{errorPassword}</p>
               <form
                 onSubmit={(event) => {
                   event.preventDefault();
@@ -69,11 +71,27 @@ const ForgotPassword = ({
                 }}
               >
                 <input
-                  className={styles.email}
-                  type="email"
-                  placeholder="Email"
+                  className={styles.textInput}
+                  type="password"
+                  placeholder="Original Password"
                   onChange={({ target: { value } }) => {
-                    setEmail(value);
+                    setOriginalPassword(value);
+                  }}
+                />
+                <input
+                  className={styles.textInput}
+                  type="password"
+                  placeholder="New Password"
+                  onChange={({ target: { value } }) => {
+                    setNewPassword(value);
+                  }}
+                />
+                <input
+                  className={styles.textInput}
+                  type="password"
+                  placeholder="Re-enter New Password"
+                  onChange={({ target: { value } }) => {
+                    setConfirmNewPassword(value);
                   }}
                 />
               </form>
@@ -91,7 +109,7 @@ const ForgotPassword = ({
               disabled={loading}
             >
               {submitted ? (
-                'Back to Login'
+                'Close'
               ) : (
                 <div>
                   {loading ? (
@@ -109,4 +127,4 @@ const ForgotPassword = ({
   );
 };
 
-export default ForgotPassword;
+export default ResetPassword;
