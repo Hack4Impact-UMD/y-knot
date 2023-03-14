@@ -1,4 +1,4 @@
-export type Student = {
+export interface Student {
   firstName: string;
   middleName?: string;
   lastName: string;
@@ -10,28 +10,28 @@ export type Student = {
   email: string;
   birthdate: Date;
   minor: boolean;
-  gradeLevel?: number;
+  gradeLevel?: string;
   schoolName?: string;
   courseInformation: StudentCourse[];
-};
+}
 
-export type StudentCourse = {
+export interface StudentCourse {
   id: string;
   startDate: Date;
   endDate: Date;
   attendance: StudentAttendance[];
   homeworks: StudentHomework[];
   progress: Progress;
-};
+}
 
-export type StudentAttendance = {
+export interface StudentAttendance {
   date: Date;
   attended: boolean;
-};
+}
 
-export type StudentHomework = {
+export interface StudentHomework {
   name: string;
   completed: boolean;
-};
+}
 
 export type Progress = 'INPROGRESS' | 'PASS' | 'FAIL';
