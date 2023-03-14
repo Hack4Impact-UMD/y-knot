@@ -22,14 +22,17 @@ const NavigationBar = (): JSX.Element => {
                 <div className={activeLink === 'home' ? styles.highlightOn : styles.highlightOff} >                
                     <a className={styles.linkOptions} href="#" id='home' onClick={handleClick} >Home</a>
                 </div>
-                <div className={activeLink === 'about' ? styles.highlightOn : ''} >                
-                    <a className={styles.linkOptions} href="#" id='about' onClick={handleClick}>About</a>
+                <div className={activeLink === 'teachers' ? styles.highlightOn : ''} >                
+                    <a className={styles.linkOptions} href="#" id='teachers' onClick={handleClick}>Teachers</a>
                 </div>
-                <div className={activeLink === 'services' ? styles.highlightOn : ''} >                
-                    <a className={styles.linkOptions} href="#" id='services' onClick={handleClick}>Services</a>
+                <div className={activeLink === 'students' ? styles.highlightOn : ''} >                
+                    <a className={styles.linkOptions} href="#" id='students' onClick={handleClick}>Students</a>
                 </div>
-                <div className={activeLink === 'contact' ? styles.highlightOn : ''} >                
-                    <a className={styles.linkOptions} href="#" id='contact' onClick={handleClick}>Contact</a>
+                <div className={activeLink === 'settings' ? styles.highlightOn : ''} >                
+                    <a className={styles.linkOptions} href="#" id='settings' onClick={handleClick}>Settings</a>
+                </div>
+                <div className={activeLink === 'logOut' ? styles.highlightOn : ''} >                
+                    <a className={styles.linkOptions} href="#" id='logOut' onClick={handleClick}>Log Out</a>
                 </div>
             </div>
         </nav>
