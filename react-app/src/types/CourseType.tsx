@@ -28,4 +28,4 @@ export type Homework = {
   notes: string;
 };
 
-export type ClassType = 'ADULT' | 'STUDENT' | 'LEADERSHIP';
+export type ClassType = 'ADULT' | 'MINOR' | 'LEADERSHIP';

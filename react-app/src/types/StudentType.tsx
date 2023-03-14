@@ -9,7 +9,7 @@ export type Student = {
   zipCode: number;
   email: string;
   birthdate: Date;
-  child: boolean;
+  minor: boolean;
   gradeLevel?: number;
   schoolName?: string;
   courseInformation: StudentCourse[];
