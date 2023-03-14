@@ -5,6 +5,7 @@ import { AuthProvider } from './auth/AuthProvider';
 import SamplePage from './pages/SamplePage/SamplePage';
 import Sample404Page from './pages/Sample404Page/Sample404Page';
 import LoginPage from './pages/LoginPage/LoginPage';
+import NavigationBar from './components/NavigationBar/NavigationBar';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             path="*"
             element={<RequireAuth children={<Sample404Page />} />}
           />
+          <Route path="/nav" element= {<NavigationBar /> }/>
         </Routes>
       </BrowserRouter>
     </AuthProvider>
