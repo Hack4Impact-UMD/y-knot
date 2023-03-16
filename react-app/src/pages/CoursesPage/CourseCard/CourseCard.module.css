@@ -16,7 +16,7 @@
 
 .description {
   height: 35%;
-  background-color: #e3853a;
+  background-color: var(--color-orange);
   font-size: 16px;
   display: flex;
   flex-direction: column;
