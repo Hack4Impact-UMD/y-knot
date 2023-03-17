@@ -19,7 +19,7 @@ const NavigationBar = (): JSX.Element => {
             </div>
             <hr className={styles.breakLine}></hr>
             <div className={styles.linkOptionsContainer}>
-                <div className={activeLink === 'home' ? styles.highlightOn : styles.highlightOff} >                
+                <div className={activeLink === 'home' ? styles.highlightOn : ''} >                
                     <a className={styles.linkOptions} href="#" id='home' onClick={handleClick} >Home</a>
                 </div>
                 <div className={activeLink === 'teachers' ? styles.highlightOn : ''} >                
