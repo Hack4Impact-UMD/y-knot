@@ -1,4 +1,4 @@
-import { AuthError, User } from '@firebase/auth';
+import { type AuthError, type User } from '@firebase/auth';
 import {
   signInWithEmailAndPassword,
   getAuth,
