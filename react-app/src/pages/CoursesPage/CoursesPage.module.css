@@ -1,0 +1,23 @@
+.rightPane {
+  height: 100%;
+  width: 80%;
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  overflow-x: hidden;
+  padding-left: 25%;
+}
+
+.courseStatus {
+  margin-bottom: 50px;
+  margin-top: 10px;
+  font-weight: normal;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 8px;
+}
+
+.cardLayout {
+  display: flex;
+  flex-wrap: wrap;
+}

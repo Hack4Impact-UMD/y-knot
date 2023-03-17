@@ -3,13 +3,11 @@ import React, { useState } from 'react';
 import eyeIcon from '../../../assets/eye.svg';
 import eyeSlashIcon from '../../../assets/eye-slash.svg';
 import yKnotLogo from '../../../assets/yknot-logo.png';
+import ForgotPassword from '../ForgotPasswordModal/ForgotPassword';
 
-const LoginPageForm = () => {
+const LoginPageForm = (): JSX.Element => {
   const [showPassword, setShowPassword] = useState(false);
-
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
+  const [openForgotModal, setOpenForgotModal] = useState(false);
 
   return (
     <div className={styles.formContainer}>
@@ -33,7 +31,9 @@ const LoginPageForm = () => {
 
           <button
             className={styles.showPasswordButton}
-            onClick={toggleShowPassword}
+            onClick={() => {
+              setShowPassword(!showPassword);
+            }}
           >
             <img
               className={styles.showPasswordIcon}
@@ -43,7 +43,20 @@ const LoginPageForm = () => {
           </button>
         </div>
       </div>
-      <a className={styles.forgotPassword}>Forgot Password?</a>
+      <button
+        className={styles.forgotPassword}
+        onClick={() => {
+          setOpenForgotModal(!openForgotModal);
+        }}
+      >
+        Forgot Password?
+      </button>
+      <ForgotPassword
+        open={openForgotModal}
+        onClose={() => {
+          setOpenForgotModal(!openForgotModal);
+        }}
+      />
       <br />
       <button className={styles.signInButton}>Sign In</button>
     </div>

@@ -13,7 +13,7 @@ const RequireAdminAuth: React.FC<Props> = ({ children }) => {
   // always redirect to login.
   if (authContext.loading) {
     return <div>Loading</div>;
-  } else if (!authContext.user || authContext.token.claims.role != 'admin') {
+  } else if (!authContext.user || authContext.token.claims.role !== 'admin') {
     return <Navigate to="/login" />;
   }
 

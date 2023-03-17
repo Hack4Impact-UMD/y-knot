@@ -1,24 +1,36 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import RequireAuth from './auth/RequireAuth';
-import RequireAdminAuth from './auth/RequireAdminAuth';
 import { AuthProvider } from './auth/AuthProvider';
 import SamplePage from './pages/SamplePage/SamplePage';
 import Sample404Page from './pages/Sample404Page/Sample404Page';
 import LoginPage from './pages/LoginPage/LoginPage';
 import NavigationBar from './components/NavigationBar/NavigationBar';
+import CoursesPage from './pages/CoursesPage/CoursesPage';
 
-function App() {
+function App(): JSX.Element {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<RequireAuth children={<SamplePage />} />} />
+          <Route
+            path="/"
+            element={
+              <RequireAuth>
+                <SamplePage />
+              </RequireAuth>
+            }
+          />
           <Route path="/login" element={<LoginPage />} />
           <Route
             path="*"
-            element={<RequireAuth children={<Sample404Page />} />}
+            element={
+              <RequireAuth>
+                <Sample404Page />
+              </RequireAuth>
+            }
           />
           <Route path="/nav" element= {<NavigationBar /> }/>
+          <Route path="/courses" element={<CoursesPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
