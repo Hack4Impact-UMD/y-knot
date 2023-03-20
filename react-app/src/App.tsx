@@ -5,6 +5,7 @@ import SamplePage from './pages/SamplePage/SamplePage';
 import Sample404Page from './pages/Sample404Page/Sample404Page';
 import LoginPage from './pages/LoginPage/LoginPage';
 import AdminSettingsPage from './pages/AdminSettingsPage/AdminSettingsPage';
+import TeacherSettingsPage from './pages/TeacherSettingsPage/TeacherSettingsPage';
 import CoursesPage from './pages/CoursesPage/CoursesPage';
 
 function App(): JSX.Element {
@@ -30,6 +31,8 @@ function App(): JSX.Element {
             }
           />
           <Route path="/courses" element={<CoursesPage />} />
+          <Route path="/adminsettings" element={<AdminSettingsPage />} />
+          <Route path="/teachersettings" element={<TeacherSettingsPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
