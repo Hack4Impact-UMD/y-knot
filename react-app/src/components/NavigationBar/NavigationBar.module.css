@@ -54,7 +54,7 @@
 }
 
 .highlightOn {
-  background-color: #e3853a;
+  background-color: var(--color-orange);
   border-radius: 0px 20px 20px 0px;
   width: 85%;
 }
