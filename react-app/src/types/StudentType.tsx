@@ -8,7 +8,7 @@ export interface Student {
   state: string;
   zipCode: number;
   email: string;
-  birthdate: Date;
+  birthDate: String;
   minor: boolean;
   gradeLevel?: string;
   schoolName?: string;
@@ -17,15 +17,15 @@ export interface Student {
 
 export interface StudentCourse {
   id: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   attendance: StudentAttendance[];
   homeworks: StudentHomework[];
   progress: Progress;
 }
 
 export interface StudentAttendance {
-  date: Date;
+  date: string;
   attended: boolean;
 }
 
