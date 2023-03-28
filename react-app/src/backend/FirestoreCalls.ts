@@ -4,6 +4,7 @@ import {
   addDoc,
   deleteDoc,
   getDocs,
+  updateDoc,
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { type Student } from '../types/StudentType';
@@ -87,5 +88,63 @@ export function deleteStudent(id: string): Promise<void> {
       .catch((e) => {
         reject(e);
       });
+  });
+}
+
+export function updateStudent(student: Student, id: string): Promise<void> {
+  if (!id) {
+    return Promise.reject(new Error('Invalid id'));
+  }
+
+  const studentRef = doc(db, 'Students', id);
+  return updateDoc(studentRef, {
+    firstName: student.firstName,
+    middleName: student?.middleName,
+    lastName: student.lastName,
+    addrFirstLine: student.addrFirstLine,
+    addrSecondLine: student?.addrSecondLine,
+    city: student.city,
+    state: student.state,
+    zipCode: student.zipCode,
+    email: student.email,
+    birthdate: student.birthDate,
+    minor: student.minor,
+    gradeLevel: student?.gradeLevel,
+    schoolName: student?.schoolName,
+    courseInformation: student.courseInformation,
+  });
+}
+
+export function updateCourse(course: Course, id: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (!id) {
+      reject();
+      return;
+    }
+
+    const courseRef = doc(db, 'Courses', id);
+    updateDoc(courseRef, { ...course })
+      .then(() => {
+        resolve();
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+}
+
+export function updateUser(teacher: Teacher, id: string): Promise<void> {
+  if (!id) {
+    return Promise.reject(new Error('Invalid id'));
+  }
+
+  const userRef = doc(db, 'Users', id);
+  return updateDoc(userRef, {
+    userInfo: {
+      email: teacher.email,
+      gender: teacher?.gender,
+      pronoun: teacher?.pronoun,
+      classes: teacher.classes,
+    },
   });
 }
