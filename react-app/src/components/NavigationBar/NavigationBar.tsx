@@ -30,7 +30,7 @@ const NavigationBar = (): JSX.Element => {
                 ? styles.linkOptions
                 : styles.linkOptionsUnselected
             }
-            to="/nav"
+            to="/courses"
             id="home"
             onClick={handleClick}
           >
