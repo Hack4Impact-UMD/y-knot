@@ -8,7 +8,12 @@ import {
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { type Student } from '../types/StudentType';
-import { type Course } from '../types/CourseType';
+import {
+  type Course,
+  type IntroEmail,
+  type Attendance,
+  type Homework,
+} from '../types/CourseType';
 import { type Teacher, type TeacherCourse } from '../types/UserType';
 import { reject } from 'q';
 
@@ -92,25 +97,63 @@ export function deleteStudent(id: string): Promise<void> {
   });
 }
 
-export function updateStudent(student: Student): Promise<void> {
+export function updateStudent(student: Student, id: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    if (student.email) {
-      const studentRef = doc(db, 'Students', student.email);
+    if (id) {
+      const studentRef = doc(db, 'Students', id);
       updateDoc(studentRef, {
         firstName: student.firstName,
-        middleName: student.middleName,
+        middleName: student?.middleName,
         lastName: student.lastName,
         addrFirstLine: student.addrFirstLine,
-        addrSecondLine: student.addrSecondLine,
+        addrSecondLine: student?.addrSecondLine,
         city: student.city,
         state: student.state,
         zipCode: student.zipCode,
         email: student.email,
         birthdate: student.birthdate,
         minor: student.minor,
-        gradeLevel: student.gradeLevel,
-        schoolName: student.schoolName,
+        gradeLevel: student?.gradeLevel,
+        schoolName: student?.schoolName,
         courseInformation: student.courseInformation,
+      })
+        .then(() => {
+          resolve();
+        })
+        .catch((e) => {
+          reject(e);
+        });
+    }
+  });
+}
+
+export function updateCourse(course: Course, id: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (id) {
+      const courseRef = doc(db, 'Courses', id);
+      updateDoc(courseRef, { ...course })
+        .then(() => {
+          resolve();
+        })
+        .catch((e) => {
+          reject(e);
+        });
+    }
+    reject();
+  });
+}
+
+export function updateUser(teacher: Teacher, id: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (id) {
+      const userRef = doc(db, 'Users', id);
+      updateDoc(userRef, {
+        userInfo: {
+          email: teacher.email,
+          gender: teacher?.gender,
+          pronoun: teacher?.pronoun,
+          classes: teacher.classes,
+        },
       })
         .then(() => {
           resolve();
