@@ -33,6 +33,10 @@ export const addSampleStudent = ({
     courseInformation,
   };
   addStudent(student)
-    .then(() => console.log('student added'))
-    .catch((error) => console.log(error));
+    .then(() => {
+      console.log('student added');
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };

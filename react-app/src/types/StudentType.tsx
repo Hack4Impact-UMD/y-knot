@@ -8,7 +8,7 @@ export interface Student {
   state: string;
   zipCode: number;
   email: string;
-  birthDate: String;
+  birthDate: string;
   minor: boolean;
   gradeLevel?: string;
   schoolName?: string;

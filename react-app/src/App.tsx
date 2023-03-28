@@ -45,7 +45,9 @@ function App(): JSX.Element {
                       .then(() => {
                         addSampleStudent({ firstName: 'Bob' });
                       })
-                      .catch((error) => console.log(error));
+                      .catch((error) => {
+                        console.log(error);
+                      });
                   }}
                 ></button>
               }
