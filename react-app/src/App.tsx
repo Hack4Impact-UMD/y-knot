@@ -8,6 +8,8 @@ import CoursesPage from './pages/CoursesPage/CoursesPage';
 import { createAdmin } from './backend/CloudFunctionsCalls';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './muiTheme';
+import { addSampleStudent } from './backendTesting/test';
+import { authenticateUser } from './backend/FirebaseCalls';
 
 function App(): JSX.Element {
   const customTheme = theme;
@@ -39,8 +41,11 @@ function App(): JSX.Element {
               element={
                 <button
                   onClick={() => {
-                    const c = createAdmin();
-                    console.log(c);
+                    authenticateUser('sgaba@umd.edu', '123abc')
+                      .then(() => {
+                        addSampleStudent({ firstName: 'Bob' });
+                      })
+                      .catch((error) => console.log(error));
                   }}
                 ></button>
               }
