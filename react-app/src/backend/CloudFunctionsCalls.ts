@@ -25,4 +25,13 @@ export function createUser(
     });
 }
 
+export function createAdmin(): void {
+  const createFirstAdmin = httpsCallable(functions, 'createFirstAdmin');
+  createFirstAdmin()
+    .then(() => {})
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
 export default {};
