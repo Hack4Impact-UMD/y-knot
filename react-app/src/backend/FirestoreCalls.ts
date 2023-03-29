@@ -5,24 +5,12 @@ import {
   deleteDoc,
   getDocs,
   getDoc,
+  updateDoc,
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { type Student } from '../types/StudentType';
 import { type Course } from '../types/CourseType';
-import { type Teacher, type TeacherCourse } from '../types/UserType';
-
-// Sample function
-export function sampleFunction(object: Object): Promise<string> {
-  return new Promise((resolve, reject) => {
-    addDoc(collection(db, 'CollectionName'), object)
-      .then((docRef) => {
-        resolve(docRef.id);
-      })
-      .catch((e) => {
-        reject(e);
-      });
-  });
-}
+import { type Teacher, type YKNOTUser } from '../types/UserType';
 
 export function getAllStudents(): Promise<Student[]> {
   const studentsRef = collection(db, 'Students');
@@ -156,6 +144,60 @@ export function getCourse(id: string): Promise<Course> {
         } else {
           reject(new Error('Course does not exist'));
         }
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+}
+
+export function updateStudent(student: Student, id: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (id === '' || !id) {
+      reject(new Error('Invalid id'));
+      return;
+    }
+
+    const studentRef = doc(db, 'Students', id);
+    updateDoc(studentRef, { ...student })
+      .then(() => {
+        resolve();
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+}
+
+export function updateCourse(course: Course, id: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (id === '' || !id) {
+      reject(new Error('Invalid id'));
+      return;
+    }
+
+    const courseRef = doc(db, 'Courses', id);
+    updateDoc(courseRef, { ...course })
+      .then(() => {
+        resolve();
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+}
+
+export function updateUser(YKNOTUser: YKNOTUser, id: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (id === '' || !id) {
+      reject(new Error('Invalid id'));
+      return;
+    }
+
+    const userRef = doc(db, 'Users', id);
+    updateDoc(userRef, { ...YKNOTUser })
+      .then(() => {
+        resolve();
       })
       .catch((e) => {
         reject(e);
