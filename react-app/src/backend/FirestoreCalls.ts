@@ -9,8 +9,7 @@ import {
 import { db } from '../config/firebase';
 import { type Student } from '../types/StudentType';
 import { type Course } from '../types/CourseType';
-import { type Teacher, type TeacherCourse } from '../types/UserType';
-import { type YKNOTUser } from '../types/UserType';
+import { type Teacher, type YKNOTUser } from '../types/UserType';
 
 // Sample function
 export function sampleFunction(object: Object): Promise<string> {
@@ -93,26 +92,19 @@ export function deleteStudent(id: string): Promise<void> {
 }
 
 export function updateStudent(student: Student, id: string): Promise<void> {
-  if (!id) {
-    return Promise.reject(new Error('Invalid id'));
-  }
+  return new Promise((resolve, reject) => {
+    if (!id) {
+      return Promise.reject(new Error('Invalid id'));
+    }
 
-  const studentRef = doc(db, 'Students', id);
-  return updateDoc(studentRef, {
-    firstName: student.firstName,
-    middleName: student?.middleName,
-    lastName: student.lastName,
-    addrFirstLine: student.addrFirstLine,
-    addrSecondLine: student?.addrSecondLine,
-    city: student.city,
-    state: student.state,
-    zipCode: student.zipCode,
-    email: student.email,
-    birthdate: student.birthDate,
-    minor: student.minor,
-    gradeLevel: student?.gradeLevel,
-    schoolName: student?.schoolName,
-    courseInformation: student.courseInformation,
+    const studentRef = doc(db, 'Students', id);
+    updateDoc(studentRef, { ...student })
+      .then(() => {
+        resolve();
+      })
+      .catch((e) => {
+        reject(e);
+      });
   });
 }
 
@@ -135,17 +127,18 @@ export function updateCourse(course: Course, id: string): Promise<void> {
 }
 
 export function updateUser(YKNOTUser: YKNOTUser, id: string): Promise<void> {
-  if (!id) {
-    return Promise.reject(new Error('Invalid id'));
-  }
+  return new Promise((resolve, reject) => {
+    if (!id) {
+      return Promise.reject(new Error('Invalid id'));
+    }
 
-  const userRef = doc(db, 'Users', id);
-  return updateDoc(userRef, {
-    userInfo: {
-      name: YKNOTUser.name,
-      auth_id: YKNOTUser.auth_id,
-      type: YKNOTUser.type,
-      userInfo: YKNOTUser?.userInfo,
-    },
+    const userRef = doc(db, 'Users', id);
+    updateDoc(userRef, { ...YKNOTUser })
+      .then(() => {
+        resolve();
+      })
+      .catch((e) => {
+        reject(e);
+      });
   });
 }
