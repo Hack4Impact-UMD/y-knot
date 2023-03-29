@@ -4,7 +4,7 @@ import {
   addDoc,
   deleteDoc,
   getDocs,
-  getDoc
+  getDoc,
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { type Student } from '../types/StudentType';
@@ -91,30 +91,54 @@ export function deleteStudent(id: string): Promise<void> {
   });
 }
 
+export function addCourse(course: Course): Promise<string> {
+  return new Promise((resolve, reject) => {
+    addDoc(collection(db, 'Courses'), course)
+      .then((docRef) => {
+        resolve(docRef.id);
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+}
+
+export function deleteCourse(id: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    deleteDoc(doc(db, 'Courses', id))
+      .then(() => {
+        resolve();
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+}
+
 export function getTeacher(id: string): Promise<Teacher> {
   return new Promise((resolve, reject) => {
-    getDoc(doc(db, "Users", id))
+    getDoc(doc(db, 'Users', id))
       .then((teacherSnapshot) => {
         if (teacherSnapshot.exists()) {
           resolve(teacherSnapshot.data() as Teacher);
         } else {
-          reject(new Error("Teacher does not exist"));
+          reject(new Error('Teacher does not exist'));
         }
       })
       .catch((e) => {
         reject(e);
-      })
+      });
   });
 }
 
 export function getStudent(id: string): Promise<Student> {
   return new Promise((resolve, reject) => {
-    getDoc(doc(db, "Students", id))
+    getDoc(doc(db, 'Students', id))
       .then((studentSnapshot) => {
         if (studentSnapshot.exists()) {
-          resolve(studentSnapshot.data() as Student)
+          resolve(studentSnapshot.data() as Student);
         } else {
-          reject(new Error("Student does not exist"))
+          reject(new Error('Student does not exist'));
         }
       })
       .catch((e) => {
@@ -125,16 +149,16 @@ export function getStudent(id: string): Promise<Student> {
 
 export function getCourse(id: string): Promise<Course> {
   return new Promise((resolve, reject) => {
-    getDoc(doc(db, "Courses", id))
+    getDoc(doc(db, 'Courses', id))
       .then((courseSnapshot) => {
         if (courseSnapshot.exists()) {
-          resolve(courseSnapshot.data() as Course)
+          resolve(courseSnapshot.data() as Course);
         } else {
-          reject(new Error("Course does not exist"))
+          reject(new Error('Course does not exist'));
         }
       })
       .catch((e) => {
         reject(e);
-      })
+      });
   });
 }
