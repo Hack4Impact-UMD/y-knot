@@ -91,6 +91,30 @@ export function deleteStudent(id: string): Promise<void> {
   });
 }
 
+export function addCourse(course: Course): Promise<string> {
+  return new Promise((resolve, reject) => {
+    addDoc(collection(db, 'Courses'), course)
+      .then((docRef) => {
+        resolve(docRef.id);
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+}
+
+export function deleteCourse(id: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    deleteDoc(doc(db, 'Courses', id))
+      .then(() => {
+        resolve();
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+}
+
 export function updateStudent(student: Student, id: string): Promise<void> {
   return new Promise((resolve, reject) => {
     if (!id) {
