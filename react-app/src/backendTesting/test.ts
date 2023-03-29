@@ -15,7 +15,7 @@ export const addSampleStudent = ({
   gradeLevel = '10th',
   schoolName = 'YKnot High School',
   courseInformation = [],
-}) => {
+}): void => {
   const student: Student = {
     firstName,
     middleName,

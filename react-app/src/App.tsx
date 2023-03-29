@@ -6,7 +6,6 @@ import Sample404Page from './pages/Sample404Page/Sample404Page';
 import LoginPage from './pages/LoginPage/LoginPage';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import CoursesPage from './pages/CoursesPage/CoursesPage';
-import { createAdmin } from './backend/CloudFunctionsCalls';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './muiTheme';
 import { addSampleStudent } from './backendTesting/test';
