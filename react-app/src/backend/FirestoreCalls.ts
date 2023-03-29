@@ -98,7 +98,7 @@ export function getTeacher(id: string): Promise<Teacher> {
         if (teacherSnapshot.exists()) {
           resolve(teacherSnapshot.data() as Teacher);
         } else {
-          reject("Teacher does not exist");
+          reject(new Error("Teacher does not exist"));
         }
       })
       .catch((e) => {
@@ -114,7 +114,7 @@ export function getStudent(id: string): Promise<Student> {
         if (studentSnapshot.exists()) {
           resolve(studentSnapshot.data() as Student)
         } else {
-          reject("Student does not exist")
+          reject(new Error("Student does not exist"))
         }
       })
       .catch((e) => {
@@ -130,7 +130,7 @@ export function getCourse(id: string): Promise<Course> {
         if (courseSnapshot.exists()) {
           resolve(courseSnapshot.data() as Course)
         } else {
-          reject("Course does not exist")
+          reject(new Error("Course does not exist"))
         }
       })
       .catch((e) => {
