@@ -10,6 +10,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './muiTheme';
 import { addSampleStudent } from './backendTesting/test';
 import { authenticateUser } from './backend/FirebaseCalls';
+import { Upload } from './components/Upload/Upload';
 
 function App(): JSX.Element {
   const customTheme = theme;
@@ -53,6 +54,7 @@ function App(): JSX.Element {
                 ></button>
               }
             />
+            <Route path="/upload" element={<Upload />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
