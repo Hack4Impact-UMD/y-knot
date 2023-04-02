@@ -40,11 +40,15 @@
   background-color: var(--color-orange);
   border-radius: 30px;
   font-size: 1.4rem;
-  color: #ffffff;
+  color: white;
+}
+
+.signInButton:hover {
+  background: var(--color-yellow-orange);
 }
 
 .forgotPassword {
-  color: blue;
+  color: var(--color-blue);
   font-size: 1rem;
   text-decoration: underline;
   align-self: flex-start;
