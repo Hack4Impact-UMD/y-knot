@@ -14,7 +14,7 @@ Currently, Y-KNOT relies on various technologies including [Wix](https://www.wix
 - Our frontend is TypeScript, React, and CSS Modules.
 - Our backend is TypeScript and Firebase.
 - Y-KNOT uses Wix forms to obtain student sign up and payment information. We will grab information from these forms.
-<!-- Infrastructure diagram -->
+<img src="Y-KNOT Infrastructure Diagram.png" alt="Y-KNOT infrastructure diagram" width=1000>
 
 # Running the Repo Locally
 1. Clone the repo and `cd` into it
