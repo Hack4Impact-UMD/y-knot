@@ -3,7 +3,7 @@
 # Point of Contact
 For inquiries about the project, contact 
 - Sahil Gaba (sgaba9778@gmail.com)
-- Sophie Tsai (sophietsai31@gmail.com).
+- Sophie Tsai (sophietsai31@gmail.com)
 
 # Project Info
 [Y-KNOT](https://www.yknotinc.org/home) is an organization founded by Regina Gibbons that provides educational programs to students and adults in the Prince George’s County area. 
