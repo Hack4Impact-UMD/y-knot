@@ -1,0 +1,51 @@
+.logOutConfirmation {
+    background-color: rgba(0, 0, 0, 0.2);;
+    position: fixed;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    align-items: center;
+    justify-content: center;
+  }
+
+.popup {
+    background-color: white;
+    width: 65vh;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30vh;
+    border-radius: 16px;
+    text-align: center;
+    padding-top: 30px;
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+}
+
+button {
+  margin: 5px;
+  border-radius: 50px;
+  background-color: white;
+  border-color: var(--color-orange);
+  border-width: 5px;
+  width: 45%;
+  height: 45px;
+  padding: 11px 0 11px 0;
+  font-size: 20px;   
+  border-style: solid;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+button:hover {
+  background: var(--color-orange);
+  color: white;
+}
+
+.question {
+  margin-top: 35px;
+  margin-bottom: 35px;
+}
