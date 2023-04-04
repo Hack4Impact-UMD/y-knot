@@ -66,7 +66,7 @@ const NavigationBar = (): JSX.Element => {
                 ? styles.linkOptions
                 : styles.linkOptionsUnselected
             }
-            to="/nav"
+            to="/students"
             id="students"
             onClick={handleClick}
           >
