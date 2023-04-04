@@ -1,0 +1,40 @@
+* {
+  font-family: 'Poppins';
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.content {
+  width: 65vw;
+}
+
+.header {
+  text-align: center;
+  font-weight: normal;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.courses {
+  width: 60%;
+}
+
+.dates,
+.grade {
+  width: 20%;
+}
+
+.divider {
+  border-top: 3px solid var(--color-grey);
+  border-bottom: 3px solid var(--color-grey);
+}
+
+td {
+  padding: 20px;
+}
