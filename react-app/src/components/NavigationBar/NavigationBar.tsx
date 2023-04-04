@@ -116,7 +116,16 @@ const NavigationBar = (): JSX.Element => {
           </NavLink>
         </div>
       </div>
-      {showPopup && <LogOutConfirmation onClose={() => setShowPopup(false)} onConfirm={() => console.log("confirmed")}/>}
+      {showPopup && (
+        <LogOutConfirmation
+          onClose={() => {
+            setShowPopup(false);
+          }}
+          onConfirm={() => {
+            console.log('confirmed');
+          }}
+        />
+      )}
     </nav>
   );
 };
