@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Modal from '../../../components/ModalWrapper/Modal';
+import x from '../../../assets/x.svg';
 import styles from './ForgotPassword.module.css';
 
 interface forgotModalType {
@@ -49,7 +50,7 @@ const ForgotPassword = ({
               handleOnClose();
             }}
           >
-            &#x2715;
+            <img src={x} alt="Close popup" />
           </button>
         </div>
         <div className={styles.content}>

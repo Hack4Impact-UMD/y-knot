@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Modal from '../ModalWrapper/Modal';
+import x from '../../assets/x.svg';
 import styles from './ResetEmail.module.css';
 
 interface modalType {
@@ -49,7 +50,7 @@ const ResetEmail = ({ open, onClose }: modalType): React.ReactElement => {
               handleOnClose();
             }}
           >
-            &#x2715;
+            <img src={x} alt="Close popup" />
           </button>
         </div>
         <div className={styles.content}>
