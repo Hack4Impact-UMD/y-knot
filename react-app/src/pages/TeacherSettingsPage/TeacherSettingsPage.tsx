@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styles from './TeacherSettingsPage.module.css';
 import { MdEdit } from 'react-icons/md';
 import ResetEmail from '../../components/ResetEmail/ResetEmail';
@@ -7,13 +7,13 @@ import ResetPassword from '../../components/ResetPassword/ResetPassword';
 const TeacherSettingsPage = (): JSX.Element => {
   const [editName, setEditName] = useState(false);
   const [name, setName] = useState('Eric Johnson');
-  // const [editEmail, setEditEmail] = useState(false);
   const [email, setEmail] = useState('eric.johnson@gmail.com');
   const [openEmailModal, setOpenEmailModal] = useState<boolean>(false);
   const [openPasswordModal, setOpenPasswordModal] = useState<boolean>(false);
 
   return (
     <div className={styles.settings}>
+      <h1 className={styles.title}>Settings</h1>
       <div className={styles.inputs}>
         <div className={styles.box} id="Name">
           <a className={styles.boxTitle}>Name</a>
@@ -54,27 +54,8 @@ const TeacherSettingsPage = (): JSX.Element => {
               setOpenEmailModal(!openEmailModal);
             }}
           />
-          {/* <a className={styles.boxData}>
-            {editEmail ? (
-              <input
-                onChange={(event) => {
-                  setEmail(event.target.value);
-                }}
-              ></input>
-            ) : (
-              email
-            )}
-            </a>
-          <button
-            className={styles.editKey}
-            onClick={() => {
-              setEditEmail(!editEmail);
-            }}
-          >
-            {editEmail ? 'save' : <MdEdit />}
-          </button> */}
         </div>
-        <div className={styles.box} id="Password">
+        <div className={styles.bottomBox} id="Password">
           <a className={styles.boxTitle}>Password</a>
           <a className={styles.boxData}>******************</a>
           <button
@@ -91,19 +72,6 @@ const TeacherSettingsPage = (): JSX.Element => {
               setOpenPasswordModal(!openPasswordModal);
             }}
           />
-        </div>
-        <div className={styles.box} id="Password">
-          <a className={styles.boxTitle}>Teacher</a>
-          <a className={styles.boxData}></a>
-          <button className={styles.editButton}>Add Teacher</button>
-        </div>
-        <div className={styles.box}>
-          <a className={styles.boxTitle}></a>
-          <a className={styles.boxData}></a>
-        </div>
-        <div className={styles.bottomBox}>
-          <a className={styles.boxTitle}></a>
-          <a className={styles.boxData}></a>
         </div>
       </div>
     </div>

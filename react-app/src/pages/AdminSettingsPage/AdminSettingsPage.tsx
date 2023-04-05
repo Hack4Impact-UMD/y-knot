@@ -1,5 +1,5 @@
 import styles from './AdminSettingsPage.module.css';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import ResetEmail from '../../components/ResetEmail/ResetEmail';
 import ResetPassword from '../../components/ResetPassword/ResetPassword';
 import { MdEdit } from 'react-icons/md';
