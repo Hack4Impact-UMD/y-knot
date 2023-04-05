@@ -15,7 +15,7 @@ const AdminSettingsPage = (): JSX.Element => {
     <div className={styles.settings}>
       <h1 className={styles.title}>Settings</h1>
       <div className={styles.inputs}>
-      <div className={styles.box} id="Name">
+        <div className={styles.box} id="Name">
           <a className={styles.boxTitle}>Name</a>
           <a className={styles.boxData}>
             {editName ? (
@@ -42,13 +42,17 @@ const AdminSettingsPage = (): JSX.Element => {
           <a className={styles.boxData}>{email}</a>
           <button
             className={styles.editKey}
-            onClick={() => setOpenEmailModal(!openEmailModal)}
+            onClick={() => {
+              setOpenEmailModal(!openEmailModal);
+            }}
           >
             <MdEdit />
           </button>
           <ResetEmail
             open={openEmailModal}
-            onClose={() => setOpenEmailModal(!openEmailModal)}
+            onClose={() => {
+              setOpenEmailModal(!openEmailModal);
+            }}
           />
         </div>
         <div className={styles.bottomBox} id="Password">
@@ -56,13 +60,17 @@ const AdminSettingsPage = (): JSX.Element => {
           <a className={styles.boxData}>******************</a>
           <button
             className={styles.editButton}
-            onClick={() => setOpenPasswordModal(!openPasswordModal)}
+            onClick={() => {
+              setOpenPasswordModal(!openPasswordModal);
+            }}
           >
             Change Password
           </button>
           <ResetPassword
             open={openPasswordModal}
-            onClose={() => setOpenPasswordModal(!openPasswordModal)}
+            onClose={() => {
+              setOpenPasswordModal(!openPasswordModal);
+            }}
           />
         </div>
       </div>

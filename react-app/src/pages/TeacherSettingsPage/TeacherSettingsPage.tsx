@@ -7,7 +7,7 @@ import ResetPassword from '../../components/ResetPassword/ResetPassword';
 const TeacherSettingsPage = (): JSX.Element => {
   const [editName, setEditName] = useState(false);
   const [name, setName] = useState('Eric Johnson');
-  //const [editEmail, setEditEmail] = useState(false);
+  // const [editEmail, setEditEmail] = useState(false);
   const [email, setEmail] = useState('eric.johnson@gmail.com');
   const [openEmailModal, setOpenEmailModal] = useState<boolean>(false);
   const [openPasswordModal, setOpenPasswordModal] = useState<boolean>(false);
@@ -42,15 +42,19 @@ const TeacherSettingsPage = (): JSX.Element => {
           <a className={styles.boxData}>{email}</a>
           <button
             className={styles.editKey}
-            onClick={() => setOpenEmailModal(!openEmailModal)}
+            onClick={() => {
+              setOpenEmailModal(!openEmailModal);
+            }}
           >
             <MdEdit />
           </button>
           <ResetEmail
             open={openEmailModal}
-            onClose={() => setOpenEmailModal(!openEmailModal)}
+            onClose={() => {
+              setOpenEmailModal(!openEmailModal);
+            }}
           />
-          {/*<a className={styles.boxData}>
+          {/* <a className={styles.boxData}>
             {editEmail ? (
               <input
                 onChange={(event) => {
@@ -68,20 +72,24 @@ const TeacherSettingsPage = (): JSX.Element => {
             }}
           >
             {editEmail ? 'save' : <MdEdit />}
-          </button>*/}
+          </button> */}
         </div>
         <div className={styles.box} id="Password">
           <a className={styles.boxTitle}>Password</a>
           <a className={styles.boxData}>******************</a>
           <button
             className={styles.editButton}
-            onClick={() => setOpenPasswordModal(!openPasswordModal)}
+            onClick={() => {
+              setOpenPasswordModal(!openPasswordModal);
+            }}
           >
             Change Password
           </button>
           <ResetPassword
             open={openPasswordModal}
-            onClose={() => setOpenPasswordModal(!openPasswordModal)}
+            onClose={() => {
+              setOpenPasswordModal(!openPasswordModal);
+            }}
           />
         </div>
         <div className={styles.box} id="Password">

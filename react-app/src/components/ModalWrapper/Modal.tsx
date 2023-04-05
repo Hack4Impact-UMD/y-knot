@@ -8,9 +8,7 @@ interface modalPropsType {
 }
 
 // used to set height of modal based on "type" prop passed in
-interface modalTypes {
-  [modalType: string]: any;
-}
+type modalTypes = Record<string, any>;
 
 const modalTypeMap: modalTypes = {
   // height = 200px
