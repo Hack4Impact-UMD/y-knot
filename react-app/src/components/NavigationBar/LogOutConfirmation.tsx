@@ -15,8 +15,6 @@ const LogOutConfirmation = ({
   onClose,
   open,
 }: popupModalType): React.ReactElement => {
-  const [submitted, setSubmitted] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handleConfirm = (): void => {
@@ -51,7 +49,6 @@ const LogOutConfirmation = ({
               onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                 handleConfirm();
               }}
-              disabled={loading}
             >
               Yes
             </button>
