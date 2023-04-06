@@ -4,8 +4,7 @@ import { AuthProvider } from './auth/AuthProvider';
 import SamplePage from './pages/SamplePage/SamplePage';
 import Sample404Page from './pages/Sample404Page/Sample404Page';
 import LoginPage from './pages/LoginPage/LoginPage';
-import AdminSettingsPage from './pages/AdminSettingsPage/AdminSettingsPage';
-import TeacherSettingsPage from './pages/TeacherSettingsPage/TeacherSettingsPage';
+import TeacherSettingsPage from './pages/SettingsPage/SettingsPage';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import CoursesPage from './pages/CoursesPage/CoursesPage';
 import { ThemeProvider } from '@mui/material/styles';
@@ -47,7 +46,7 @@ function App(): JSX.Element {
                   onClick={() => {
                     authenticateUser('sgaba@umd.edu', '123abc')
                       .then(() => {
-                        addSampleStudent({ firstName: 'Bob' });
+                        // addSampleStudent({ firstName: 'Bob' });
                       })
                       .catch((error) => {
                         console.log(error);
@@ -57,8 +56,7 @@ function App(): JSX.Element {
               }
             />
             <Route path="/upload" element={<Upload />} />
-            <Route path="/adminsettings" element={<AdminSettingsPage />} />
-            <Route path="/teachersettings" element={<TeacherSettingsPage />} />
+            <Route path="/settings" element={<TeacherSettingsPage />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
