@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styles from './NavigationBar.module.css';
 import yKnotLogo from '../../assets/yknot-logo.png';
 import { NavLink } from 'react-router-dom';
+import LogOutConfirmation from './LogOutConfirmation';
 
 const NavigationBar = (): JSX.Element => {
   const [activeLink, setActiveLink] = useState('home');
@@ -102,7 +103,7 @@ const NavigationBar = (): JSX.Element => {
                 ? styles.linkOptions
                 : styles.linkOptionsUnselected
             }
-            to="/nav"
+            to=""
             id="logOut"
             onClick={handleClick}
           >
@@ -112,8 +113,9 @@ const NavigationBar = (): JSX.Element => {
       </div>
       {showPopup && (
         <LogOutConfirmation
+          open={showPopup}
           onClose={() => {
-            setShowPopup(false);
+            setShowPopup(!showPopup);
           }}
           onConfirm={() => {
             console.log('confirmed');
