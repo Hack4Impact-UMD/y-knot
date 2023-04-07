@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './NavigationBar.module.css';
 import yKnotLogo from '../../assets/yknot-logo.png';
 import { NavLink } from 'react-router-dom';
-import LogOutConfirmation from './LogOutConfirmation';
+import LogOutConfirmation from './LogOutConfirmation/LogOutConfirmation';
 
 const NavigationBar = (): JSX.Element => {
   const [activeLink, setActiveLink] = useState('home');

@@ -20,18 +20,17 @@
   text-align: center;
 }
 
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  
-}
-
 .actions {
   width: 100%;
 }
 
-button {
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.container button {
   width: 16.67vh;
   min-width: 160px;
   height: 35px;
@@ -50,7 +49,6 @@ button {
   background: var(--color-white);
 }
 
-button:hover {
+.container button:hover {
   background: var(--color-orange);
 }
-
