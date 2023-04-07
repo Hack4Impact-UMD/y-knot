@@ -1,8 +1,7 @@
-import { logOut } from '../../backend/FirebaseCalls';
+import { logOut } from '../../../backend/FirebaseCalls';
 import { useNavigate } from 'react-router';
-import styles from '../../components/NavigationBar/LogOutConfirmation.module.css';
-import { useState } from 'react';
-import Modal from '../../components/ModalWrapper/Modal';
+import styles from './LogOutConfirmation.module.css';
+import Modal from '../../ModalWrapper/Modal';
 
 interface popupModalType {
   onClose: () => void;
