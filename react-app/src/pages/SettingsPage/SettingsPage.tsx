@@ -15,7 +15,6 @@ const TeacherSettingsPage = (): JSX.Element => {
   const [openPasswordModal, setOpenPasswordModal] = useState<boolean>(false);
 
   const authContext = useAuth();
-  console.log(authContext);
 
   return (
     <div>
