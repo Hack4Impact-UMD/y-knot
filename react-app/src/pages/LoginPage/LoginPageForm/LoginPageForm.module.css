@@ -24,7 +24,7 @@
   width: 400px;
   height: 35px;
   font-size: 1.4rem;
-  background-color: #d9d9d9;
+  background-color: var(--color-grey);
   border-style: none;
   border-radius: 10px;
   margin: 10px;
@@ -40,11 +40,15 @@
   background-color: var(--color-orange);
   border-radius: 30px;
   font-size: 1.4rem;
-  color: #ffffff;
+  color: white;
+}
+
+.signInButton:hover {
+  background: var(--color-yellow-orange);
 }
 
 .forgotPassword {
-  color: blue;
+  color: var(--color-blue);
   font-size: 1rem;
   text-decoration: underline;
   align-self: flex-start;
