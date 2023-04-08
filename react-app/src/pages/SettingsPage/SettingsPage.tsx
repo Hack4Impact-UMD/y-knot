@@ -17,80 +17,78 @@ const TeacherSettingsPage = (): JSX.Element => {
   const authContext = useAuth();
 
   return (
-    <div>
+    <div className={styles.gridContainer}>
       <NavigationBar />
       {authContext?.loading ? (
         <div className={styles.container}>
           <Loading />
         </div>
       ) : (
-        <div className={styles.rightContainer}>
-          <div className={styles.settings}>
-            <h1 className={styles.title}>Settings</h1>
-            <div className={styles.inputs}>
-              {authContext?.token?.claims.role !== 'admin' ? (
-                <div className={styles.box} id="Name">
-                  <a className={styles.boxTitle}>Name</a>
-                  <a className={styles.boxData}>
-                    {editName ? (
-                      <input
-                        onChange={(event) => {
-                          setName(event.target.value);
-                        }}
-                      ></input>
-                    ) : (
-                      name
-                    )}
-                  </a>
-                  <button
-                    className={styles.editKey}
-                    onClick={() => {
-                      setEditName(!editName);
-                    }}
-                  >
-                    {editName ? 'save' : <MdEdit />}
-                  </button>
-                </div>
-              ) : (
-                <></>
-              )}
-
-              <div className={styles.box} id="Email">
-                <a className={styles.boxTitle}>Email</a>
-                <a className={styles.boxData}>{email}</a>
+        <div className={styles.settings}>
+          <h1 className={styles.title}>Settings</h1>
+          <div className={styles.inputs}>
+            {authContext?.token?.claims.role !== 'admin' ? (
+              <div className={styles.box} id="Name">
+                <a className={styles.boxTitle}>Name</a>
+                <a className={styles.boxData}>
+                  {editName ? (
+                    <input
+                      onChange={(event) => {
+                        setName(event.target.value);
+                      }}
+                    ></input>
+                  ) : (
+                    name
+                  )}
+                </a>
                 <button
                   className={styles.editKey}
                   onClick={() => {
-                    setOpenEmailModal(!openEmailModal);
+                    setEditName(!editName);
                   }}
                 >
-                  <MdEdit />
+                  {editName ? 'save' : <MdEdit />}
                 </button>
-                <ResetEmail
-                  open={openEmailModal}
-                  onClose={() => {
-                    setOpenEmailModal(!openEmailModal);
-                  }}
-                />
               </div>
-              <div className={styles.bottomBox} id="Password">
-                <a className={styles.boxTitle}>Password</a>
-                <a className={styles.boxData}>******************</a>
-                <button
-                  className={styles.editButton}
-                  onClick={() => {
-                    setOpenPasswordModal(!openPasswordModal);
-                  }}
-                >
-                  Change Password
-                </button>
-                <ResetPassword
-                  open={openPasswordModal}
-                  onClose={() => {
-                    setOpenPasswordModal(!openPasswordModal);
-                  }}
-                />
-              </div>
+            ) : (
+              <></>
+            )}
+
+            <div className={styles.box} id="Email">
+              <a className={styles.boxTitle}>Email</a>
+              <a className={styles.boxData}>{email}</a>
+              <button
+                className={styles.editKey}
+                onClick={() => {
+                  setOpenEmailModal(!openEmailModal);
+                }}
+              >
+                <MdEdit />
+              </button>
+              <ResetEmail
+                open={openEmailModal}
+                onClose={() => {
+                  setOpenEmailModal(!openEmailModal);
+                }}
+              />
+            </div>
+            <div className={styles.bottomBox} id="Password">
+              <a className={styles.boxTitle}>Password</a>
+              <a className={styles.boxData}>******************</a>
+              <button
+                className={styles.editButton}
+                onClick={() => {
+                  setOpenPasswordModal(!openPasswordModal);
+                }}
+              >
+                Change Password
+              </button>
+              <ResetPassword
+                open={openPasswordModal}
+                onClose={() => {
+                  setOpenPasswordModal(!openPasswordModal);
+                }}
+              />
             </div>
           </div>
         </div>

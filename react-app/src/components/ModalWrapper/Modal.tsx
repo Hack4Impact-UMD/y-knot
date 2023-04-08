@@ -13,6 +13,7 @@ type modalTypes = Record<string, any>;
 const modalTypeMap: modalTypes = {
   // height = 200px
   forgotPassword: styles.forgotPassword,
+  logOutConfirmation: styles.logOutConfirmation,
   // height = 325px
   resetPassword: styles.resetPassword,
   // height = 275px

@@ -30,6 +30,7 @@ const LogOutConfirmation = ({
 
   return (
     <Modal
+      type="logOutConfirmation"
       open={open}
       onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
         handleOnClose();

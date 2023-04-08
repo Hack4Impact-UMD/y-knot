@@ -17,11 +17,15 @@ import LogOutConfirmation from './LogOutConfirmation/LogOutConfirmation';
 
 const NavigationBar = (): JSX.Element => {
   const authContext = useAuth();
+  const [logoutTab, setLogoutTab] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (e.currentTarget.id === 'logOut') {
+      setLogoutTab(true);
       setShowPopup(true);
+    } else {
+      setLogoutTab(false);
     }
   };
 
@@ -75,7 +79,7 @@ const NavigationBar = (): JSX.Element => {
                 ? `${styles.linkOptions} ${styles.highlightOn}`
                 : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
             }
-            to="/nav"
+            to="/courses"
             id="teachers"
             end
           >
@@ -101,7 +105,7 @@ const NavigationBar = (): JSX.Element => {
                 ? `${styles.linkOptions} ${styles.highlightOn}`
                 : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
             }
-            to="/nav"
+            to="/courses"
             id="students"
             end
           >
@@ -148,13 +152,14 @@ const NavigationBar = (): JSX.Element => {
         </div>
         <div>
           <NavLink
-            className={({ isActive }) =>
-              isActive
+            className={
+              logoutTab
                 ? `${styles.linkOptions} ${styles.highlightOn}`
                 : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
             }
-            to=""
             id="logOut"
+            onClick={handleClick}
+            to=""
             end
           >
             <div className={styles.tab}>
@@ -178,6 +183,7 @@ const NavigationBar = (): JSX.Element => {
           open={showPopup}
           onClose={() => {
             setShowPopup(!showPopup);
+            setLogoutTab(false);
           }}
           onConfirm={() => {
             console.log('confirmed');

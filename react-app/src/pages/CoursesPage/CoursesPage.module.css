@@ -1,11 +1,13 @@
+.gridContainer {
+  display: grid;
+  grid-template-columns: 20% 80%;
+}
+
 .rightPane {
   height: 100%;
-  width: 80%;
-  position: fixed;
-  z-index: 2;
-  top: 0;
-  overflow-x: hidden;
-  padding-left: 25%;
+  width: 95%;
+  /* overflow-x: hidden; */
+  padding-left: 5%;
 }
 
 .courseStatus {

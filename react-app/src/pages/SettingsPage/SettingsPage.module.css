@@ -1,12 +1,11 @@
+.gridContainer {
+  display: grid;
+  grid-template-columns: 20% 80%;
+}
+
 .container {
   height: 100vh;
   width: 100%;
-}
-
-.rightContainer {
-  position: absolute;
-  width: 87%;
-  right: 0;
 }
 
 .inputs {
@@ -16,9 +15,9 @@
   box-sizing: border-box;
   border: 1px solid #000000;
   border-radius: 20px;
-  width: 60%;
-  margin-left: 25%;
-  margin-right: 25%;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .settings {
@@ -27,9 +26,10 @@
 
 .title {
   text-align: center;
-  margin-left: 50%;
   width: 105px;
   height: 38px;
+  margin-left: auto;
+  margin-right: auto;
 
   font-style: normal;
   font-weight: 600;
