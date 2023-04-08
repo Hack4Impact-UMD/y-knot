@@ -48,10 +48,13 @@ const LoginPageForm = (): JSX.Element => {
   return (
     <form className={styles.formContainer} onSubmit={handleSignIn}>
       <img className={styles.yknotlogo} src={yKnotLogo} alt="y-knot logo" />
-      <h1 className={styles.signInText}>Sign In</h1>
-      {/* <div className={styles.loadingSpinner}>
-        <Loading></Loading>
-      </div> */}
+      <div className={styles.titleContainer}>
+        {showLoading ? (
+          <Loading></Loading>
+        ) : (
+          <h1 className={styles.signInText}>Sign In</h1>
+        )}
+      </div>
       <div className={styles.inputBox}>
         <div className={styles.emailContainer}>
           <input

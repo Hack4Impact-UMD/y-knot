@@ -94,4 +94,10 @@
   color: var(--color-red);
   padding-top: 1%;
   font-size: 14px;
+  width: 50%;
+  text-align: center;
+}
+
+.titleContainer {
+  height: 100px;
 }
