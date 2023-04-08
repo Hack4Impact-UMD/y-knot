@@ -85,3 +85,13 @@
 .showPasswordIcon {
   width: 25px;
 }
+
+.hideFailureMsg {
+  display: none;
+}
+
+.showFailureMessage {
+  color: var(--color-red);
+  padding-top: 1%;
+  font-size: 14px;
+}
