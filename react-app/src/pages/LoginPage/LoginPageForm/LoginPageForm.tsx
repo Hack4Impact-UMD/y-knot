@@ -1,5 +1,5 @@
 import styles from './LoginPageForm.module.css';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import eyeIcon from '../../../assets/eye.svg';
 import eyeSlashIcon from '../../../assets/eye-slash.svg';
 import yKnotLogo from '../../../assets/yknot-logo.png';

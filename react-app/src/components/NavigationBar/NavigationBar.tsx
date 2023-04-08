@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styles from './NavigationBar.module.css';
 import yKnotLogo from '../../assets/yknot-logo.png';
 import { NavLink } from 'react-router-dom';
@@ -12,9 +13,17 @@ import whiteSettingsIcon from '../../assets/settings-white.svg';
 import blackSettingsIcon from '../../assets/settings-black.svg';
 import whiteLogoutIcon from '../../assets/logout-white.svg';
 import blackLogoutIcon from '../../assets/logout-black.svg';
+import LogOutConfirmation from './LogOutConfirmation/LogOutConfirmation';
 
 const NavigationBar = (): JSX.Element => {
   const authContext = useAuth();
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (e.currentTarget.id === 'logOut') {
+      setShowPopup(true);
+    }
+  };
 
   return (
     <nav className={styles.navigationBar}>
@@ -144,7 +153,7 @@ const NavigationBar = (): JSX.Element => {
                 ? `${styles.linkOptions} ${styles.highlightOn}`
                 : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
             }
-            to="/nav"
+            to=""
             id="logOut"
             end
           >
@@ -164,6 +173,17 @@ const NavigationBar = (): JSX.Element => {
           </NavLink>
         </div>
       </div>
+      {showPopup && (
+        <LogOutConfirmation
+          open={showPopup}
+          onClose={() => {
+            setShowPopup(!showPopup);
+          }}
+          onConfirm={() => {
+            console.log('confirmed');
+          }}
+        />
+      )}
     </nav>
   );
 };
