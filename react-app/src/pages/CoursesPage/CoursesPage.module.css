@@ -1,12 +1,12 @@
 .gridContainer {
   display: grid;
   grid-template-columns: 20% 80%;
+  width: 100vw;
 }
 
 .rightPane {
   height: 100%;
   width: 95%;
-  /* overflow-x: hidden; */
   padding-left: 5%;
 }
 
