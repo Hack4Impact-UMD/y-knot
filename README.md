@@ -14,6 +14,8 @@ Currently, Y-KNOT relies on various technologies including [Wix](https://www.wix
 - Our frontend is TypeScript, React, and CSS Modules.
 - Our backend is TypeScript and Firebase.
 - Y-KNOT uses Wix forms to obtain student sign up and payment information. We will grab information from these forms.
+
+ Diagram of the current project infrastructure:
 <img src="Y-KNOT Infrastructure Diagram.png" alt="Y-KNOT infrastructure diagram" width=1000>
 
 # Running the Repo Locally
@@ -26,9 +28,9 @@ Currently, Y-KNOT relies on various technologies including [Wix](https://www.wix
 We are currently using Firebase Hosting. You can view a dev deployment of the application at https://yknot-42027.web.app/login
 
 ---
-# Backend Structure
+# Project Structure
 
-## Firebase
+## Backend - Firebase
 Contact Sahil or Sophie to gain access to our Firebase Console.
 
 Once logged in to the Firebase Console, you can view our stored data by clicking on the "Firestore Database" tab.
@@ -38,30 +40,10 @@ We currently have 3 collections which corresponds to our project Types:
 - Students
 - Users (Teachers and Admin accounts)
 
----
-# Project Structure
-Preferred practices used for this project can be found [here](https://docs.google.com/document/d/1xvTzr924g-AdLrsiXV2TH-g51YwWqS-KANRcvYWpIUE/edit#heading=h.epmqipk5l7nc)
+## File Organization & Preferred Practices
+Documentation on the preferred practices used for this project can be found **[here](https://docs.google.com/document/d/1xvTzr924g-AdLrsiXV2TH-g51YwWqS-KANRcvYWpIUE/edit#heading=h.epmqipk5l7nc)**
 
-## Assets
-Global assets folder storing all images used throughout the project.
-
-## Auth
-Folder storing authentication related files.
-
-## Backend
-Folder storing files for backend calls to Firebase.
-
-## Backend Testing
-Folder containing functions for backend testing. 
-
-## Components
-Global components folder storing components used across multiple pages.
-
-## Config
-Folder storing the Firebase configuration.
-
-## Pages
-Folder with sub-folders for specific pages containing the main Typescript and CSS files. These page folders may contain additional sub-folders for each component used on the page. Each folder should contain the x.tsx file and corresponding x.module.css file.
-
-## Types
-Folder storing commonly used types where each component can access it. This currently includes the `CourseType`, `StudentType`, and `UserType`.
+Note:
+- We are using a singular global assets folder: `/assets`. 
+- Only components used across multiple pages are stored in the global components folder: `/components`.
+- The Typescript and CSS files for each page can be found in `/pages`. The specific page folders may contain additional sub-folders for each component used on the page for organization. Each folder should contain the x.tsx file and corresponding x.module.css file.
