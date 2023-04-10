@@ -26,150 +26,162 @@ const NavigationBar = (): JSX.Element => {
 
   return (
     <nav className={styles.navigationBar}>
-      <div className={styles.titleContainer}>
-        <img className={styles.yKnotLogo} src={yKnotLogo} alt="y-knot logo" />
-        {authContext?.loading ? (
-          <h2 className={styles.header}>&nbsp;</h2>
-        ) : (
-          <>
+      {authContext?.loading ? (
+        <></>
+      ) : (
+        <>
+          <div className={styles.titleContainer}>
+            <img
+              className={styles.yKnotLogo}
+              src={yKnotLogo}
+              alt="y-knot logo"
+            />
             {authContext?.token?.claims.role === 'admin' ? (
               <h2 className={styles.header}>Admin</h2>
             ) : (
               <h2 className={styles.header}>Teacher</h2>
             )}
-          </>
-        )}
-      </div>
-      <hr className={styles.breakLine}></hr>
-      <div className={styles.linkOptionsContainer}>
-        <div>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? `${styles.linkOptions} ${styles.highlightOn}`
-                : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
-            }
-            to="/courses"
-            id="home"
-          >
-            <div className={styles.tab}>
-              <img
-                className={styles.iconActive}
-                src={whiteHomeIcon}
-                alt="Icon of a white house"
-              />
-              <img
-                className={styles.iconInactive}
-                src={blackHomeIcon}
-                alt="Icon of a black house"
-              />
-              Home
+          </div>
+          <hr className={styles.breakLine}></hr>
+          <div className={styles.linkOptionsContainer}>
+            <div>
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? `${styles.linkOptions} ${styles.highlightOn}`
+                    : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
+                }
+                to="/courses"
+                id="home"
+              >
+                <div className={styles.tab}>
+                  <img
+                    className={styles.iconActive}
+                    src={whiteHomeIcon}
+                    alt="Icon of a white house"
+                  />
+                  <img
+                    className={styles.iconInactive}
+                    src={blackHomeIcon}
+                    alt="Icon of a black house"
+                  />
+                  {authContext?.token?.claims.role === 'admin' ? (
+                    <div>Home</div>
+                  ) : (
+                    <div>Courses</div>
+                  )}
+                </div>
+              </NavLink>
             </div>
-          </NavLink>
-        </div>
-        <div>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? `${styles.linkOptions} ${styles.highlightOn}`
-                : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
-            }
-            to="/courses"
-            id="teachers"
-            end
-          >
-            <div className={styles.tab}>
-              <img
-                className={styles.iconActive}
-                src={whiteTeachersIcon}
-                alt="White icon of people"
-              />
-              <img
-                className={styles.iconInactive}
-                src={blackTeachersIcon}
-                alt="Black icon of people"
-              />
-              Teachers
+            {authContext?.token?.claims.role === 'admin' ? (
+              <div>
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${styles.linkOptions} ${styles.highlightOn}`
+                      : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
+                  }
+                  to="/courses"
+                  id="teachers"
+                  end
+                >
+                  <div className={styles.tab}>
+                    <img
+                      className={styles.iconActive}
+                      src={whiteTeachersIcon}
+                      alt="White icon of people"
+                    />
+                    <img
+                      className={styles.iconInactive}
+                      src={blackTeachersIcon}
+                      alt="Black icon of people"
+                    />
+                    Teachers
+                  </div>
+                </NavLink>
+              </div>
+            ) : (
+              <></>
+            )}
+            <div>
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? `${styles.linkOptions} ${styles.highlightOn}`
+                    : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
+                }
+                to="/courses"
+                id="students"
+                end
+              >
+                <div className={styles.tab}>
+                  <img
+                    className={styles.iconActive}
+                    src={whiteCapIcon}
+                    alt="White icon of a graduation cap"
+                  />
+                  <img
+                    className={styles.iconInactive}
+                    src={blackCapIcon}
+                    alt="Black icon of a graduation cap"
+                  />
+                  Students
+                </div>
+              </NavLink>
             </div>
-          </NavLink>
-        </div>
-        <div>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? `${styles.linkOptions} ${styles.highlightOn}`
-                : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
-            }
-            to="/courses"
-            id="students"
-            end
-          >
-            <div className={styles.tab}>
-              <img
-                className={styles.iconActive}
-                src={whiteCapIcon}
-                alt="White icon of a graduation cap"
-              />
-              <img
-                className={styles.iconInactive}
-                src={blackCapIcon}
-                alt="Black icon of a graduation cap"
-              />
-              Students
+            <div>
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? `${styles.linkOptions} ${styles.highlightOn}`
+                    : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
+                }
+                to="/settings"
+                id="settings"
+                end
+              >
+                <div className={styles.tab}>
+                  <img
+                    className={styles.iconActive}
+                    src={whiteSettingsIcon}
+                    alt="White gear icon"
+                  />
+                  <img
+                    className={styles.iconInactive}
+                    src={blackSettingsIcon}
+                    alt="Black gear icon"
+                  />
+                  Settings
+                </div>
+              </NavLink>
             </div>
-          </NavLink>
-        </div>
-        <div>
-          <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? `${styles.linkOptions} ${styles.highlightOn}`
-                : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
-            }
-            to="/settings"
-            id="settings"
-            end
-          >
-            <div className={styles.tab}>
-              <img
-                className={styles.iconActive}
-                src={whiteSettingsIcon}
-                alt="White gear icon"
-              />
-              <img
-                className={styles.iconInactive}
-                src={blackSettingsIcon}
-                alt="Black gear icon"
-              />
-              Settings
+            <div>
+              <NavLink
+                className={`${styles.linkOptionsUnselected} ${styles.highlightOff}`}
+                id="logOut"
+                onClick={handleClick}
+                to=""
+                end
+              >
+                <div className={styles.tab}>
+                  <img src={blackLogoutIcon} alt="Black logout icon" />
+                  Log Out
+                </div>
+              </NavLink>
             </div>
-          </NavLink>
-        </div>
-        <div>
-          <NavLink
-            className={`${styles.linkOptionsUnselected} ${styles.highlightOff}`}
-            id="logOut"
-            onClick={handleClick}
-            to=""
-            end
-          >
-            <div className={styles.tab}>
-              <img src={blackLogoutIcon} alt="Black logout icon" />
-              Log Out
-            </div>
-          </NavLink>
-        </div>
-      </div>
-      {showPopup && (
-        <LogOutConfirmation
-          open={showPopup}
-          onClose={() => {
-            setShowPopup(!showPopup);
-          }}
-          onConfirm={() => {
-            console.log('confirmed');
-          }}
-        />
+          </div>
+          {showPopup && (
+            <LogOutConfirmation
+              open={showPopup}
+              onClose={() => {
+                setShowPopup(!showPopup);
+              }}
+              onConfirm={() => {
+                console.log('confirmed');
+              }}
+            />
+          )}
+        </>
       )}
     </nav>
   );
