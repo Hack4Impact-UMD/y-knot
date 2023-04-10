@@ -7,7 +7,6 @@ import { getAllStudents } from '../../backend/FirestoreCalls';
 import { authenticateUser } from '../../backend/FirebaseCalls';
 
 const AdminStudentRosterPage = (): JSX.Element => {
-  const [searchName, setSearchName] = useState<String>();
   const [students, setStudents] = useState<Student[]>([]);
   const [tempRoster, setTempRoster] = useState<Student[]>([]);
 
@@ -15,7 +14,10 @@ const AdminStudentRosterPage = (): JSX.Element => {
     authenticateUser('sgaba@umd.edu', '123abc')
       .then(() =>
         getAllStudents()
-          .then((data) => setStudents(data))
+          .then((data) => {
+            setStudents(data);
+            setTempRoster(data);
+          })
           .catch((err) => console.error(err)),
       )
       .catch((err) => {
@@ -24,14 +26,16 @@ const AdminStudentRosterPage = (): JSX.Element => {
   }, []);
 
   const handleSearch = (e: any) => {
-    console.log(e.target.value);
-    setSearchName(e.target.value);
-    setTempRoster(students);
-    tempRoster.filter(
-      (student) =>
-        student.firstName === searchName || student.lastName === searchName,
+    setTempRoster(
+      students.filter((student) => checkName(student, e.target.value)),
     );
   };
+
+  function checkName(student: Student, input: string) {
+    const name = student.firstName + ' ' + student.lastName;
+    const lowerCaseName = name.toLowerCase();
+    return lowerCaseName.includes(input);
+  }
 
   return (
     <div className={styles.rightPane}>
