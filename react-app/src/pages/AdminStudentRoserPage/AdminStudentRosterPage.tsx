@@ -1,5 +1,6 @@
 import styles from './AdminStudentRosterPage.module.css';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
+import Loading from '../../components/LoadingScreen/Loading';
 import StudentList from './StudentList/StudentList';
 import { Student } from '../../types/StudentType';
 import { useState, useEffect } from 'react';
@@ -50,7 +51,11 @@ const AdminStudentRosterPage = (): JSX.Element => {
         />
       </div>
       <h1 className={styles.heading}>Student Roster</h1>
-      <StudentList students={tempRoster} />
+      {students.length === 0 ? (
+        <Loading />
+      ) : (
+        <StudentList students={tempRoster} />
+      )}
     </div>
   );
 };
