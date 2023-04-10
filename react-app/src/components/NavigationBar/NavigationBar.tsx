@@ -11,21 +11,16 @@ import whiteCapIcon from '../../assets/cap-white.svg';
 import blackCapIcon from '../../assets/cap-black.svg';
 import whiteSettingsIcon from '../../assets/settings-white.svg';
 import blackSettingsIcon from '../../assets/settings-black.svg';
-import whiteLogoutIcon from '../../assets/logout-white.svg';
 import blackLogoutIcon from '../../assets/logout-black.svg';
 import LogOutConfirmation from './LogOutConfirmation/LogOutConfirmation';
 
 const NavigationBar = (): JSX.Element => {
   const authContext = useAuth();
-  const [logoutTab, setLogoutTab] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (e.currentTarget.id === 'logOut') {
-      setLogoutTab(true);
       setShowPopup(true);
-    } else {
-      setLogoutTab(false);
     }
   };
 
@@ -152,27 +147,14 @@ const NavigationBar = (): JSX.Element => {
         </div>
         <div>
           <NavLink
-            className={
-              logoutTab
-                ? `${styles.linkOptions} ${styles.highlightOn}`
-                : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
-            }
+            className={`${styles.linkOptionsUnselected} ${styles.highlightOff}`}
             id="logOut"
             onClick={handleClick}
             to=""
             end
           >
             <div className={styles.tab}>
-              <img
-                className={styles.iconActive}
-                src={whiteLogoutIcon}
-                alt="White logout icon"
-              />
-              <img
-                className={styles.iconInactive}
-                src={blackLogoutIcon}
-                alt="Black logout icon"
-              />
+              <img src={blackLogoutIcon} alt="Black logout icon" />
               Log Out
             </div>
           </NavLink>
@@ -183,7 +165,6 @@ const NavigationBar = (): JSX.Element => {
           open={showPopup}
           onClose={() => {
             setShowPopup(!showPopup);
-            setLogoutTab(false);
           }}
           onConfirm={() => {
             console.log('confirmed');
