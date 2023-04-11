@@ -16,7 +16,7 @@
   font-weight: normal;
 }
 
-table {
+.table {
   border-collapse: collapse;
   width: 100%;
 }
@@ -35,6 +35,6 @@ table {
   border-bottom: 3px solid var(--color-grey);
 }
 
-td {
+.td {
   padding: 20px;
 }

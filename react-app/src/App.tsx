@@ -11,6 +11,8 @@ import { theme } from './muiTheme';
 import { addSampleStudent } from './backendTesting/test';
 import { authenticateUser } from './backend/FirebaseCalls';
 import { Upload } from './components/Upload/Upload';
+import TranscriptPage from './pages/TranscriptPage/TranscriptPage';
+import { PDFViewer } from '@react-pdf/renderer';
 
 function App(): JSX.Element {
   const customTheme = theme;
@@ -55,6 +57,7 @@ function App(): JSX.Element {
               }
             />
             <Route path="/upload" element={<Upload />} />
+            <Route path="/transcript" element={<TranscriptPage/>} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
