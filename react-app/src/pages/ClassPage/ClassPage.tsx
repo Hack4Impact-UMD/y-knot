@@ -116,11 +116,7 @@ const ClassPage = (): JSX.Element => {
         {currentTab === Tab.Attendance && <Attendance />}
         {currentTab === Tab.Homework && <Homework />}
         {currentTab === Tab.Teachers && <Teachers />}
-<<<<<<< HEAD
         {currentTab === Tab.Settings && <Settings />} */}
-=======
-        {currentTab === Tab.Settings && <Settings />}*/}
->>>>>>> 339ec114fb499acf6c4ea6255fd934d103516951
         </div>
       )}
     </div>
