@@ -10,6 +10,8 @@ import { authenticateUser } from '../../backend/FirebaseCalls';
 const AdminStudentRosterPage = (): JSX.Element => {
   const [students, setStudents] = useState<Student[]>([]);
   const [tempRoster, setTempRoster] = useState<Student[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [search, setSearch] = useState<string>('');
 
   useEffect(() => {
     authenticateUser('sgaba@umd.edu', '123abc')
@@ -18,15 +20,21 @@ const AdminStudentRosterPage = (): JSX.Element => {
           .then((data) => {
             setStudents(data);
             setTempRoster(data);
+            setLoading(false);
           })
-          .catch((err) => console.error(err)),
+          .catch((err) => {
+            console.error(err);
+            setLoading(false);
+          }),
       )
       .catch((err) => {
         console.error(err);
+        setLoading(false);
       });
   }, []);
 
   const handleSearch = (e: any) => {
+    setSearch(e.target.value);
     setTempRoster(
       students.filter((student) => checkName(student, e.target.value)),
     );
@@ -51,10 +59,14 @@ const AdminStudentRosterPage = (): JSX.Element => {
         />
       </div>
       <h1 className={styles.heading}>Student Roster</h1>
-      {students.length === 0 ? (
+      {loading ? (
         <Loading />
       ) : (
-        <StudentList students={tempRoster} />
+        <StudentList
+          name={search}
+          rosterSize={students.length}
+          students={tempRoster}
+        />
       )}
     </div>
   );
