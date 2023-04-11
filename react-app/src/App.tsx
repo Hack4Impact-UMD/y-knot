@@ -11,6 +11,7 @@ import { theme } from './muiTheme';
 import { addSampleStudent } from './backendTesting/test';
 import { authenticateUser } from './backend/FirebaseCalls';
 import { Upload } from './components/Upload/Upload';
+import AdminClassPage from './pages/ClassPage/AdminClassPage';
 
 function App(): JSX.Element {
   const customTheme = theme;
@@ -55,6 +56,7 @@ function App(): JSX.Element {
               }
             />
             <Route path="/upload" element={<Upload />} />
+            <Route path="/class" element={<AdminClassPage />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
