@@ -17,7 +17,7 @@ const TeacherSettingsPage = (): JSX.Element => {
   const authContext = useAuth();
 
   return (
-    <div className={styles.gridContainer}>
+    <>
       <NavigationBar />
       {authContext?.loading ? (
         <div className={styles.container}>
@@ -93,7 +93,7 @@ const TeacherSettingsPage = (): JSX.Element => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

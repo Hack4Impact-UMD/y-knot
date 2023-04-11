@@ -4,7 +4,7 @@ import NavigationBar from '../../components/NavigationBar/NavigationBar';
 
 const CoursesPage = (): JSX.Element => {
   return (
-    <div className={styles.gridContainer}>
+    <>
       <NavigationBar />
       <div className={styles.rightPane}>
         <h1 className={styles.courseStatus}>Active Courses</h1>
@@ -34,7 +34,7 @@ const CoursesPage = (): JSX.Element => {
           <CourseCard teacher="bob" course="1" section="1" />
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
