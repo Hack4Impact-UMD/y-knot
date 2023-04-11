@@ -8,6 +8,7 @@ enum Tab {
   Attendance = 'Attendance',
   Homework = 'Homework',
   Teachers = 'Teachers',
+  Settings = 'Settings',
 }
 
 const AdminClassPage = (): JSX.Element => {
@@ -79,6 +80,16 @@ const AdminClassPage = (): JSX.Element => {
           >
             Teachers
           </button>
+          <button
+            className={
+              currentTab === Tab.Settings ? styles.selectedTab : styles.tab
+            }
+            onClick={() => {
+              handleTabChange(Tab.Settings);
+            }}
+          >
+            Settings
+          </button>
         </div>
 
         {/* For rendering the corresponding component whenever tab value changes */}
@@ -88,7 +99,7 @@ const AdminClassPage = (): JSX.Element => {
         {currentTab === Tab.Attendance && <Attendance />}
         {currentTab === Tab.Homework && <Homework />}
         {currentTab === Tab.Teachers && <Teachers />}
-        {currentTab === Tab.Attendance && <Attendance />}*/}
+        {currentTab === Tab.Settings && <Settings />}*/}
       </div>
     </div>
   );

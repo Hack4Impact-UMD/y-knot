@@ -48,6 +48,7 @@
   border-style: solid;
   border-color: white;
   border-radius: 15px;
+  border-width: 1px;
   text-decoration: none;
   color: black;
   padding-top: 8px;
@@ -63,6 +64,7 @@
   border-style: solid;
   border-color: black;
   border-radius: 15px;
+  border-width: 1px;
   text-decoration: none;
   color: black;
   padding-top: 8px;
