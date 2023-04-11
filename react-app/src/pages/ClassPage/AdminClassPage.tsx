@@ -30,7 +30,9 @@ const AdminClassPage = (): JSX.Element => {
 
         <div className={styles.content}>
           <button
-            className={currentTab === Tab.Main? styles.selectedTab : styles.tab}
+            className={
+              currentTab === Tab.Main ? styles.selectedTab : styles.tab
+            }
             onClick={() => {
               handleTabChange(Tab.Main);
             }}
@@ -38,7 +40,9 @@ const AdminClassPage = (): JSX.Element => {
             Main
           </button>
           <button
-            className={currentTab === Tab.Students? styles.selectedTab : styles.tab}
+            className={
+              currentTab === Tab.Students ? styles.selectedTab : styles.tab
+            }
             onClick={() => {
               handleTabChange(Tab.Students);
             }}
@@ -46,7 +50,9 @@ const AdminClassPage = (): JSX.Element => {
             Students
           </button>
           <button
-            className={currentTab === Tab.Attendance? styles.selectedTab : styles.tab}
+            className={
+              currentTab === Tab.Attendance ? styles.selectedTab : styles.tab
+            }
             onClick={() => {
               handleTabChange(Tab.Attendance);
             }}
@@ -54,7 +60,9 @@ const AdminClassPage = (): JSX.Element => {
             Attendance
           </button>
           <button
-            className={currentTab === Tab.Homework? styles.selectedTab : styles.tab}
+            className={
+              currentTab === Tab.Homework ? styles.selectedTab : styles.tab
+            }
             onClick={() => {
               handleTabChange(Tab.Homework);
             }}
@@ -62,7 +70,9 @@ const AdminClassPage = (): JSX.Element => {
             Homework
           </button>
           <button
-            className={currentTab === Tab.Teachers? styles.selectedTab : styles.tab}
+            className={
+              currentTab === Tab.Teachers ? styles.selectedTab : styles.tab
+            }
             onClick={() => {
               handleTabChange(Tab.Teachers);
             }}
