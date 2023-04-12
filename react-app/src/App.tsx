@@ -4,9 +4,10 @@ import { AuthProvider } from './auth/AuthProvider';
 import SamplePage from './pages/SamplePage/SamplePage';
 import Sample404Page from './pages/Sample404Page/Sample404Page';
 import LoginPage from './pages/LoginPage/LoginPage';
-import TeacherSettingsPage from './pages/SettingsPage/SettingsPage';
+import SettingsPage from './pages/SettingsPage/SettingsPage';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import CoursesPage from './pages/CoursesPage/CoursesPage';
+import ClassPage from './pages/ClassPage/ClassPage';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './muiTheme';
 import { addSampleStudent } from './backendTesting/test';
@@ -46,7 +47,7 @@ function App(): JSX.Element {
                   onClick={() => {
                     authenticateUser('sgaba@umd.edu', '123abc')
                       .then(() => {
-                        // addSampleStudent({ firstName: 'Bob' });
+                        addSampleStudent({ firstName: 'Bob' });
                       })
                       .catch((error) => {
                         console.log(error);
@@ -56,7 +57,8 @@ function App(): JSX.Element {
               }
             />
             <Route path="/upload" element={<Upload />} />
-            <Route path="/settings" element={<TeacherSettingsPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/class" element={<ClassPage />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

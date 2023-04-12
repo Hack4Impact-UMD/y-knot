@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Modal from '../../../components/ModalWrapper/Modal';
 import x from '../../../assets/x.svg';
 import styles from './ForgotPassword.module.css';
+import { sendResetEmail } from '../../../backend/FirebaseCalls';
 
 interface forgotModalType {
   open: boolean;
@@ -22,7 +23,17 @@ const ForgotPassword = ({
     if (submitted) {
       handleOnClose();
     } else {
-      setSubmitted(true);
+      // validate email input
+      if (/^[\w]+@[\w]+(\.\w+)+$/.test(email)) {
+        // send reset email
+        sendResetEmail(email);
+
+        setSubmitted(true);
+      } else if (!email) {
+        setErrorEmail('*This field is required');
+      } else {
+        setErrorEmail('*Invalid email address');
+      }
       setLoading(false);
     }
   };
@@ -45,6 +56,7 @@ const ForgotPassword = ({
       <>
         <div className={styles.header}>
           <button
+            type="button"
             className={styles.close}
             onClick={() => {
               handleOnClose();
@@ -62,28 +74,31 @@ const ForgotPassword = ({
             <>
               <h2 className={styles.title}>Reset Password</h2>
               <p className={styles.error}>{errorEmail}</p>
-              <form
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  setLoading(true);
-                  handlePasswordReset();
+
+              <input
+                autoFocus
+                className={styles.email}
+                type="email"
+                placeholder="Email"
+                required
+                onChange={({ target: { value } }) => {
+                  setEmail(value);
                 }}
-              >
-                <input
-                  className={styles.email}
-                  type="email"
-                  placeholder="Email"
-                  onChange={({ target: { value } }) => {
-                    setEmail(value);
-                  }}
-                />
-              </form>
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    setLoading(true);
+                    handlePasswordReset();
+                  }
+                }}
+              />
             </>
           )}
         </div>
+
         <div className={styles.actions}>
           <div className={styles.container}>
             <button
+              type="button"
               className={styles.resetButton}
               onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                 setLoading(true);

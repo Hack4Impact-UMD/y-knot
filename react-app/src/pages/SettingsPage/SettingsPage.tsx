@@ -7,7 +7,7 @@ import { useAuth } from '../../auth/AuthProvider';
 import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 
-const TeacherSettingsPage = (): JSX.Element => {
+const SettingsPage = (): JSX.Element => {
   const [editName, setEditName] = useState(false);
   const [name, setName] = useState('Eric Johnson');
   const [email, setEmail] = useState('eric.johnson@gmail.com');
@@ -97,4 +97,4 @@ const TeacherSettingsPage = (): JSX.Element => {
   );
 };
 
-export default TeacherSettingsPage;
+export default SettingsPage;
