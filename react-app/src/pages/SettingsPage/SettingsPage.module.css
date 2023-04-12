@@ -19,7 +19,7 @@
   margin-top: 100px;
   float: right;
   height: 100%;
-  width: 80%;
+  width: calc(100% - 250px);
 }
 
 .title {

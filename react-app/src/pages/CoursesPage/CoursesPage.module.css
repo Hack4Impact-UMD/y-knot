@@ -1,7 +1,7 @@
 .rightPane {
   float: right;
   height: 100%;
-  width: 75%;
+  width: calc(100% - 300px);
   padding-left: 5%;
 }
 
