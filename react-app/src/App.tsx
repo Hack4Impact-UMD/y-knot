@@ -58,7 +58,7 @@ function App(): JSX.Element {
             />
             <Route path="/upload" element={<Upload />} />
             <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/class" element={<ClassPage />} />
+            <Route path="/courses/class" element={<ClassPage />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
