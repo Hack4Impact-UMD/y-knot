@@ -81,7 +81,7 @@ const NavigationBar = (): JSX.Element => {
                       ? `${styles.linkOptions} ${styles.highlightOn}`
                       : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
                   }
-                  to="/courses"
+                  to="/nav"
                   id="teachers"
                   end
                 >
@@ -110,7 +110,7 @@ const NavigationBar = (): JSX.Element => {
                     ? `${styles.linkOptions} ${styles.highlightOn}`
                     : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
                 }
-                to="/courses"
+                to="/nav"
                 id="students"
                 end
               >
