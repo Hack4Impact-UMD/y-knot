@@ -7,8 +7,6 @@ export interface YKNOTUser {
 
 export interface Teacher {
   email: string;
-  gender?: string;
-  pronoun?: string;
   classes: TeacherCourse[];
 }
 
