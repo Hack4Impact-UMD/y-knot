@@ -6,10 +6,15 @@ import LogOutConfirmation from './LogOutConfirmation/LogOutConfirmation';
 
 const NavigationBar = (): JSX.Element => {
   const [activeLink, setActiveLink] = useState('home');
+  const [showPopup, setShowPopup] = useState(false);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     setActiveLink(e.currentTarget.id);
     console.log(e.currentTarget.id);
+
+    if (e.currentTarget.id === 'logOut') {
+      setShowPopup(true);
+    }
   };
 
   return (

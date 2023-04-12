@@ -7,6 +7,14 @@
   --color-blue: #2613b6;
   --color-orange: #e3853a;
   --color-yellow: #fbe555;
+  --color-pastel-red: #ffc0c0;
+  --color-pastel-green: #c9ffc0;
+  --color-pastel-blue: #c0f0ff;
+  --color-pastel-orange: #ffc89d;
+  --color-pastel-yellow: #feffc0;
+  --color-grey: #d9d9d9;
+  --color-teal: #13a2b6;
+  --color-yellow-orange: #e3b43a;
 }
 
 body {
