@@ -19,7 +19,8 @@ Currently, Y-KNOT relies on various technologies including [Wix](https://www.wix
 - Our backend is TypeScript and Firebase.
 
 Diagram of the current project infrastructure:
-<img src="Y-KNOT Infrastructure Diagram.png" alt="Y-KNOT infrastructure diagram" width=1000>
+<br/>
+<img src="Y-KNOT Infrastructure Diagram.png" alt="Y-KNOT infrastructure diagram" width=500>
 
 # Running the Repo Locally
 
