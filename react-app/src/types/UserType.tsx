@@ -7,14 +7,7 @@ export interface YKNOTUser {
 
 export interface Teacher {
   email: string;
-  classes: TeacherCourse[];
-}
-
-export interface TeacherCourse {
-  id: string;
-  name: string;
-  startDate: Date;
-  endDate: Date;
+  courses: string[];
 }
 
 export type Role = 'ADMIN' | 'TEACHER';

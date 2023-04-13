@@ -6,7 +6,7 @@ export interface Course {
   students: string[];
   teachers: string[];
   application: boolean;
-  classType: ClassType;
+  courseType: CourseType;
   prerequisites: string[];
   formId: string;
   introEmail: IntroEmail;
@@ -28,4 +28,4 @@ export interface Homework {
   notes: string;
 }
 
-export type ClassType = 'ADULT' | 'MINOR' | 'LEADERSHIP';
+export type CourseType = 'ADULT' | 'MINOR' | 'LEADERSHIP';
