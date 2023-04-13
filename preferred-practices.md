@@ -7,7 +7,8 @@ Many of the things listed below are for the sake of consistency rather than corr
 2. Name **subfolders in the app using camelCase** unless the **folder is primarily responsible for holding components**, in which case, **use PascalCase** (this is mostly for the sake of consistency)
 3. In the image below, the folder including the `Navbar` and `OtherBar` are capitalized because their purpose is to only contain the component
 <img src="https://user-images.githubusercontent.com/67646012/231619162-f230c758-978d-460e-a2dd-b3aaa013976f.png" alt="Folder containing Navbar and Otherbar which are capitalized" width=200>
-5. [Example of Naming Scheme](https://github.com/Hack4ImpactFall2021/y-knot/tree/master/src)
+
+4. [Example of Naming Scheme](https://github.com/Hack4ImpactFall2021/y-knot/tree/master/src)
 
 
 ## Styling
