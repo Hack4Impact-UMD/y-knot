@@ -1,6 +1,6 @@
-import { TfiTrash } from 'react-icons/tfi';
 import { Student } from '../../../types/StudentType';
-import { FiEye } from 'react-icons/fi';
+import { ReactComponent as EyeIcon } from '../../../assets/view.svg';
+import { ReactComponent as TrashIcon } from '../../../assets/trash.svg';
 import styles from './StudentList.module.css';
 
 const StudentList = (props: {
@@ -16,8 +16,8 @@ const StudentList = (props: {
         {student.firstName} {student.lastName}
       </p>
       <span className={styles.icons}>
-        <FiEye size={28} />
-        <TfiTrash size={28} />
+        <EyeIcon />
+        <TrashIcon />
       </span>
       <hr className={styles.line} />
     </div>
