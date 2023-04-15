@@ -57,7 +57,7 @@ function App(): JSX.Element {
               }
             />
             <Route path="/upload" element={<Upload />} />
-            <Route path="/transcript" element={<TranscriptPage/>} />
+            <Route path="/transcript" element={<TranscriptPage />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

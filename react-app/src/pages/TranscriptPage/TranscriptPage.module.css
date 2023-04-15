@@ -1,50 +1,7 @@
-* {
-  font-family: 'Poppins';
-}
-
 .container {
   height: 100vh;
   width: 100%;
   margin: -6px -6px 0 -3px;
   padding: 0;
   display: flex;
-}
-
-.viewer {
-  margin: 2px 0 0 5px;
-}
-
-.content {
-  width: 65vw;
-}
-
-.header {
-  text-align: center;
-  font-weight: normal;
-}
-.embe {
-  margin-bottom: -5px;
-}
-
-.table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-.courses {
-  width: 60%;
-}
-
-.dates,
-.grade {
-  width: 20%;
-}
-
-.divider {
-  border-top: 3px solid var(--color-grey);
-  border-bottom: 3px solid var(--color-grey);
-}
-
-.td {
-  padding: 20px;
 }
