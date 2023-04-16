@@ -1,123 +1,127 @@
-
 .container {
-    height: 100vh;
-    width: 100%;
-  }
-  
-  .inputs {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    border: 1px solid #000000;
-    border-radius: 20px;
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
-  .settings {
-    margin-top: 100px;
-    float: right;
-    height: 100%;
-    width: calc(100% - 250px);
-  }
-  
-  .title {
-    text-align: center;
-    width: 205px;
-    height: 38px;
-    margin-left: auto;
-    margin-right: auto;
-  
-    font-style: normal;
-    font-weight: 600;
-    font-size: 25px;
-    line-height: 38px;
-  }
-  
-  .box {
-    border-bottom: 1px solid #000000;
-    padding-top: 30px;
-    padding-bottom: 25px;
-    padding-left: 5px;
-  }
-  
-  .bottomBox {
-    padding-bottom: 30px;
-    padding-top: 30px;
-    padding-left: 5px;
-  }
-  
-  .boxTitle {
-    font-style: normal;
-    font-weight: 400;
-    font-size: 1.5rem;
-    width: 200px;
-    padding-left: 20px;
-    display: inline-block;
-  }
-  
-  .boxData {
-    float: center;
-    font-style: italic;
-    font-weight: 500;
-    font-size: 1.5rem;
-  }
-  
-  .editKey {
-    background: none;
-    border: none;
-    outline: none;
-    float: right;
-    margin-right: 20px;
-    padding: 0px;
-    height: 32px;
-    color: #808080;
-    font-size: 2rem;
-    margin-right: 20px;
-    cursor: pointer;
-  }
-  
-  .editButton {
-    position: absolute;
-    width: 85px;
-    height: 60px;
-    margin-left: 74%;
-    
-    background: #E3853A;
-    border-radius: 15px;
-  }
-  .transcriptButton {
-    position: absolute;
-    width: 85px;
-    height: 60px;
-    margin-left: 68%;
-    
-    background: #E3853A;
-    border-radius: 15px;
-  }
-  
-  .buttons {
-    display: flex;
-  }
+  height: 100vh;
+  width: 100%;
+}
 
-  .coursesTitle {
-    text-decoration: underline;
-    text-align: left;
-    width: 205px;
-    height: 38px;
-    margin-left: 10%;
+.inputs {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border: 1px solid #000000;
+  border-radius: 20px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
 
-  
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 25px;
-    line-height: 38px;
-  }
+.settings {
+  margin-top: 100px;
+  float: right;
+  height: 100%;
+  width: calc(100% - 250px);
+}
 
-  .topButtons {
-    align-items: flex;
-    margin-bottom: 30px;
-  }
+.title {
+  text-align: center;
+  width: 205px;
+  height: 38px;
+  margin-left: auto;
+  margin-right: auto;
+
+  font-style: normal;
+  font-weight: 600;
+  font-size: 25px;
+  line-height: 38px;
+}
+
+.box {
+  border-bottom: 1px solid #000000;
+  padding-top: 30px;
+  padding-bottom: 25px;
+  padding-left: 5px;
+}
+
+.bottomBox {
+  padding-bottom: 30px;
+  padding-top: 30px;
+  padding-left: 5px;
+}
+
+.boxTitle {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 1.5rem;
+  width: 200px;
+  padding-left: 20px;
+  display: inline-block;
+}
+
+.boxData {
+  float: center;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.5rem;
+}
+
+.editKey {
+  background: none;
+  border: none;
+  outline: none;
+  float: right;
+  margin-right: 20px;
+  padding: 0px;
+  height: 32px;
+  color: #808080;
+  font-size: 2rem;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.editButton {
+  width: 85px;
+  height: 60px;
+  border-radius: 15px;
+  border: none;
+  background-color: var(--color-orange);
+}
+
+.transcriptButton {
+  width: 85px;
+  height: 60px;
+  border-radius: 15px;
+  border: none;
+  background-color: var(--color-orange);
+}
+
+.buttons {
+  display: flex;
+}
+
+.coursesTitle {
+  text-decoration: underline;
+  text-align: left;
+  width: 205px;
+  height: 38px;
+  margin-left: 10%;
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 25px;
+  line-height: 38px;
+}
+
+.topButtons {
+  align-items: flex;
+  margin-bottom: 30px;
+  margin-left: 80%;
+  display: flex;
+  gap: 15px;
+}
+
+.courseList {
+  display: flex;
+  margin-left: 10%;
+  flex-wrap: wrap;
+}

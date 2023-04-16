@@ -4,8 +4,8 @@ import { MdEdit } from 'react-icons/md';
 import { useAuth } from '../../auth/AuthProvider';
 import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
-import edit from '../../assets/edit.svg'
-
+import CourseCard from '../../components/CourseCard/CourseCard';
+import edit from '../../assets/edit.svg';
 
 const TeacherProfilePage = (): JSX.Element => {
   const [editName, setEditName] = useState(false);
@@ -24,8 +24,10 @@ const TeacherProfilePage = (): JSX.Element => {
       ) : (
         <div className={styles.settings}>
           <div className={styles.topButtons}>
-            <button className={styles.editButton}><img src={edit}/></button>
             <h1 className={styles.title}>Teacher Profile</h1>
+            <button className={styles.editButton}>
+              <img src={edit} />
+            </button>
           </div>
           <div className={styles.inputs}>
             {authContext?.token?.claims.role !== 'admin' ? (
@@ -59,12 +61,18 @@ const TeacherProfilePage = (): JSX.Element => {
               <a className={styles.boxTitle}>Name</a>
               <a className={styles.boxData}>{name}</a>
             </div>
-            <div className={styles.box} id="Email">
+            <div className={styles.bottomBox} id="Email">
               <a className={styles.boxTitle}>Email</a>
               <a className={styles.boxData}>{email}</a>
             </div>
           </div>
           <h1 className={styles.coursesTitle}>Courses</h1>
+          <div className={styles.courseList}>
+            <CourseCard teacher="bob" course="1" section="1" />
+            <CourseCard teacher="bob" course="1" section="1" />
+            <CourseCard teacher="bob" course="1" section="1" />
+            <CourseCard teacher="bob" course="1" section="1" />
+          </div>
         </div>
       )}
     </>

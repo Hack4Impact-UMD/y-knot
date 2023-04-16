@@ -4,8 +4,9 @@ import { MdEdit } from 'react-icons/md';
 import { useAuth } from '../../auth/AuthProvider';
 import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
-import edit from '../../assets/edit.svg'
-import transcript from '../../assets/transcript.svg'
+import edit from '../../assets/edit.svg';
+import transcript from '../../assets/transcript.svg';
+import CourseCard from '../../components/CourseCard/CourseCard';
 
 const StudentProfilePage = (): JSX.Element => {
   const [editName, setEditName] = useState(false);
@@ -27,12 +28,17 @@ const StudentProfilePage = (): JSX.Element => {
         </div>
       ) : (
         <div className={styles.settings}>
+          <h1 className={styles.title}>Student Profile</h1>
+
           <div className={styles.topButtons}>
-            <button className={styles.editButton}><img src={edit}/></button>
-            <button className={styles.transcriptButton}><img src={transcript}/></button>
-            <h1 className={styles.title}>Student Profile</h1>
+            <button className={styles.editButton}>
+              <img src={edit} />
+            </button>
+            <button className={styles.transcriptButton}>
+              <img src={transcript} />
+            </button>
           </div>
-          
+
           <div className={styles.inputs}>
             {authContext?.token?.claims.role !== 'admin' ? (
               <div className={styles.box} id="Name">
@@ -69,7 +75,7 @@ const StudentProfilePage = (): JSX.Element => {
               <a className={styles.boxTitle}>Email</a>
               <a className={styles.boxData}>{email}</a>
             </div>
-            
+
             <div className={styles.box} id="Grade">
               <a className={styles.boxTitle}>Grade</a>
               <a className={styles.boxData}>{grade}</a>
@@ -80,6 +86,12 @@ const StudentProfilePage = (): JSX.Element => {
             </div>
           </div>
           <h1 className={styles.coursesTitle}>Courses</h1>
+          <div className={styles.courseList}>
+            <CourseCard teacher="bob" course="1" section="1" />
+            <CourseCard teacher="bob" course="1" section="1" />
+            <CourseCard teacher="bob" course="1" section="1" />
+            <CourseCard teacher="bob" course="1" section="1" />
+          </div>
         </div>
       )}
     </>
