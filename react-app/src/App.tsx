@@ -12,6 +12,8 @@ import { theme } from './muiTheme';
 import { addSampleStudent } from './backendTesting/test';
 import { authenticateUser } from './backend/FirebaseCalls';
 import { Upload } from './components/Upload/Upload';
+import StudentProfilePage from './pages/StudentProfilePage/StudentProfilePage';
+import TeacherProfilePage from './pages/TeacherProfilePage/TeacherProfilePage';
 
 function App(): JSX.Element {
   const customTheme = theme;
@@ -57,6 +59,9 @@ function App(): JSX.Element {
             />
             <Route path="/upload" element={<Upload />} />
             <Route path="/class" element={<ClassPage />} />
+            <Route path="/students" element={<StudentProfilePage/>}/>
+            <Route path="/teacher" element={<TeacherProfilePage/>}/>
+
           </Routes>
         </BrowserRouter>
       </AuthProvider>
