@@ -10,18 +10,45 @@ const StudentList = (props: {
 }) => {
   const { rosterSize, students, name } = props;
 
-  const list = students.map((student) => (
-    <div key={student.firstName} className={styles.studentBox}>
-      <p className={styles.name}>
-        {student.firstName} {student.lastName}
-      </p>
-      <span className={styles.icons}>
-        <EyeIcon />
-        <TrashIcon />
-      </span>
-      <hr className={styles.line} />
-    </div>
-  ));
+  const list = students.map(
+    (student, i) => (
+      <div
+        key={student.firstName}
+        className={
+          i === rosterSize - 1 ? styles.studentBoxBottom : styles.studentBox
+        }
+      >
+        <p className={styles.name}>
+          {student.firstName} {student.lastName}
+        </p>
+        <div className={styles.icons}>
+          <EyeIcon />
+          <TrashIcon />
+        </div>
+      </div>
+    ),
+    // { i === rosterSize ? (
+    //   <div key={student.firstName} className={styles.studentBoxBottom}>
+    //     <p className={styles.name}>
+    //       {student.firstName} {student.lastName}
+    //     </p>
+    //     <div className={styles.icons}>
+    //       <EyeIcon />
+    //       <TrashIcon />
+    //     </div>
+    //   </div>
+    // ) : (
+    //   <div key={student.firstName}>
+    //     <p className={styles.name}>
+    //       {student.firstName} {student.lastName}
+    //     </p>
+    //     <div className={styles.icons}>
+    //       <EyeIcon />
+    //       <TrashIcon />
+    //     </div>
+    //   </div>
+    // );}
+  );
 
   return (
     <div>
@@ -30,7 +57,7 @@ const StudentList = (props: {
       ) : students.length === 0 ? (
         <h4 className={styles.noStudent}>No Student Found Matching "{name}"</h4>
       ) : (
-        list
+        <div className={styles.listBox}>{list}</div>
       )}
     </div>
   );
