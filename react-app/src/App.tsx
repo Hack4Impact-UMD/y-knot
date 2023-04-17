@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import CoursesPage from './pages/CoursesPage/CoursesPage';
 import AdminStudentRosterPage from './pages/AdminStudentRoserPage/AdminStudentRosterPage';
+import ClassPage from './pages/ClassPage/ClassPage';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './muiTheme';
 import { addSampleStudent } from './backendTesting/test';
@@ -58,6 +59,7 @@ function App(): JSX.Element {
               }
             />
             <Route path="/upload" element={<Upload />} />
+            <Route path="/class" element={<ClassPage />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
