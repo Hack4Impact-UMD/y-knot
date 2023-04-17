@@ -11,45 +11,22 @@ const StudentList = (props: {
 }) => {
   const { rosterSize, students, name, tempRosterSize } = props;
 
-  const list = students.map(
-    (student, i) => (
-      <div
-        key={student.firstName}
-        className={
-          i === tempRosterSize - 1 ? styles.studentBoxBottom : styles.studentBox
-        }
-      >
-        <p className={styles.name}>
-          {student.firstName} {student.lastName}
-        </p>
-        <div className={styles.icons}>
-          <EyeIcon />
-          <TrashIcon />
-        </div>
+  const list = students.map((student, i) => (
+    <div
+      key={student.firstName}
+      className={
+        i === tempRosterSize - 1 ? styles.studentBoxBottom : styles.studentBox
+      }
+    >
+      <p className={styles.name}>
+        {student.firstName} {student.lastName}
+      </p>
+      <div className={styles.icons}>
+        <EyeIcon />
+        <TrashIcon />
       </div>
-    ),
-    // { i === rosterSize ? (
-    //   <div key={student.firstName} className={styles.studentBoxBottom}>
-    //     <p className={styles.name}>
-    //       {student.firstName} {student.lastName}
-    //     </p>
-    //     <div className={styles.icons}>
-    //       <EyeIcon />
-    //       <TrashIcon />
-    //     </div>
-    //   </div>
-    // ) : (
-    //   <div key={student.firstName}>
-    //     <p className={styles.name}>
-    //       {student.firstName} {student.lastName}
-    //     </p>
-    //     <div className={styles.icons}>
-    //       <EyeIcon />
-    //       <TrashIcon />
-    //     </div>
-    //   </div>
-    // );}
-  );
+    </div>
+  ));
 
   return (
     <div>
