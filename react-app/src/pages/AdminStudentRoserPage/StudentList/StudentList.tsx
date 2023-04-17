@@ -7,15 +7,16 @@ const StudentList = (props: {
   name: string;
   rosterSize: number;
   students: Student[];
+  tempRosterSize: number;
 }) => {
-  const { rosterSize, students, name } = props;
+  const { rosterSize, students, name, tempRosterSize } = props;
 
   const list = students.map(
     (student, i) => (
       <div
         key={student.firstName}
         className={
-          i === rosterSize - 1 ? styles.studentBoxBottom : styles.studentBox
+          i === tempRosterSize - 1 ? styles.studentBoxBottom : styles.studentBox
         }
       >
         <p className={styles.name}>

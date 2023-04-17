@@ -64,7 +64,8 @@ const AdminStudentRosterPage = (): JSX.Element => {
       ) : (
         <StudentList
           name={search}
-          rosterSize={tempRoster.length}
+          rosterSize={students.length}
+          tempRosterSize={tempRoster.length}
           students={tempRoster}
         />
       )}
