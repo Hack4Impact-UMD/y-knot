@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import RequireAuth from './auth/RequireAuth';
 import { AuthProvider } from './auth/AuthProvider';
 import SamplePage from './pages/SamplePage/SamplePage';
@@ -21,15 +21,31 @@ function App(): JSX.Element {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
+            <Route path="/login" element={<LoginPage />} />
             <Route
               path="/"
               element={
                 <RequireAuth>
-                  <SamplePage />
+                  <Navigate to="/courses" />
                 </RequireAuth>
               }
             />
-            <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/courses"
+              element={
+                <RequireAuth>
+                  <CoursesPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <RequireAuth>
+                  <SettingsPage />
+                </RequireAuth>
+              }
+            />
             <Route
               path="*"
               element={
@@ -38,8 +54,6 @@ function App(): JSX.Element {
                 </RequireAuth>
               }
             />
-            <Route path="/nav" element={<NavigationBar />} />
-            <Route path="/courses" element={<CoursesPage />} />
             <Route
               path="/testfunctions"
               element={
@@ -57,7 +71,6 @@ function App(): JSX.Element {
               }
             />
             <Route path="/upload" element={<Upload />} />
-            <Route path="/settings" element={<SettingsPage />} />
             <Route path="/courses/class" element={<ClassPage />} />
           </Routes>
         </BrowserRouter>

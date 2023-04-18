@@ -1,8 +1,14 @@
-.container {
+.loadingContainer {
   height: 100vh;
-  width: 100%;
+  margin-left: 200px;
+  width: calc(100% - 200px);
+  position: relative;
+  z-index: -1;
 }
 
+.editImage {
+  width: 25px;
+}
 .inputs {
   flex-grow: 1;
   display: flex;

@@ -36,11 +36,11 @@ const NavigationBar = (): JSX.Element => {
               src={yKnotLogo}
               alt="y-knot logo"
             />
-            {authContext?.token?.claims.role === 'admin' ? (
-              <h2 className={styles.header}>Admin</h2>
-            ) : (
-              <h2 className={styles.header}>Teacher</h2>
-            )}
+            <h2 className={styles.header}>
+              {authContext?.token?.claims.role === 'admin'
+                ? 'Admin'
+                : 'Teacher'}
+            </h2>
           </div>
           <hr className={styles.breakLine}></hr>
           <div className={styles.linkOptionsContainer}>
@@ -175,9 +175,6 @@ const NavigationBar = (): JSX.Element => {
               open={showPopup}
               onClose={() => {
                 setShowPopup(!showPopup);
-              }}
-              onConfirm={() => {
-                console.log('confirmed');
               }}
             />
           )}

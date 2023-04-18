@@ -16,22 +16,6 @@
   transform: translate(-50%, -50%);
 }
 
-.forgotPassword {
-  height: 200px;
-}
-
-.logOutConfirmation {
-  height: 200px;
-}
-
-.resetPassword {
-  height: 325px;
-}
-
-.resetEmail {
-  height: 275px;
-}
-
 .modal {
   width: 400px;
   background: white;

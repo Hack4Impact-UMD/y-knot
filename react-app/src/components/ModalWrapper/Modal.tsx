@@ -4,28 +4,16 @@ interface modalPropsType {
   open: boolean;
   onClose: any;
   children: React.ReactNode;
-  type: string;
+  height: number;
 }
-
-// used to set height of modal based on "type" prop passed in
-type modalTypes = Record<string, any>;
-
-const modalTypeMap: modalTypes = {
-  // height = 200px
-  forgotPassword: styles.forgotPassword,
-  logOutConfirmation: styles.logOutConfirmation,
-  // height = 325px
-  resetPassword: styles.resetPassword,
-  // height = 275px
-  resetEmail: styles.resetEmail,
-};
 
 const Modal = ({
   open,
   onClose,
   children,
-  type,
+  height,
 }: modalPropsType): React.ReactElement => {
+  const heightString = height + 'px';
   return (
     <div
       onClick={(e) => {
@@ -36,7 +24,7 @@ const Modal = ({
         <>
           <div className={styles.background} onClick={() => onClose()} />
           <div className={styles.centered}>
-            <div className={`${styles.modal} ${modalTypeMap[type]}`}>
+            <div className={styles.modal} style={{ height: heightString }}>
               {children}
             </div>
           </div>

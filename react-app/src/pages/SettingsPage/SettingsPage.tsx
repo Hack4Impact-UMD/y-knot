@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import styles from './SettingsPage.module.css';
-import { MdEdit } from 'react-icons/md';
-import ResetEmail from '../../components/ResetEmail/ResetEmail';
-import ResetPassword from '../../components/ResetPassword/ResetPassword';
+import editImage from '../../assets/edit.svg';
+import ResetEmail from './ResetEmail/ResetEmail';
+import ResetPassword from './ResetPassword/ResetPassword';
 import { useAuth } from '../../auth/AuthProvider';
 import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
@@ -20,7 +20,11 @@ const SettingsPage = (): JSX.Element => {
     <>
       <NavigationBar />
       {authContext?.loading ? (
-        <div className={styles.container}>
+        /* This loading container is used because the animation used in the Loading component creates a new
+          stacking context which interferes element stacking. In order to make sure popups are at the front,
+          the loadaingContainer has a z-index of -1.
+        */
+        <div className={styles.loadingContainer}>
           <Loading />
         </div>
       ) : (
@@ -47,7 +51,7 @@ const SettingsPage = (): JSX.Element => {
                     setEditName(!editName);
                   }}
                 >
-                  {editName ? 'save' : <MdEdit />}
+                  {editName ? 'save' : ''}
                 </button>
               </div>
             ) : (
@@ -56,14 +60,14 @@ const SettingsPage = (): JSX.Element => {
 
             <div className={styles.box} id="Email">
               <a className={styles.boxTitle}>Email</a>
-              <a className={styles.boxData}>{email}</a>
+              <a className={styles.boxData}>{authContext.user?.email}</a>
               <button
                 className={styles.editKey}
                 onClick={() => {
                   setOpenEmailModal(!openEmailModal);
                 }}
               >
-                <MdEdit />
+                <img src={editImage} alt="Edit" className={styles.editImage} />
               </button>
               <ResetEmail
                 open={openEmailModal}
