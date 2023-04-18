@@ -1,11 +1,8 @@
 .rightPane {
+  float: right;
   height: 100%;
-  width: 80%;
-  position: fixed;
-  z-index: 2;
-  top: 0;
-  overflow-x: hidden;
-  padding-left: 25%;
+  width: calc(100% - 300px);
+  padding-left: 5%;
 }
 
 .courseStatus {
