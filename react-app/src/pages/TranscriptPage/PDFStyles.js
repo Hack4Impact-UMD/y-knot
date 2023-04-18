@@ -1,5 +1,5 @@
 import { StyleSheet, Font } from '@react-pdf/renderer';
-import Poppins from '../../fonts/poppins/poppins.css';
+import Poppins from '../../fonts/poppins/poppins-v20-latin-regular.ttf';
 
 Font.register({ family: 'Poppins', src: Poppins });
 
@@ -37,8 +37,8 @@ const styles = StyleSheet.create({
   activeCourses: {
     margin: 'auto',
     flexDirection: 'row',
-    borderTop: '3px solid var(--color-grey)',
-    borderBottom: '3px solid var(--color-grey)',
+    borderTop: '2px solid #D8D8D8',
+    borderBottom: '2px solid #D8D8D8',
   },
   coursesTableCol: {
     width: '50%',
