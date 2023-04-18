@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import Modal from '../../../components/ModalWrapper/Modal';
+import x from '../../../assets/x.svg';
 import styles from './ForgotPassword.module.css';
+import { sendResetEmail } from '../../../backend/FirebaseCalls';
+import Loading from '../../../components/LoadingScreen/Loading';
+import { AuthError } from '@firebase/auth';
 
 interface forgotModalType {
   open: boolean;
@@ -12,29 +16,46 @@ const ForgotPassword = ({
   onClose,
 }: forgotModalType): React.ReactElement => {
   const [email, setEmail] = useState<string>('');
-  const [errorEmail, setErrorEmail] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
   const handlePasswordReset = (): void => {
-    // placeholder for password reset logic
+    setLoading(true);
     if (submitted) {
       handleOnClose();
     } else {
-      setSubmitted(true);
-      setLoading(false);
+      // validate email input
+      if (/^[\w]+@[\w]+(\.\w+)+$/.test(email)) {
+        // send reset email
+        sendResetEmail(email)
+          .then(() => setSubmitted(true))
+          .catch((error) => {
+            const code = (error as AuthError).code;
+            if (code != 'auth/user-not-found') {
+              setErrorMessage('Backend Error');
+            }
+            setSubmitted(true);
+          });
+      } else if (!email) {
+        setErrorMessage('*This field is required');
+      } else {
+        setErrorMessage('*Invalid email address');
+      }
     }
+    setLoading(false);
   };
 
   const handleOnClose = (): void => {
     onClose();
     setSubmitted(false);
-    setErrorEmail('');
+    setErrorMessage('');
     setLoading(false);
   };
 
   return (
     <Modal
+      height={200}
       open={open}
       onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
         handleOnClose();
@@ -43,48 +64,52 @@ const ForgotPassword = ({
       <>
         <div className={styles.header}>
           <button
+            type="button"
             className={styles.close}
             onClick={() => {
               handleOnClose();
             }}
           >
-            &#x2715;
+            <img src={x} alt="Close popup" />
           </button>
         </div>
         <div className={styles.content}>
           {submitted ? (
             <div className={styles.submit}>
-              Thank you! Check your email for further instructions.
+              {errorMessage == 'Backend Error'
+                ? 'Error occurred while trying to send reset password email. Please try again later'
+                : 'Thank you! Check your email for further instructions.'}
             </div>
           ) : (
             <>
               <h2 className={styles.title}>Reset Password</h2>
-              <p className={styles.error}>{errorEmail}</p>
-              <form
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  setLoading(true);
-                  handlePasswordReset();
+              <p className={styles.error}>{errorMessage}</p>
+              <input
+                autoFocus
+                className={styles.email}
+                type="email"
+                placeholder="Email"
+                required
+                onChange={(e) => {
+                  setEmail(e.target.value);
                 }}
-              >
-                <input
-                  className={styles.email}
-                  type="email"
-                  placeholder="Email"
-                  onChange={({ target: { value } }) => {
-                    setEmail(value);
-                  }}
-                />
-              </form>
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    handlePasswordReset();
+                  }
+                }}
+              />
             </>
           )}
         </div>
+
         <div className={styles.actions}>
-          <div className={styles.container}>
+          <div className={styles.actionsContainer}>
             <button
+              type="button"
               className={styles.resetButton}
               onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                setLoading(true);
                 handlePasswordReset();
               }}
               disabled={loading}
@@ -92,13 +117,7 @@ const ForgotPassword = ({
               {submitted ? (
                 'Back to Login'
               ) : (
-                <div>
-                  {loading ? (
-                    <div className={styles.spinner}></div>
-                  ) : (
-                    'Reset Password'
-                  )}
-                </div>
+                <div>{loading ? <Loading /> : 'Reset Password'}</div>
               )}
             </button>
           </div>

@@ -1,7 +1,3 @@
-* {
-  font-family: 'Poppins';
-}
-
 .formContainer {
   display: flex;
   flex-direction: column;
@@ -44,6 +40,7 @@
 }
 
 .signInButton:hover {
+  cursor: pointer;
   background: var(--color-yellow-orange);
 }
 
@@ -84,4 +81,20 @@
 
 .showPasswordIcon {
   width: 25px;
+}
+
+.hideFailureMsg {
+  display: none;
+}
+
+.showFailureMessage {
+  color: var(--color-red);
+  padding-top: 1%;
+  font-size: 14px;
+  width: 50%;
+  text-align: center;
+}
+
+.titleContainer {
+  height: 100px;
 }
