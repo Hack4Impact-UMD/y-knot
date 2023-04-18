@@ -58,12 +58,12 @@ const NavigationBar = (): JSX.Element => {
                   <img
                     className={styles.iconActive}
                     src={whiteHomeIcon}
-                    alt="Icon of a white house"
+                    alt="House icon"
                   />
                   <img
                     className={styles.iconInactive}
                     src={blackHomeIcon}
-                    alt="Icon of a black house"
+                    alt="House Icon"
                   />
                   {authContext?.token?.claims.role === 'admin' ? (
                     <div>Home</div>
@@ -89,12 +89,12 @@ const NavigationBar = (): JSX.Element => {
                     <img
                       className={styles.iconActive}
                       src={whiteTeachersIcon}
-                      alt="White icon of people"
+                      alt="People icon"
                     />
                     <img
                       className={styles.iconInactive}
                       src={blackTeachersIcon}
-                      alt="Black icon of people"
+                      alt="People icon"
                     />
                     Teachers
                   </div>
@@ -118,12 +118,12 @@ const NavigationBar = (): JSX.Element => {
                   <img
                     className={styles.iconActive}
                     src={whiteCapIcon}
-                    alt="White icon of a graduation cap"
+                    alt="Graduation cap icon"
                   />
                   <img
                     className={styles.iconInactive}
                     src={blackCapIcon}
-                    alt="Black icon of a graduation cap"
+                    alt="Graduation cap icon"
                   />
                   Students
                 </div>
@@ -144,12 +144,12 @@ const NavigationBar = (): JSX.Element => {
                   <img
                     className={styles.iconActive}
                     src={whiteSettingsIcon}
-                    alt="White gear icon"
+                    alt="Gear icon"
                   />
                   <img
                     className={styles.iconInactive}
                     src={blackSettingsIcon}
-                    alt="Black gear icon"
+                    alt="Gear icon"
                   />
                   Settings
                 </div>
@@ -164,7 +164,7 @@ const NavigationBar = (): JSX.Element => {
                 end
               >
                 <div className={styles.tab}>
-                  <img src={blackLogoutIcon} alt="Black logout icon" />
+                  <img src={blackLogoutIcon} alt="Logout icon" />
                   Log Out
                 </div>
               </NavLink>
