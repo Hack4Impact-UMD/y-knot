@@ -19,7 +19,8 @@ Currently, Y-KNOT relies on various technologies including [Wix](https://www.wix
 - Our backend is TypeScript and Firebase.
 
 Diagram of the current project infrastructure:
-<img src="Y-KNOT Infrastructure Diagram.png" alt="Y-KNOT infrastructure diagram" width=1000>
+<br/>
+<img src="Y-KNOT Infrastructure Diagram.png" alt="Y-KNOT infrastructure diagram" width=500>
 
 # Running the Repo Locally
 
@@ -47,10 +48,11 @@ We currently have 3 collections which corresponds to our project Types:
 - Courses
 - Students
 - Users (Teachers and Admin accounts)
+<img src="Y-KNOT Types Diagram.png" alt="Y-KNOT types diagram" width=1000>
 
 ## File Organization & Preferred Practices
 
-Documentation on the preferred practices used for this project can be found **[here](https://docs.google.com/document/d/1xvTzr924g-AdLrsiXV2TH-g51YwWqS-KANRcvYWpIUE/edit#heading=h.epmqipk5l7nc)**
+Documentation on the preferred practices used for this project can be found **[here](preferred-practices.md)**
 
 Note:
 

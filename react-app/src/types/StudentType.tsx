@@ -17,8 +17,6 @@ export interface Student {
 
 export interface StudentCourse {
   id: string;
-  startDate: string;
-  endDate: string;
   attendance: StudentAttendance[];
   homeworks: StudentHomework[];
   progress: Progress;

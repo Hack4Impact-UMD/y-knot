@@ -2,6 +2,7 @@ import app, { functions } from '../config/firebase';
 
 import { httpsCallable } from 'firebase/functions';
 import { getAuth, sendPasswordResetEmail } from '@firebase/auth';
+import { authenticateUser } from './FirebaseCalls';
 
 /*
  * Creates a user and sends a password reset email to that user.
@@ -34,4 +35,22 @@ export function createAdmin(): void {
     });
 }
 
+export function updateUserEmail(
+  oldEmail: string,
+  currentEmail: string,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const createUserCloudFunction = httpsCallable(functions, 'updateUserEmail');
+    const auth = getAuth(app);
+
+    createUserCloudFunction({ email: oldEmail, newEmail: currentEmail })
+      .then(() => {
+        resolve();
+      })
+      .catch((error) => {
+        console.log(error);
+        reject(error);
+      });
+  });
+}
 export default {};
