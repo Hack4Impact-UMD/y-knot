@@ -3,7 +3,7 @@ import { useAuth } from '../../auth/AuthProvider';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import styles from '../../pages/ClassPage/ClassPage.module.css';
 import Loading from '../../components/LoadingScreen/Loading';
-import TeacherPage from '../../components/ClassPages/TeacherPage';
+import ClassTeachers from './ClassTeachers/ClassTeachers';
 
 enum Tab {
   Main = 'Main',
@@ -117,7 +117,7 @@ const ClassPage = (): JSX.Element => {
           {currentTab === Tab.Attendance && <Attendance />}
           {currentTab === Tab.Homework && <Homework />}
           {currentTab === Tab.Settings && <Settings />} */}
-          {currentTab === Tab.Teachers && <TeacherPage />}
+          {currentTab === Tab.Teachers && <ClassTeachers />}
         </div>
       )}
     </div>
