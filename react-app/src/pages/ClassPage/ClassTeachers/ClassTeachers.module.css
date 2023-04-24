@@ -20,24 +20,20 @@
 
 .box {
   border-bottom: 1px solid #000000;
-  padding-top: 30px;
-  padding-bottom: 25px;
-  padding-left: 5px;
+  align-items: center;
+  padding: 10px;
+  padding-left: 30px;
   display: flex;
 }
 
 .bottomBox {
-  padding-bottom: 30px;
-  padding-top: 30px;
-  padding-left: 5px;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  padding-left: 30px;
 }
 
 .boxTitle {
-  font-style: normal;
-  font-weight: 400;
-  font-size: 1.5rem;
-  width: 200px;
-  padding-left: 20px;
   display: inline-block;
 }
 
@@ -49,24 +45,23 @@
 }
 
 .icons {
-  width: 75%;
   display: flex;
-  justify-content: end;
-  padding-right: 50px;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 30px;
+  color: black;
+  transform: scale(0.75);
+  margin-left: auto;
 }
 
 .addButton {
   background-color: var(--color-pastel-green);
   border-style: none;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   padding-left: 20px;
   padding-right: 20px;
   border-radius: 10px;
   margin-top: 20px;
   margin-left: 93%;
-}
-
-.eyeIcon {
-  margin-right: 20px;
 }
