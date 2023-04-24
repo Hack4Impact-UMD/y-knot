@@ -12,6 +12,8 @@ import { theme } from './muiTheme';
 import { addSampleStudent } from './backendTesting/test';
 import { authenticateUser } from './backend/FirebaseCalls';
 import { Upload } from './components/Upload/Upload';
+import CertificatePage from './pages/CertificatePage/CertificatePage';
+import { PDFViewer } from '@react-pdf/renderer';
 
 function App(): JSX.Element {
   const customTheme = theme;
@@ -57,6 +59,10 @@ function App(): JSX.Element {
             />
             <Route path="/upload" element={<Upload />} />
             <Route path="/class" element={<ClassPage />} />
+            <Route
+              path="/certificate"
+              element={<CertificatePage name="Fiona Love" course="Math" />}
+            />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

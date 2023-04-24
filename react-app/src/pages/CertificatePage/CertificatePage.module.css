@@ -1,0 +1,10 @@
+.certificate {
+  margin: 20px;
+  height: 90vh;
+  width: 160vh;
+}
+
+.page {
+  display: flex;
+  justify-content: center;
+}
