@@ -1,5 +1,5 @@
 .title {
-  margin: 0;
+  margin: 10px 0px 0px 0px;
   padding: 0;
   font-size: 27px;
 }
@@ -18,7 +18,7 @@
   cursor: pointer;
 }
 
-.actionsContainer {
+.container {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
@@ -35,8 +35,8 @@
 
 .error {
   height: 25px;
-  margin: 0;
-  padding: 5px 0 0 0;
+  margin: 10px 0 0 0;
+  padding: 0;
   font-size: 0.8rem;
   color: red;
 }
@@ -51,13 +51,18 @@
   align-items: center;
 }
 
-.email {
+.textInput {
   width: 33vh;
   min-width: 180px;
   background: var(--color-grey);
   border: none;
   border-radius: 10px;
   padding: 11px 11px;
+  margin: 0px 0px 16px 0px;
+}
+
+form {
+  text-align: center;
 }
 
 .resetButton {
@@ -77,10 +82,34 @@
   background: var(--color-orange);
   cursor: pointer;
   transition: all 0.25s ease;
+  position: relative;
+  top: -16px;
 }
 
 .resetButton:hover {
   background: var(--color-yellow-orange);
+}
+
+.spinner:before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  border-radius: 50%;
+  border-top: 2px solid #07d;
+  border-right: 2px solid transparent;
+  animation: spinner 0.6s linear infinite;
+}
+
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .submit {
@@ -88,4 +117,5 @@
   width: 70%;
   text-align: center;
   padding-top: 2rem;
+  margin-top: 50px;
 }

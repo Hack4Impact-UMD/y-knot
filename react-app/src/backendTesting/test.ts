@@ -1,12 +1,6 @@
 import { addStudent, addCourse } from '../backend/FirestoreCalls';
 import { type Student } from '../types/StudentType';
-import {
-  type Course,
-  type IntroEmail,
-  type Attendance,
-  type Homework,
-  type ClassType,
-} from '../types/CourseType';
+import { type Course, type CourseType } from '../types/CourseType';
 
 export const addSampleStudent = ({
   firstName = 'firstname',
@@ -57,7 +51,7 @@ export const addSampleCourse = ({
   students = [],
   teachers = [],
   application = false,
-  classType = 'MINOR' as ClassType,
+  courseType = 'MINOR' as CourseType,
   prerequisites = [],
   formId = 'test123',
   introEmail = { content: 'This is an intro email.' },
@@ -72,7 +66,7 @@ export const addSampleCourse = ({
     students,
     teachers,
     application,
-    classType,
+    courseType,
     prerequisites,
     formId,
     introEmail,

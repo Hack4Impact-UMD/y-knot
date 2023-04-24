@@ -7,16 +7,7 @@ export interface YKNOTUser {
 
 export interface Teacher {
   email: string;
-  gender?: string;
-  pronoun?: string;
-  classes: TeacherCourse[];
-}
-
-export interface TeacherCourse {
-  id: string;
-  name: string;
-  startDate: string; // "YYYY-MM-DD"
-  endDate: string; // "YYYY-MM-DD"
+  courses: string[];
 }
 
 export type Role = 'ADMIN' | 'TEACHER';
