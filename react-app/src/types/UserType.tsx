@@ -15,8 +15,8 @@ export interface Teacher {
 export interface TeacherCourse {
   id: string;
   name: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: string; // "YYYY-MM-DD"
+  endDate: string; // "YYYY-MM-DD"
 }
 
 export type Role = 'ADMIN' | 'TEACHER';

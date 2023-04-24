@@ -1,7 +1,7 @@
 export interface Course {
   name: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: string; // "YYYY-MM-DD"
+  endDate: string; // "YYYY-MM-DD"
   meetingTime: string;
   students: string[];
   teachers: string[];
@@ -19,7 +19,7 @@ export interface IntroEmail {
 }
 
 export interface Attendance {
-  date: Date;
+  date: string;
   notes: string;
 }
 
