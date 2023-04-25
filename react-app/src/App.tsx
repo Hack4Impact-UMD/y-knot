@@ -1,9 +1,10 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import RequireAuth from './auth/RequireAuth';
 import { AuthProvider } from './auth/AuthProvider';
 import SamplePage from './pages/SamplePage/SamplePage';
 import Sample404Page from './pages/Sample404Page/Sample404Page';
 import LoginPage from './pages/LoginPage/LoginPage';
+import SettingsPage from './pages/SettingsPage/SettingsPage';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import CoursesPage from './pages/CoursesPage/CoursesPage';
 import ClassPage from './pages/ClassPage/ClassPage';
@@ -22,15 +23,31 @@ function App(): JSX.Element {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
+            <Route path="/login" element={<LoginPage />} />
             <Route
               path="/"
               element={
                 <RequireAuth>
-                  <SamplePage />
+                  <Navigate to="/courses" />
                 </RequireAuth>
               }
             />
-            <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/courses"
+              element={
+                <RequireAuth>
+                  <CoursesPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <RequireAuth>
+                  <SettingsPage />
+                </RequireAuth>
+              }
+            />
             <Route
               path="*"
               element={
@@ -39,8 +56,6 @@ function App(): JSX.Element {
                 </RequireAuth>
               }
             />
-            <Route path="/nav" element={<NavigationBar />} />
-            <Route path="/courses" element={<CoursesPage />} />
             <Route
               path="/testfunctions"
               element={
@@ -58,7 +73,7 @@ function App(): JSX.Element {
               }
             />
             <Route path="/upload" element={<Upload />} />
-            <Route path="/class" element={<ClassPage />} />
+            <Route path="/courses/class" element={<ClassPage />} />
             <Route
               path="/certificate"
               element={<CertificatePage name="Fiona Love" course="Math" />}
