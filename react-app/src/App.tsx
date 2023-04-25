@@ -59,14 +59,8 @@ function App(): JSX.Element {
               element={
                 <button
                   onClick={() => {
-                    authenticateUser('sgaba@umd.edu', '123abc')
-                      .then(() => {
-                        // addSampleStudent({ firstName: 'Bob' });
-                        addSampleCourse({ name: 'Math' });
-                      })
-                      .catch((error) => {
-                        console.log(error);
-                      });
+                    // addSampleStudent({ firstName: 'Bob' });
+                    addSampleCourse({ name: 'Math' });
                   }}
                 ></button>
               }
