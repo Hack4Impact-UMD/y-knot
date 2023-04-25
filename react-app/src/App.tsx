@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import RequireAuth from './auth/RequireAuth';
 import { AuthProvider } from './auth/AuthProvider';
-import SamplePage from './pages/SamplePage/SamplePage';
 import Sample404Page from './pages/Sample404Page/Sample404Page';
 import LoginPage from './pages/LoginPage/LoginPage';
 import SettingsPage from './pages/SettingsPage/SettingsPage';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import CoursesPage from './pages/CoursesPage/CoursesPage';
+import AdminStudentRosterPage from './pages/StudentRosterPage/StudentRosterPage';
 import ClassPage from './pages/ClassPage/ClassPage';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './muiTheme';
@@ -54,6 +54,9 @@ function App(): JSX.Element {
                 </RequireAuth>
               }
             />
+            <Route path="/nav" element={<NavigationBar />} />
+            <Route path="/courses" element={<CoursesPage />} />
+            <Route path="/students" element={<AdminStudentRosterPage />} />
             <Route
               path="/testfunctions"
               element={
