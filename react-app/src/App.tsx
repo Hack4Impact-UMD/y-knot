@@ -10,7 +10,7 @@ import AdminStudentRosterPage from './pages/StudentRosterPage/StudentRosterPage'
 import ClassPage from './pages/ClassPage/ClassPage';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './muiTheme';
-import { addSampleStudent } from './backendTesting/test';
+import { addSampleCourse, addSampleStudent } from './backendTesting/test';
 import { authenticateUser } from './backend/FirebaseCalls';
 import { Upload } from './components/Upload/Upload';
 
@@ -62,13 +62,8 @@ function App(): JSX.Element {
               element={
                 <button
                   onClick={() => {
-                    authenticateUser('sgaba@umd.edu', '123abc')
-                      .then(() => {
-                        addSampleStudent({ firstName: 'Bob' });
-                      })
-                      .catch((error) => {
-                        console.log(error);
-                      });
+                    // addSampleStudent({ firstName: 'Bob' });
+                    addSampleCourse({ name: 'Math' });
                   }}
                 ></button>
               }
