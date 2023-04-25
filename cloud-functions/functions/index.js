@@ -2,6 +2,8 @@ const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 admin.initializeApp();
 const db = admin.firestore();
+const cors = require("cors");
+const corsHandler = cors({ origin: true });
 
 /*
  * Creates a new user
@@ -175,11 +177,17 @@ exports.createFirstAdmin = functions
                   res.json({ result: `sgaba@umd.edu role is ${role}` });
                 })
                 .catch((error) => {
-                  res.json({ result: error });
+                  throw new functions.https.HttpsError(
+                    "Unknown",
+                    "Unable to add user to database"
+                  );
                 });
             })
             .catch((error) => {
-              res.json({ result: "Operation Failed:" + error });
+              throw new functions.https.HttpsError(
+                "unknown",
+                "Unable to set user claims"
+              );
             });
         }
       })
@@ -211,4 +219,65 @@ exports.getUserRole = functions
       .catch((error) => {
         res.json({ result: error });
       });
+  });
+
+// TODO: Add better error codes.
+exports.updateUserEmail = functions
+  .region("us-east4")
+  .https.onRequest((req, res) => {
+    corsHandler(req, res, async () => {
+      const auth = admin.auth();
+      auth
+        .verifyIdToken(req.headers.authorization.split("Bearer ")[1])
+        .then((decodedToken) => {
+          auth
+            .updateUser(decodedToken.uid, {
+              email: req.body.data.newEmail,
+            })
+            .then(() => {
+              db.collection("Users")
+                .where("email", "==", decodedToken.email)
+                .get()
+                .then((querySnapshot) => {
+                  if (querySnapshot.docs.length == 0) {
+                    throw new functions.https.HttpsError(
+                      "Unknown",
+                      "Unable to find user with that email in the database"
+                    );
+                  }
+                  querySnapshot.forEach((doc) => {
+                    doc.ref
+                      .update({ email: req.body.data.newEmail })
+                      .then(() => {
+                        res.json({ result: "Complete" });
+                      })
+                      .catch(() => {
+                        throw new functions.https.HttpsError(
+                          "Unknown",
+                          "Unable to update user in database"
+                        );
+                      });
+                  });
+                })
+                .catch((error) => {
+                  throw new functions.https.HttpsError(
+                    "Unknown",
+                    "Unable to find user with that email in the database"
+                  );
+                });
+            })
+            .catch((error) => {
+              throw new functions.https.HttpsError(
+                "Unknown",
+                "Unable to update user's email"
+              );
+            });
+        })
+        .catch((error) => {
+          throw new functions.https.HttpsError(
+            "unauthenticated",
+            "failed to authenticate request. ID token is missing or invalid."
+          );
+        });
+    });
   });
