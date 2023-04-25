@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './TeacherProfilePage.module.css';
 import { MdEdit } from 'react-icons/md';
 import { useAuth } from '../../auth/AuthProvider';
@@ -6,13 +6,42 @@ import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import CourseCard from '../../components/CourseCard/CourseCard';
 import edit from '../../assets/edit.svg';
+import { useParams } from 'react-router-dom';
+import { getTeacher } from '../../backend/FirestoreCalls';
+import { authenticateUser } from '../../backend/FirebaseCalls';
+import { Teacher } from '../../types/UserType';
 
 const TeacherProfilePage = (): JSX.Element => {
+  const [teacher, setTeacher] = useState<Teacher>();
   const [editName, setEditName] = useState(false);
   const [name, setName] = useState('Fiona Love');
   const [email, setEmail] = useState('f.love@gmail.com');
+  const [loading, setLoading] = useState<boolean>(true);
 
   const authContext = useAuth();
+
+  const teacherID = useParams().id;
+
+  useEffect(() => {
+    if (teacherID) {
+      authenticateUser('sgaba@umd.edu', '123abc')
+        .then(() =>
+          getTeacher(teacherID)
+            .then((data) => {
+              setTeacher(data);
+              setLoading(false);
+            })
+            .catch((err) => {
+              console.error(err);
+              setLoading(false);
+            }),
+        )
+        .catch((err) => {
+          console.error(err);
+          setLoading(false);
+        });
+    }
+  }, []);
 
   return (
     <>
@@ -21,14 +50,18 @@ const TeacherProfilePage = (): JSX.Element => {
         <div className={styles.container}>
           <Loading />
         </div>
+      ) : loading ? (
+        <Loading />
       ) : (
         <div className={styles.settings}>
+          <h1 className={styles.title}>Teacher Profile</h1>
+
           <div className={styles.topButtons}>
-            <h1 className={styles.title}>Teacher Profile</h1>
             <button className={styles.editButton}>
               <img src={edit} />
             </button>
           </div>
+
           <div className={styles.inputs}>
             {authContext?.token?.claims.role !== 'admin' ? (
               <div className={styles.box} id="Name">
