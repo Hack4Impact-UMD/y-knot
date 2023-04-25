@@ -22,7 +22,7 @@ const SettingsPage = (): JSX.Element => {
       {authContext?.loading ? (
         /* This loading container is used because the animation used in the Loading component creates a new
           stacking context which interferes element stacking. In order to make sure popups are at the front,
-          the loadaingContainer has a z-index of -1.
+          the loadingContainer has a z-index of -1.
         */
         <div className={styles.loadingContainer}>
           <Loading />
