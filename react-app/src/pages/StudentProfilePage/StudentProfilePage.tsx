@@ -7,6 +7,7 @@ import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import edit from '../../assets/edit.svg';
 import transcript from '../../assets/transcript.svg';
 import CourseCard from '../../components/CourseCard/CourseCard';
+import UpdateStudent from './UpdateStudent/UpdateStudent';
 import { useParams } from 'react-router-dom';
 import { getStudent } from '../../backend/FirestoreCalls';
 import { authenticateUser } from '../../backend/FirebaseCalls';
@@ -59,12 +60,22 @@ const StudentProfilePage = (): JSX.Element => {
           <h1 className={styles.title}>Student Profile</h1>
 
           <div className={styles.topButtons}>
-            <button className={styles.editButton}>
+            <button className={styles.editButton}
+                    onClick={() => {
+                      setOpenEmailModal(!openEmailModal);
+                    }}>
               <img src={edit} />
             </button>
+            <UpdateStudent             
+                open={openEmailModal}
+                onClose={() => {
+                  setOpenEmailModal(!openEmailModal);
+                }}
+              />
             <button className={styles.transcriptButton}>
               <img src={transcript} />
             </button>
+
           </div>
 
           <div className={styles.inputs}>
