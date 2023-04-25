@@ -221,74 +221,59 @@ exports.getUserRole = functions
       });
   });
 
+// TODO: Add better error codes.
 exports.updateUserEmail = functions
   .region("us-east4")
   .https.onRequest((req, res) => {
     corsHandler(req, res, async () => {
       const auth = admin.auth();
-      functions.logger.debug("Reached first checkpoint");
       auth
-        .verifyIdToken(req.idToken)
-        .then(() => {
-          functions.logger.debug("Reached second checkpoint");
+        .verifyIdToken(req.headers.authorization.split("Bearer ")[1])
+        .then((decodedToken) => {
           auth
-            .getUserByEmail(req.email)
-            .then((userRecord) => {
-              functions.logger.debug("Reached third checkpoint");
-              auth()
-                .updateUser(userRecord.uid, {
-                  email: req.newEmail,
-                })
-                .then(() => {
-                  db.collection("Users")
-                    .where("email", "==", req.email)
-                    .get()
-                    .then((querySnapshot) => {
-                      if (querySnapshot.docs.length == 0) {
+            .updateUser(decodedToken.uid, {
+              email: req.body.data.newEmail,
+            })
+            .then(() => {
+              db.collection("Users")
+                .where("email", "==", decodedToken.email)
+                .get()
+                .then((querySnapshot) => {
+                  if (querySnapshot.docs.length == 0) {
+                    throw new functions.https.HttpsError(
+                      "Unknown",
+                      "Unable to find user with that email in the database"
+                    );
+                  }
+                  querySnapshot.forEach((doc) => {
+                    doc.ref
+                      .update({ email: req.body.data.newEmail })
+                      .then(() => {
+                        res.json({ result: "Complete" });
+                      })
+                      .catch(() => {
                         throw new functions.https.HttpsError(
                           "Unknown",
-                          "Unable to find user with that email in the database"
+                          "Unable to update user in database"
                         );
-                      }
-                      querySnapshot.forEach((doc) => {
-                        doc.ref
-                          .update({ email: req.newEmail })
-                          .then(() => {
-                            res.json({ result: "Complete" });
-                          })
-                          .catch(() => {
-                            throw new functions.https.HttpsError(
-                              "Unknown",
-                              "Unable to update user in database"
-                            );
-                          });
                       });
-                    })
-                    .catch((error) => {
-                      throw new functions.https.HttpsError(
-                        "Unknown",
-                        "Unable to find user with that email in the database"
-                      );
-                    });
+                  });
                 })
                 .catch((error) => {
                   throw new functions.https.HttpsError(
                     "Unknown",
-                    "Unable to update user's email"
+                    "Unable to find user with that email in the database"
                   );
                 });
             })
             .catch((error) => {
               throw new functions.https.HttpsError(
                 "Unknown",
-                "Unable to find user with that email"
+                "Unable to update user's email"
               );
             });
         })
         .catch((error) => {
-          functions.logger.debug("FAILED TO REACH SECOND checkpoint");
-          functions.logger.debug(data.idToken);
-
           throw new functions.https.HttpsError(
             "unauthenticated",
             "failed to authenticate request. ID token is missing or invalid."
