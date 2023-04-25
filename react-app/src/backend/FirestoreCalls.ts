@@ -6,19 +6,25 @@ import {
   getDocs,
   getDoc,
   updateDoc,
+  runTransaction,
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
-import { type Student } from '../types/StudentType';
+import { StudentID, type Student } from '../types/StudentType';
 import { type Course } from '../types/CourseType';
 import { type Teacher, type YKNOTUser } from '../types/UserType';
 
-export function getAllStudents(): Promise<Student[]> {
+export function getAllStudents(): Promise<StudentID[]> {
   const studentsRef = collection(db, 'Students');
   return new Promise((resolve, reject) => {
     getDocs(studentsRef)
       .then((snapshot) => {
-        const students = snapshot.docs.map((doc) => doc.data() as Student);
-        resolve(students);
+        const allStudents: StudentID[] = [];
+        const students = snapshot.docs.map((doc) => {
+          const student: Student = doc.data() as Student;
+          const newStudent: StudentID = { ...student, id: doc.id };
+          allStudents.push(newStudent);
+        });
+        resolve(allStudents);
       })
       .catch((e) => {
         reject(e);
@@ -69,12 +75,43 @@ export function addStudent(student: Student): Promise<string> {
 
 export function deleteStudent(id: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    deleteDoc(doc(db, 'Students', id))
+    /* runTransaction provides protection against race conditions where
+       2 people are modifying the data at once. It also ensures that either
+       all of these writes succeed or none of them do.
+    */
+    runTransaction(db, async (transaction) => {
+      const studentRef: Student = (
+        await transaction.get(doc(db, 'Students', id))
+      ).data() as Student;
+      const idOrder: string[] = [];
+      const students: Set<String>[] = [];
+      await Promise.all(
+        studentRef.courseInformation.map(async (course) => {
+          idOrder.push(course.id);
+          return (
+            await transaction.get(doc(db, 'Courses', course.id))
+          ).data() as Course;
+        }),
+      ).then((result) => {
+        result.forEach((course) => {
+          students.push(course.students);
+        });
+      });
+      students.forEach((studentList) => {
+        studentList.delete(id);
+      });
+      idOrder.map((id, index) => {
+        transaction.update(doc(db, 'Courses', id), {
+          students: students[index],
+        });
+      });
+      transaction.delete(doc(db, 'Students', id));
+    })
       .then(() => {
         resolve();
       })
-      .catch((e) => {
-        reject(e);
+      .catch(() => {
+        reject();
       });
   });
 }

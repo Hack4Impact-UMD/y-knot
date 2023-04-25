@@ -5,6 +5,8 @@ import styles from './ResetEmail.module.css';
 import { authenticateUser } from '../../../backend/FirebaseCalls';
 import { useAuth } from '../../../auth/AuthProvider';
 import { updateUserEmail } from '../../../backend/CloudFunctionsCalls';
+import { useNavigate } from 'react-router-dom';
+import Loading from '../../../components/LoadingScreen/Loading';
 
 interface modalType {
   open: boolean;
@@ -19,6 +21,7 @@ const ResetEmail = ({ open, onClose }: modalType): React.ReactElement => {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const auth = useAuth();
+  const navigate = useNavigate();
 
   const handleEmailChange = async () => {
     setLoading(true);
@@ -39,12 +42,14 @@ const ResetEmail = ({ open, onClose }: modalType): React.ReactElement => {
       setErrorMessage('*Invalid email address.');
     } else {
       await authenticateUser(auth.user.email!, password)
-        .then(() => {
-          updateUserEmail(newEmail, confirmNewEmail)
+        .then(async () => {
+          await updateUserEmail(newEmail, confirmNewEmail)
             .then(() => {
-              console.log('done!');
+              setSubmitted(true);
             })
-            .catch((error) => setErrorMessage(error));
+            .catch((error) =>
+              setErrorMessage('Failed to update email. Try again later.'),
+            );
         })
         .catch((error) => {
           setErrorMessage('Password is incorrect');
@@ -54,6 +59,9 @@ const ResetEmail = ({ open, onClose }: modalType): React.ReactElement => {
   };
 
   const handleOnClose = (): void => {
+    if (submitted) {
+      navigate('../login');
+    }
     onClose();
     setSubmitted(false);
     setNewEmail('');
@@ -84,7 +92,7 @@ const ResetEmail = ({ open, onClose }: modalType): React.ReactElement => {
         <div className={styles.content}>
           {submitted ? (
             <div className={styles.submit}>
-              Thank you! Check your email for further instructions.
+              Thank you! You will now be redirected to the login page.
             </div>
           ) : (
             <>
@@ -155,15 +163,9 @@ const ResetEmail = ({ open, onClose }: modalType): React.ReactElement => {
               disabled={loading}
             >
               {submitted ? (
-                'Close'
+                'Back to Login'
               ) : (
-                <div>
-                  {loading ? (
-                    <div className={styles.spinner}></div>
-                  ) : (
-                    'Reset Email'
-                  )}
-                </div>
+                <div>{loading ? <Loading /> : 'Reset Email'}</div>
               )}
             </button>
           </div>
