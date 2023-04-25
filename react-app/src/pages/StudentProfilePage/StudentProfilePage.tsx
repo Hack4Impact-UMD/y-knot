@@ -7,7 +7,7 @@ import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import edit from '../../assets/edit.svg';
 import transcript from '../../assets/transcript.svg';
 import CourseCard from '../../components/CourseCard/CourseCard';
-import ResetPassword from './ResetPassword/ResetPassword';
+import UpdateStudent from './UpdateStudent/UpdateStudent';
 
 const StudentProfilePage = (): JSX.Element => {
   const [editName, setEditName] = useState(false);
@@ -38,7 +38,7 @@ const StudentProfilePage = (): JSX.Element => {
                     }}>
               <img src={edit} />
             </button>
-            <ResetPassword             
+            <UpdateStudent             
                 open={openEmailModal}
                 onClose={() => {
                   setOpenEmailModal(!openEmailModal);

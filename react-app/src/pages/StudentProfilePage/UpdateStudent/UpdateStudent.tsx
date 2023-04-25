@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import Modal from '../../../components/ModalWrapper/Modal';
 import x from '../../../assets/x.svg';
-import styles from './ResetPassword.module.css';
+import styles from './UpdateStudent.module.css';
 import Loading from '../../../components/LoadingScreen/Loading';
 import { authenticateUser } from '../../../backend/FirebaseCalls';
+import { updateStudent } from '../../../backend/FirestoreCalls';
 import { updateUserPassword } from '../../../backend/AuthCalls';
 
 interface modalType {
@@ -11,11 +12,12 @@ interface modalType {
   onClose: any;
 }
 
-const ResetPassword = ({ open, onClose }: modalType): React.ReactElement => {
-  const [originalPassword, setOriginalPassword] = useState<string>('');
-  const [newPassword, setNewPassword] = useState<string>('');
-  const [confirmNewPassword, setConfirmNewPassword] = useState<string>('');
-  const [errorPassword, setErrorPassword] = useState<string>('');
+const UpdateStudent = ({ open, onClose }: modalType): React.ReactElement => {
+  const [newName, setNewName] = useState<string>('');
+  const [newEmail, setNewEmail] = useState<string>('');
+  const [newGrade, setNewGrade] = useState<string>('');
+  const [newSchool, setNewSchool] = useState<string>('');
+  const [errorStudent, setErrorStudent] = useState<string>('');
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -24,21 +26,20 @@ const ResetPassword = ({ open, onClose }: modalType): React.ReactElement => {
     if (submitted) {
       handleOnClose();
     } else if (
-      originalPassword.trim() == '' ||
-      newPassword.trim() == '' ||
-      confirmNewPassword.trim() == ''
+      newName.trim() == '' ||
+      newEmail.trim() == '' ||
+      newGrade.trim() == '' ||
+      newSchool.trim() == ''
     ) {
-      setErrorPassword('*All fields are required');
-    } else if (newPassword !== confirmNewPassword) {
-      setErrorPassword('*Your new passwords must match.');
+      setErrorStudent('*All fields are required');
     } else {
-      await updateUserPassword(newPassword, originalPassword)
+      await updateUserPassword(newEmail, newName)
         .then(() => {
           setSubmitted(true);
-          setErrorPassword('');
+          setErrorStudent('');
         })
         .catch((error) => {
-          setErrorPassword(error);
+          setErrorStudent(error);
           if (error.length > 50) {
             setSubmitted(true);
           }
@@ -50,16 +51,16 @@ const ResetPassword = ({ open, onClose }: modalType): React.ReactElement => {
   const handleOnClose = (): void => {
     onClose();
     setSubmitted(false);
-    setOriginalPassword('');
-    setNewPassword('');
-    setConfirmNewPassword('');
-    setErrorPassword('');
+    setNewName('');
+    setNewEmail('');
+    setNewGrade('');
+    setNewSchool('');
+    setErrorStudent('');
     setLoading(false);
   };
 
   return (
     <Modal
-      height={325}
       open={open}
       onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
         handleOnClose();
@@ -79,21 +80,21 @@ const ResetPassword = ({ open, onClose }: modalType): React.ReactElement => {
         <div className={styles.content}>
           {submitted ? (
             <div className={styles.submit}>
-              {errorPassword != ''
-                ? errorPassword
-                : 'Your password has been updated.'}
+              {errorStudent != ''
+                ? errorStudent
+                : 'Your information has been updated.'}
             </div>
           ) : (
             <>
-              <h2 className={styles.title}>Reset Password</h2>
-              <p className={styles.error}>{errorPassword}</p>
+              <h2 className={styles.title}>Reset Student</h2>
+              <p className={styles.error}>{errorStudent}</p>
               <input
                 required
                 className={styles.textInput}
                 type="password"
-                placeholder="Original Password"
+                placeholder="Name"
                 onChange={(event) => {
-                  setOriginalPassword(event.target.value);
+                  setNewName(event.target.value);
                 }}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter') {
@@ -106,9 +107,9 @@ const ResetPassword = ({ open, onClose }: modalType): React.ReactElement => {
                 required
                 className={styles.textInput}
                 type="password"
-                placeholder="New Password"
+                placeholder="Email"
                 onChange={(event) => {
-                  setNewPassword(event.target.value);
+                  setNewEmail(event.target.value);
                 }}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter') {
@@ -121,9 +122,24 @@ const ResetPassword = ({ open, onClose }: modalType): React.ReactElement => {
                 required
                 className={styles.textInput}
                 type="password"
-                placeholder="Re-enter New Password"
+                placeholder="Grade"
                 onChange={(event) => {
-                  setConfirmNewPassword(event.target.value);
+                  setNewGrade(event.target.value);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    handlePasswordReset();
+                  }
+                }}
+              />
+                <input
+                required
+                className={styles.textInput}
+                type="password"
+                placeholder="School"
+                onChange={(event) => {
+                  setNewSchool(event.target.value);
                 }}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter') {
@@ -148,7 +164,7 @@ const ResetPassword = ({ open, onClose }: modalType): React.ReactElement => {
               {submitted ? (
                 'Close'
               ) : (
-                <div>{loading ? <Loading /> : 'Reset Password'}</div>
+                <div>{loading ? <Loading /> : 'Reset Student'}</div>
               )}
             </button>
           </div>
@@ -158,4 +174,4 @@ const ResetPassword = ({ open, onClose }: modalType): React.ReactElement => {
   );
 };
 
-export default ResetPassword;
+export default UpdateStudent;
