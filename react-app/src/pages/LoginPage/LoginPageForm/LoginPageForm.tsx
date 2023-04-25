@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router';
 import type { AuthError } from 'firebase/auth';
 import Loading from '../../../components/LoadingScreen/Loading';
 
-const LoginPageForm = (): JSX.Element => {
+const LoginPageForm = ({ redirect }: { redirect: string }): JSX.Element => {
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -24,12 +24,12 @@ const LoginPageForm = (): JSX.Element => {
     setShowLoading(true);
     if (email && password) {
       authenticateUser(email, password)
-        .then(async (user) => {
+        .then(() => {
           setShowLoading(false);
           setFailureMessage('');
-          navigate('/courses');
+          navigate(redirect);
         })
-        .catch(async (error) => {
+        .catch((error) => {
           setShowLoading(false);
           const code = (error as AuthError).code;
           if (code === 'auth/too-many-requests') {
@@ -46,21 +46,25 @@ const LoginPageForm = (): JSX.Element => {
   };
 
   return (
-    <form className={styles.formContainer} onSubmit={handleSignIn}>
+    <form
+      className={styles.formContainer}
+      onSubmit={(event) => {
+        if (!openForgotModal) {
+          handleSignIn(event);
+        }
+      }}
+    >
       <img className={styles.yknotlogo} src={yKnotLogo} alt="y-knot logo" />
       <div className={styles.titleContainer}>
-        {showLoading ? (
-          <Loading></Loading>
-        ) : (
-          <h1 className={styles.signInText}>Sign In</h1>
-        )}
+        <h1 className={styles.signInText}>Sign In</h1>
       </div>
       <div className={styles.inputBox}>
         <div className={styles.emailContainer}>
           <input
+            required
             value={email}
             className={styles.inputField}
-            type="text"
+            type="email"
             placeholder="Email"
             onChange={(event) => setEmail(event.target.value)}
           ></input>
@@ -69,6 +73,7 @@ const LoginPageForm = (): JSX.Element => {
         <div className={styles.passwordContainer}>
           <div className={styles.passwordInputContainer}>
             <input
+              required
               value={password}
               className={styles.inputField}
               type={showPassword ? 'text' : 'password'}
@@ -107,8 +112,12 @@ const LoginPageForm = (): JSX.Element => {
         }}
       />
       <br />
-      <button type="submit" className={styles.signInButton}>
-        Sign In
+      <button
+        type="submit"
+        className={styles.signInButton}
+        disabled={showLoading}
+      >
+        {showLoading ? <Loading></Loading> : 'Sign In'}
       </button>
       <p className={'' ? styles.hideFailureMsg : styles.showFailureMessage}>
         {failureMessage}
