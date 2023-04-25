@@ -1,0 +1,54 @@
+.listBox {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border: 1px solid #000000;
+  border-radius: 20px;
+  width: 80%;
+  margin: 30px auto;
+}
+
+.studentBox {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  padding-left: 30px;
+  border-top: 1px solid #000000;
+}
+
+.studentBoxTop {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  padding-left: 30px;
+}
+
+.line {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 10px 0;
+}
+
+.icons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 30px;
+  color: black;
+  transform: scale(0.75);
+}
+
+.name {
+  margin-right: auto;
+}
+
+.noStudent {
+  padding-top: 100px;
+  text-align: center;
+}
+
+.button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
