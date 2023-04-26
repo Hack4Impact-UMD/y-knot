@@ -11,10 +11,9 @@ import ClassPage from './pages/ClassPage/ClassPage';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './muiTheme';
 import { addSampleCourse, addSampleStudent } from './backendTesting/test';
-import { authenticateUser } from './backend/FirebaseCalls';
 import { Upload } from './components/Upload/Upload';
 import TranscriptPage from './pages/TranscriptPage/TranscriptPage';
-import { PDFViewer } from '@react-pdf/renderer';
+import CertificatePage from './pages/CertificatePage/CertificatePage';
 
 function App(): JSX.Element {
   const customTheme = theme;
@@ -73,6 +72,10 @@ function App(): JSX.Element {
             <Route path="/upload" element={<Upload />} />
             <Route path="/transcript" element={<TranscriptPage />} />
             <Route path="/courses/class" element={<ClassPage />} />
+            <Route
+              path="/certificate"
+              element={<CertificatePage name="Fiona Love" course="Math" />}
+            />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

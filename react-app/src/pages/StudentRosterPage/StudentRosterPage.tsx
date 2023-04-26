@@ -4,7 +4,7 @@ import Loading from '../../components/LoadingScreen/Loading';
 import StudentList from './StudentList/StudentList';
 import { Student, StudentID } from '../../types/StudentType';
 import { useState, useEffect } from 'react';
-import { getAllStudents } from '../../backend/FirestoreCalls';
+import { getAllStudents, getStudent } from '../../backend/FirestoreCalls';
 import { authenticateUser } from '../../backend/FirebaseCalls';
 import { useAuth } from '../../auth/AuthProvider';
 
@@ -98,3 +98,4 @@ const AdminStudentRosterPage = (): JSX.Element => {
 };
 
 export default AdminStudentRosterPage;
+
