@@ -11,7 +11,7 @@ const CertificatePage = ({ name, course }: studentDetails): JSX.Element => {
   return (
     <div>
       <div className={styles.page}>
-        <PDFViewer className={styles.certificate}>
+        <PDFViewer width="100%" height="100%">
           <Certificate name={name} course={course} />
         </PDFViewer>
       </div>

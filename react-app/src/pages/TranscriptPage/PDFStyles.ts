@@ -81,7 +81,6 @@ const styles = StyleSheet.create({
   },
   header: {
     textAlign: 'center',
-    fontWeight: 'normal',
     paddingTop: '45px',
     paddingBottom: '20px',
     fontFamily: 'Poppins',
