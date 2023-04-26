@@ -24,20 +24,22 @@ const TranscriptPage = (): JSX.Element => {
           <Page size="A4" style={styles.page}>
             <View style={styles.table}>
               <Text style={styles.header}>Y-KNOT Transcript</Text>
-              <Text style={styles.name}>Student Name: Fiona Jones</Text>
+              <Text style={styles.name}>Fiona Jones</Text>
               <View style={styles.activeCourses}>
                 <View style={styles.coursesTableCol}>
-                  <Text style={styles.coursesTableCell}>Active Courses:</Text>
+                  <Text style={[styles.boldHeader, styles.noMargin]}>
+                    Active Courses:
+                  </Text>
                 </View>
                 <View style={styles.tableCol}>
-                  <Text style={styles.tableCell}>Date of Course:</Text>
+                  <Text style={styles.boldHeader}>Date of Course:</Text>
                 </View>
                 <View style={styles.tableCol}>
-                  <Text style={styles.tableCell}>Pass/Fail</Text>
+                  <Text style={styles.boldHeader}>Pass/Fail</Text>
                 </View>
               </View>
               {activeCourses.map((item, index) => (
-                <View style={styles.tableRow}>
+                <View style={styles.tableRow} key={index}>
                   <View style={styles.coursesTableCol}>
                     <Text style={styles.coursesTableCell}>{item.course}</Text>
                   </View>
@@ -51,17 +53,19 @@ const TranscriptPage = (): JSX.Element => {
               ))}
               <View style={styles.activeCourses}>
                 <View style={styles.coursesTableCol}>
-                  <Text style={styles.coursesTableCell}>Upcoming Courses:</Text>
+                  <Text style={[styles.boldHeader, styles.noMargin]}>
+                    Upcoming Courses:
+                  </Text>
                 </View>
                 <View style={styles.tableCol}>
-                  <Text style={styles.tableCell}>Date of Course:</Text>
+                  <Text style={styles.boldHeader}>Date of Course:</Text>
                 </View>
                 <View style={styles.tableCol}>
-                  <Text style={styles.tableCell}>Pass/Fail</Text>
+                  <Text style={styles.boldHeader}>Pass/Fail</Text>
                 </View>
               </View>
               {upcomingCourses.map((item, index) => (
-                <View style={styles.tableRow}>
+                <View style={styles.tableRow} key={index}>
                   <View style={styles.coursesTableCol}>
                     <Text style={styles.coursesTableCell}>{item.course}</Text>
                   </View>
@@ -75,17 +79,19 @@ const TranscriptPage = (): JSX.Element => {
               ))}
               <View style={styles.activeCourses}>
                 <View style={styles.coursesTableCol}>
-                  <Text style={styles.coursesTableCell}>Past Courses:</Text>
+                  <Text style={[styles.boldHeader, styles.noMargin]}>
+                    Past Courses:
+                  </Text>
                 </View>
                 <View style={styles.tableCol}>
-                  <Text style={styles.tableCell}>Date of Course:</Text>
+                  <Text style={styles.boldHeader}>Date of Course:</Text>
                 </View>
                 <View style={styles.tableCol}>
-                  <Text style={styles.tableCell}>Pass/Fail</Text>
+                  <Text style={styles.boldHeader}>Pass/Fail</Text>
                 </View>
               </View>
               {pastCourses.map((item, index) => (
-                <View style={styles.tableRow}>
+                <View style={styles.tableRow} key={index}>
                   <View style={styles.coursesTableCol}>
                     <Text style={styles.coursesTableCell}>{item.course}</Text>
                   </View>

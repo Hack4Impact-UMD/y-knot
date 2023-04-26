@@ -1,9 +1,28 @@
 import { StyleSheet, Font } from '@react-pdf/renderer';
-import Poppins from '../../fonts/poppins/poppins-v20-latin-regular.ttf';
+import PoppinsTwo from '../../fonts/poppins/poppins-v20-latin-200.ttf';
+import PoppinsThree from '../../fonts/poppins/poppins-v20-latin-300.ttf';
+import PoppinsFive from '../../fonts/poppins/poppins-v20-latin-500.ttf';
 
-Font.register({ family: 'Poppins', src: Poppins });
+Font.register({
+  family: 'Poppins',
+  fonts: [
+    { src: PoppinsThree }, // font-weight: normal
+    { src: PoppinsFive, fontWeight: 500 },
+    { src: PoppinsTwo, fontWeight: 200 },
+  ],
+});
 
 const styles = StyleSheet.create({
+  boldHeader: {
+    margin: '0 auto',
+    fontSize: 10,
+    padding: 10,
+    fontFamily: 'Poppins',
+    fontWeight: 500,
+  },
+  noMargin: {
+    margin: 0,
+  },
   page: {
     overflow: 'hidden',
   },
@@ -12,11 +31,8 @@ const styles = StyleSheet.create({
     padding: 0,
     margin: 0,
   },
-  '*': {
-    fontFamily: Poppins,
-  },
   table: {
-    width: '65vw',
+    width: '80vw',
     borderCollapse: 'collapse',
     display: 'flex',
     justifyContent: 'center',
@@ -25,10 +41,10 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
   name: {
-    marginLeft: 0,
-    marginRight: '40%',
-    paddingTop: '10px',
-    paddingBottom: '10px',
+    textAlign: 'center',
+    fontSize: '16px',
+    fontFamily: 'Poppins',
+    fontWeight: 500,
   },
   tableRow: {
     margin: 'auto',
@@ -36,6 +52,7 @@ const styles = StyleSheet.create({
   },
   activeCourses: {
     margin: 'auto',
+    marginTop: '40px',
     flexDirection: 'row',
     borderTop: '2px solid #D8D8D8',
     borderBottom: '2px solid #D8D8D8',
@@ -52,17 +69,23 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 10,
     padding: '10px',
+    fontFamily: 'Poppins',
+    fontWeight: 300,
   },
   coursesTableCell: {
     marginTop: 5,
     fontSize: 10,
     padding: '10px',
+    fontFamily: 'Poppins',
+    fontWeight: 300,
   },
   header: {
     textAlign: 'center',
     fontWeight: 'normal',
     paddingTop: '45px',
     paddingBottom: '20px',
+    fontFamily: 'Poppins',
+    fontWeight: 500,
   },
 });
 
