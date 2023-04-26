@@ -4,6 +4,8 @@ import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import styles from '../../pages/ClassPage/ClassPage.module.css';
 import Loading from '../../components/LoadingScreen/Loading';
 
+import ClassStudentPage from './ClassStudentPage/ClassStudentPage';
+
 enum Tab {
   Main = 'Main',
   Students = 'Students',
@@ -109,8 +111,9 @@ const ClassPage = (): JSX.Element => {
             )}
           </div>
 
-          {/* For rendering the corresponding component whenever tab value changes */}
+          {currentTab == Tab.Students && <ClassStudentPage />}
 
+          {/* For rendering the corresponding component whenever tab value changes */}
           {/* {currentTab === Tab.Main && <MainClassPage />}
         {currentTab === Tab.Students && <Students />}
         {currentTab === Tab.Attendance && <Attendance />}
