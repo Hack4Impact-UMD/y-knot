@@ -90,32 +90,11 @@ form {
   background: var(--color-yellow-orange);
 }
 
-.spinner:before {
-  content: '';
-  box-sizing: border-box;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 20px;
-  height: 20px;
-  margin-top: -10px;
-  margin-left: -10px;
-  border-radius: 50%;
-  border-top: 2px solid #07d;
-  border-right: 2px solid transparent;
-  animation: spinner 0.6s linear infinite;
-}
-
-@keyframes spinner {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .submit {
   font-size: 0.9rem;
   width: 70%;
   text-align: center;
   padding-top: 2rem;
   margin-top: 50px;
+  margin-bottom: 20px;
 }
