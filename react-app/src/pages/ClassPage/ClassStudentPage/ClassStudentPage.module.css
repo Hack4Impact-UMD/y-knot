@@ -13,11 +13,18 @@
   margin-left: auto;
   margin-right: auto;
   margin-top: 15px;
+  margin-bottom: 30px;
+}
+
+.noStudent {
+  padding-top: 50px;
+  text-align: center;
 }
 
 .box {
   border-bottom: 1px solid #000000;
   display: flex;
+  padding: 10px;
   justify-content: space-between;
   align-items: center;
 }
@@ -34,14 +41,7 @@
   margin-left: 25px;
 }
 
-.studentName p {
-  font-size: 1.5rem;
-  font-weight: 400;
-  display: inline-block;
-}
-
 .studentEmail p {
-  font-size: 1.5rem;
   font-weight: 500;
   font-style: italic;
 }
@@ -50,8 +50,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.icons img {
-  margin-right: 25px;
+  transform: scale(0.75);
+  gap: 25px;
 }

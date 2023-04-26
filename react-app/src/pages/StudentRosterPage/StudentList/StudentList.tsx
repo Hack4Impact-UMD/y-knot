@@ -44,7 +44,7 @@ const StudentList = (props: {
   return (
     <div>
       {props.students.length === 0 ? (
-        <h4 className={styles.noStudent}>No Students currently in Roster</h4>
+        <h4 className={styles.noStudent}>No Students Currently in Roster</h4>
       ) : studentList.length === 0 ? (
         <h4 className={styles.noStudent}>
           No Student Found Matching "{props.search}"
