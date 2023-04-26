@@ -7,7 +7,7 @@ export interface YKNOTUser {
 
 export interface Teacher {
   email: string;
-  courses: string[];
+  courses: Set<string>;
 }
 
 export type Role = 'ADMIN' | 'TEACHER';
