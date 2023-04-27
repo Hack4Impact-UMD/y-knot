@@ -14,6 +14,11 @@ import { addSampleCourse, addSampleStudent } from './backendTesting/test';
 import { Upload } from './components/Upload/Upload';
 import TranscriptPage from './pages/TranscriptPage/TranscriptPage';
 import CertificatePage from './pages/CertificatePage/CertificatePage';
+import {
+  createUser,
+  deleteUser,
+  setUserRole,
+} from './backend/CloudFunctionsCalls';
 
 function App(): JSX.Element {
   const customTheme = theme;
