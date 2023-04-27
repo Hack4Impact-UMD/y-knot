@@ -1,55 +1,11 @@
 import {
   getAuth,
-  updateEmail,
   updatePassword,
   reauthenticateWithCredential,
   EmailAuthProvider,
   type AuthError,
 } from 'firebase/auth';
 import app from '../config/firebase';
-
-/*
-Updates the logged-in user's email.
-May fail if the login token is old. Currently not handling this case, because
-this function should be called with the RequireAdminAuth function
-which should update the token. Another solution is to include a password
-field in the frontend for this.
-
-TODO: make error messages work
-
-Parameters:
-Email: the new email
-*/
-export async function updateUserEmail(email: string): Promise<string> {
-  const auth = getAuth(app);
-  const user = auth.currentUser;
-  let status = 'Unknown Error Occured';
-
-  if (user != null) {
-    const currEmail = user.email;
-    await updateEmail(user, email)
-      .then(() => {
-        status = `Changed current account's email from ${currEmail} to ${email}`;
-      })
-      .catch((error) => {
-        const code = (error as AuthError).code;
-        if (
-          code === 'auth/invalid-email' ||
-          code === 'auth/email-already-in-use'
-        ) {
-          status = 'Invalid email entered';
-        } else if (code === 'auth/requires-recent-login') {
-          status = 'Session expired. Please sign in again.';
-        } else {
-          status = 'Failed to change email. Please try again later.';
-        }
-      });
-  } else {
-    status = 'Session expired. Please sign in again.';
-  }
-
-  return status;
-}
 
 /*
 Updates the logged-in user's password.

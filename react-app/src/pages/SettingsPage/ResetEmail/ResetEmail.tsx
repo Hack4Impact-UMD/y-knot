@@ -43,13 +43,13 @@ const ResetEmail = ({ open, onClose }: modalType): React.ReactElement => {
     } else {
       await authenticateUser(auth.user.email!, password)
         .then(async () => {
-          await updateUserEmail(newEmail, confirmNewEmail)
+          await updateUserEmail(auth.user.email!, confirmNewEmail)
             .then(() => {
               setSubmitted(true);
             })
-            .catch((error) =>
-              setErrorMessage('Failed to update email. Try again later.'),
-            );
+            .catch((error) => {
+              setErrorMessage('Failed to update email. Try again later.');
+            });
         })
         .catch((error) => {
           setErrorMessage('Password is incorrect');
