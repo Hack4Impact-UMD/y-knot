@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { StudentID } from '../../../types/StudentType';
+import { type StudentID } from '../../../types/StudentType';
 import styles from './StudentList.module.css';
 import eyeIcon from '../../../assets/view.svg';
 import trashIcon from '../../../assets/trash.svg';
 
 const StudentList = (props: {
   search: string;
-  students: Partial<StudentID>[];
+  students: Array<Partial<StudentID>>;
 }) => {
   const [studentList, setStudentList] = useState<any[]>([]);
   useEffect(() => {

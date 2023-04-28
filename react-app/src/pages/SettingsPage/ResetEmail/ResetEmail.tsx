@@ -55,7 +55,9 @@ const ResetEmail = ({ open, onClose }: modalType): React.ReactElement => {
           setErrorMessage('Password is incorrect');
         });
     }
-    setTimeout(() => setLoading(false), 100);
+    setTimeout(() => {
+      setLoading(false);
+    }, 100);
   };
 
   const handleOnClose = (): void => {

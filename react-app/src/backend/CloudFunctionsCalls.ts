@@ -21,7 +21,9 @@ export function createUser(
     createUserCloudFunction({ email: newEmail, name: newName, role: newRole })
       .then(async () => {
         await sendPasswordResetEmail(auth, newEmail)
-          .then(() => resolve())
+          .then(() => {
+            resolve();
+          })
           .catch((error) => {
             reject();
           });

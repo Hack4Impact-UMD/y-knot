@@ -17,7 +17,7 @@ export async function updateUserPassword(
   newPassword: string,
   oldPassword: string,
 ): Promise<string> {
-  return new Promise((resolve, reject) => {
+  return await new Promise((resolve, reject) => {
     const auth = getAuth(app);
     const user = auth.currentUser;
 

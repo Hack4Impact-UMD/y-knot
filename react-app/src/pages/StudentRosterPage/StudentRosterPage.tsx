@@ -1,4 +1,4 @@
-import { Student, StudentID } from '../../types/StudentType';
+import { Student, type StudentID } from '../../types/StudentType';
 import { useState, useEffect } from 'react';
 import { getAllStudents, getStudent } from '../../backend/FirestoreCalls';
 import { authenticateUser } from '../../backend/FirebaseCalls';
@@ -9,7 +9,7 @@ import Loading from '../../components/LoadingScreen/Loading';
 import StudentList from './StudentList/StudentList';
 
 const StudentRosterPage = (): JSX.Element => {
-  const [students, setStudents] = useState<Partial<StudentID>[]>([]);
+  const [students, setStudents] = useState<Array<Partial<StudentID>>>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
@@ -20,7 +20,7 @@ const StudentRosterPage = (): JSX.Element => {
   useEffect(() => {
     getAllStudents()
       .then((allStudents) => {
-        const partialStudents: Partial<StudentID>[] = [];
+        const partialStudents: Array<Partial<StudentID>> = [];
         allStudents.map((currStudent) => {
           const newStudent: Partial<StudentID> = {};
           newStudent.id = currStudent.id;
@@ -34,14 +34,16 @@ const StudentRosterPage = (): JSX.Element => {
       .catch((err) => {
         setError(true);
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   const handleSearch = (e: any) => {
     if (error || loading) {
       return;
     }
-    if (timer) {
+    if (timer != null) {
       clearTimeout(timer);
     }
     timer = setTimeout(function () {
