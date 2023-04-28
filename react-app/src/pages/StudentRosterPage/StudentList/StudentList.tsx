@@ -1,8 +1,8 @@
-import { Student, StudentID } from '../../../types/StudentType';
+import { useEffect, useState } from 'react';
+import { StudentID } from '../../../types/StudentType';
+import styles from './StudentList.module.css';
 import eyeIcon from '../../../assets/view.svg';
 import trashIcon from '../../../assets/trash.svg';
-import styles from './StudentList.module.css';
-import { useEffect, useState } from 'react';
 
 const StudentList = (props: {
   search: string;
@@ -25,10 +25,10 @@ const StudentList = (props: {
           >
             <p className={styles.name}>{fullName}</p>
             <div className={styles.icons}>
-              <button className={styles.button}>
+              <button className={`${styles.button} ${styles.profileIcon}`}>
                 <img src={eyeIcon} alt="View Profile" />
               </button>
-              <button className={styles.button}>
+              <button className={`${styles.button} ${styles.trashIcon}`}>
                 <img src={trashIcon} alt="Delete Student" />
               </button>
             </div>

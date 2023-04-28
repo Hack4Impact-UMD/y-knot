@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import Modal from '../../../components/ModalWrapper/Modal';
-import x from '../../../assets/x.svg';
-import styles from './ResetPassword.module.css';
-import Loading from '../../../components/LoadingScreen/Loading';
 import { authenticateUser } from '../../../backend/FirebaseCalls';
 import { updateUserPassword } from '../../../backend/AuthCalls';
+import styles from './ResetPassword.module.css';
+import Modal from '../../../components/ModalWrapper/Modal';
+import Loading from '../../../components/LoadingScreen/Loading';
+import x from '../../../assets/x.svg';
 
 interface modalType {
   open: boolean;

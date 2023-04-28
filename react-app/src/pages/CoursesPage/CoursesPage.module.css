@@ -1,13 +1,26 @@
 .rightPane {
   float: right;
   height: 100%;
-  width: calc(100% - 300px);
-  padding-left: 5%;
+  width: calc(100% - 250px);
+}
+
+.searchContainer {
+  margin: 30px auto 40px 100px;
+}
+
+.searchBar {
+  width: 250px;
+  height: 25px;
+  padding: 10px 10px 10px 20px;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 10px;
+  outline: none;
+  background-color: lightgrey;
 }
 
 .courseStatus {
-  margin-bottom: 50px;
-  margin-top: 10px;
+  margin: 10px auto 30px 100px;
   font-weight: normal;
   text-decoration: underline;
   text-decoration-thickness: 1px;
@@ -17,4 +30,5 @@
 .cardLayout {
   display: flex;
   flex-wrap: wrap;
+  margin-left: 100px;
 }

@@ -1,6 +1,6 @@
 import { PDFViewer } from '@react-pdf/renderer';
-import Certificate from './Certificate';
 import styles from './CertificatePage.module.css';
+import Certificate from './Certificate';
 
 interface studentDetails {
   name: string;

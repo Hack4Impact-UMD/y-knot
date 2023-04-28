@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import Modal from '../../../components/ModalWrapper/Modal';
-import x from '../../../assets/x.svg';
-import styles from './ForgotPassword.module.css';
 import { sendResetEmail } from '../../../backend/FirebaseCalls';
-import Loading from '../../../components/LoadingScreen/Loading';
 import { AuthError } from '@firebase/auth';
+import styles from './ForgotPassword.module.css';
+import Modal from '../../../components/ModalWrapper/Modal';
+import Loading from '../../../components/LoadingScreen/Loading';
+import x from '../../../assets/x.svg';
 
 interface forgotModalType {
   open: boolean;
@@ -90,8 +90,8 @@ const ForgotPassword = ({
                 type="email"
                 placeholder="Email"
                 required
-                onChange={(e) => {
-                  setEmail(e.target.value);
+                onChange={(event) => {
+                  setEmail(event.target.value);
                 }}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter') {

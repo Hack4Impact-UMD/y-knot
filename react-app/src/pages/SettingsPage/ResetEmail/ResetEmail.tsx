@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import Modal from '../../../components/ModalWrapper/Modal';
-import x from '../../../assets/x.svg';
-import styles from './ResetEmail.module.css';
 import { authenticateUser } from '../../../backend/FirebaseCalls';
 import { useAuth } from '../../../auth/AuthProvider';
 import { updateUserEmail } from '../../../backend/CloudFunctionsCalls';
 import { useNavigate } from 'react-router-dom';
+import styles from './ResetEmail.module.css';
+import Modal from '../../../components/ModalWrapper/Modal';
 import Loading from '../../../components/LoadingScreen/Loading';
+import x from '../../../assets/x.svg';
 
 interface modalType {
   open: boolean;

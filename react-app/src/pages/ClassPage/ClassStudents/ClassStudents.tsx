@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import styles from './ClassStudentPage.module.css';
 import { useAuth } from '../../../auth/AuthProvider';
+import styles from './ClassStudents.module.css';
 import Loading from '../../../components/LoadingScreen/Loading';
 import CertificateIcon from '../../../assets/certificate.svg';
 import EyeIcon from '../../../assets/view.svg';
@@ -11,7 +11,7 @@ interface StudentInfo {
   email: string;
 }
 
-const ClassStudentPage = (): JSX.Element => {
+const ClassStudents = (): JSX.Element => {
   const [students, setStudents] = useState<StudentInfo[]>([
     { name: 'Fiona Love', email: 'f.love@gmail.com' },
     { name: 'Alicia Jacobs', email: 'a.jacobs@gmail.com' },
@@ -51,11 +51,21 @@ const ClassStudentPage = (): JSX.Element => {
                   <p>{student.email}</p>
                 </div>
                 <div className={styles.icons}>
-                  <img src={CertificateIcon} />
+                  <button className={styles.button}>
+                    <img
+                      src={CertificateIcon}
+                      className={styles.certificateIcon}
+                    />
+                  </button>
                   {authContext?.token?.claims.role === 'admin' && (
-                    <img src={EyeIcon} /> // show student profile icon if admin
+                    // See student profile only if admin
+                    <button className={styles.button}>
+                      <img src={EyeIcon} className={styles.profileIcon} />
+                    </button>
                   )}
-                  <img src={TrashIcon} />
+                  <button className={styles.button}>
+                    <img src={TrashIcon} className={styles.trashIcon} />
+                  </button>
                 </div>
               </div>
             );
@@ -66,4 +76,4 @@ const ClassStudentPage = (): JSX.Element => {
   );
 };
 
-export default ClassStudentPage;
+export default ClassStudents;

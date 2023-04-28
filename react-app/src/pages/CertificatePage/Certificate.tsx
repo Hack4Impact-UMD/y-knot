@@ -1,5 +1,5 @@
 import { Page, Document, Text, Image, View } from '@react-pdf/renderer';
-
+import styles from './PDFStyles';
 import yknot from '../../assets/yknot-logo.png';
 import reginaSignature from '../../assets/regina-signature.png';
 import horizontalLine from '../../assets/horizontal-line.png';
@@ -7,7 +7,6 @@ import yellowCurve from '../../assets/yellow-curve.png';
 import blueCurve from '../../assets/blue-curve.png';
 import orangeCurve from '../../assets/orange-curve.png';
 import greenCurve from '../../assets/green-curve.png';
-import styles from './PDFStyles';
 
 interface studentDetails {
   name: string;
