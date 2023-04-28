@@ -44,7 +44,9 @@ const ResetPassword = ({ open, onClose }: modalType): React.ReactElement => {
           }
         });
     }
-    setTimeout(() => setLoading(false), 100);
+    setTimeout(() => {
+      setLoading(false);
+    }, 100);
   };
 
   const handleOnClose = (): void => {

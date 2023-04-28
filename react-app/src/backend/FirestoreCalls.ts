@@ -9,7 +9,7 @@ import {
   runTransaction,
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
-import { StudentID, type Student } from '../types/StudentType';
+import { type StudentID, type Student } from '../types/StudentType';
 import { type Course } from '../types/CourseType';
 import { type Teacher, type YKNOTUser } from '../types/UserType';
 
@@ -84,7 +84,7 @@ export function deleteStudent(id: string): Promise<void> {
         await transaction.get(doc(db, 'Students', id))
       ).data() as Student;
       const idOrder: string[] = [];
-      const students: Set<String>[] = [];
+      const students: Array<Set<string>> = [];
       await Promise.all(
         studentRef.courseInformation.map(async (course) => {
           idOrder.push(course.id);

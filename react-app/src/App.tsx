@@ -9,7 +9,7 @@ import {
 } from './backend/CloudFunctionsCalls';
 import { addSampleCourse, addSampleStudent } from './backendTesting/test';
 import { Upload } from './components/Upload/Upload';
-import RequireAuth from './auth/RequireAuth';
+import RequireAuth from './auth/RequireAuth/RequireAuth';
 import Sample404Page from './pages/Sample404Page/Sample404Page';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import LoginPage from './pages/LoginPage/LoginPage';

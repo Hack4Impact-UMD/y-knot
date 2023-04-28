@@ -35,8 +35,8 @@ const ClassStudents = (): JSX.Element => {
         // student roster
         <div className={styles.studentsContainer}>
           {students.map((student, i) => {
-            let roundTop = i === 0 ? styles.roundTop : '';
-            let roundBottom =
+            const roundTop = i === 0 ? styles.roundTop : '';
+            const roundBottom =
               i === students.length - 1 ? styles.roundBottom : '';
 
             return (
