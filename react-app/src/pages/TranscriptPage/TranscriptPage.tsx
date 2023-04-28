@@ -1,6 +1,6 @@
-import otherStyles from './TranscriptPage.module.css';
-import styles from './PDFStyles';
 import { Page, Text, View, Document, PDFViewer } from '@react-pdf/renderer';
+import styles from './PDFStyles';
+import otherStyles from './TranscriptPage.module.css';
 
 const TranscriptPage = (): JSX.Element => {
   const activeCourses = [

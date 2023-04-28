@@ -1,14 +1,14 @@
-import styles from './StudentRosterPage.module.css';
-import NavigationBar from '../../components/NavigationBar/NavigationBar';
-import Loading from '../../components/LoadingScreen/Loading';
-import StudentList from './StudentList/StudentList';
 import { Student, StudentID } from '../../types/StudentType';
 import { useState, useEffect } from 'react';
 import { getAllStudents, getStudent } from '../../backend/FirestoreCalls';
 import { authenticateUser } from '../../backend/FirebaseCalls';
 import { useAuth } from '../../auth/AuthProvider';
+import styles from './StudentRosterPage.module.css';
+import NavigationBar from '../../components/NavigationBar/NavigationBar';
+import Loading from '../../components/LoadingScreen/Loading';
+import StudentList from './StudentList/StudentList';
 
-const AdminStudentRosterPage = (): JSX.Element => {
+const StudentRosterPage = (): JSX.Element => {
   const [students, setStudents] = useState<Partial<StudentID>[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
@@ -50,7 +50,7 @@ const AdminStudentRosterPage = (): JSX.Element => {
   };
 
   return (
-    <div className={styles.parentContainer}>
+    <>
       {auth.loading ? (
         // Used to center the loading spinner
         <div className={styles.loading}>
@@ -64,8 +64,8 @@ const AdminStudentRosterPage = (): JSX.Element => {
               <input
                 type="text"
                 placeholder="Search Students"
-                onChange={(e) => {
-                  handleSearch(e);
+                onChange={(event) => {
+                  handleSearch(event);
                 }}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter') {
@@ -84,18 +84,17 @@ const AdminStudentRosterPage = (): JSX.Element => {
                 <Loading />
               </div>
             ) : error ? (
-              <div className={styles.failureMessage}>
+              <h4 className={styles.failureMessage}>
                 Error retrieving students. Please try again later.
-              </div>
+              </h4>
             ) : (
               <StudentList search={search} students={students} />
             )}
           </div>
         </>
       )}
-    </div>
+    </>
   );
 };
 
-export default AdminStudentRosterPage;
-
+export default StudentRosterPage;

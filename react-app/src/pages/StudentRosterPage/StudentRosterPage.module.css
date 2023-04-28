@@ -1,35 +1,3 @@
-.rightPane {
-  float: right;
-  width: calc(100% - 300px);
-  display: flex;
-  flex-direction: column;
-}
-.rightPane::-webkit-scrollbar {
-  width: 200px;
-  background: -webkit-linear-gradient(0, blue 50%, white 100%);
-}
-.heading {
-  width: 100%;
-  text-align: center;
-}
-
-.searchContainer {
-  width: calc(100%-100px);
-  padding-left: 100px;
-  margin-top: 30px;
-}
-
-.searchBar {
-  width: 400px;
-  height: 25px;
-  padding: 10px 10px 10px 20px;
-  font-size: 1.2rem;
-  border: 2px solid #fff;
-  border-radius: 10px;
-  outline: none;
-  background-color: lightgrey;
-}
-
 .loading {
   width: 100%;
   height: 100vh;
@@ -38,9 +6,42 @@
   align-items: center;
 }
 
+.rightPane {
+  float: right;
+  width: calc(100% - 250px);
+  display: flex;
+  flex-direction: column;
+}
+
+.rightPane::-webkit-scrollbar {
+  width: 200px;
+  background: -webkit-linear-gradient(0, blue 50%, white 100%);
+}
+
+.searchContainer {
+  margin-left: 100px;
+  margin-top: 30px;
+}
+
+.searchBar {
+  width: 250px;
+  height: 25px;
+  padding: 10px 10px 10px 20px;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 10px;
+  outline: none;
+  background-color: lightgrey;
+}
+
+.heading {
+  width: 100%;
+  text-align: center;
+}
+
 .failureMessage {
   width: 100%;
-  margin-top: 180px;
+  margin-top: 120px;
   justify-content: center;
   align-items: center;
   text-align: center;

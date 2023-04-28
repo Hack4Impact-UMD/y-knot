@@ -1,16 +1,18 @@
 import { useState } from 'react';
+import { useAuth } from '../../auth/AuthProvider';
 import styles from './SettingsPage.module.css';
-import editImage from '../../assets/edit.svg';
 import ResetEmail from './ResetEmail/ResetEmail';
 import ResetPassword from './ResetPassword/ResetPassword';
-import { useAuth } from '../../auth/AuthProvider';
 import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
+import editIcon from '../../assets/gray-pencil.svg';
+import saveIcon from '../../assets/save.svg';
 
 const SettingsPage = (): JSX.Element => {
-  const [editName, setEditName] = useState(false);
-  const [name, setName] = useState('Eric Johnson');
-  const [email, setEmail] = useState('eric.johnson@gmail.com');
+  const [editName, setEditName] = useState<boolean>(false);
+  const [name, setName] = useState<string>('Eric Johnson');
+  const [updatedName, setUpdatedName] = useState<string>('');
+  const [email, setEmail] = useState<string>('eric.johnson@gmail.com');
   const [openEmailModal, setOpenEmailModal] = useState<boolean>(false);
   const [openPasswordModal, setOpenPasswordModal] = useState<boolean>(false);
 
@@ -32,26 +34,48 @@ const SettingsPage = (): JSX.Element => {
           <h1 className={styles.title}>Settings</h1>
           <div className={styles.inputs}>
             {authContext?.token?.claims.role !== 'admin' ? (
+              // Display name if the user is not an admin
               <div className={styles.box} id="Name">
                 <a className={styles.boxTitle}>Name</a>
                 <a className={styles.boxData}>
                   {editName ? (
                     <input
+                      type="text"
+                      className={styles.nameInput}
                       onChange={(event) => {
-                        setName(event.target.value);
+                        setUpdatedName(event.target.value);
                       }}
+                      value={updatedName}
                     ></input>
                   ) : (
                     name
                   )}
                 </a>
                 <button
-                  className={styles.editKey}
+                  className={styles.editButton}
                   onClick={() => {
                     setEditName(!editName);
+                    if (updatedName !== '' && updatedName !== name) {
+                      setName(updatedName);
+                      // TODO: Update name in backend
+                    } else {
+                      setUpdatedName(name);
+                    }
                   }}
                 >
-                  {editName ? 'save' : ''}
+                  {editName ? (
+                    <img
+                      src={saveIcon}
+                      alt="Save"
+                      className={styles.editIcon}
+                    />
+                  ) : (
+                    <img
+                      src={editIcon}
+                      alt="Edit"
+                      className={styles.editIcon}
+                    />
+                  )}
                 </button>
               </div>
             ) : (
@@ -62,12 +86,12 @@ const SettingsPage = (): JSX.Element => {
               <a className={styles.boxTitle}>Email</a>
               <a className={styles.boxData}>{authContext.user?.email}</a>
               <button
-                className={styles.editKey}
+                className={styles.editButton}
                 onClick={() => {
                   setOpenEmailModal(!openEmailModal);
                 }}
               >
-                <img src={editImage} alt="Edit" className={styles.editImage} />
+                <img src={editIcon} alt="Edit" className={styles.editIcon} />
               </button>
               <ResetEmail
                 open={openEmailModal}
@@ -76,6 +100,7 @@ const SettingsPage = (): JSX.Element => {
                 }}
               />
             </div>
+
             <div className={styles.bottomBox} id="Password">
               <a className={styles.boxTitle}>Password</a>
               <a className={styles.boxData}>******************</a>
@@ -85,7 +110,7 @@ const SettingsPage = (): JSX.Element => {
                   setOpenPasswordModal(!openPasswordModal);
                 }}
               >
-                Change Password
+                <img src={editIcon} alt="Edit" className={styles.editIcon} />
               </button>
               <ResetPassword
                 open={openPasswordModal}

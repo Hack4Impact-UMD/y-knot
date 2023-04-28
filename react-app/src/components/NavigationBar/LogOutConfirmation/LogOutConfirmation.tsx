@@ -1,8 +1,8 @@
 import { logOut } from '../../../backend/FirebaseCalls';
 import { useNavigate } from 'react-router';
+import { useState } from 'react';
 import styles from './LogOutConfirmation.module.css';
 import Modal from '../../ModalWrapper/Modal';
-import { useState } from 'react';
 import x from '../../../assets/x.svg';
 
 interface popupModalType {

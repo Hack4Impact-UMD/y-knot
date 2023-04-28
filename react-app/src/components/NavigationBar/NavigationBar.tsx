@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import styles from './NavigationBar.module.css';
-import yKnotLogo from '../../assets/yknot-logo.png';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
+import styles from './NavigationBar.module.css';
+import yKnotLogo from '../../assets/yknot-logo.png';
 import whiteHomeIcon from '../../assets/home-white.svg';
 import blackHomeIcon from '../../assets/home-black.svg';
 import whiteTeachersIcon from '../../assets/teachers-white.svg';
