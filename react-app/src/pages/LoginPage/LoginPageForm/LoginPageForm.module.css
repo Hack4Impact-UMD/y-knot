@@ -63,6 +63,16 @@
   width: 25px;
 }
 
+.forgotPassword {
+  color: var(--color-blue);
+  font-size: 1rem;
+  text-decoration: underline;
+  align-self: flex-start;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
 .signInButton {
   margin-top: 15px;
   width: 280px;
@@ -77,16 +87,6 @@
 .signInButton:hover {
   cursor: pointer;
   background: var(--color-yellow-orange);
-}
-
-.forgotPassword {
-  color: var(--color-blue);
-  font-size: 1rem;
-  text-decoration: underline;
-  align-self: flex-start;
-  cursor: pointer;
-  background: none;
-  border: none;
 }
 
 .hideFailureMsg {

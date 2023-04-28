@@ -1,17 +1,17 @@
-.rightPane {
-  width: calc(100% - 250px);
-  height: 100%;
-  float: right;
-  display: flex;
-  flex-direction: column;
-}
-
 .loadingContainer {
   height: 100vh;
   margin-left: 200px;
   width: calc(100% - 250px);
   position: relative;
   z-index: -1;
+}
+
+.rightPane {
+  width: calc(100% - 250px);
+  height: 100%;
+  float: right;
+  display: flex;
+  flex-direction: column;
 }
 
 .classInfo {

@@ -42,7 +42,7 @@ const StudentList = (props: {
   }, [props.search]);
 
   return (
-    <div>
+    <>
       {props.students.length === 0 ? (
         <h4 className={styles.noStudent}>No Students Currently in Roster</h4>
       ) : studentList.length === 0 ? (
@@ -52,7 +52,7 @@ const StudentList = (props: {
       ) : (
         <div className={styles.listBox}>{studentList}</div>
       )}
-    </div>
+    </>
   );
 };
 

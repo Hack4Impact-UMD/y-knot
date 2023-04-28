@@ -2,6 +2,11 @@
   margin-top: 15px;
 }
 
+.noStudent {
+  padding-top: 50px;
+  text-align: center;
+}
+
 .studentsContainer {
   flex-grow: 1;
   display: flex;
@@ -14,11 +19,6 @@
   margin-right: auto;
   margin-top: 15px;
   margin-bottom: 30px;
-}
-
-.noStudent {
-  padding-top: 50px;
-  text-align: center;
 }
 
 .box {

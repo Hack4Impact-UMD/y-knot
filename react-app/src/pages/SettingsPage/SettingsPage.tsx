@@ -6,6 +6,7 @@ import ResetPassword from './ResetPassword/ResetPassword';
 import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import editIcon from '../../assets/gray-pencil.svg';
+import saveIcon from '../../assets/save.svg';
 
 const SettingsPage = (): JSX.Element => {
   const [editName, setEditName] = useState<boolean>(false);
@@ -40,6 +41,7 @@ const SettingsPage = (): JSX.Element => {
                   {editName ? (
                     <input
                       type="text"
+                      className={styles.nameInput}
                       onChange={(event) => {
                         setUpdatedName(event.target.value);
                       }}
@@ -62,7 +64,11 @@ const SettingsPage = (): JSX.Element => {
                   }}
                 >
                   {editName ? (
-                    <div className={styles.saveText}>save</div>
+                    <img
+                      src={saveIcon}
+                      alt="Save"
+                      className={styles.editIcon}
+                    />
                   ) : (
                     <img
                       src={editIcon}

@@ -6,6 +6,18 @@
   z-index: -1;
 }
 
+.settings {
+  margin-top: 75px;
+  float: right;
+  height: 100%;
+  width: calc(100% - 250px);
+}
+
+.title {
+  text-align: center;
+  width: 100%;
+}
+
 .inputs {
   flex-grow: 1;
   display: flex;
@@ -18,16 +30,12 @@
   margin-right: auto;
 }
 
-.settings {
-  margin-top: 75px;
-  float: right;
-  height: 100%;
-  width: calc(100% - 250px);
-}
-
-.title {
-  text-align: center;
+.nameInput {
   width: 100%;
+  padding: 3px 5px 3px 5px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border-width: 1px;
 }
 
 .box {
@@ -59,26 +67,6 @@
   font-size: 1.25rem;
 }
 
-.saveText {
-  font-size: 1.25rem;
-  color: #9b9b9b;
-}
-
-.saveText:hover {
-  font-size: 1.25rem;
-  color: var(--color-orange);
-}
-
-.editIcon {
-  width: 25px;
-}
-
-.editIcon:hover {
-  width: 25px;
-  filter: brightness(0) saturate(100%) invert(72%) sepia(14%) saturate(6705%)
-    hue-rotate(334deg) brightness(94%) contrast(89%);
-}
-
 .editButton {
   background: none;
   border: none;
@@ -88,4 +76,16 @@
   height: 32px;
   font-size: 2rem;
   cursor: pointer;
+}
+
+.editIcon {
+  width: 25px;
+  filter: brightness(0) saturate(100%) invert(68%) sepia(6%) saturate(0%)
+    hue-rotate(192deg) brightness(89%) contrast(97%);
+}
+
+.editIcon:hover {
+  width: 25px;
+  filter: brightness(0) saturate(100%) invert(72%) sepia(14%) saturate(6705%)
+    hue-rotate(334deg) brightness(94%) contrast(89%);
 }

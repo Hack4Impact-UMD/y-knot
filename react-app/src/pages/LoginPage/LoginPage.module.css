@@ -9,21 +9,17 @@
   overflow: hidden;
 }
 
+.leftPane {
+  margin: 0px 0px 0px -150px;
+  height: 100vh;
+}
+
 .splitright {
   height: 100%;
   flex-grow: 1;
   z-index: 2;
   top: 0;
   overflow-x: hidden;
-}
-
-.pagecontainer:first-child {
-  z-index: 2;
-}
-
-.leftPane {
-  margin: 0px 0px 0px -150px;
-  height: 100vh;
 }
 
 .banner {

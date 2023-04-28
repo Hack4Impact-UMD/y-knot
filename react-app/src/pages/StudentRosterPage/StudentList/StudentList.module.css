@@ -23,10 +23,8 @@
   padding-left: 30px;
 }
 
-.line {
-  border: none;
-  border-top: 1px solid #ccc;
-  margin: 10px 0;
+.name {
+  margin-right: auto;
 }
 
 .icons {
@@ -35,6 +33,13 @@
   align-items: center;
   gap: 25px;
   transform: scale(0.75);
+}
+
+.button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
 
 .profileIcon:hover {
@@ -47,18 +52,7 @@
     brightness(87%) contrast(104%);
 }
 
-.name {
-  margin-right: auto;
-}
-
 .noStudent {
   margin-top: 120px;
   text-align: center;
-}
-
-.button {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
 }
