@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import styles from './StudentProfilePage.module.css';
-import { MdEdit } from 'react-icons/md';
 import { useAuth } from '../../auth/AuthProvider';
 import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';

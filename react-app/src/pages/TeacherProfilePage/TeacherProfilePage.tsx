@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 import styles from './TeacherProfilePage.module.css';
-import { MdEdit } from 'react-icons/md';
 import { useAuth } from '../../auth/AuthProvider';
 import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import CourseCard from '../../components/CourseCard/CourseCard';
-import edit from '../../assets/edit.svg';
 import { useParams } from 'react-router-dom';
 import { getTeacher } from '../../backend/FirestoreCalls';
 import { authenticateUser } from '../../backend/FirebaseCalls';
