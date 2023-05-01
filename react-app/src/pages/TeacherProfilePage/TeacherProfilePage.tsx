@@ -49,7 +49,9 @@ const TeacherProfilePage = (): JSX.Element => {
           <Loading />
         </div>
       ) : loading ? (
-        <Loading />
+        <div className={styles.container}>
+          <Loading />
+        </div>
       ) : (
         <div className={styles.settings}>
           <h1 className={styles.title}>Teacher Profile</h1>

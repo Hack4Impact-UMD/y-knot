@@ -52,11 +52,13 @@ const StudentProfilePage = (): JSX.Element => {
     <>
       <NavigationBar />
       {authContext?.loading ? (
-        <div className={styles.container}>
+        <div className={styles.loadingContainer}>
           <Loading />
         </div>
       ) : loading ? (
-        <Loading />
+        <div className={styles.loadingContainer}>
+          <Loading />
+        </div>
       ) : (
         <div className={styles.rightPane}>
           <div className={styles.header}>
