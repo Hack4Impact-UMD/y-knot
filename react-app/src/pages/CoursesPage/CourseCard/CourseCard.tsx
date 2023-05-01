@@ -34,7 +34,7 @@ const CourseCard = ({
           backgroundColor: color ? '' : '#D9D9D9',
         }}
       >
-        {authContext?.token?.claims.role === 'admin' ? teacher : teacher}
+        {authContext?.token?.claims.role === 'admin' ? teacher : ''}
       </div>
     </div>
   );

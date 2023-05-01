@@ -2,10 +2,10 @@ import styles from './CoursesPage.module.css';
 import CourseCard from './CourseCard/CourseCard';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import { useAuth } from '../../../src/auth/AuthProvider';
+import { Link } from 'react-router-dom';
 
 const CoursesPage = (): JSX.Element => {
   const authContext = useAuth();
-  const admin = authContext?.token?.claims.role === 'admin';
 
   const colors = ['#5a9447', '#e3853a', '#2613b6', '#d00110'];
   const courses = [
@@ -20,25 +20,29 @@ const CoursesPage = (): JSX.Element => {
   const currentCards = courses.map((c) => {
     i++;
     return (
-      <CourseCard
-        key={i}
-        teacher={c.teacher}
-        course={c.course}
-        section={c.section}
-        color={colors[i % colors.length]}
-      />
+      <Link to="/courses/class" style={{ textDecoration: 'none' }}>
+        <CourseCard
+          key={i}
+          teacher={c.teacher}
+          course={c.course}
+          section={c.section}
+          color={colors[i % colors.length]}
+        />
+      </Link>
     );
   });
   i = -1;
   const pastCards = courses.map((c) => {
     i++;
     return (
-      <CourseCard
-        key={i}
-        teacher={c.teacher}
-        course={c.course}
-        section={c.section}
-      />
+      <Link to="/courses/class" style={{ textDecoration: 'none' }}>
+        <CourseCard
+          key={i}
+          teacher={c.teacher}
+          course={c.course}
+          section={c.section}
+        />
+      </Link>
     );
   });
 
@@ -46,12 +50,14 @@ const CoursesPage = (): JSX.Element => {
   const upcomingCards = courses.map((c) => {
     i++;
     return (
-      <CourseCard
-        key={i}
-        teacher={c.teacher}
-        course={c.course}
-        section={c.section}
-      />
+      <Link to="/courses/class" style={{ textDecoration: 'none' }}>
+        <CourseCard
+          key={i}
+          teacher={c.teacher}
+          course={c.course}
+          section={c.section}
+        />
+      </Link>
     );
   });
 
