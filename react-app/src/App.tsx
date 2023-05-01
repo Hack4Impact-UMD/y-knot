@@ -2,12 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './auth/AuthProvider';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './muiTheme';
-import {
-  createUser,
-  deleteUser,
-  setUserRole,
-} from './backend/CloudFunctionsCalls';
-import { addSampleCourse, addSampleStudent } from './backendTesting/test';
+import { addSampleCourse } from './backendTesting/test';
 import { Upload } from './components/Upload/Upload';
 import RequireAuth from './auth/RequireAuth/RequireAuth';
 import Sample404Page from './pages/Sample404Page/Sample404Page';
@@ -17,14 +12,10 @@ import SettingsPage from './pages/SettingsPage/SettingsPage';
 import CoursesPage from './pages/CoursesPage/CoursesPage';
 import StudentRosterPage from './pages/StudentRosterPage/StudentRosterPage';
 import ClassPage from './pages/ClassPage/ClassPage';
-import { addSampleStudent } from './backendTesting/test';
-import { authenticateUser } from './backend/FirebaseCalls';
-import { Upload } from './components/Upload/Upload';
 import StudentProfilePage from './pages/StudentProfilePage/StudentProfilePage';
 import TeacherProfilePage from './pages/TeacherProfilePage/TeacherProfilePage';
 import TranscriptPage from './pages/TranscriptPage/TranscriptPage';
 import CertificatePage from './pages/CertificatePage/CertificatePage';
-
 
 function App(): JSX.Element {
   const customTheme = theme;

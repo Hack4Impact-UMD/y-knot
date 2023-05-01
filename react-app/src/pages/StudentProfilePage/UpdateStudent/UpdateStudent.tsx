@@ -63,6 +63,7 @@ const UpdateStudent = ({ open, onClose }: modalType): React.ReactElement => {
 
   return (
     <Modal
+      height={200}
       open={open}
       onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
         handleOnClose();

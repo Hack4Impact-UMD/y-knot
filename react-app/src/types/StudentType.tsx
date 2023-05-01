@@ -27,7 +27,7 @@ export interface Student {
   state: string;
   zipCode: number;
   email: string;
-  birthDate: string;
+  birthDate: string; // "YYYY-MM-DD"
   minor: boolean;
   gradeLevel?: string;
   schoolName?: string;
