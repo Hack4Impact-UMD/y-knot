@@ -9,7 +9,7 @@ import edit from '../../assets/edit.svg';
 import { useParams } from 'react-router-dom';
 import { getTeacher } from '../../backend/FirestoreCalls';
 import { authenticateUser } from '../../backend/FirebaseCalls';
-import { Teacher } from '../../types/UserType';
+import { type Teacher } from '../../types/UserType';
 
 const TeacherProfilePage = (): JSX.Element => {
   const [teacher, setTeacher] = useState<Teacher>();
@@ -56,40 +56,7 @@ const TeacherProfilePage = (): JSX.Element => {
         <div className={styles.settings}>
           <h1 className={styles.title}>Teacher Profile</h1>
 
-          <div className={styles.topButtons}>
-            <button className={styles.editButton}>
-              <img src={edit} />
-            </button>
-          </div>
-
           <div className={styles.inputs}>
-            {authContext?.token?.claims.role !== 'admin' ? (
-              <div className={styles.box} id="Name">
-                <a className={styles.boxTitle}>Name</a>
-                <a className={styles.boxData}>
-                  {editName ? (
-                    <input
-                      onChange={(event) => {
-                        setName(event.target.value);
-                      }}
-                    ></input>
-                  ) : (
-                    name
-                  )}
-                </a>
-                <button
-                  className={styles.editKey}
-                  onClick={() => {
-                    setEditName(!editName);
-                  }}
-                >
-                  {editName ? 'save' : <MdEdit />}
-                </button>
-              </div>
-            ) : (
-              <></>
-            )}
-
             <div className={styles.box} id="Name">
               <a className={styles.boxTitle}>Name</a>
               <a className={styles.boxData}>{name}</a>

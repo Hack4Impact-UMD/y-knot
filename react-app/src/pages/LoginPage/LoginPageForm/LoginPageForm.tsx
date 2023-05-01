@@ -62,7 +62,9 @@ const LoginPageForm = (): JSX.Element => {
             className={styles.inputField}
             type="text"
             placeholder="Email"
-            onChange={(event) => setEmail(event.target.value)}
+            onChange={(event) => {
+              setEmail(event.target.value);
+            }}
           ></input>
         </div>
 
@@ -73,7 +75,9 @@ const LoginPageForm = (): JSX.Element => {
               className={styles.inputField}
               type={showPassword ? 'text' : 'password'}
               placeholder="Password"
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={(event) => {
+                setPassword(event.target.value);
+              }}
             ></input>
           </div>
           <button

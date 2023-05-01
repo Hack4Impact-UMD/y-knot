@@ -45,7 +45,9 @@ const UpdateStudent = ({ open, onClose }: modalType): React.ReactElement => {
           }
         });
     }
-    setTimeout(() => setLoading(false), 100);
+    setTimeout(() => {
+      setLoading(false);
+    }, 100);
   };
 
   const handleOnClose = (): void => {
@@ -133,7 +135,7 @@ const UpdateStudent = ({ open, onClose }: modalType): React.ReactElement => {
                   }
                 }}
               />
-                <input
+              <input
                 required
                 className={styles.textInput}
                 type="password"
