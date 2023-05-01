@@ -10,7 +10,6 @@
 .loading {
   content: '';
   box-sizing: border-box;
-  position: absolute;
   width: 20px;
   height: 20px;
   border-radius: 50%;

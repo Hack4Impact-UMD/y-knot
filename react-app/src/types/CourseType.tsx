@@ -1,13 +1,13 @@
 export interface Course {
   name: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: string; // "YYYY-MM-DD"
+  endDate: string; // "YYYY-MM-DD"
   meetingTime: string;
-  students: string[];
-  teachers: string[];
+  students: Set<string>;
+  teachers: Set<string>;
   application: boolean;
-  classType: ClassType;
-  prerequisites: string[];
+  courseType: CourseType;
+  prerequisites: Set<string>;
   formId: string;
   introEmail: IntroEmail;
   attendance: Attendance[];
@@ -19,7 +19,7 @@ export interface IntroEmail {
 }
 
 export interface Attendance {
-  date: Date;
+  date: string;
   notes: string;
 }
 
@@ -28,4 +28,4 @@ export interface Homework {
   notes: string;
 }
 
-export type ClassType = 'ADULT' | 'MINOR' | 'LEADERSHIP';
+export type CourseType = 'ADULT' | 'MINOR' | 'LEADERSHIP';
