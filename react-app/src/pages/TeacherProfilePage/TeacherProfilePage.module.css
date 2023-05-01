@@ -1,5 +1,20 @@
 .container {
   height: 100vh;
+  margin-left: 200px;
+  width: calc(100% - 250px);
+  position: relative;
+  z-index: -1;
+}
+
+.settings {
+  margin-top: 75px;
+  float: right;
+  height: 100%;
+  width: calc(100% - 250px);
+}
+
+.title {
+  text-align: center;
   width: 100%;
 }
 
@@ -8,51 +23,29 @@
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  border: 1px solid #000000;
+  border: 1px solid black;
   border-radius: 20px;
   width: 80%;
   margin-left: auto;
   margin-right: auto;
 }
 
-.settings {
-  margin-top: 100px;
-  float: right;
-  height: 100%;
-  width: calc(100% - 250px);
-}
-
-.title {
-  text-align: center;
-  width: 205px;
-  height: 38px;
-  margin-left: auto;
-  margin-right: auto;
-
-  font-style: normal;
-  font-weight: 600;
-  font-size: 25px;
-  line-height: 38px;
-}
-
 .box {
-  border-bottom: 1px solid #000000;
-  padding-top: 30px;
-  padding-bottom: 25px;
-  padding-left: 5px;
+  border-bottom: 1px solid black;
+  padding: 20px;
 }
 
 .bottomBox {
-  padding-bottom: 30px;
-  padding-top: 30px;
-  padding-left: 5px;
+  padding: 20px;
 }
 
 .boxTitle {
   font-style: normal;
   font-weight: 400;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   width: 200px;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
   padding-left: 20px;
   display: inline-block;
 }
@@ -61,52 +54,15 @@
   float: center;
   font-style: italic;
   font-weight: 500;
-  font-size: 1.5rem;
-}
-
-.editKey {
-  background: none;
-  border: none;
-  outline: none;
-  float: right;
-  padding: 0px;
-  height: 32px;
-  color: #808080;
-  font-size: 2rem;
-  margin-right: 20px;
-  cursor: pointer;
-}
-
-.editButton {
-  width: 85px;
-  height: 60px;
-
-  background: var(--color-orange);
-  border-radius: 15px;
-  border: none;
-}
-
-.buttons {
-  display: flex;
+  font-size: 1.25rem;
 }
 
 .coursesTitle {
+  margin: 30px auto 30px 100px;
+  font-weight: normal;
   text-decoration: underline;
-  text-align: left;
-  width: 205px;
-  height: 38px;
-  margin-left: 10%;
-
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 600;
-  font-size: 25px;
-  line-height: 38px;
-}
-
-.topButtons {
-  margin-bottom: 20px;
-  margin-left: 82%;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 8px;
 }
 
 .courseList {

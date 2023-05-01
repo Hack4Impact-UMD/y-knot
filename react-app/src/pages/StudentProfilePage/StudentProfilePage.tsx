@@ -58,45 +58,51 @@ const StudentProfilePage = (): JSX.Element => {
       ) : loading ? (
         <Loading />
       ) : (
-        <div className={styles.settings}>
-          <h1 className={styles.title}>Student Profile</h1>
+        <div className={styles.rightPane}>
+          <div className={styles.header}>
+            <h1 className={styles.title}>Student Profile</h1>
 
-          <div className={styles.topButtons}>
-            <button
-              className={styles.editButton}
-              onClick={() => {
-                if (!edit) {
-                  setStudent({
-                    firstName: name || 'undefined',
-                    middleName: student?.middleName,
-                    lastName: student != null ? student.lastName : 'undefined',
-                    addrFirstLine:
-                      student != null ? student.addrFirstLine : 'undefined',
-                    addrSecondLine: student?.addrSecondLine,
-                    city: student != null ? student.city : 'undefined',
-                    state: student != null ? student.state : 'undefined',
-                    zipCode: student != null ? student.zipCode : 0,
-                    email: email || 'undefined',
-                    birthDate:
-                      student != null ? student.birthDate : 'undefined',
-                    minor: student != null ? student.minor : false,
-                    gradeLevel: grade,
-                    schoolName: school,
-                    courseInformation:
-                      student != null ? student.courseInformation : [],
-                  });
-                  if (student != null && studentID) {
-                    updateStudent(student, studentID);
+            <div className={styles.topButtons}>
+              <button className={styles.button}>
+                <img className={styles.icon} src={transcript} />
+              </button>
+              <button
+                className={styles.button}
+                onClick={() => {
+                  if (!edit) {
+                    setStudent({
+                      firstName: name || 'undefined',
+                      middleName: student?.middleName,
+                      lastName:
+                        student != null ? student.lastName : 'undefined',
+                      addrFirstLine:
+                        student != null ? student.addrFirstLine : 'undefined',
+                      addrSecondLine: student?.addrSecondLine,
+                      city: student != null ? student.city : 'undefined',
+                      state: student != null ? student.state : 'undefined',
+                      zipCode: student != null ? student.zipCode : 0,
+                      email: email || 'undefined',
+                      birthDate:
+                        student != null ? student.birthDate : 'undefined',
+                      minor: student != null ? student.minor : false,
+                      gradeLevel: grade,
+                      schoolName: school,
+                      courseInformation:
+                        student != null ? student.courseInformation : [],
+                    });
+                    if (student != null && studentID) {
+                      updateStudent(student, studentID);
+                    }
                   }
-                }
-                setEdit(!edit);
-              }}
-            >
-              <img src={edit ? editImage : saveImage} />
-            </button>
-            <button className={styles.transcriptButton}>
-              <img src={transcript} />
-            </button>
+                  setEdit(!edit);
+                }}
+              >
+                <img
+                  className={styles.icon}
+                  src={edit ? editImage : saveImage}
+                />
+              </button>
+            </div>
           </div>
 
           <div className={styles.inputs}>
@@ -105,6 +111,7 @@ const StudentProfilePage = (): JSX.Element => {
               <a className={styles.boxData}>
                 {!edit ? (
                   <input
+                    className={styles.inputBox}
                     onChange={(event) => {
                       setName(event.target.value);
                     }}
@@ -119,6 +126,7 @@ const StudentProfilePage = (): JSX.Element => {
               <a className={styles.boxData}>
                 {!edit ? (
                   <input
+                    className={styles.inputBox}
                     onChange={(event) => {
                       setEmail(event.target.value);
                     }}
@@ -134,6 +142,7 @@ const StudentProfilePage = (): JSX.Element => {
               <a className={styles.boxData}>
                 {!edit ? (
                   <input
+                    className={styles.inputBox}
                     onChange={(event) => {
                       setGrade(event.target.value);
                     }}
@@ -148,6 +157,7 @@ const StudentProfilePage = (): JSX.Element => {
               <a className={styles.boxData}>
                 {!edit ? (
                   <input
+                    className={styles.inputBox}
                     onChange={(event) => {
                       setSchool(event.target.value);
                     }}

@@ -1,6 +1,54 @@
 .container {
   height: 100vh;
+  margin-left: 200px;
+  width: calc(100% - 250px);
+  position: relative;
+  z-index: -1;
+}
+
+.rightPane {
+  margin-top: 75px;
+  float: right;
+  height: 100%;
+  width: calc(100% - 250px);
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+}
+
+.title {
+  margin-left: 37%;
   width: 100%;
+}
+
+.topButtons {
+  display: flex;
+  align-items: flex;
+  margin-right: 10%;
+  gap: 15px;
+}
+
+.button {
+  width: 65px;
+  height: 50px;
+  margin-bottom: 15px;
+  border-radius: 15px;
+  border: none;
+  background-color: var(--color-orange);
+}
+
+.button:hover {
+  width: 65px;
+  height: 50px;
+  border-radius: 15px;
+  border: none;
+  background-color: var(--color-yellow-orange);
+}
+
+.icon {
+  height: 25px;
 }
 
 .inputs {
@@ -8,51 +56,31 @@
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  border: 1px solid #000000;
+  border: 1px solid black;
   border-radius: 20px;
   width: 80%;
   margin-left: auto;
   margin-right: auto;
 }
 
-.settings {
-  margin-top: 100px;
-  float: right;
-  height: 100%;
-  width: calc(100% - 250px);
-}
-
-.title {
-  text-align: center;
-  width: 205px;
-  height: 38px;
-  margin-left: auto;
-  margin-right: auto;
-
-  font-style: normal;
-  font-weight: 600;
-  font-size: 25px;
-  line-height: 38px;
-}
-
 .box {
-  border-bottom: 1px solid #000000;
-  padding-top: 30px;
-  padding-bottom: 25px;
-  padding-left: 5px;
+  border-bottom: 1px solid black;
+  padding: 20px;
+  display: flex;
+  align-items: center;
 }
 
 .bottomBox {
-  padding-bottom: 30px;
-  padding-top: 30px;
-  padding-left: 5px;
+  padding: 20px;
 }
 
 .boxTitle {
   font-style: normal;
   font-weight: 400;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   width: 200px;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
   padding-left: 20px;
   display: inline-block;
 }
@@ -61,63 +89,22 @@
   float: center;
   font-style: italic;
   font-weight: 500;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
 }
 
-.editKey {
-  background: none;
-  border: none;
-  outline: none;
-  float: right;
-  margin-right: 20px;
-  padding: 0px;
-  height: 32px;
-  color: #808080;
-  font-size: 2rem;
-  margin-right: 20px;
-  cursor: pointer;
-}
-
-.editButton {
-  width: 85px;
-  height: 60px;
-  border-radius: 15px;
-  border: none;
-  background-color: var(--color-orange);
-}
-
-.transcriptButton {
-  width: 85px;
-  height: 60px;
-  border-radius: 15px;
-  border: none;
-  background-color: var(--color-orange);
-}
-
-.buttons {
-  display: flex;
+.inputBox {
+  padding: 3px 5px 3px 5px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border-width: 1px;
 }
 
 .coursesTitle {
+  margin: 30px auto 30px 100px;
+  font-weight: normal;
   text-decoration: underline;
-  text-align: left;
-  width: 205px;
-  height: 38px;
-  margin-left: 10%;
-
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 600;
-  font-size: 25px;
-  line-height: 38px;
-}
-
-.topButtons {
-  align-items: flex;
-  margin-bottom: 30px;
-  margin-left: 74%;
-  display: flex;
-  gap: 15px;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 8px;
 }
 
 .courseList {
