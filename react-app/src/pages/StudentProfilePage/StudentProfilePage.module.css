@@ -92,6 +92,12 @@
   font-size: 1.25rem;
 }
 
+.nameInputs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .inputBox {
   padding: 3px 5px 3px 5px;
   font-size: 1rem;

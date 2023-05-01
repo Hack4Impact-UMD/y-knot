@@ -17,7 +17,9 @@ const StudentProfilePage = (): JSX.Element => {
   const [edit, setEdit] = useState(true);
   const [student, setStudent] = useState<Student>();
   const [editName, setEditName] = useState(false);
-  const [name, setName] = useState(student?.firstName);
+  const [firstName, setFirstName] = useState(student?.firstName);
+  const [middleName, setMiddleName] = useState(student?.middleName);
+  const [lastName, setLastName] = useState(student?.lastName);
   const [email, setEmail] = useState(student?.email);
   const [grade, setGrade] = useState(student?.gradeLevel);
   const [school, setSchool] = useState(student?.schoolName);
@@ -73,10 +75,9 @@ const StudentProfilePage = (): JSX.Element => {
                 onClick={() => {
                   if (!edit) {
                     setStudent({
-                      firstName: name || 'undefined',
-                      middleName: student?.middleName,
-                      lastName:
-                        student != null ? student.lastName : 'undefined',
+                      firstName: firstName || 'undefined',
+                      middleName: middleName || 'undefined',
+                      lastName: lastName || 'undefined',
                       addrFirstLine:
                         student != null ? student.addrFirstLine : 'undefined',
                       addrSecondLine: student?.addrSecondLine,
@@ -112,14 +113,31 @@ const StudentProfilePage = (): JSX.Element => {
               <a className={styles.boxTitle}>Name</a>
               <a className={styles.boxData}>
                 {!edit ? (
-                  <input
-                    className={styles.inputBox}
-                    onChange={(event) => {
-                      setName(event.target.value);
-                    }}
-                  ></input>
+                  <div className={styles.nameInputs}>
+                    <input
+                      className={styles.inputBox}
+                      onChange={(event) => {
+                        setFirstName(event.target.value);
+                      }}
+                      placeholder="First"
+                    ></input>
+                    <input
+                      className={styles.inputBox}
+                      onChange={(event) => {
+                        setMiddleName(event.target.value);
+                      }}
+                      placeholder="Middle"
+                    ></input>
+                    <input
+                      className={styles.inputBox}
+                      onChange={(event) => {
+                        setLastName(event.target.value);
+                      }}
+                      placeholder="Last"
+                    ></input>
+                  </div>
                 ) : (
-                  `${student?.firstName} ${student?.lastName}`
+                  `${student?.firstName} ${student?.middleName} ${student?.lastName}`
                 )}
               </a>
             </div>
