@@ -32,6 +32,11 @@
   font-size: large;
 }
 
+.noStudent {
+  padding-top: 10px;
+  text-align: center;
+}
+
 .inputs {
   flex-grow: 1;
   display: flex;

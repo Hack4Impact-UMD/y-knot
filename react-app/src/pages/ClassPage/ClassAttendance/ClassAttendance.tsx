@@ -4,7 +4,7 @@ import noteIcon from '../../../assets/note.svg';
 import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
 
 const ClassAttendance = (): JSX.Element => {
-  const students = [
+  const students: string[] = [
     'Fiona Love',
     'Alicia Jacobs',
     'Emily Lee',
@@ -13,7 +13,7 @@ const ClassAttendance = (): JSX.Element => {
   ];
 
   const dates = ['1/1/2023', '1/8/2023', '1/16/2023'];
-  const [selectAllChecked, setSelectAllChecked] = useState(false);
+  const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
 
   const handleSelectAllChange = () => {
     setSelectAllChecked(true);
@@ -34,29 +34,33 @@ const ClassAttendance = (): JSX.Element => {
           })}
         </select>
       </div>
-      <div className={styles.inputs}>
-        {students.map(function (name, i) {
-          const roundTop = i === 0 ? styles.roundTop : '';
-          const roundBottom =
-            i === students.length - 1 ? styles.roundBottom : '';
+      {students.length === 0 ? (
+        <h4 className={styles.noStudent}>No Students Currently in Roster</h4>
+      ) : (
+        <div className={styles.inputs}>
+          {students.map(function (name, i) {
+            const roundTop = i === 0 ? styles.roundTop : '';
+            const roundBottom =
+              i === students.length - 1 ? styles.roundBottom : '';
 
-          return (
-            <div
-              className={`${styles.box} ${roundTop} ${roundBottom}`}
-              key={name}
-            >
-              <p className={styles.boxTitle}>{name}</p>
-              <CheckboxWithLabel
+            return (
+              <div
+                className={`${styles.box} ${roundTop} ${roundBottom}`}
                 key={name}
-                checkedText="Present"
-                uncheckedText="Absent"
-                isChecked={selectAllChecked}
-                setIsChecked={setSelectAllChecked}
-              />
-            </div>
-          );
-        })}
-      </div>
+              >
+                <p className={styles.boxTitle}>{name}</p>
+                <CheckboxWithLabel
+                  key={name}
+                  checkedText="Present"
+                  uncheckedText="Absent"
+                  isChecked={selectAllChecked}
+                  setIsChecked={setSelectAllChecked}
+                />
+              </div>
+            );
+          })}
+        </div>
+      )}
       <div className={styles.bottomLevel}>
         <button className={styles.bottomButton}>Save</button>
         <button className={styles.bottomButton} onClick={handleSelectAllChange}>
