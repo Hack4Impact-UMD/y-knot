@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
-import styles from './HomeworkPage.module.css';
-import trashIcon from '../../../assets/trash.svg';
-import eyeIcon from '../../../assets/view.svg';
+import { useState } from 'react';
+import styles from './ClassAttendance.module.css';
 import noteIcon from '../../../assets/note.svg';
 import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
 
-const HomeworkPage = (): JSX.Element => {
+const ClassAttendance = (): JSX.Element => {
   const students = [
     'Fiona Love',
     'Alicia Jacobs',
@@ -14,7 +12,7 @@ const HomeworkPage = (): JSX.Element => {
     'Ariana Apple',
   ];
 
-  const dates = ['Homework 2', 'Exam 1', 'Exam 2'];
+  const dates = ['1/1/2023', '1/8/2023', '1/16/2023'];
   const [selectAllChecked, setSelectAllChecked] = useState(false);
 
   const handleSelectAllChange = () => {
@@ -24,10 +22,12 @@ const HomeworkPage = (): JSX.Element => {
   return (
     <div className={styles.mainContainer}>
       <div className={styles.topLevel}>
-        <img className={styles.noteIcon} src={noteIcon}></img>
+        <button className={styles.noteButton}>
+          <img className={styles.noteIcon} src={noteIcon}></img>
+        </button>
         <select defaultValue="" className={styles.dateSelection}>
           <option value="" disabled hidden>
-            Assignment
+            Date:
           </option>
           {dates.map(function (date, i) {
             return <option value={date}>{date}</option>;
@@ -36,18 +36,20 @@ const HomeworkPage = (): JSX.Element => {
       </div>
       <div className={styles.inputs}>
         {students.map(function (name, i) {
+          const roundTop = i === 0 ? styles.roundTop : '';
+          const roundBottom =
+            i === students.length - 1 ? styles.roundBottom : '';
+
           return (
             <div
-              className={
-                i === students.length - 1 ? styles.bottomBox : styles.box
-              }
+              className={`${styles.box} ${roundTop} ${roundBottom}`}
               key={name}
             >
-              <a className={styles.boxTitle}>{name}</a>
+              <p className={styles.boxTitle}>{name}</p>
               <CheckboxWithLabel
                 key={name}
-                checkedText="Complete"
-                uncheckedText="Incomplete"
+                checkedText="Present"
+                uncheckedText="Absent"
                 isChecked={selectAllChecked}
                 setIsChecked={setSelectAllChecked}
               />
@@ -56,14 +58,10 @@ const HomeworkPage = (): JSX.Element => {
         })}
       </div>
       <div className={styles.bottomLevel}>
-        <button className={styles.save}>Save</button>
-
-        <button className={styles.selectAll} onClick={handleSelectAllChange}>
+        <button className={styles.bottomButton}>Save</button>
+        <button className={styles.bottomButton} onClick={handleSelectAllChange}>
           Select All
         </button>
-
-        <button className={styles.remove}>Remove</button>
-        <button className={styles.add}>Add</button>
       </div>
       <br></br>
       <br></br>
@@ -71,4 +69,4 @@ const HomeworkPage = (): JSX.Element => {
   );
 };
 
-export default HomeworkPage;
+export default ClassAttendance;

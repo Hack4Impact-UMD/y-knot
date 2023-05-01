@@ -85,6 +85,7 @@
 }
 
 .editIcon:hover {
+  cursor: pointer;
   width: 25px;
   filter: brightness(0) saturate(100%) invert(72%) sepia(14%) saturate(6705%)
     hue-rotate(334deg) brightness(94%) contrast(89%);

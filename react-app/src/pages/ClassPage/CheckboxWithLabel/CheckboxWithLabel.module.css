@@ -1,3 +1,9 @@
+.icons {
+  width: 15%;
+  display: flex;
+  margin-left: 50%;
+}
+
 /* customized checkbox css*/
 .checkboxContainer {
   display: inline-block;
@@ -24,6 +30,7 @@
 }
 
 .checkboxContainer:hover input ~ .checkmark {
+  cursor: pointer;
   background-color: #ccc;
 }
 
@@ -52,12 +59,5 @@
 }
 
 .statusLabel {
-  font-size: larger;
   padding-left: 20%;
-}
-
-.icons {
-  width: 15%;
-  display: flex;
-  margin-left: 50%;
 }

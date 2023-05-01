@@ -3,8 +3,8 @@ import { useAuth } from '../../auth/AuthProvider';
 import styles from '../../pages/ClassPage/ClassPage.module.css';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
-import AttendancePage from './AttendancePage/AttendancePage';
-import HomeworkPage from './HomeworkPage/HomeworkPage';
+import ClassAttendance from './ClassAttendance/ClassAttendance';
+import ClassHomework from './ClassHomework/ClassHomework';
 import ClassStudents from './ClassStudents/ClassStudents';
 
 enum Tab {
@@ -120,8 +120,8 @@ const ClassPage = (): JSX.Element => {
         {currentTab === Tab.Teachers && <Teachers />}
         {currentTab === Tab.Settings && <Settings />} */}
 
-          {currentTab === Tab.Homework && <HomeworkPage />}
-          {currentTab === Tab.Attendance && <AttendancePage />}
+          {currentTab === Tab.Homework && <ClassHomework />}
+          {currentTab === Tab.Attendance && <ClassAttendance />}
         </div>
       )}
     </div>
