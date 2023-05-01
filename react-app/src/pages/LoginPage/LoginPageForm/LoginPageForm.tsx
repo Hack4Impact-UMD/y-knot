@@ -1,13 +1,13 @@
-import styles from './LoginPageForm.module.css';
 import { useState } from 'react';
-import eyeIcon from '../../../assets/eye.svg';
-import eyeSlashIcon from '../../../assets/eye-slash.svg';
-import yKnotLogo from '../../../assets/yknot-logo.png';
-import ForgotPassword from '../ForgotPasswordModal/ForgotPassword';
 import { authenticateUser } from '../../../backend/FirebaseCalls';
 import { useNavigate } from 'react-router';
 import type { AuthError } from 'firebase/auth';
+import styles from './LoginPageForm.module.css';
 import Loading from '../../../components/LoadingScreen/Loading';
+import ForgotPassword from '../ForgotPasswordModal/ForgotPassword';
+import eyeIcon from '../../../assets/eye.svg';
+import eyeSlashIcon from '../../../assets/eye-slash.svg';
+import yKnotLogo from '../../../assets/yknot-logo.png';
 
 const LoginPageForm = ({ redirect }: { redirect: string }): JSX.Element => {
   const navigate = useNavigate();
@@ -58,59 +58,63 @@ const LoginPageForm = ({ redirect }: { redirect: string }): JSX.Element => {
       <div className={styles.titleContainer}>
         <h1 className={styles.signInText}>Sign In</h1>
       </div>
-      <div className={styles.inputBox}>
-        <div className={styles.emailContainer}>
-          <input
-            required
-            value={email}
-            className={styles.inputField}
-            type="email"
-            placeholder="Email"
-            onChange={(event) => setEmail(event.target.value)}
-          ></input>
-        </div>
+      <div className={styles.formContainer}>
+        <div className={styles.inputBox}>
+          <div className={styles.emailContainer}>
+            <input
+              required
+              value={email}
+              className={styles.inputField}
+              type="email"
+              placeholder="Email"
+              onChange={(event) => {
+                setEmail(event.target.value);
+              }}
+            ></input>
+          </div>
 
-        <div className={styles.passwordContainer}>
-          <div className={styles.passwordInputContainer}>
+          <div className={styles.passwordContainer}>
             <input
               required
               value={password}
               className={styles.inputField}
               type={showPassword ? 'text' : 'password'}
               placeholder="Password"
-              onChange={(event) => setPassword(event.target.value)}
+              onChange={(event) => {
+                setPassword(event.target.value);
+              }}
             ></input>
+            <button
+              type="button"
+              className={styles.showPasswordButton}
+              onClick={() => {
+                setShowPassword(!showPassword);
+              }}
+            >
+              <img
+                className={styles.showPasswordIcon}
+                src={showPassword ? eyeIcon : eyeSlashIcon}
+                alt="Toggle password visibility"
+              />
+            </button>
           </div>
-          <button
-            type="button"
-            className={styles.showPasswordButton}
-            onClick={() => {
-              setShowPassword(!showPassword);
-            }}
-          >
-            <img
-              className={styles.showPasswordIcon}
-              src={showPassword ? eyeIcon : eyeSlashIcon}
-              alt="Toggle password visibility"
-            />
-          </button>
         </div>
+        <button
+          type="button"
+          className={styles.forgotPassword}
+          onClick={() => {
+            setOpenForgotModal(!openForgotModal);
+          }}
+        >
+          Forgot Password?
+        </button>
+        <ForgotPassword
+          open={openForgotModal}
+          onClose={() => {
+            setOpenForgotModal(!openForgotModal);
+          }}
+        />
       </div>
-      <button
-        type="button"
-        className={styles.forgotPassword}
-        onClick={() => {
-          setOpenForgotModal(!openForgotModal);
-        }}
-      >
-        Forgot Password?
-      </button>
-      <ForgotPassword
-        open={openForgotModal}
-        onClose={() => {
-          setOpenForgotModal(!openForgotModal);
-        }}
-      />
       <br />
       <button
         type="submit"
