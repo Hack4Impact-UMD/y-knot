@@ -17,7 +17,6 @@ import SettingsPage from './pages/SettingsPage/SettingsPage';
 import CoursesPage from './pages/CoursesPage/CoursesPage';
 import StudentRosterPage from './pages/StudentRosterPage/StudentRosterPage';
 import ClassPage from './pages/ClassPage/ClassPage';
-import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './muiTheme';
 import { addSampleStudent } from './backendTesting/test';
 import { authenticateUser } from './backend/FirebaseCalls';
