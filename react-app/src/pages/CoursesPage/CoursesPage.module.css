@@ -32,3 +32,22 @@
   flex-wrap: wrap;
   margin-left: 100px;
 }
+
+.courseHeader {
+  display: flex;
+  width: 100%;
+}
+
+.addCourse {
+  border-radius: 30px;
+  border: none;
+  background-color: var(--color-orange);
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 25px;
+  width: 200px;
+  height: 50px;
+  color: #ffffff;
+  margin-right: 100px;
+}

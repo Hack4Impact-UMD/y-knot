@@ -1,4 +1,5 @@
 import styles from './CourseCard.module.css';
+import { useAuth } from '../../../../src/auth/AuthProvider';
 
 interface courseDetails {
   teacher: string;
@@ -13,6 +14,8 @@ const CourseCard = ({
   section,
   color,
 }: courseDetails): JSX.Element => {
+  const authContext = useAuth();
+
   return (
     <div className={styles.container}>
       <div
@@ -31,7 +34,7 @@ const CourseCard = ({
           backgroundColor: color ? '' : '#D9D9D9',
         }}
       >
-        {teacher}
+        {authContext?.token?.claims.role === 'admin' ? teacher : teacher}
       </div>
     </div>
   );

@@ -22,7 +22,7 @@ const CoursesPage = (): JSX.Element => {
     return (
       <CourseCard
         key={i}
-        teacher={admin ? c.teacher : ''}
+        teacher={c.teacher}
         course={c.course}
         section={c.section}
         color={colors[i % colors.length]}
@@ -35,7 +35,7 @@ const CoursesPage = (): JSX.Element => {
     return (
       <CourseCard
         key={i}
-        teacher={admin ? c.teacher : ''}
+        teacher={c.teacher}
         course={c.course}
         section={c.section}
       />
@@ -48,7 +48,7 @@ const CoursesPage = (): JSX.Element => {
     return (
       <CourseCard
         key={i}
-        teacher={admin ? c.teacher : ''}
+        teacher={c.teacher}
         course={c.course}
         section={c.section}
       />
@@ -75,7 +75,18 @@ const CoursesPage = (): JSX.Element => {
           />
         </div>
 
-        <h1 className={styles.courseStatus}>Active Courses</h1>
+        <div className={styles.courseHeader}>
+          <h1 className={styles.courseStatus}>Active Courses</h1>
+
+          {authContext?.token?.claims.role === 'admin' ? (
+            <>
+              <button className={styles.addCourse}>Add Course</button>
+            </>
+          ) : (
+            <></>
+          )}
+        </div>
+
         <div className={styles.cardLayout}>{currentCards}</div>
 
         <h1 className={styles.courseStatus}>Past Courses</h1>
