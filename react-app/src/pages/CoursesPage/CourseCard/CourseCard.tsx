@@ -4,20 +4,35 @@ interface courseDetails {
   teacher: string;
   course: string;
   section: string;
+  color?: string;
 }
 
-const CourseCard = (props: courseDetails): JSX.Element => {
-  const labels = ['Teacher Name', 'Course', 'Section'];
-  const description = Object.entries(props).map((elem, index) => (
-    <div>
-      {labels[index]}: {elem[1]}
-    </div>
-  ));
-
+const CourseCard = ({
+  teacher,
+  course,
+  section,
+  color,
+}: courseDetails): JSX.Element => {
   return (
     <div className={styles.container}>
-      <div className={styles.background}></div>
-      <div className={styles.description}>{description}</div>
+      <div
+        className={styles.background}
+        style={{
+          backgroundColor: color ? color : '#e3853a',
+          color: color ? '#ffffff' : '#000000',
+        }}
+      >
+        <div className={styles.course}>{course}</div>
+        <div className={styles.section}>{section}</div>
+      </div>
+      <div
+        className={styles.description}
+        style={{
+          backgroundColor: color ? '' : '#D9D9D9',
+        }}
+      >
+        {teacher}
+      </div>
     </div>
   );
 };
