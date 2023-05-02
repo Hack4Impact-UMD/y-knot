@@ -15,7 +15,7 @@ const StudentList = (props: {
   const [popupName, setPopupName] = useState<String>();
   const [popupEmail, setPopupEmail] = useState<String>();
   const [removeStudentId, setStudentId] = useState<String>();
-
+  const [numToShow, setNumToShow] = useState<number>(50);
   const handleClick = () => {
     setShowPopup(true);
   };
@@ -57,11 +57,18 @@ const StudentList = (props: {
           </div>,
         );
       }
-
       return result;
     }, []);
     setStudentList(list);
   }, [props.search]);
+
+  const handleLoadMore = () => {
+    if (numToShow + 30 > props.students.length) {
+      setNumToShow(props.students.length);
+    } else {
+      setNumToShow(numToShow + 30);
+    }
+  };
 
   return (
     <>
@@ -73,7 +80,9 @@ const StudentList = (props: {
         </h4>
       ) : (
         <>
-          <div className={styles.listBox}>{studentList}</div>
+          <div className={styles.listBox}>
+            {studentList.slice(0, numToShow)}
+          </div>
           {showPopup && (
             <DeleteStudentConfirmation
               open={showPopup}
@@ -85,6 +94,11 @@ const StudentList = (props: {
               removeStudentId={removeStudentId ? removeStudentId : 'undefined'}
               setReloadList={props.setReloadList}
             />
+          )}
+          {numToShow < props.students.length && (
+            <button className={styles.loadMore} onClick={handleLoadMore}>
+              Load More
+            </button>
           )}
         </>
       )}

@@ -56,3 +56,14 @@
   margin-top: 120px;
   text-align: center;
 }
+.loadMore {
+  width: 150px;
+  height: 40px;
+  float: right;
+  background: var(--color-orange);
+  border-radius: 30px;
+  font-size: 17px;
+  border: none;
+  color: white;
+  margin-left: 45%;
+}

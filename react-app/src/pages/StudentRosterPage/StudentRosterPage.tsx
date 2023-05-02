@@ -18,6 +18,22 @@ const StudentRosterPage = (): JSX.Element => {
   // Used to detect time in between keystrokes when using the search bar
   let timer: NodeJS.Timeout | null = null;
 
+  function createStudentList() {
+    let studentList: Array<Partial<StudentID>> = [];
+    for (let i = 1; i <= 51; i++) {
+      let student: Partial<StudentID> = {};
+      student.id = i.toString();
+      student.firstName = 'John';
+      student.middleName = 'Doe';
+      student.lastName = 'Smith';
+      student.email = `student${i}@example.com`;
+      studentList.push(student);
+    }
+    return studentList;
+  }
+
+  const fakeStudentList = createStudentList();
+
   useEffect(() => {
     setLoading(true);
     getAllStudents()
@@ -33,6 +49,7 @@ const StudentRosterPage = (): JSX.Element => {
           partialStudents.push(newStudent);
         });
         setStudents(partialStudents);
+        //setStudents(fakeStudentList);
       })
       .catch((err) => {
         setError(true);
