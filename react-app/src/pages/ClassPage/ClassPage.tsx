@@ -118,7 +118,7 @@ const ClassPage = (): JSX.Element => {
           {currentTab === Tab.Homework && <Homework />}
           {currentTab === Tab.Settings && <Settings />} */}
 
-          {currentTab === Tab.Main && <ClassTeachers />}
+          {currentTab === Tab.Teachers && <ClassTeachers />}
         </div>
       )}
     </div>
