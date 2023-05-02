@@ -5,7 +5,7 @@ export interface YKNOTUser {
   userInfo?: Teacher;
 }
 
-export interface Teacher {
+export interface Teacher extends YKNOTUser {
   email: string;
   gender?: string;
   pronoun?: string;
