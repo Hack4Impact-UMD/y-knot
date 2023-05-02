@@ -10,7 +10,6 @@ import {
 import { addSampleCourse, addSampleStudent } from './backendTesting/test';
 import { Upload } from './components/Upload/Upload';
 import RequireAuth from './auth/RequireAuth/RequireAuth';
-import Sample404Page from './pages/Sample404Page/Sample404Page';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import LoginPage from './pages/LoginPage/LoginPage';
 import SettingsPage from './pages/SettingsPage/SettingsPage';
@@ -19,6 +18,7 @@ import StudentRosterPage from './pages/StudentRosterPage/StudentRosterPage';
 import ClassPage from './pages/ClassPage/ClassPage';
 import TranscriptPage from './pages/TranscriptPage/TranscriptPage';
 import CertificatePage from './pages/CertificatePage/CertificatePage';
+import NotFound from './pages/NotFoundPage/NotFound';
 
 function App(): JSX.Element {
   const customTheme = theme;
@@ -56,7 +56,7 @@ function App(): JSX.Element {
               path="*"
               element={
                 <RequireAuth>
-                  <Sample404Page />
+                  <NotFound />
                 </RequireAuth>
               }
             />

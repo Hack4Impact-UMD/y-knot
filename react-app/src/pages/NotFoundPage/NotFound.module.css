@@ -1,0 +1,58 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.yKnotLogo {
+  width: 200px;
+  position: absolute;
+  top: 40px;
+  left: 20px;
+}
+
+.text {
+  text-align: center;
+  color: #414141;
+}
+
+.text * {
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+}
+
+.text h1 {
+  font-size: 6rem;
+}
+
+.text h2 {
+  font-size: 2rem;
+  margin-top: 0.5rem;
+}
+
+.button {
+  margin-top: 3rem;
+  width: 16.67vh;
+  min-width: 180px;
+  height: 35px;
+  padding: 11px 0 11px 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  color: white;
+  font-weight: 500;
+  font-size: 0.8rem;
+  border: none;
+  border-radius: 25px;
+  background: var(--color-orange);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.button:hover {
+  background: var(--color-yellow-orange);
+}
