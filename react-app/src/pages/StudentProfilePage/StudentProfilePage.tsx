@@ -1,28 +1,34 @@
 import { useEffect, useState } from 'react';
-import styles from './StudentProfilePage.module.css';
+import { useParams } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
+import { getStudent, updateStudent } from '../../backend/FirestoreCalls';
+import { authenticateUser } from '../../backend/FirebaseCalls';
+import { type Student } from '../../types/StudentType';
+import styles from './StudentProfilePage.module.css';
 import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import editImage from '../../assets/edit.svg';
 import saveImage from '../../assets/save.svg';
-import transcript from '../../assets/transcript.svg';
+import transcriptIcon from '../../assets/transcript.svg';
 import CourseCard from '../../components/CourseCard/CourseCard';
 import UpdateStudent from './UpdateStudent/UpdateStudent';
-import { useParams } from 'react-router-dom';
-import { getStudent, updateStudent } from '../../backend/FirestoreCalls';
-import { authenticateUser } from '../../backend/FirebaseCalls';
-import { type Student } from '../../types/StudentType';
 
 const StudentProfilePage = (): JSX.Element => {
-  const [edit, setEdit] = useState(true);
+  const [edit, setEdit] = useState<boolean>(true);
+  const [hasEdited, setHasEdited] = useState<boolean>(false);
   const [student, setStudent] = useState<Student>();
-  const [editName, setEditName] = useState(false);
-  const [firstName, setFirstName] = useState(student?.firstName);
-  const [middleName, setMiddleName] = useState(student?.middleName);
-  const [lastName, setLastName] = useState(student?.lastName);
-  const [email, setEmail] = useState(student?.email);
-  const [grade, setGrade] = useState(student?.gradeLevel);
-  const [school, setSchool] = useState(student?.schoolName);
+  const [firstName, setFirstName] = useState<string | undefined>(
+    student?.firstName,
+  );
+  const [middleName, setMiddleName] = useState<string | undefined>(
+    student?.middleName,
+  );
+  const [lastName, setLastName] = useState<string | undefined>(
+    student?.lastName,
+  );
+  const [email, setEmail] = useState<string | undefined>(student?.email);
+  const [grade, setGrade] = useState<string | undefined>(student?.gradeLevel);
+  const [school, setSchool] = useState<string | undefined>(student?.schoolName);
   const [loading, setLoading] = useState<boolean>(true);
 
   const authContext = useAuth();
@@ -36,6 +42,12 @@ const StudentProfilePage = (): JSX.Element => {
           getStudent(studentID)
             .then((data) => {
               setStudent(data);
+              setFirstName(data.firstName);
+              setMiddleName(data.middleName);
+              setLastName(data.lastName);
+              setEmail(data.email);
+              setGrade(data.gradeLevel);
+              setSchool(data.schoolName);
               setLoading(false);
             })
             .catch((err) => {
@@ -50,14 +62,17 @@ const StudentProfilePage = (): JSX.Element => {
     }
   }, []);
 
+  useEffect(() => {
+    if (hasEdited && student != null && studentID) {
+      updateStudent(student, studentID);
+      setHasEdited(false);
+    }
+  }, [student]);
+
   return (
     <>
       <NavigationBar />
-      {authContext?.loading ? (
-        <div className={styles.loadingContainer}>
-          <Loading />
-        </div>
-      ) : loading ? (
+      {authContext?.loading || loading ? (
         <div className={styles.loadingContainer}>
           <Loading />
         </div>
@@ -68,7 +83,7 @@ const StudentProfilePage = (): JSX.Element => {
 
             <div className={styles.topButtons}>
               <button className={styles.button}>
-                <img className={styles.icon} src={transcript} />
+                <img className={styles.icon} src={transcriptIcon} />
               </button>
               <button
                 className={styles.button}
@@ -76,26 +91,26 @@ const StudentProfilePage = (): JSX.Element => {
                   if (!edit) {
                     setStudent({
                       firstName: firstName || 'undefined',
-                      middleName: middleName || 'undefined',
+                      middleName: middleName || '',
                       lastName: lastName || 'undefined',
-                      addrFirstLine:
-                        student != null ? student.addrFirstLine : 'undefined',
+                      addrFirstLine: student
+                        ? student.addrFirstLine
+                        : 'undefined',
                       addrSecondLine: student?.addrSecondLine,
-                      city: student != null ? student.city : 'undefined',
-                      state: student != null ? student.state : 'undefined',
-                      zipCode: student != null ? student.zipCode : 0,
+                      city: student ? student.city : 'undefined',
+                      state: student ? student.state : 'undefined',
+                      zipCode: student ? student.zipCode : 0,
                       email: email || 'undefined',
-                      birthDate:
-                        student != null ? student.birthDate : 'undefined',
-                      minor: student != null ? student.minor : false,
+                      birthDate: student ? student.birthDate : 'undefined',
+                      minor: student ? student.minor : false,
                       gradeLevel: grade,
                       schoolName: school,
-                      courseInformation:
-                        student != null ? student.courseInformation : [],
+                      courseInformation: student
+                        ? student.courseInformation
+                        : [],
                     });
-                    if (student != null && studentID) {
-                      updateStudent(student, studentID);
-                    }
+                  } else {
+                    setHasEdited(true);
                   }
                   setEdit(!edit);
                 }}
@@ -120,6 +135,7 @@ const StudentProfilePage = (): JSX.Element => {
                         setFirstName(event.target.value);
                       }}
                       placeholder="First"
+                      value={firstName}
                     ></input>
                     <input
                       className={styles.inputBox}
@@ -127,6 +143,7 @@ const StudentProfilePage = (): JSX.Element => {
                         setMiddleName(event.target.value);
                       }}
                       placeholder="Middle"
+                      value={middleName}
                     ></input>
                     <input
                       className={styles.inputBox}
@@ -134,6 +151,7 @@ const StudentProfilePage = (): JSX.Element => {
                         setLastName(event.target.value);
                       }}
                       placeholder="Last"
+                      value={lastName}
                     ></input>
                   </div>
                 ) : (
@@ -141,6 +159,7 @@ const StudentProfilePage = (): JSX.Element => {
                 )}
               </a>
             </div>
+
             <div className={styles.box} id="Email">
               <a className={styles.boxTitle}>Email</a>
               <a className={styles.boxData}>
@@ -150,6 +169,7 @@ const StudentProfilePage = (): JSX.Element => {
                     onChange={(event) => {
                       setEmail(event.target.value);
                     }}
+                    value={email}
                   ></input>
                 ) : (
                   student?.email
@@ -166,13 +186,15 @@ const StudentProfilePage = (): JSX.Element => {
                     onChange={(event) => {
                       setGrade(event.target.value);
                     }}
+                    value={grade}
                   ></input>
                 ) : (
                   student?.gradeLevel
                 )}
               </a>
             </div>
-            <div className={styles.bottomBox} id="Password">
+
+            <div className={styles.bottomBox} id="School">
               <a className={styles.boxTitle}>School</a>
               <a className={styles.boxData}>
                 {!edit ? (
@@ -181,6 +203,7 @@ const StudentProfilePage = (): JSX.Element => {
                     onChange={(event) => {
                       setSchool(event.target.value);
                     }}
+                    value={school}
                   ></input>
                 ) : (
                   student?.schoolName
@@ -188,6 +211,7 @@ const StudentProfilePage = (): JSX.Element => {
               </a>
             </div>
           </div>
+
           <h1 className={styles.coursesTitle}>Courses</h1>
           <div className={styles.courseList}>
             <CourseCard teacher="bob" course="1" section="1" />

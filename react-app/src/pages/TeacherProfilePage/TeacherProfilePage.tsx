@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react';
-import styles from './TeacherProfilePage.module.css';
-import { useAuth } from '../../auth/AuthProvider';
-import Loading from '../../components/LoadingScreen/Loading';
-import NavigationBar from '../../components/NavigationBar/NavigationBar';
-import CourseCard from '../../components/CourseCard/CourseCard';
 import { useParams } from 'react-router-dom';
+import { useAuth } from '../../auth/AuthProvider';
 import { getTeacher } from '../../backend/FirestoreCalls';
 import { authenticateUser } from '../../backend/FirebaseCalls';
 import { type Teacher } from '../../types/UserType';
+import styles from './TeacherProfilePage.module.css';
+import Loading from '../../components/LoadingScreen/Loading';
+import NavigationBar from '../../components/NavigationBar/NavigationBar';
+import CourseCard from '../../components/CourseCard/CourseCard';
 
 const TeacherProfilePage = (): JSX.Element => {
   const [teacher, setTeacher] = useState<Teacher>();
-  const [editName, setEditName] = useState(false);
-  const [name, setName] = useState('Fiona Love');
-  const [email, setEmail] = useState('f.love@gmail.com');
+  const [editName, setEditName] = useState<boolean>(false);
+  const [name, setName] = useState<string>('Fiona Love');
+  const [email, setEmail] = useState<string>('f.love@gmail.com');
   const [loading, setLoading] = useState<boolean>(true);
 
   const authContext = useAuth();
@@ -44,7 +44,7 @@ const TeacherProfilePage = (): JSX.Element => {
   return (
     <>
       <NavigationBar />
-      {authContext?.loading ? (
+      {authContext?.loading || loading ? (
         <div className={styles.container}>
           <Loading />
         </div>
@@ -66,6 +66,7 @@ const TeacherProfilePage = (): JSX.Element => {
               <a className={styles.boxData}>{email}</a>
             </div>
           </div>
+
           <h1 className={styles.coursesTitle}>Courses</h1>
           <div className={styles.courseList}>
             <CourseCard teacher="bob" course="1" section="1" />
