@@ -49,7 +49,10 @@ const ClassMain = (): JSX.Element => {
           </div>
         </div>
         <div className={styles.introContent}>
-          <p className={styles.introText} contentEditable={editText}>
+          <p
+            className={`${styles.introText} ${editText && styles.editing}`}
+            contentEditable={editText}
+          >
             {text}
           </p>
         </div>
