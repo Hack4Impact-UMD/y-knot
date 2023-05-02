@@ -8,11 +8,13 @@ import DeleteStudentConfirmation from './DeleteStudentConfirmation/DeleteStudent
 const StudentList = (props: {
   search: string;
   students: Array<Partial<StudentID>>;
+  setReloadList: Function;
 }) => {
   const [studentList, setStudentList] = useState<any[]>([]);
   const [showPopup, setShowPopup] = useState(false);
   const [popupName, setPopupName] = useState<String>();
   const [popupEmail, setPopupEmail] = useState<String>();
+  const [removeStudentId, setStudentId] = useState<String>();
 
   const handleClick = () => {
     setShowPopup(true);
@@ -25,6 +27,7 @@ const StudentList = (props: {
       const lastName = student.lastName ? student.lastName + ' ' : '';
       const fullName = firstName + middleName + lastName;
       const email = student.email;
+      const id = student.id;
       if (fullName.toLowerCase().includes(props.search.toLowerCase())) {
         result.push(
           <div
@@ -45,6 +48,7 @@ const StudentList = (props: {
                   onClick={() => {
                     setPopupEmail(email);
                     setPopupName(fullName);
+                    setStudentId(id);
                     handleClick();
                   }}
                 />
@@ -78,6 +82,8 @@ const StudentList = (props: {
               }}
               popupName={popupName ? popupName : 'undefined'}
               popupEmail={popupEmail ? popupEmail : 'undefined'}
+              removeStudentId={removeStudentId ? removeStudentId : 'undefined'}
+              setReloadList={props.setReloadList}
             />
           )}
         </>

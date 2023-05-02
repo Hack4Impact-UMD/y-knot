@@ -2,12 +2,15 @@ import { useState } from 'react';
 import styles from './DeleteStudentConfirmation.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
 import x from '../../../../assets/x.svg';
+import { deleteStudent } from '../../../../backend/FirestoreCalls';
 
 interface popupModalType {
   onClose: () => void;
   open: any;
   popupName: String;
   popupEmail: String;
+  removeStudentId: String;
+  setReloadList: Function;
 }
 
 const DeleteStudentConfirmation = ({
@@ -15,10 +18,16 @@ const DeleteStudentConfirmation = ({
   open,
   popupName,
   popupEmail,
+  removeStudentId,
+  setReloadList,
 }: popupModalType): React.ReactElement => {
   const [submittedError, setSubmittedError] = useState<boolean>(false);
 
   const handleConfirm = (): void => {
+    if (removeStudentId != 'undefined') {
+      deleteStudent(removeStudentId.valueOf());
+      setReloadList(true);
+    }
     onClose();
   };
 
@@ -55,8 +64,12 @@ const DeleteStudentConfirmation = ({
             ) : (
               <div className={styles.bodyText}>
                 Are you sure you would like to remove?
-                <div className={styles.name}>{popupName}</div>
-                <div className={styles.email}>({popupEmail})</div>
+                <div className={styles.name}>
+                  {popupName === 'undefined' ? '' : popupName}
+                </div>
+                <div className={styles.email}>
+                  {popupEmail === 'undefined' ? '' : <>({popupEmail})</>}
+                </div>
               </div>
             )}
           </p>

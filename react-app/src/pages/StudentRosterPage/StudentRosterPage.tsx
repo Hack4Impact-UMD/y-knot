@@ -13,11 +13,13 @@ const StudentRosterPage = (): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
+  const [reloadList, setReloadList] = useState<Boolean>(false);
   const auth = useAuth();
   // Used to detect time in between keystrokes when using the search bar
   let timer: NodeJS.Timeout | null = null;
 
   useEffect(() => {
+    setLoading(true);
     getAllStudents()
       .then((allStudents) => {
         const partialStudents: Array<Partial<StudentID>> = [];
@@ -38,7 +40,7 @@ const StudentRosterPage = (): JSX.Element => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [reloadList]);
 
   const handleSearch = (e: any) => {
     if (error || loading) {
@@ -91,7 +93,11 @@ const StudentRosterPage = (): JSX.Element => {
                 Error retrieving students. Please try again later.
               </h4>
             ) : (
-              <StudentList search={search} students={students} />
+              <StudentList
+                search={search}
+                students={students}
+                setReloadList={setReloadList}
+              />
             )}
           </div>
         </>
