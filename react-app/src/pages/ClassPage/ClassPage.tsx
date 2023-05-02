@@ -3,6 +3,7 @@ import { useAuth } from '../../auth/AuthProvider';
 import styles from '../../pages/ClassPage/ClassPage.module.css';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
+import ClassMain from './ClassMain/ClassMain';
 import ClassStudents from './ClassStudents/ClassStudents';
 
 enum Tab {
@@ -110,6 +111,7 @@ const ClassPage = (): JSX.Element => {
             )}
           </div>
 
+          {currentTab == Tab.Main && <ClassMain />}
           {currentTab == Tab.Students && <ClassStudents />}
 
           {/* For rendering the corresponding component whenever tab value changes */}
