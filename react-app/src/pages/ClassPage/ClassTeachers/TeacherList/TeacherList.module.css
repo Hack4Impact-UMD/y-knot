@@ -1,0 +1,71 @@
+.listBox {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border: 1px solid #000000;
+  border-radius: 20px;
+  width: 100%;
+  margin-top: 30px;
+}
+
+.teacherBox {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  padding-left: 30px;
+  border-top: 1px solid #000000;
+}
+
+.teacherBoxTop {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  padding-left: 30px;
+}
+
+.line {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 10px 0;
+}
+
+.icons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 30px;
+  color: black;
+  transform: scale(0.75);
+}
+
+.name {
+  margin-right: auto;
+}
+
+.noTeacher {
+  padding-top: 100px;
+  text-align: center;
+}
+
+.button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.addButton {
+  background: var(--color-pastel-green);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 35px;
+  float: right;
+}
+
+.parentContainer {
+  width: 80%;
+}

@@ -1,42 +1,61 @@
-import styles from './ClassTeachers.module.css';
-import trashIcon from '../../../assets/trash.svg';
-import eyeIcon from '../../../assets/view.svg';
-const ClassTeachers = (): JSX.Element => {
+import { useState, useEffect } from 'react';
+import { getAllTeachers } from '../../../backend/FirestoreCalls';
+import { type YKNOTUser, type Role, Teacher } from '../../../types/UserType';
+import TeacherList from './TeacherList/TeacherList';
+import NavigationBar from '../../../components/NavigationBar/NavigationBar';
+import Loading from '../../../components/LoadingScreen/Loading';
+import { useAuth } from '../../../auth/AuthProvider';
+import styles from '../ClassTeachers/ClassTeachers.module.css';
+
+interface PartialUser {
+  auth_id: string;
+  name: string;
+  type: Role;
+}
+
+const AdminTeacherRosterPage = (): JSX.Element => {
+  const [teachers, setTeachers] = useState<Array<Partial<YKNOTUser>>>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<boolean>(false);
+  const auth = useAuth();
+
+  useEffect(() => {
+    getAllTeachers()
+      .then((allTeachers) => {
+        const partialTeachers: Array<Partial<YKNOTUser>> = allTeachers.map(
+          (currTeacher) => ({
+            name: currTeacher.name,
+            auth_id: currTeacher.auth_id,
+            type: currTeacher.type,
+            userInfo: currTeacher.userInfo,
+          }),
+        );
+        setTeachers(partialTeachers);
+      })
+      .catch((err) => {
+        setError(true);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  });
+
   return (
-    <div className={styles.container}>
-      <div className={styles.inputs}>
-        <div className={styles.box}>
-          <a className={styles.boxTitle}>Fiona Love</a>
-          <div className={styles.icons}>
-            <img src={eyeIcon}></img>
-            <img src={trashIcon}></img>
-          </div>
+    <div className={styles.parentContainer}>
+      {auth.loading ? (
+        <div className={styles.loading}>
+          <Loading />
         </div>
-        <div className={styles.box}>
-          <a className={styles.boxTitle}>Alicia Jacobs</a>
-          <div className={styles.icons}>
-            <img src={eyeIcon}></img>
-            <img src={trashIcon}></img>
+      ) : (
+        <>
+          <NavigationBar />
+          <div className={styles.rightPane}>
+            <TeacherList teachers={teachers} />
           </div>
-        </div>
-        <div className={styles.box}>
-          <a className={styles.boxTitle}>Emily Lee</a>
-          <div className={styles.icons}>
-            <img src={eyeIcon}></img>
-            <img src={trashIcon}></img>
-          </div>
-        </div>
-        <div className={styles.box}>
-          <a className={styles.boxTitle}>Brian Bailey</a>
-          <div className={styles.icons}>
-            <img src={eyeIcon}></img>
-            <img src={trashIcon}></img>
-          </div>
-        </div>
-      </div>
-      <button className={styles.addButton}>Add</button>
+        </>
+      )}
     </div>
   );
 };
 
-export default ClassTeachers;
+export default AdminTeacherRosterPage;
