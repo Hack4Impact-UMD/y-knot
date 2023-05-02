@@ -27,6 +27,7 @@ const StudentRosterPage = (): JSX.Element => {
           newStudent.firstName = currStudent.firstName;
           newStudent.middleName = currStudent.middleName;
           newStudent.lastName = currStudent.lastName;
+          newStudent.email = currStudent.email;
           partialStudents.push(newStudent);
         });
         setStudents(partialStudents);

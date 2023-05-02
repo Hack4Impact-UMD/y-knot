@@ -3,18 +3,28 @@ import { type StudentID } from '../../../types/StudentType';
 import styles from './StudentList.module.css';
 import eyeIcon from '../../../assets/view.svg';
 import trashIcon from '../../../assets/trash.svg';
+import DeleteStudentConfirmation from './DeleteStudentConfirmation/DeleteStudentConfirmation';
 
 const StudentList = (props: {
   search: string;
   students: Array<Partial<StudentID>>;
 }) => {
   const [studentList, setStudentList] = useState<any[]>([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupName, setPopupName] = useState<String>();
+  const [popupEmail, setPopupEmail] = useState<String>();
+
+  const handleClick = () => {
+    setShowPopup(true);
+  };
+
   useEffect(() => {
     const list = props.students.reduce((result: any[], student, i) => {
       const firstName = student.firstName ? student.firstName + ' ' : '';
       const middleName = student.middleName ? student.middleName + ' ' : '';
       const lastName = student.lastName ? student.lastName + ' ' : '';
       const fullName = firstName + middleName + lastName;
+      const email = student.email;
       if (fullName.toLowerCase().includes(props.search.toLowerCase())) {
         result.push(
           <div
@@ -29,7 +39,15 @@ const StudentList = (props: {
                 <img src={eyeIcon} alt="View Profile" />
               </button>
               <button className={`${styles.button} ${styles.trashIcon}`}>
-                <img src={trashIcon} alt="Delete Student" />
+                <img
+                  src={trashIcon}
+                  alt="Delete Student"
+                  onClick={() => {
+                    setPopupEmail(email);
+                    setPopupName(fullName);
+                    handleClick();
+                  }}
+                />
               </button>
             </div>
           </div>,
@@ -50,7 +68,19 @@ const StudentList = (props: {
           No Student Found Matching "{props.search}"
         </h4>
       ) : (
-        <div className={styles.listBox}>{studentList}</div>
+        <>
+          <div className={styles.listBox}>{studentList}</div>
+          {showPopup && (
+            <DeleteStudentConfirmation
+              open={showPopup}
+              onClose={() => {
+                setShowPopup(!showPopup);
+              }}
+              popupName={popupName ? popupName : 'undefined'}
+              popupEmail={popupEmail ? popupEmail : 'undefined'}
+            />
+          )}
+        </>
       )}
     </>
   );
