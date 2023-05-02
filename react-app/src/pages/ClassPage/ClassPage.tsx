@@ -81,7 +81,7 @@ const ClassPage = (): JSX.Element => {
             >
               Homework
             </button>
-            {authContext?.token?.claims.role === 'admin' ? (
+            {authContext?.token?.claims.role === 'ADMIN' ? (
               <button
                 className={
                   currentTab === Tab.Teachers ? styles.selectedTab : styles.tab
@@ -95,7 +95,7 @@ const ClassPage = (): JSX.Element => {
             ) : (
               <></>
             )}
-            {authContext?.token?.claims.role === 'admin' ? (
+            {authContext?.token?.claims.role === 'ADMIN' ? (
               <button
                 className={
                   currentTab === Tab.Settings ? styles.selectedTab : styles.tab

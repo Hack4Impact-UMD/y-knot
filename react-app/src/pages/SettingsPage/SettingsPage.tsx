@@ -33,7 +33,7 @@ const SettingsPage = (): JSX.Element => {
         <div className={styles.settings}>
           <h1 className={styles.title}>Settings</h1>
           <div className={styles.inputs}>
-            {authContext?.token?.claims.role !== 'admin' ? (
+            {authContext?.token?.claims.role !== 'ADMIN' ? (
               // Display name if the user is not an admin
               <div className={styles.box} id="Name">
                 <a className={styles.boxTitle}>Name</a>
