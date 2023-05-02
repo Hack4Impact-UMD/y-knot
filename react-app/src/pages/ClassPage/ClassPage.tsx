@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useAuth } from '../../auth/AuthProvider';
-import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import styles from '../../pages/ClassPage/ClassPage.module.css';
+import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
 import ClassTeachers from './ClassTeachers/ClassTeachers';
+import ClassStudents from './ClassStudents/ClassStudents';
 
 enum Tab {
   Main = 'Main',
@@ -28,7 +29,7 @@ const ClassPage = (): JSX.Element => {
     <div>
       <NavigationBar />
       {authContext?.loading ? (
-        <div className={styles.rightPane}>
+        <div className={styles.loadingContainer}>
           <Loading />
         </div>
       ) : (
@@ -110,8 +111,9 @@ const ClassPage = (): JSX.Element => {
             )}
           </div>
 
-          {/* For rendering the corresponding component whenever tab value changes */}
+          {currentTab == Tab.Students && <ClassStudents />}
 
+          {/* For rendering the corresponding component whenever tab value changes */}
           {/* {currentTab === Tab.Main && <MainClassPage />}
           {currentTab === Tab.Students && <Students />}
           {currentTab === Tab.Attendance && <Attendance />}

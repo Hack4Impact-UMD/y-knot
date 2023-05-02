@@ -1,7 +1,8 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import Loading from '../components/LoadingScreen/Loading';
-import { AuthProvider, useAuth } from './AuthProvider';
+import { AuthProvider, useAuth } from '../AuthProvider';
+import styles from './RequireAuth.module.css';
+import Loading from '../../components/LoadingScreen/Loading';
 
 interface Props {
   children: JSX.Element;
@@ -10,7 +11,11 @@ interface Props {
 const RequireAuth: React.FC<Props> = ({ children }) => {
   const authContext = useAuth();
   if (authContext.loading) {
-    return <Loading />;
+    return (
+      <div className={styles.loadingContainer}>
+        <Loading />;
+      </div>
+    );
   } else if (!authContext.user) {
     return <Navigate to="/login" state={{ redir: window.location.pathname }} />;
   }
