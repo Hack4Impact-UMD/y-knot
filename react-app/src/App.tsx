@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './auth/AuthProvider';
+import { AuthProvider, useAuth } from './auth/AuthProvider';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './muiTheme';
 import { addSampleCourse } from './backendTesting/test';
@@ -16,6 +16,8 @@ import StudentProfilePage from './pages/StudentProfilePage/StudentProfilePage';
 import TeacherProfilePage from './pages/TeacherProfilePage/TeacherProfilePage';
 import TranscriptPage from './pages/TranscriptPage/TranscriptPage';
 import CertificatePage from './pages/CertificatePage/CertificatePage';
+import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
+import { setUserRole } from './backend/CloudFunctionsCalls';
 
 function App(): JSX.Element {
   const customTheme = theme;
@@ -57,29 +59,76 @@ function App(): JSX.Element {
                 </RequireAuth>
               }
             />
-            <Route path="/nav" element={<NavigationBar />} />
-            <Route path="/courses" element={<CoursesPage />} />
-            <Route path="/students" element={<StudentRosterPage />} />
+            <Route
+              path="/courses"
+              element={
+                <RequireAuth>
+                  <CoursesPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/students"
+              element={
+                <RequireAdminAuth>
+                  <StudentRosterPage />
+                </RequireAdminAuth>
+              }
+            />
             <Route
               path="/testfunctions"
               element={
-                <button
-                  onClick={() => {
-                    // addSampleStudent({ firstName: 'Bob' });
-                    addSampleCourse({ name: 'Math' });
-                  }}
-                ></button>
+                <RequireAuth>
+                  <button
+                    onClick={() => {
+                      // addSampleStudent({ firstName: 'Bob' });
+                      // addSampleCourse({ name: 'Math' });
+                    }}
+                  ></button>
+                </RequireAuth>
               }
             />
             <Route path="/upload" element={<Upload />} />
             <Route path="/class" element={<ClassPage />} />
-            <Route path="/student/:id" element={<StudentProfilePage />} />
-            <Route path="/teacher/:id" element={<TeacherProfilePage />} />
-            <Route path="/transcript" element={<TranscriptPage />} />
-            <Route path="/courses/class" element={<ClassPage />} />
+            <Route
+              path="/student/:id"
+              element={
+                <RequireAuth>
+                  <StudentProfilePage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/teacher/:id"
+              element={
+                <RequireAuth>
+                  <TeacherProfilePage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/transcript"
+              element={
+                <RequireAuth>
+                  <TranscriptPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/courses/class"
+              element={
+                <RequireAuth>
+                  <ClassPage />
+                </RequireAuth>
+              }
+            />
             <Route
               path="/certificate"
-              element={<CertificatePage name="Fiona Love" course="Math" />}
+              element={
+                <RequireAuth>
+                  <CertificatePage name="Fiona Love" course="Math" />
+                </RequireAuth>
+              }
             />
           </Routes>
         </BrowserRouter>
