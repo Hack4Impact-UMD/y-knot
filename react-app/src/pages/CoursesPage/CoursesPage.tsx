@@ -1,5 +1,5 @@
 import styles from './CoursesPage.module.css';
-import CourseCard from './CourseCard/CourseCard';
+import CourseCard from '../../components/CourseCard/CourseCard';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 
 const CoursesPage = (): JSX.Element => {
