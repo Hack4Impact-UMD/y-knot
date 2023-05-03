@@ -3,6 +3,8 @@ import { useAuth } from '../../auth/AuthProvider';
 import styles from '../../pages/ClassPage/ClassPage.module.css';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
+import ClassAttendance from './ClassAttendance/ClassAttendance';
+import ClassHomework from './ClassHomework/ClassHomework';
 import ClassTeachers from './ClassTeachers/ClassTeachers';
 import ClassStudents from './ClassStudents/ClassStudents';
 
@@ -113,11 +115,11 @@ const ClassPage = (): JSX.Element => {
 
           {/* For rendering the corresponding component whenever tab value changes */}
           {/* {currentTab === Tab.Main && <MainClassPage />}
-          {currentTab === Tab.Attendance && <Attendance />}
-          {currentTab === Tab.Homework && <Homework />}
-          {currentTab === Tab.Settings && <Settings />} */}
+        {currentTab === Tab.Settings && <Settings />} */}
 
           {currentTab == Tab.Students && <ClassStudents />}
+          {currentTab === Tab.Attendance && <ClassAttendance />}
+          {currentTab === Tab.Homework && <ClassHomework />}
           {currentTab === Tab.Teachers && <ClassTeachers />}
         </div>
       )}

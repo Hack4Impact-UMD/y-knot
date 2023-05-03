@@ -96,5 +96,6 @@ form {
 }
 
 .resetButton:hover {
+  cursor: pointer;
   background: var(--color-yellow-orange);
 }
