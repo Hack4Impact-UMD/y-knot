@@ -37,7 +37,7 @@ const NavigationBar = (): JSX.Element => {
               alt="y-knot logo"
             />
             <h2 className={styles.header}>
-              {authContext?.token?.claims.role === 'admin'
+              {authContext?.token?.claims.role === 'ADMIN'
                 ? 'Admin'
                 : 'Teacher'}
             </h2>
@@ -65,7 +65,7 @@ const NavigationBar = (): JSX.Element => {
                     src={blackHomeIcon}
                     alt="House Icon"
                   />
-                  {authContext?.token?.claims.role === 'admin' ? (
+                  {authContext?.token?.claims.role === 'ADMIN' ? (
                     <div>Home</div>
                   ) : (
                     <div>Courses</div>
@@ -73,7 +73,7 @@ const NavigationBar = (): JSX.Element => {
                 </div>
               </NavLink>
             </div>
-            {authContext?.token?.claims.role === 'admin' ? (
+            {authContext?.token?.claims.role === 'ADMIN' ? (
               <div>
                 <NavLink
                   className={({ isActive }) =>

@@ -1,0 +1,127 @@
+.loadingContainer {
+  height: 100vh;
+  margin-left: 200px;
+  width: calc(100% - 250px);
+  z-index: -1;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.errorMessage {
+  text-align: center;
+}
+
+.rightPane {
+  margin-top: 75px;
+  float: right;
+  height: 100%;
+  width: calc(100% - 250px);
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+}
+
+.title {
+  margin-left: 43%;
+  width: 100%;
+}
+
+.topButtons {
+  display: flex;
+  align-items: flex;
+  margin-right: 10%;
+  gap: 15px;
+}
+
+.button {
+  width: 65px;
+  height: 50px;
+  margin-bottom: 15px;
+  border-radius: 15px;
+  border: none;
+  background-color: var(--color-orange);
+  cursor: pointer;
+}
+
+.button:hover {
+  width: 65px;
+  height: 50px;
+  border-radius: 15px;
+  border: none;
+  background-color: var(--color-yellow-orange);
+}
+
+.icon {
+  height: 25px;
+}
+
+.inputs {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border: 1px solid black;
+  border-radius: 20px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.box {
+  border-bottom: 1px solid black;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.bottomBox {
+  padding: 20px;
+}
+
+.boxTitle {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 1.25rem;
+  width: 200px;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  padding-left: 20px;
+  display: inline-block;
+}
+
+.boxData {
+  float: center;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.25rem;
+}
+
+.nameInputs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.inputBox {
+  padding: 3px 5px 3px 5px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border-width: 1px;
+}
+
+.coursesTitle {
+  margin: 30px auto 30px 10%;
+  font-weight: normal;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 8px;
+}
+
+.courseList {
+  display: flex;
+  margin-left: 10%;
+  flex-wrap: wrap;
+}

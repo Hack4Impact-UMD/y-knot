@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { type StudentID } from '../../../types/StudentType';
+import { Link } from 'react-router-dom';
 import styles from './StudentList.module.css';
 import eyeIcon from '../../../assets/view.svg';
 import trashIcon from '../../../assets/trash.svg';
@@ -25,9 +26,11 @@ const StudentList = (props: {
           >
             <p className={styles.name}>{fullName}</p>
             <div className={styles.icons}>
-              <button className={`${styles.button} ${styles.profileIcon}`}>
-                <img src={eyeIcon} alt="View Profile" />
-              </button>
+              <Link to={`/student/${student.id}`}>
+                <button className={`${styles.button} ${styles.profileIcon}`}>
+                  <img src={eyeIcon} alt="View Profile" />
+                </button>
+              </Link>
               <button className={`${styles.button} ${styles.trashIcon}`}>
                 <img src={trashIcon} alt="Delete Student" />
               </button>
