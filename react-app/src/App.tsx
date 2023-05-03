@@ -69,7 +69,24 @@ function App(): JSX.Element {
                 <button
                   onClick={() => {
                     // addSampleStudent({ firstName: 'Bob' });
-                    addSampleCourse({ name: 'Math' });
+                    addSampleCourse({
+                      name: 'Computer Science',
+                      startDate: '2023-02-01',
+                      endDate: '2023-08-31',
+                      meetingTime: 'Monday 1:00PM',
+                      students: [],
+                      teachers: [],
+                      courseType: 'MINOR',
+                      prerequisites: [],
+                      formId: 'test456',
+                      introEmail: { content: 'This is an intro email.' },
+                      attendance: [
+                        { date: '2023-04-26', notes: 'This is a note.' },
+                      ],
+                      homeworks: [
+                        { name: 'Homework 1', notes: 'This is also a note.' },
+                      ],
+                    });
                   }}
                 ></button>
               }

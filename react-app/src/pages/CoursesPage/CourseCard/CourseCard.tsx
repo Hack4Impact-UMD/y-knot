@@ -2,7 +2,7 @@ import styles from './CourseCard.module.css';
 import { useAuth } from '../../../../src/auth/AuthProvider';
 
 interface courseDetails {
-  teacher: Set<string>;
+  teacher: string[];
   course: string;
   section: string;
   color?: string;

@@ -48,11 +48,11 @@ export const addSampleCourse = ({
   startDate = '2023-04-23',
   endDate = '2023-09-13',
   meetingTime = 'Thursday 3:30PM',
-  students = new Set<string>(),
-  teachers = new Set<string>(),
+  students = [],
+  teachers = [],
   application = false,
   courseType = 'MINOR' as CourseType,
-  prerequisites = new Set<string>(),
+  prerequisites = [],
   formId = 'test123',
   introEmail = { content: 'This is an intro email.' },
   attendance = [{ date: '2023-04-26', notes: 'This is a note.' }],
@@ -81,18 +81,3 @@ export const addSampleCourse = ({
       console.log(error);
     });
 };
-
-addSampleCourse({
-  name: 'World History 101',
-  startDate: '2022-06-01',
-  endDate: '2022-08-31',
-  meetingTime: 'Monday 1:00PM',
-  students: new Set<string>(),
-  teachers: new Set<string>(),
-  courseType: 'MINOR',
-  prerequisites :new Set<string>(),
-  formId: 'test456',
-  introEmail: { content: 'This is an intro email.' },
-  attendance: [{ date: '2023-04-26', notes: 'This is a note.' }],
-  homeworks: [{ name: 'Homework 1', notes: 'This is also a note.' }],
-});
