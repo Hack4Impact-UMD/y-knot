@@ -111,15 +111,13 @@ const ClassPage = (): JSX.Element => {
             )}
           </div>
 
-          {currentTab == Tab.Students && <ClassStudents />}
-
           {/* For rendering the corresponding component whenever tab value changes */}
           {/* {currentTab === Tab.Main && <MainClassPage />}
-          {currentTab === Tab.Students && <Students />}
           {currentTab === Tab.Attendance && <Attendance />}
           {currentTab === Tab.Homework && <Homework />}
           {currentTab === Tab.Settings && <Settings />} */}
 
+          {currentTab == Tab.Students && <ClassStudents />}
           {currentTab === Tab.Teachers && <ClassTeachers />}
         </div>
       )}

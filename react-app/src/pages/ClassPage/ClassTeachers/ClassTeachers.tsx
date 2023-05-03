@@ -1,23 +1,16 @@
 import { useState, useEffect } from 'react';
 import { getAllTeachers } from '../../../backend/FirestoreCalls';
-import { type YKNOTUser, type Role, Teacher } from '../../../types/UserType';
-import TeacherList from './TeacherList/TeacherList';
-import NavigationBar from '../../../components/NavigationBar/NavigationBar';
-import Loading from '../../../components/LoadingScreen/Loading';
 import { useAuth } from '../../../auth/AuthProvider';
+import { type YKNOTUser } from '../../../types/UserType';
 import styles from '../ClassTeachers/ClassTeachers.module.css';
+import Loading from '../../../components/LoadingScreen/Loading';
 
-interface PartialUser {
-  auth_id: string;
-  name: string;
-  type: Role;
-}
-
-const AdminTeacherRosterPage = (): JSX.Element => {
+const ClassTeachers = (): JSX.Element => {
   const [teachers, setTeachers] = useState<Array<Partial<YKNOTUser>>>([]);
+  const [teacherList, setTeacherList] = useState<JSX.Element[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
-  const auth = useAuth();
+  const authContext = useAuth();
 
   useEffect(() => {
     getAllTeachers()
@@ -26,8 +19,6 @@ const AdminTeacherRosterPage = (): JSX.Element => {
           (currTeacher) => ({
             name: currTeacher.name,
             auth_id: currTeacher.auth_id,
-            type: currTeacher.type,
-            userInfo: currTeacher.userInfo,
           }),
         );
         setTeachers(partialTeachers);
@@ -40,22 +31,45 @@ const AdminTeacherRosterPage = (): JSX.Element => {
       });
   });
 
+  useEffect(() => {
+    const list = teachers.map((teacher, i) => {
+      const roundTop = i === 0 ? styles.roundTop : '';
+      const roundBottom = i === teachers.length - 1 ? styles.roundBottom : '';
+      return (
+        <div key={i} className={`${styles.box} ${roundTop} ${roundBottom}`}>
+          <p className={styles.name}>{teacher.name}</p>
+        </div>
+      );
+    });
+    setTeacherList(list);
+  }, [teachers]);
+
   return (
-    <div className={styles.parentContainer}>
-      {auth.loading ? (
-        <div className={styles.loading}>
+    <>
+      {authContext?.loading || loading ? (
+        <div className={styles.loadingContainer}>
           <Loading />
         </div>
       ) : (
-        <>
-          <NavigationBar />
-          <div className={styles.rightPane}>
-            <TeacherList teachers={teachers} />
-          </div>
-        </>
+        <div>
+          {teachers.length === 0 ? (
+            <h4 className={styles.message}>No Teachers Currently in Roster</h4>
+          ) : error ? (
+            <h4 className={styles.message}>
+              Error retrieving teachers. Please try again later.
+            </h4>
+          ) : (
+            <>
+              <div className={styles.teachersContainer}>{teacherList}</div>
+              <div className={styles.bottomLevel}>
+                <button className={styles.addButton}>Add</button>
+              </div>
+            </>
+          )}
+        </div>
       )}
-    </div>
+    </>
   );
 };
 
-export default AdminTeacherRosterPage;
+export default ClassTeachers;
