@@ -5,7 +5,6 @@ import { theme } from './muiTheme';
 import { addSampleCourse } from './backendTesting/test';
 import { Upload } from './components/Upload/Upload';
 import RequireAuth from './auth/RequireAuth/RequireAuth';
-import NavigationBar from './components/NavigationBar/NavigationBar';
 import LoginPage from './pages/LoginPage/LoginPage';
 import SettingsPage from './pages/SettingsPage/SettingsPage';
 import CoursesPage from './pages/CoursesPage/CoursesPage';
@@ -16,7 +15,6 @@ import TeacherProfilePage from './pages/TeacherProfilePage/TeacherProfilePage';
 import TranscriptPage from './pages/TranscriptPage/TranscriptPage';
 import CertificatePage from './pages/CertificatePage/CertificatePage';
 import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
-import { setUserRole } from './backend/CloudFunctionsCalls';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 
 function App(): JSX.Element {
