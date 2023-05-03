@@ -2,10 +2,12 @@ import styles from './CourseCard.module.css';
 import { useAuth } from '../../../../src/auth/AuthProvider';
 
 interface courseDetails {
-  teacher: string;
+  teacher: Set<string>;
   course: string;
   section: string;
   color?: string;
+  startDate: string;
+  endDate: string;
 }
 
 const CourseCard = ({
@@ -21,7 +23,7 @@ const CourseCard = ({
       <div
         className={styles.background}
         style={{
-          backgroundColor: color ? color : '#e3853a',
+          backgroundColor: color || '#e3853a',
           color: color ? '#ffffff' : '#000000',
         }}
       >

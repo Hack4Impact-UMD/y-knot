@@ -3,63 +3,67 @@ import CourseCard from './CourseCard/CourseCard';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import { useAuth } from '../../../src/auth/AuthProvider';
 import { Link } from 'react-router-dom';
+import { type Course } from '../../types/CourseType';
+import { useState, useEffect } from 'react';
+import { getAllCourses } from '../../../src/backend/FirestoreCalls';
+import { DateTime } from 'luxon';
 
 const CoursesPage = (): JSX.Element => {
   const authContext = useAuth();
-
+  const [currentCourses, setCurrentCourses] = useState<Course[]>([]);
+  const [pastCourses, setPastCourses] = useState<Course[]>([]);
+  const [upcomingCourses, setUpcomingCourses] = useState<Course[]>([]);
   const colors = ['#5a9447', '#e3853a', '#2613b6', '#d00110'];
-  const courses = [
-    { teacher: '[Teacher Name]', course: 'Math II', section: '[Section]' },
-    { teacher: '[Teacher Name]', course: 'Math II', section: '[Section]' },
-    { teacher: '[Teacher Name]', course: 'Math II', section: '[Section]' },
-    { teacher: '[Teacher Name]', course: 'Math II', section: '[Section]' },
-    { teacher: '[Teacher Name]', course: 'Math II', section: '[Section]' },
-    { teacher: '[Teacher Name]', course: 'Math II', section: '[Section]' },
-  ];
-  let i = -1;
-  const currentCards = courses.map((c) => {
-    i++;
-    return (
-      <Link to="/courses/class" style={{ textDecoration: 'none' }}>
-        <CourseCard
-          key={i}
-          teacher={c.teacher}
-          course={c.course}
-          section={c.section}
-          color={colors[i % colors.length]}
-        />
-      </Link>
-    );
-  });
-  i = -1;
-  const pastCards = courses.map((c) => {
-    i++;
-    return (
-      <Link to="/courses/class" style={{ textDecoration: 'none' }}>
-        <CourseCard
-          key={i}
-          teacher={c.teacher}
-          course={c.course}
-          section={c.section}
-        />
-      </Link>
-    );
-  });
 
-  i = -1;
-  const upcomingCards = courses.map((c) => {
-    i++;
-    return (
-      <Link to="/courses/class" style={{ textDecoration: 'none' }}>
-        <CourseCard
-          key={i}
-          teacher={c.teacher}
-          course={c.course}
-          section={c.section}
-        />
-      </Link>
-    );
-  });
+  useEffect(() => {
+    getAllCourses()
+      .then((courses) => {
+        const now = DateTime.now();
+        const upcomingCourses = courses.filter(
+          (c) => DateTime.fromISO(c.startDate) > now,
+        );
+        const currentCourses = courses.filter(
+          (c) =>
+            DateTime.fromISO(c.startDate) <= now &&
+            DateTime.fromISO(c.endDate) >= now,
+        );
+        const pastCourses = courses.filter(
+          (c) => DateTime.fromISO(c.endDate) < now,
+        );
+
+        setCurrentCourses(currentCourses);
+        setPastCourses(pastCourses);
+        setUpcomingCourses(upcomingCourses);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  const displayCourseCards = (courses: Course[]) => {
+    return courses.map((c, i) => {
+      let color = colors[i % colors.length];
+      const now = DateTime.now();
+      if (
+        DateTime.fromISO(c.startDate) > now ||
+        DateTime.fromISO(c.endDate) < now
+      ) {
+        color = 'gray';
+      }
+      return (
+        <Link to="/courses/class" key={i} style={{ textDecoration: 'none' }}>
+          <CourseCard
+            teacher={c.teachers}
+            course={c.name}
+            section="[Section]"
+            startDate={c.startDate}
+            endDate={c.endDate}
+            color={color}
+          />
+        </Link>
+      );
+    });
+  };
 
   return (
     <>
@@ -93,13 +97,19 @@ const CoursesPage = (): JSX.Element => {
           )}
         </div>
 
-        <div className={styles.cardLayout}>{currentCards}</div>
+        <div className={styles.cardLayout}>
+          {displayCourseCards(currentCourses)}
+        </div>
 
         <h1 className={styles.courseStatus}>Past Courses</h1>
-        <div className={styles.cardLayout}>{pastCards}</div>
+        <div className={styles.cardLayout}>
+          {displayCourseCards(pastCourses)}
+        </div>
 
         <h1 className={styles.courseStatus}>Upcoming Courses</h1>
-        <div className={styles.cardLayout}>{upcomingCards}</div>
+        <div className={styles.cardLayout}>
+          {displayCourseCards(upcomingCourses)}
+        </div>
       </div>
     </>
   );
