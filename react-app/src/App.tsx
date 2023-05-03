@@ -16,6 +16,7 @@ import TranscriptPage from './pages/TranscriptPage/TranscriptPage';
 import CertificatePage from './pages/CertificatePage/CertificatePage';
 import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
+import NavigationBar from './components/NavigationBar/NavigationBar';
 
 function App(): JSX.Element {
   const customTheme = theme;
@@ -30,22 +31,6 @@ function App(): JSX.Element {
               element={
                 <RequireAuth>
                   <Navigate to="/courses" />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/courses"
-              element={
-                <RequireAuth>
-                  <CoursesPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <RequireAuth>
-                  <SettingsPage />
                 </RequireAuth>
               }
             />
@@ -66,11 +51,35 @@ function App(): JSX.Element {
               }
             />
             <Route
+              path="/courses/class"
+              element={
+                <RequireAuth>
+                  <ClassPage />
+                </RequireAuth>
+              }
+            />
+            <Route
               path="/students"
               element={
                 <RequireAdminAuth>
                   <StudentRosterPage />
                 </RequireAdminAuth>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <RequireAuth>
+                  <SettingsPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/nav"
+              element={
+                <RequireAuth>
+                  <NavigationBar />
+                </RequireAuth>
               }
             />
             <Route
@@ -87,7 +96,6 @@ function App(): JSX.Element {
               }
             />
             <Route path="/upload" element={<Upload />} />
-            <Route path="/class" element={<ClassPage />} />
             <Route
               path="/student/:id"
               element={
@@ -109,14 +117,6 @@ function App(): JSX.Element {
               element={
                 <RequireAuth>
                   <TranscriptPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/courses/class"
-              element={
-                <RequireAuth>
-                  <ClassPage />
                 </RequireAuth>
               }
             />

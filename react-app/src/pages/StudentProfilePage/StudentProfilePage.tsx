@@ -56,9 +56,9 @@ const StudentProfilePage = (): JSX.Element => {
         </div>
       ) : error ? (
         <div className={styles.loadingContainer}>
-          <p className={styles.errorMessage}>
+          <h4 className={styles.errorMessage}>
             Error obtaining student's profile. Please try again later.
-          </p>
+          </h4>
         </div>
       ) : (
         <div className={styles.rightPane}>

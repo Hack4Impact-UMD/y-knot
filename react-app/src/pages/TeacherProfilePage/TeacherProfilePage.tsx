@@ -15,9 +15,7 @@ const TeacherProfilePage = (): JSX.Element => {
   const [name, setName] = useState<string>('Fiona Love');
   const [email, setEmail] = useState<string>('f.love@gmail.com');
   const [loading, setLoading] = useState<boolean>(true);
-
   const authContext = useAuth();
-
   const teacherID = useParams().id;
 
   useEffect(() => {
