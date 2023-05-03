@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import styles from './NotFound.module.css';
+import styles from './NotFoundPage.module.css';
 import yKnotLogo from '../../assets/yknot-logo.png';
 
-const NotFound = (): JSX.Element => {
+const NotFoundPage = (): JSX.Element => {
   const navigate = useNavigate();
 
   const handleRedirect = () => {
-    let path = `/courses`;
+    const path = `/courses`;
     navigate(path);
   };
 
@@ -24,4 +24,4 @@ const NotFound = (): JSX.Element => {
   );
 };
 
-export default NotFound;
+export default NotFoundPage;

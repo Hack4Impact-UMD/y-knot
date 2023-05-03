@@ -18,7 +18,7 @@ import StudentRosterPage from './pages/StudentRosterPage/StudentRosterPage';
 import ClassPage from './pages/ClassPage/ClassPage';
 import TranscriptPage from './pages/TranscriptPage/TranscriptPage';
 import CertificatePage from './pages/CertificatePage/CertificatePage';
-import NotFound from './pages/NotFoundPage/NotFound';
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 
 function App(): JSX.Element {
   const customTheme = theme;
@@ -56,7 +56,7 @@ function App(): JSX.Element {
               path="*"
               element={
                 <RequireAuth>
-                  <NotFound />
+                  <NotFoundPage />
                 </RequireAuth>
               }
             />
