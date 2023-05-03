@@ -6,6 +6,8 @@ import {
   getDocs,
   getDoc,
   updateDoc,
+  query,
+  where,
   runTransaction,
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
@@ -33,7 +35,10 @@ export function getAllStudents(): Promise<StudentID[]> {
 }
 
 export function getAllTeachers(): Promise<Teacher[]> {
-  const teachersRef = collection(db, 'Users');
+  const teachersRef = query(
+    collection(db, 'Users'),
+    where('type', '!=', 'ADMIN'),
+  );
   return new Promise((resolve, reject) => {
     getDocs(teachersRef)
       .then((snapshot) => {

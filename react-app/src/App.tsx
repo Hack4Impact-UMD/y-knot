@@ -5,7 +5,6 @@ import { theme } from './muiTheme';
 import { addSampleCourse } from './backendTesting/test';
 import { Upload } from './components/Upload/Upload';
 import RequireAuth from './auth/RequireAuth/RequireAuth';
-import Sample404Page from './pages/Sample404Page/Sample404Page';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import LoginPage from './pages/LoginPage/LoginPage';
 import SettingsPage from './pages/SettingsPage/SettingsPage';
@@ -18,6 +17,7 @@ import TranscriptPage from './pages/TranscriptPage/TranscriptPage';
 import CertificatePage from './pages/CertificatePage/CertificatePage';
 import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
 import { setUserRole } from './backend/CloudFunctionsCalls';
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 
 function App(): JSX.Element {
   const customTheme = theme;
@@ -55,7 +55,7 @@ function App(): JSX.Element {
               path="*"
               element={
                 <RequireAuth>
-                  <Sample404Page />
+                  <NotFoundPage />
                 </RequireAuth>
               }
             />
