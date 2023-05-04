@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './auth/AuthProvider';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './muiTheme';
-import { addSampleCourse } from './backendTesting/test';
+import { addSampleCourse, addSampleStudent } from './backendTesting/test';
 import { Upload } from './components/Upload/Upload';
 import RequireAuth from './auth/RequireAuth/RequireAuth';
 import LoginPage from './pages/LoginPage/LoginPage';
@@ -89,11 +89,6 @@ function App(): JSX.Element {
                   <button
                     onClick={() => {
                       // addSampleStudent({ firstName: 'Bob' });
-                      // addSampleCourse({
-                      //   name: 'English',
-                      //   startDate: '2023-04-23',
-                      //   endDate: '2023-09-13',
-                      // });
                     }}
                   ></button>
                 </RequireAuth>
