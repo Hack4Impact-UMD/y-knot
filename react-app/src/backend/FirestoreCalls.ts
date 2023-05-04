@@ -89,7 +89,7 @@ export function deleteStudent(id: string): Promise<void> {
         await transaction.get(doc(db, 'Students', id))
       ).data() as Student;
       const idOrder: string[] = [];
-      const students: Array<Set<string>> = [];
+      const students: Array<string[]> = [];
       await Promise.all(
         studentRef.courseInformation.map(async (course) => {
           idOrder.push(course.id);
@@ -102,9 +102,10 @@ export function deleteStudent(id: string): Promise<void> {
           students.push(course.students);
         });
       });
-      students.forEach((studentList) => {
-        studentList.delete(id);
-      });
+      // TODO: UPDATE THIS FOR ARRAY
+      // students.forEach((studentList) => {
+      //   studentList.delete(id);
+      // });
       idOrder.map((id, index) => {
         transaction.update(doc(db, 'Courses', id), {
           students: students[index],

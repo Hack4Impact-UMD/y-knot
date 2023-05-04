@@ -1,23 +1,43 @@
+import { useAuth } from '../../../src/auth/AuthProvider';
 import styles from './CourseCard.module.css';
 
 interface courseDetails {
-  teacher: string;
+  teacher: string[];
   course: string;
   section: string;
+  color?: string;
+  startDate: string;
+  endDate: string;
 }
 
-const CourseCard = (props: courseDetails): JSX.Element => {
-  const labels = ['Teacher Name', 'Course', 'Section'];
-  const description = Object.entries(props).map((elem, index) => (
-    <div>
-      {labels[index]}: {elem[1]}
-    </div>
-  ));
+const CourseCard = ({
+  teacher,
+  course,
+  section,
+  color,
+}: courseDetails): JSX.Element => {
+  const authContext = useAuth();
 
   return (
     <div className={styles.container}>
-      <div className={styles.background}></div>
-      <div className={styles.description}>{description}</div>
+      <div
+        className={styles.background}
+        style={{
+          backgroundColor: color || 'var(--color-orange)',
+          color: color ? 'white' : 'black',
+        }}
+      >
+        <div className={styles.course}>{course}</div>
+        <div className={styles.section}>{section}</div>
+      </div>
+      <div
+        className={styles.description}
+        style={{
+          backgroundColor: color ? '' : 'var(--color-grey)',
+        }}
+      >
+        {authContext?.token?.claims.role === 'ADMIN' ? teacher : ''}
+      </div>
     </div>
   );
 };

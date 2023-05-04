@@ -32,3 +32,25 @@
   flex-wrap: wrap;
   margin-left: 100px;
 }
+
+.courseHeader {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+.addCourse {
+  border-radius: 30px;
+  border: none;
+  background-color: var(--color-orange);
+  font-size: 1.05rem;
+  width: 150px;
+  height: 40px;
+  color: white;
+  margin-right: 10%;
+  cursor: pointer;
+}
+
+.addCourse:hover {
+  background-color: var(--color-yellow-orange);
+}
