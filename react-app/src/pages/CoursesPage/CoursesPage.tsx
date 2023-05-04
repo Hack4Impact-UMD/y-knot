@@ -13,7 +13,12 @@ const CoursesPage = (): JSX.Element => {
   const [currentCourses, setCurrentCourses] = useState<Course[]>([]);
   const [pastCourses, setPastCourses] = useState<Course[]>([]);
   const [upcomingCourses, setUpcomingCourses] = useState<Course[]>([]);
-  const colors = ['#5a9447', '#e3853a', '#2613b6', '#d00110'];
+  const colors = [
+    'var(--color-green)',
+    'var(--color-orange)',
+    'var(--color-blue)',
+    'var(--color-red)',
+  ];
 
   useEffect(() => {
     getAllCourses()

@@ -23,8 +23,8 @@ const CourseCard = ({
       <div
         className={styles.background}
         style={{
-          backgroundColor: color || '#e3853a',
-          color: color ? '#ffffff' : '#000000',
+          backgroundColor: color || 'var(--color-orange)',
+          color: color ? 'white' : 'black',
         }}
       >
         <div className={styles.course}>{course}</div>
@@ -33,10 +33,10 @@ const CourseCard = ({
       <div
         className={styles.description}
         style={{
-          backgroundColor: color ? '' : '#D9D9D9',
+          backgroundColor: color ? '' : 'var(--color-grey)',
         }}
       >
-        {authContext?.token?.claims.role === 'admin' ? teacher : ''}
+        {authContext?.token?.claims.role === 'ADMIN' ? teacher : ''}
       </div>
     </div>
   );

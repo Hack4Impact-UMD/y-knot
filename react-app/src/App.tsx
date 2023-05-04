@@ -89,7 +89,11 @@ function App(): JSX.Element {
                   <button
                     onClick={() => {
                       // addSampleStudent({ firstName: 'Bob' });
-                      // addSampleCourse({ name: 'Math' });
+                      // addSampleCourse({
+                      //   name: 'English',
+                      //   startDate: '2023-04-23',
+                      //   endDate: '2023-09-13',
+                      // });
                     }}
                   ></button>
                 </RequireAuth>
