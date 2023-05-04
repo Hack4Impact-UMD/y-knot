@@ -1,5 +1,5 @@
 import styles from './CoursesPage.module.css';
-import CourseCard from './CourseCard/CourseCard';
+import CourseCard from '../../components/CourseCard/CourseCard';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import { useAuth } from '../../../src/auth/AuthProvider';
 import { Link } from 'react-router-dom';

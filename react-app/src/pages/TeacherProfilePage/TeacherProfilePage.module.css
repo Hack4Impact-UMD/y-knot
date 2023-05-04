@@ -1,4 +1,4 @@
-.loadingContainer {
+.container {
   height: 100vh;
   margin-left: 200px;
   width: calc(100% - 250px);
@@ -30,25 +30,13 @@
   margin-right: auto;
 }
 
-.nameInput {
-  width: 100%;
-  padding: 3px 5px 3px 5px;
-  font-size: 1rem;
-  border-radius: 5px;
-  border-width: 1px;
-}
-
 .box {
   border-bottom: 1px solid black;
   padding: 20px;
-  display: flex;
-  align-items: center;
 }
 
 .bottomBox {
   padding: 20px;
-  display: flex;
-  align-items: center;
 }
 
 .boxTitle {
@@ -56,6 +44,8 @@
   font-weight: 400;
   font-size: 1.25rem;
   width: 200px;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
   padding-left: 20px;
   display: inline-block;
 }
@@ -67,26 +57,16 @@
   font-size: 1.25rem;
 }
 
-.editButton {
-  background: none;
-  border: none;
-  margin-left: auto;
-  margin-right: 20px;
-  padding: 0px;
-  height: 32px;
-  font-size: 2rem;
-  cursor: pointer;
+.coursesTitle {
+  margin: 30px auto 30px 10%;
+  font-weight: normal;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 8px;
 }
 
-.editIcon {
-  width: 25px;
-  filter: brightness(0) saturate(100%) invert(68%) sepia(6%) saturate(0%)
-    hue-rotate(192deg) brightness(89%) contrast(97%);
-}
-
-.editIcon:hover {
-  cursor: pointer;
-  width: 25px;
-  filter: brightness(0) saturate(100%) invert(72%) sepia(14%) saturate(6705%)
-    hue-rotate(334deg) brightness(94%) contrast(89%);
+.courseList {
+  display: flex;
+  margin-left: 10%;
+  flex-wrap: wrap;
 }
