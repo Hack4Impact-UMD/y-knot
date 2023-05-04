@@ -81,7 +81,7 @@ const NavigationBar = (): JSX.Element => {
                       ? `${styles.linkOptions} ${styles.highlightOn}`
                       : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
                   }
-                  to="/nav"
+                  to="/teachers"
                   id="teachers"
                   end
                 >

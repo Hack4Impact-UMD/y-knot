@@ -13,7 +13,7 @@ import {
 import { db } from '../config/firebase';
 import { type StudentID, type Student } from '../types/StudentType';
 import { type Course } from '../types/CourseType';
-import { type Teacher, type YKNOTUser } from '../types/UserType';
+import { TeacherID, type Teacher, type YKNOTUser } from '../types/UserType';
 
 export function getAllStudents(): Promise<StudentID[]> {
   const studentsRef = collection(db, 'Students');
@@ -34,7 +34,7 @@ export function getAllStudents(): Promise<StudentID[]> {
   });
 }
 
-export function getAllTeachers(): Promise<Teacher[]> {
+export function getAllTeachers(): Promise<TeacherID[]> {
   const teachersRef = query(
     collection(db, 'Users'),
     where('type', '!=', 'ADMIN'),
@@ -42,8 +42,12 @@ export function getAllTeachers(): Promise<Teacher[]> {
   return new Promise((resolve, reject) => {
     getDocs(teachersRef)
       .then((snapshot) => {
-        const teachers = snapshot.docs.map((doc) => doc.data() as Teacher);
-        resolve(teachers);
+        const teacherID: TeacherID[] = [];
+        const teachers = snapshot.docs.map((doc) => {
+          const teacher = doc.data() as Teacher;
+          teacherID.push({ ...teacher, id: doc.id });
+        });
+        resolve(teacherID);
       })
       .catch((e) => {
         reject(e);
@@ -152,6 +156,27 @@ export function getTeacher(id: string): Promise<Teacher> {
       .then((teacherSnapshot) => {
         if (teacherSnapshot.exists()) {
           resolve(teacherSnapshot.data() as Teacher);
+        } else {
+          reject(new Error('Teacher does not exist'));
+        }
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+}
+
+export function getTeacherWithAuth(auth_id: string): Promise<TeacherID> {
+  return new Promise((resolve, reject) => {
+    const teachersRef = query(
+      collection(db, 'Users'),
+      where('auth_id', '==', auth_id),
+    );
+    getDocs(teachersRef)
+      .then((teacherSnapshot) => {
+        if (teacherSnapshot.size > 0) {
+          const teacherData = teacherSnapshot.docs[0].data() as Teacher;
+          resolve({ ...teacherData, id: teacherSnapshot.docs[0].id });
         } else {
           reject(new Error('Teacher does not exist'));
         }
