@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../../auth/AuthProvider';
 import styles from './SettingsPage.module.css';
 import ResetEmail from './ResetEmail/ResetEmail';
@@ -7,21 +7,36 @@ import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import editIcon from '../../assets/gray-pencil.svg';
 import saveIcon from '../../assets/save.svg';
+import { getTeacherWithAuth, updateUser } from '../../backend/FirestoreCalls';
+import { TeacherID } from '../../types/UserType';
 
 const SettingsPage = (): JSX.Element => {
   const [editName, setEditName] = useState<boolean>(false);
-  const [name, setName] = useState<string>('Eric Johnson');
+  const [loading, setLoading] = useState<boolean>(true);
+  const [teacher, setTeacher] = useState<TeacherID>();
+  const [name, setName] = useState<string>('');
   const [updatedName, setUpdatedName] = useState<string>('');
-  const [email, setEmail] = useState<string>('eric.johnson@gmail.com');
+  const [email, setEmail] = useState<string>('');
   const [openEmailModal, setOpenEmailModal] = useState<boolean>(false);
   const [openPasswordModal, setOpenPasswordModal] = useState<boolean>(false);
 
   const authContext = useAuth();
-
+  useEffect(() => {
+    if (!authContext.loading && authContext?.token?.claims.role !== 'ADMIN') {
+      getTeacherWithAuth(authContext.user.uid)
+        .then((teacher) => {
+          setName(teacher.name);
+          setTeacher(teacher);
+        })
+        .catch((error) => console.log(error))
+        .finally(() => setLoading(false));
+    }
+  }, [authContext.loading]);
   return (
     <>
       <NavigationBar />
-      {authContext?.loading ? (
+      {authContext?.loading ||
+      (loading && authContext?.token?.claims.role !== 'ADMIN') ? (
         /* This loading container is used because the animation used in the Loading component creates a new
           stacking context which interferes element stacking. In order to make sure popups are at the front,
           the loadingContainer has a z-index of -1.
@@ -54,13 +69,18 @@ const SettingsPage = (): JSX.Element => {
                 <button
                   className={styles.editButton}
                   onClick={() => {
-                    setEditName(!editName);
-                    if (updatedName !== '' && updatedName !== name) {
-                      setName(updatedName);
-                      // TODO: Update name in backend
-                    } else {
+                    if (!editName) {
                       setUpdatedName(name);
+                    } else {
+                      if (updatedName !== name) {
+                        setName(updatedName);
+                        updateUser(
+                          { ...teacher!, name: updatedName },
+                          teacher!.id,
+                        );
+                      }
                     }
+                    setEditName(!editName);
                   }}
                 >
                   {editName ? (

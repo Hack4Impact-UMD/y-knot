@@ -17,6 +17,8 @@ import CertificatePage from './pages/CertificatePage/CertificatePage';
 import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import NavigationBar from './components/NavigationBar/NavigationBar';
+import TeacherRosterPage from './pages/TempTeacherRosterPage/TeacherRosterPage';
+import { createUser } from './backend/CloudFunctionsCalls';
 
 function App(): JSX.Element {
   const customTheme = theme;
@@ -67,6 +69,14 @@ function App(): JSX.Element {
               }
             />
             <Route
+              path="/teachers"
+              element={
+                <RequireAdminAuth>
+                  <TeacherRosterPage />
+                </RequireAdminAuth>
+              }
+            />
+            <Route
               path="/settings"
               element={
                 <RequireAuth>
@@ -106,9 +116,9 @@ function App(): JSX.Element {
             <Route
               path="/teacher/:id"
               element={
-                <RequireAuth>
+                <RequireAdminAuth>
                   <TeacherProfilePage />
-                </RequireAuth>
+                </RequireAdminAuth>
               }
             />
             <Route

@@ -10,4 +10,7 @@ export interface Teacher extends YKNOTUser {
   courses: string[];
 }
 
+export interface TeacherID extends Teacher {
+  id: string
+}
 export type Role = 'ADMIN' | 'TEACHER';
