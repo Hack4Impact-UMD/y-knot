@@ -1,5 +1,5 @@
+import { useAuth } from '../../../src/auth/AuthProvider';
 import styles from './CourseCard.module.css';
-import { useAuth } from '../../../../src/auth/AuthProvider';
 
 interface courseDetails {
   teacher: string[];

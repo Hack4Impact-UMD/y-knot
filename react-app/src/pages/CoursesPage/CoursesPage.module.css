@@ -36,18 +36,21 @@
 .courseHeader {
   display: flex;
   width: 100%;
+  align-items: center;
 }
 
 .addCourse {
   border-radius: 30px;
   border: none;
   background-color: var(--color-orange);
-  font-family: 'Poppins';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 25px;
-  width: 200px;
-  height: 50px;
-  color: #ffffff;
-  margin-right: 100px;
+  font-size: 1.05rem;
+  width: 150px;
+  height: 40px;
+  color: white;
+  margin-right: 10%;
+  cursor: pointer;
+}
+
+.addCourse:hover {
+  background-color: var(--color-yellow-orange);
 }

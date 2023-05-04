@@ -88,7 +88,7 @@ const CoursesPage = (): JSX.Element => {
         <div className={styles.courseHeader}>
           <h1 className={styles.courseStatus}>Active Courses</h1>
 
-          {authContext?.token?.claims.role === 'admin' ? (
+          {authContext?.token?.claims.role === 'ADMIN' ? (
             <>
               <button className={styles.addCourse}>Add Course</button>
             </>
