@@ -46,3 +46,7 @@
   align-items: center;
   text-align: center;
 }
+
+html {
+  overflow-y: overlay;
+}

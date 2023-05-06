@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { type StudentID } from '../../../types/StudentType';
 import styles from './StudentList.module.css';
 import eyeIcon from '../../../assets/view.svg';
@@ -16,6 +17,7 @@ const StudentList = (props: {
   const [popupEmail, setPopupEmail] = useState<String>();
   const [removeStudentId, setStudentId] = useState<String>();
   const [numToShow, setNumToShow] = useState<number>(50);
+  const navigate = useNavigate();
   const handleClick = () => {
     setShowPopup(true);
   };
@@ -39,7 +41,13 @@ const StudentList = (props: {
             <p className={styles.name}>{fullName}</p>
             <div className={styles.icons}>
               <button className={`${styles.button} ${styles.profileIcon}`}>
-                <img src={eyeIcon} alt="View Profile" />
+                <img
+                  src={eyeIcon}
+                  alt="View Profile"
+                  onClick={() => {
+                    navigate(`/profile/${id}`);
+                  }}
+                />
               </button>
               <button className={`${styles.button} ${styles.trashIcon}`}>
                 <img
@@ -63,10 +71,10 @@ const StudentList = (props: {
   }, [props.search]);
 
   const handleLoadMore = () => {
-    if (numToShow + 30 > props.students.length) {
+    if (numToShow + 50 > props.students.length) {
       setNumToShow(props.students.length);
     } else {
-      setNumToShow(numToShow + 30);
+      setNumToShow(numToShow + 50);
     }
   };
 
