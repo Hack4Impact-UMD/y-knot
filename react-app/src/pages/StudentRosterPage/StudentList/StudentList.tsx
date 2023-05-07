@@ -26,7 +26,6 @@ const StudentList = (props: {
   };
 
   useEffect(() => {
-    console.log('hit');
     setReloadList(false);
 
     const list = props.students.reduce((result: any[], student, i) => {

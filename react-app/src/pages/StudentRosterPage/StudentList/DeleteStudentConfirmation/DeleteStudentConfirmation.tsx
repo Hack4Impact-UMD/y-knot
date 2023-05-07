@@ -43,14 +43,11 @@ const DeleteStudentConfirmation = ({
               return student.id !== removeStudentId.valueOf();
             }),
           );
-          console.log(students);
           setReloadList(true);
-          console.log(reloadList);
           setOpenSuccess(true);
         })
         .catch((err) => {
           setOpenFailure(true);
-          console.log('Failed to Remove Student');
         });
     }
     onClose();
