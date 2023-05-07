@@ -9,13 +9,16 @@ import DeleteStudentConfirmation from './DeleteStudentConfirmation/DeleteStudent
 const StudentList = (props: {
   search: string;
   students: Array<Partial<StudentID>>;
-  setReloadList: Function;
+  setStudents: Function;
+  setOpenSuccess: Function;
+  setOpenFailure: Function;
 }) => {
   const [studentList, setStudentList] = useState<any[]>([]);
   const [showPopup, setShowPopup] = useState(false);
   const [popupName, setPopupName] = useState<String>();
   const [popupEmail, setPopupEmail] = useState<String>();
   const [removeStudentId, setStudentId] = useState<String>();
+  const [reloadList, setReloadList] = useState<Boolean>(false);
   const [numToShow, setNumToShow] = useState<number>(50);
   const navigate = useNavigate();
   const handleClick = () => {
@@ -23,6 +26,9 @@ const StudentList = (props: {
   };
 
   useEffect(() => {
+    console.log('hit');
+    setReloadList(false);
+
     const list = props.students.reduce((result: any[], student, i) => {
       const firstName = student.firstName ? student.firstName + ' ' : '';
       const middleName = student.middleName ? student.middleName + ' ' : '';
@@ -68,7 +74,7 @@ const StudentList = (props: {
       return result;
     }, []);
     setStudentList(list);
-  }, [props.search]);
+  }, [props.search, reloadList]);
 
   const handleLoadMore = () => {
     if (numToShow + 50 > props.students.length) {
@@ -100,7 +106,12 @@ const StudentList = (props: {
               popupName={popupName ? popupName : 'undefined'}
               popupEmail={popupEmail ? popupEmail : 'undefined'}
               removeStudentId={removeStudentId ? removeStudentId : 'undefined'}
-              setReloadList={props.setReloadList}
+              setReloadList={setReloadList}
+              reloadList={reloadList}
+              students={props.students}
+              setStudents={props.setStudents}
+              setOpenSuccess={props.setOpenSuccess}
+              setOpenFailure={props.setOpenFailure}
             />
           )}
           {numToShow < props.students.length && (

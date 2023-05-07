@@ -3,6 +3,7 @@ import styles from './DeleteStudentConfirmation.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
 import x from '../../../../assets/x.svg';
 import { deleteStudent } from '../../../../backend/FirestoreCalls';
+import { type StudentID } from '../../../../types/StudentType';
 
 interface popupModalType {
   onClose: () => void;
@@ -11,6 +12,11 @@ interface popupModalType {
   popupEmail: String;
   removeStudentId: String;
   setReloadList: Function;
+  students: Array<Partial<StudentID>>;
+  setStudents: Function;
+  reloadList: Boolean;
+  setOpenSuccess: Function;
+  setOpenFailure: Function;
 }
 
 const DeleteStudentConfirmation = ({
@@ -20,16 +26,35 @@ const DeleteStudentConfirmation = ({
   popupEmail,
   removeStudentId,
   setReloadList,
+  setStudents,
+  students,
+  reloadList,
+  setOpenSuccess,
+  setOpenFailure,
 }: popupModalType): React.ReactElement => {
   const [submittedError, setSubmittedError] = useState<boolean>(false);
 
-  const handleConfirm = (): void => {
+  function handleConfirm() {
     if (removeStudentId != 'undefined') {
-      deleteStudent(removeStudentId.valueOf());
-      setReloadList(true);
+      deleteStudent(removeStudentId.valueOf())
+        .then(() => {
+          setStudents(
+            students.filter((student) => {
+              return student.id !== removeStudentId.valueOf();
+            }),
+          );
+          console.log(students);
+          setReloadList(true);
+          console.log(reloadList);
+          setOpenSuccess(true);
+        })
+        .catch((err) => {
+          setOpenFailure(true);
+          console.log('Failed to Remove Student');
+        });
     }
     onClose();
-  };
+  }
 
   const handleOnClose = (): void => {
     setSubmittedError(false);
@@ -57,7 +82,7 @@ const DeleteStudentConfirmation = ({
           </button>
         </div>
         <div className={styles.content}>
-          <h2 className={styles.title}>Remove Teacher Confirmation</h2>
+          <h2 className={styles.title}>Remove Student Confirmation</h2>
           <p>
             {submittedError ? (
               'Log out failed. Try again later.'

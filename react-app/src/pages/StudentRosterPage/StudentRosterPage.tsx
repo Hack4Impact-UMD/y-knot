@@ -7,14 +7,24 @@ import styles from './StudentRosterPage.module.css';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
 import StudentList from './StudentList/StudentList';
+import { Alert, Snackbar } from '@mui/material';
 
 const StudentRosterPage = (): JSX.Element => {
   const [students, setStudents] = useState<Array<Partial<StudentID>>>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
-  const [reloadList, setReloadList] = useState<Boolean>(false);
+
+  //Used to handle Deletion alert
+  const [openSuccess, setOpenSuccess] = useState<boolean>(false);
+  const [openFailure, setOpenFailure] = useState<boolean>(false);
+  const handleToClose = (event: any, reason: any) => {
+    setOpenSuccess(false);
+    setOpenFailure(false);
+  };
+
   const auth = useAuth();
+
   // Used to detect time in between keystrokes when using the search bar
   let timer: NodeJS.Timeout | null = null;
 
@@ -36,6 +46,7 @@ const StudentRosterPage = (): JSX.Element => {
 
   useEffect(() => {
     setLoading(true);
+
     getAllStudents()
       .then((allStudents) => {
         const partialStudents: Array<Partial<StudentID>> = [];
@@ -49,7 +60,6 @@ const StudentRosterPage = (): JSX.Element => {
           partialStudents.push(newStudent);
         });
         setStudents(partialStudents);
-        //setStudents(fakeStudentList);
       })
       .catch((err) => {
         setError(true);
@@ -57,7 +67,7 @@ const StudentRosterPage = (): JSX.Element => {
       .finally(() => {
         setLoading(false);
       });
-  }, [reloadList]);
+  }, []);
 
   const handleSearch = (e: any) => {
     if (error || loading) {
@@ -113,10 +123,39 @@ const StudentRosterPage = (): JSX.Element => {
               <StudentList
                 search={search}
                 students={students}
-                setReloadList={setReloadList}
+                setStudents={setStudents}
+                setOpenSuccess={setOpenSuccess}
+                setOpenFailure={setOpenFailure}
               />
             )}
           </div>
+          <Snackbar
+            anchorOrigin={{
+              horizontal: 'right',
+              vertical: 'bottom',
+            }}
+            open={openSuccess}
+            autoHideDuration={3000}
+            onClose={handleToClose}
+          >
+            <Alert severity="success" sx={{ width: '100%' }}>
+              Student was Successfully Removed
+            </Alert>
+          </Snackbar>
+
+          <Snackbar
+            anchorOrigin={{
+              horizontal: 'right',
+              vertical: 'bottom',
+            }}
+            open={openFailure}
+            autoHideDuration={3000}
+            onClose={handleToClose}
+          >
+            <Alert severity="error" sx={{ width: '100%' }}>
+              Student could not be Removed
+            </Alert>
+          </Snackbar>
         </>
       )}
     </>
