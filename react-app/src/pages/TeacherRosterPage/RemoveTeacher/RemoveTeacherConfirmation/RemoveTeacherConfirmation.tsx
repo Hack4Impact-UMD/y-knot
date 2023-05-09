@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import styles from './DeleteTeacherConfirmation.module.css';
+import styles from './RemoveTeacherConfirmation.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
 import x from '../../../../assets/x.svg';
-import { deleteTeacher } from '../../../../backend/FirestoreCalls';
+//import { deleteTeacher } from '../../../../backend/FirestoreCalls';
 
 interface popupModalType {
   onClose: () => void;
@@ -25,7 +25,7 @@ const RemoveTeacherConfirmation = ({
 
   const handleConfirm = (): void => {
     if (removeTeacherId != 'undefined') {
-      deleteTeacher(removeTeacherId.valueOf());
+      //deleteTeacher(removeTeacherId.valueOf());
       setReloadList(true);
     }
     onClose();

@@ -3,7 +3,7 @@ import { authenticateUser } from '../../../backend/FirebaseCalls';
 import { useAuth } from '../../../auth/AuthProvider';
 import { updateUserEmail } from '../../../backend/CloudFunctionsCalls';
 import { useNavigate } from 'react-router-dom';
-import styles from './AddTeacher.module.css';
+import styles from './RemoveTeacher.module.css';
 import Modal from '../../../components/ModalWrapper/Modal';
 import Loading from '../../../components/LoadingScreen/Loading';
 import x from '../../../assets/x.svg';
@@ -13,7 +13,7 @@ interface modalType {
   onClose: any;
 }
 
-const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
+const RemoveTeacher = ({ open, onClose }: modalType): React.ReactElement => {
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -31,7 +31,7 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
 
   return (
     <Modal
-      height={260}
+      height={230}
       open={open}
       onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
         handleOnClose();
@@ -55,27 +55,13 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
             </div>
           ) : (
             <>
-              <h2 className={styles.title}>Add Teacher</h2>
+              <h2 className={styles.title}>Remove Teacher</h2>
               <p className={styles.error}>{errorMessage}</p>
               <form
                 onSubmit={(event) => {
                   event.preventDefault();
                 }}
               >
-                <input
-                  required
-                  className={styles.textInput}
-                  type="name"
-                  placeholder="Name"
-                  onChange={(event) => {
-                    setName(event.target.value);
-                  }}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      event.preventDefault();
-                    }
-                  }}
-                />
                 <input
                   required
                   className={styles.textInput}
@@ -115,4 +101,4 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
   );
 };
 
-export default AddTeacher;
+export default RemoveTeacher;

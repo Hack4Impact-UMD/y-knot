@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import styles from './DeleteTeacherConfirmation.module.css';
+import styles from './AddTeacherConfirmation.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
 import x from '../../../../assets/x.svg';
-import { addUser } from '../../../../backend/FirestoreCalls';
+import { addStudent } from '../../../../backend/FirestoreCalls';
 
 interface popupModalType {
   onClose: () => void;
@@ -25,7 +25,8 @@ const AddTeacherConfirmation = ({
 
   const handleConfirm = (): void => {
     if (addTeacherId != 'undefined') {
-      addUser(addTeacherId.valueOf());
+      // TODO: MAKE ADDUSER BACKEND FUNCTION
+      // addStudent(addTeacherId.valueOf());
       setReloadList(true);
     }
     onClose();

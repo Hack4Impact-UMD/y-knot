@@ -19,6 +19,8 @@ import StudentRosterPage from './pages/StudentRosterPage/StudentRosterPage';
 import ClassPage from './pages/ClassPage/ClassPage';
 import TranscriptPage from './pages/TranscriptPage/TranscriptPage';
 import CertificatePage from './pages/CertificatePage/CertificatePage';
+import TeacherRosterPage from './pages/TeacherRosterPage/TeacherRosterPage';
+import AddTeacherConfirmation from './pages/TeacherRosterPage/AddTeacher/AddTeacherConfirmation/AddTeacherConfirmation';
 
 function App(): JSX.Element {
   const customTheme = theme;
@@ -81,6 +83,7 @@ function App(): JSX.Element {
               path="/certificate"
               element={<CertificatePage name="Fiona Love" course="Math" />}
             />
+            <Route path="teacherroster" element={<TeacherRosterPage/>}/>
           </Routes>
         </BrowserRouter>
       </AuthProvider>
