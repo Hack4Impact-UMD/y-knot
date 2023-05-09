@@ -1,0 +1,62 @@
+.teachersContainer {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border: 1px solid black;
+  border-radius: 20px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+}
+
+.loadingContainer {
+  margin-top: 15px;
+}
+
+.box {
+  border-bottom: 1px solid black;
+  display: flex;
+  padding: 10px;
+  align-items: center;
+}
+
+.roundTop {
+  border-radius: none;
+}
+
+.roundBottom {
+  border: none;
+}
+
+.name {
+  margin-left: 25px;
+}
+
+.message {
+  padding-top: 100px;
+  text-align: center;
+}
+
+.bottomLevel {
+  padding-top: 3%;
+  padding-bottom: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.addButton {
+  width: 150px;
+  height: 40px;
+  background: var(--color-orange);
+  color: white;
+  border-radius: 30px;
+  font-size: 1.05rem;
+  border: none;
+}
+
+.addButton:hover {
+  background: var(--color-yellow-orange);
+  cursor: pointer;
+}

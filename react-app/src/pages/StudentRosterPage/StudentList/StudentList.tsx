@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { type StudentID } from '../../../types/StudentType';
+import { Link } from 'react-router-dom';
 import styles from './StudentList.module.css';
 import eyeIcon from '../../../assets/view.svg';
 import trashIcon from '../../../assets/trash.svg';
