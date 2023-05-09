@@ -112,3 +112,68 @@
   border: none;
   margin-right: 19%;
 }
+
+.nameInput {
+  width: 400px;
+  height: 25px;
+  padding: 10px 10px 10px 20px;
+  font-size: 1.2rem;
+  border: 2px solid #fff;
+  border-radius: 10px;
+  outline: none;
+  background-color: lightgrey;
+}
+
+.noteInput {
+  width: 400px;
+  height: 200px;
+  padding: 20px 10px 10px 20px;
+  font-size: 1.2rem;
+  border: 2px solid #fff;
+  border-radius: 10px;
+  outline: none;
+  background-color: lightgrey;
+  align-self: center;
+}
+
+.removeCheckList {
+  overflow-y: "scroll";
+  width: 400px;
+  height: 200px;
+  padding: 10px 10px 10px 20px;
+  font-size: 1.2rem;
+  border: 2px solid #fff;
+  border-radius: 10px;
+  outline: none;
+  background-color: lightgrey;
+  align-self: center;
+  text-align: left;
+}
+
+.hwkListObj {
+  
+}
+
+.button {
+  background-color: var(--color-orange);
+  padding: 10px 10px 10px 20px;
+  font-size: 1.2rem;
+  width: 250px;
+  border: 2px solid #fff;
+  border-radius: 30px;
+  outline: none;
+  text-align: center;
+}
+
+.heading {
+  width: 100%;
+  color:#000000;
+  text-align: center;
+}
+
+.content {
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
