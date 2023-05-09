@@ -1,4 +1,6 @@
-export interface Student {
+export interface StudentID {
+  // Contains an id as well
+  id: string;
   firstName: string;
   middleName?: string;
   lastName: string;
@@ -9,6 +11,23 @@ export interface Student {
   zipCode: number;
   email: string;
   birthDate: string;
+  minor: boolean;
+  gradeLevel?: string;
+  schoolName?: string;
+  courseInformation: StudentCourse[];
+}
+
+export interface Student {
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  addrFirstLine: string;
+  addrSecondLine?: string;
+  city: string;
+  state: string;
+  zipCode: number;
+  email: string;
+  birthDate: string; // "YYYY-MM-DD"
   minor: boolean;
   gradeLevel?: string;
   schoolName?: string;

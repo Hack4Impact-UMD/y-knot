@@ -48,7 +48,7 @@ We currently have 3 collections which corresponds to our project Types:
 - Courses
 - Students
 - Users (Teachers and Admin accounts)
-<img src="Y-KNOT Types Diagram.png" alt="Y-KNOT types diagram" width=1000>
+  <img width="1879" alt="Y-KNOT Types Diagram" src="https://user-images.githubusercontent.com/67646012/235238107-c9e9f27e-a696-4f3f-9675-5709ba47f6e0.png" width=1000>
 
 ## File Organization & Preferred Practices
 

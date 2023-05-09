@@ -5,9 +5,9 @@ export interface YKNOTUser {
   userInfo?: Teacher;
 }
 
-export interface Teacher {
+export interface Teacher extends YKNOTUser {
   email: string;
-  courses: string[];
+  courses: Set<string>;
 }
 
 export type Role = 'ADMIN' | 'TEACHER';

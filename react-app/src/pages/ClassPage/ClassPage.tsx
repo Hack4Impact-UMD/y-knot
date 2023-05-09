@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useAuth } from '../../auth/AuthProvider';
-import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import styles from '../../pages/ClassPage/ClassPage.module.css';
+import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
-import AttendancePage from './AttendancePage/AttendancePage';
-import HomeworkPage from './HomeworkPage/HomeworkPage';
+import ClassAttendance from './ClassAttendance/ClassAttendance';
+import ClassHomework from './ClassHomework/ClassHomework';
+import ClassTeachers from './ClassTeachers/ClassTeachers';
+import ClassStudents from './ClassStudents/ClassStudents';
 
 enum Tab {
   Main = 'Main',
@@ -29,7 +31,7 @@ const ClassPage = (): JSX.Element => {
     <div>
       <NavigationBar />
       {authContext?.loading ? (
-        <div className={styles.rightPane}>
+        <div className={styles.loadingContainer}>
           <Loading />
         </div>
       ) : (
@@ -81,7 +83,7 @@ const ClassPage = (): JSX.Element => {
             >
               Homework
             </button>
-            {authContext?.token?.claims.role === 'admin' ? (
+            {authContext?.token?.claims.role === 'ADMIN' ? (
               <button
                 className={
                   currentTab === Tab.Teachers ? styles.selectedTab : styles.tab
@@ -95,7 +97,7 @@ const ClassPage = (): JSX.Element => {
             ) : (
               <></>
             )}
-            {authContext?.token?.claims.role === 'admin' ? (
+            {authContext?.token?.claims.role === 'ADMIN' ? (
               <button
                 className={
                   currentTab === Tab.Settings ? styles.selectedTab : styles.tab
@@ -112,14 +114,13 @@ const ClassPage = (): JSX.Element => {
           </div>
 
           {/* For rendering the corresponding component whenever tab value changes */}
-
           {/* {currentTab === Tab.Main && <MainClassPage />}
-        {currentTab === Tab.Students && <Students />}
-        {currentTab === Tab.Teachers && <Teachers />}
         {currentTab === Tab.Settings && <Settings />} */}
 
-          {currentTab === Tab.Homework && <HomeworkPage />}
-          {currentTab === Tab.Attendance && <AttendancePage />}
+          {currentTab == Tab.Students && <ClassStudents />}
+          {currentTab === Tab.Attendance && <ClassAttendance />}
+          {currentTab === Tab.Homework && <ClassHomework />}
+          {currentTab === Tab.Teachers && <ClassTeachers />}
         </div>
       )}
     </div>

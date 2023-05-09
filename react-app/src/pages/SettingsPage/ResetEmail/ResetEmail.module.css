@@ -1,12 +1,11 @@
-.title {
-  margin: 10px 0px 0px 0px;
-  padding: 0;
-  font-size: 27px;
-}
-
-.actions {
-  width: 100%;
-  margin-top: 23px;
+.header {
+  background: white;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .close {
@@ -18,12 +17,6 @@
   cursor: pointer;
 }
 
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-}
-
 .content {
   width: 100%;
   display: flex;
@@ -31,6 +24,21 @@
   justify-content: center;
   align-items: center;
   color: black;
+}
+
+.submit {
+  font-size: 0.9rem;
+  width: 70%;
+  text-align: center;
+  padding-top: 2rem;
+  margin-top: 50px;
+  margin-bottom: 20px;
+}
+
+.title {
+  margin: 10px 0px 0px 0px;
+  padding: 0;
+  font-size: 27px;
 }
 
 .error {
@@ -41,14 +49,8 @@
   color: red;
 }
 
-.header {
-  background: white;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+form {
+  text-align: center;
 }
 
 .textInput {
@@ -61,8 +63,15 @@
   margin: 0px 0px 16px 0px;
 }
 
-form {
-  text-align: center;
+.actions {
+  width: 100%;
+  margin-top: 23px;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
 .resetButton {
@@ -87,35 +96,6 @@ form {
 }
 
 .resetButton:hover {
+  cursor: pointer;
   background: var(--color-yellow-orange);
-}
-
-.spinner:before {
-  content: '';
-  box-sizing: border-box;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 20px;
-  height: 20px;
-  margin-top: -10px;
-  margin-left: -10px;
-  border-radius: 50%;
-  border-top: 2px solid #07d;
-  border-right: 2px solid transparent;
-  animation: spinner 0.6s linear infinite;
-}
-
-@keyframes spinner {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.submit {
-  font-size: 0.9rem;
-  width: 70%;
-  text-align: center;
-  padding-top: 2rem;
-  margin-top: 50px;
 }
