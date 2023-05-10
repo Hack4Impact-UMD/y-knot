@@ -4,6 +4,7 @@ import editIcon from '../../../assets/gray-pencil.svg';
 import saveIcon from '../../../assets/save.svg';
 import uploadIcon from '../../../assets/upload.svg';
 import certificateIcon from '../../../assets/certificate.svg';
+import emailIcon from '../../../assets/email.svg';
 
 const ClassMain = (): JSX.Element => {
   const [text, setText] = useState(
@@ -59,7 +60,14 @@ const ClassMain = (): JSX.Element => {
       </div>
       <div className={styles.buttons}>
         <button className={styles.certificate}>
-          <img src={certificateIcon} alt="Certificate" />
+          <img
+            src={certificateIcon}
+            alt="Certificate"
+            className={styles.certificateIcon}
+          />
+        </button>
+        <button className={styles.email}>
+          <img src={emailIcon} alt="Email" className={styles.emailIcon} />
         </button>
       </div>
     </div>
