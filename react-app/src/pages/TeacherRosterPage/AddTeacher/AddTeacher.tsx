@@ -11,9 +11,12 @@ import x from '../../../assets/x.svg';
 interface modalType {
   open: boolean;
   onClose: any;
+  setAddSubmitted: (value: boolean) => void;
+  setPopUpName: (value: string) => void;
+  setPopUpEmail: (value: string) => void;
 }
 
-const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
+const AddTeacher = ({ open, onClose, setAddSubmitted, setPopUpEmail, setPopUpName }: modalType): React.ReactElement => {
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -99,6 +102,12 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
             <button
               className={styles.resetButton}
               onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                setAddSubmitted(true);
+                console.log(email);
+                //TODO: using email, get teacher name from the backend to update PopUpName on the follwoing line
+                //something like: name = database.getName(email)
+                setPopUpName(name);
+                setPopUpEmail(email);
               }}
               disabled={loading}
             >

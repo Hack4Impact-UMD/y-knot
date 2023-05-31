@@ -11,6 +11,7 @@ interface popupModalType {
   popupEmail: String;
   removeTeacherId: String;
   setReloadList: Function;
+  setRemoveSubmissionError: Function;
 }
 
 const RemoveTeacherConfirmation = ({
@@ -20,12 +21,16 @@ const RemoveTeacherConfirmation = ({
   popupEmail,
   removeTeacherId,
   setReloadList,
+  setRemoveSubmissionError,
 }: popupModalType): React.ReactElement => {
   const [submittedError, setSubmittedError] = useState<boolean>(false);
 
   const handleConfirm = (): void => {
     if (removeTeacherId != 'undefined') {
       //deleteTeacher(removeTeacherId.valueOf());
+      //TODO: set submittedError based on that ^ response 
+      //setRemoveSubmissionError(Math.round(Math.random()) == 0 ? false : true);
+      setRemoveSubmissionError(true);
       setReloadList(true);
     }
     onClose();
@@ -65,7 +70,7 @@ const RemoveTeacherConfirmation = ({
               <div className={styles.bodyText}>
                 Are you sure you would like to remove?
                 <div className={styles.name}>
-                  {popupName === 'undefined' ? '' : popupName}
+                  {popupName === 'undefined' ? '' : <>({popupName})</>}
                 </div>
                 <div className={styles.email}>
                   {popupEmail === 'undefined' ? '' : <>({popupEmail})</>}

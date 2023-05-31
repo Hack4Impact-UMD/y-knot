@@ -10,40 +10,74 @@ import AddTeacherConfirmation from './AddTeacher/AddTeacherConfirmation/AddTeach
 import { getMaxListeners } from 'process';
 import AddTeacher from './AddTeacher/AddTeacher';
 import RemoveTeacher from './RemoveTeacher/RemoveTeacher';
+import RemoveTeacherError from './RemoveTeacher/RemoveTeacherError/RemoveTeacherError'
 import RemoveTeacherConfirmation from './RemoveTeacher/RemoveTeacherConfirmation/RemoveTeacherConfirmation';
 
 const TeacherRosterPage = (): JSX.Element => {
     const [showPopup, setShowPopup] = useState(true);
     const [popupName, setPopUpName] = useState("John");
     const [popupEmail, setPopUpEmail] = useState("John@gmail.com");
+    const [removeSubmitted, setRemoveSubmitted] = useState(false);
+    const [removeSubmissionError, setRemoveSubmissionError] = useState(false);
+    const [addSubmitted, setAddSubmitted] = useState(false);
     const setReloadList = () => 1 ;
-
 
     return (
         showPopup ? 
-        (            <AddTeacher
-            open={true}
-            onClose = {()=> {
-                setShowPopup(!showPopup);
-            }}
-            />)
-        // (<RemoveTeacherConfirmation
-        //     onClose = {() => {
-        //         setShowPopup(!showPopup);
-        //       }}
-        //     popupName={popupName}
-        //     popupEmail={popupEmail}
-        //     removeTeacherId={"1"}
-        //     setReloadList={setReloadList}
-        //     open={true}
-        // />)
-        : (
-            <RemoveTeacher
-                open={true}
+        (
+            <>
+                <AddTeacher
+                open={!addSubmitted}
                 onClose = {()=> {
                     setShowPopup(!showPopup);
                 }}
+                setPopUpName={setPopUpName}
+                setPopUpEmail={setPopUpEmail}
+                setAddSubmitted={setAddSubmitted}
                 />
+                <AddTeacherConfirmation
+                    onClose={() => {
+                        setAddSubmitted(!addSubmitted)
+                        setShowPopup(!showPopup);
+                    } }
+                    popupName={popupName}
+                    popupEmail={popupEmail}
+                    addTeacherId={"1"}
+                    setReloadList={setReloadList}
+                    open={addSubmitted} />
+            </>
+        ) : (
+            <>
+                <RemoveTeacher
+                    open={!removeSubmitted}
+                    onClose={() => {
+                        setShowPopup(!showPopup);
+                    } }
+                    setRemoveSubmitted={setRemoveSubmitted}
+                    setPopUpName={setPopUpName}
+                    setPopUpEmail={setPopUpEmail} />
+                <RemoveTeacherConfirmation
+                    onClose={() => {
+                      console.log('removeSubmissionError during onClose: ', removeSubmissionError);
+                        if (!removeSubmissionError){
+                          setRemoveSubmitted(!removeSubmitted)
+                          setShowPopup(!showPopup);
+                        }
+                    } }
+                    popupName={popupName}
+                    popupEmail={popupEmail}
+                    removeTeacherId={"1"}
+                    setReloadList={setReloadList}
+                    setRemoveSubmissionError={setRemoveSubmissionError}
+                    open={removeSubmitted} />
+                <RemoveTeacherError
+                  popupEmail={popupEmail}
+                  onClose={() => {
+                    setRemoveSubmissionError(!removeSubmissionError);
+                  } }
+                  open = {removeSubmissionError}
+                />
+            </>
         )
     )
 };
