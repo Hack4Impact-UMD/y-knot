@@ -12,26 +12,21 @@ import CourseCard from '../../components/CourseCard/CourseCard';
 const TeacherProfilePage = (): JSX.Element => {
   const [teacher, setTeacher] = useState<Teacher>();
   const [editName, setEditName] = useState<boolean>(false);
-  const [name, setName] = useState<string>('Fiona Love');
-  const [email, setEmail] = useState<string>('f.love@gmail.com');
+  const [name, setName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const authContext = useAuth();
   const teacherID = useParams().id;
 
   useEffect(() => {
     if (teacherID) {
-      authenticateUser('sgaba@umd.edu', '123abc')
-        .then(() =>
-          getTeacher(teacherID)
-            .then((data) => {
-              setTeacher(data);
-              setLoading(false);
-            })
-            .catch((err) => {
-              console.error(err);
-              setLoading(false);
-            }),
-        )
+      getTeacher(teacherID)
+        .then((data) => {
+          setTeacher(data);
+          setName(data.name!);
+          setEmail(data.email!);
+          setLoading(false);
+        })
         .catch((err) => {
           console.error(err);
           setLoading(false);
@@ -67,10 +62,38 @@ const TeacherProfilePage = (): JSX.Element => {
 
           <h1 className={styles.coursesTitle}>Courses</h1>
           <div className={styles.courseList}>
-            <CourseCard teacher="bob" course="1" section="1" />
-            <CourseCard teacher="bob" course="1" section="1" />
-            <CourseCard teacher="bob" course="1" section="1" />
-            <CourseCard teacher="bob" course="1" section="1" />
+            <CourseCard
+              teacher={['bob']}
+              course="Hack4Impact"
+              section="[Section]"
+              startDate="2023-01-01"
+              endDate="2023-04-01"
+              color="gray"
+            />
+            <CourseCard
+              teacher={['bob']}
+              course="Math"
+              section="[Section]"
+              startDate="2023-01-01"
+              endDate="2023-04-01"
+              color="gray"
+            />
+            <CourseCard
+              teacher={['bob']}
+              course="Sign Language"
+              section="[Section]"
+              startDate="2023-01-01"
+              endDate="2023-04-01"
+              color="gray"
+            />
+            <CourseCard
+              teacher={['bob']}
+              course="English"
+              section="[Section]"
+              startDate="2023-01-01"
+              endDate="2023-04-01"
+              color="gray"
+            />
           </div>
         </div>
       )}

@@ -1,20 +1,6 @@
-export interface StudentID {
+export interface StudentID extends Student {
   // Contains an id as well
   id: string;
-  firstName: string;
-  middleName?: string;
-  lastName: string;
-  addrFirstLine: string;
-  addrSecondLine?: string;
-  city: string;
-  state: string;
-  zipCode: number;
-  email: string;
-  birthDate: string;
-  minor: boolean;
-  gradeLevel?: string;
-  schoolName?: string;
-  courseInformation: StudentCourse[];
 }
 
 export interface Student {

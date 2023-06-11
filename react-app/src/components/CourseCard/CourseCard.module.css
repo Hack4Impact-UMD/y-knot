@@ -7,19 +7,31 @@
   overflow: hidden;
   margin-right: 50px;
   margin-bottom: 40px;
+  box-shadow: 0px 0px 10px 0px #00000040;
 }
 
 .background {
-  height: 65%;
-  background-color: var(--color-grey);
+  display: flex;
+  flex-direction: column;
+  height: 50%;
+  padding: 15px;
+  justify-content: center;
+  color: white;
+  gap: 10%;
+}
+
+.course {
+  font-weight: 500;
+  font-size: 1.6rem;
+}
+
+.section {
+  font-style: italic;
 }
 
 .description {
-  height: 35%;
-  background-color: var(--color-orange);
-  font-size: 16px;
-  display: flex;
-  flex-direction: column;
+  padding: 15px;
+  height: 50%;
   gap: 3px;
-  padding: 6px 0px 0px 6px;
+  color: black;
 }
