@@ -67,44 +67,48 @@
   width: 22px;
 }
 
-.introContent {
-  overflow-wrap: normal;
+.introText {
+  margin: 0 15px 15px 15px;
+  padding: 10px;
+  max-width: 100%;
+  height: 290px;
+  color: #838383;
+  overflow-y: auto;
 }
 
-.introText {
-  margin: 0 20px 15px 20px;
-  color: #838383;
+.editing {
+  color: black;
+  border: 2px solid rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  word-break: break-word;
 }
 
 .buttons {
   display: inline-flex;
   float: right;
+  gap: 15px;
 }
 
 .certificate,
 .email {
   background-color: var(--color-orange);
   border: none;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 75px;
-  height: 60px;
+  border-radius: 15px;
+  width: 65px;
+  height: 50px;
+  margin-bottom: 30px;
+  cursor: pointer;
 }
 
-.certificate {
-  margin-right: 10px;
+.certificate:hover,
+.email:hover {
+  background-color: var(--color-yellow-orange);
 }
 
-.certificateIcon,
+.certificateIcon {
+  height: 65%;
+}
+
 .emailIcon {
-  max-width: 100%;
-  max-height: 100%;
-}
-
-.editing {
-  color: black;
-  border: 2px solid rgba(0, 0, 0, 0.25);
+  height: 45%;
 }

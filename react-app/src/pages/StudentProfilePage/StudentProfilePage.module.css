@@ -31,7 +31,6 @@
 
 .topButtons {
   display: flex;
-  align-items: flex;
   margin-right: 10%;
   gap: 15px;
 }

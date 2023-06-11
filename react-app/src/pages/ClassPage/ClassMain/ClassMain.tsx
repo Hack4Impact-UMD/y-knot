@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import styles from './ClassMain.module.css';
 import editIcon from '../../../assets/gray-pencil.svg';
 import saveIcon from '../../../assets/save.svg';
@@ -7,16 +7,15 @@ import certificateIcon from '../../../assets/certificate.svg';
 import emailIcon from '../../../assets/email.svg';
 
 const ClassMain = (): JSX.Element => {
-  const [text, setText] = useState(
+  const emailContentRef = useRef<HTMLDivElement>(null);
+  const [text, setText] = useState<string>(
     'Hello everyone and welcome to math! In this course we will be teaching...',
   );
   const [editText, setEditText] = useState<boolean>(false);
 
   const handleEdit = (): void => {
-    if (editText) {
-      const newText = document.querySelector(
-        `.${styles.introText}`,
-      )?.textContent;
+    if (editText && emailContentRef.current) {
+      const newText = emailContentRef.current.innerHTML;
 
       if (newText !== null && newText !== undefined) {
         setText(newText);
@@ -50,12 +49,12 @@ const ClassMain = (): JSX.Element => {
           </div>
         </div>
         <div className={styles.introContent}>
-          <p
+          <div
             className={`${styles.introText} ${editText && styles.editing}`}
             contentEditable={editText}
-          >
-            {text}
-          </p>
+            ref={emailContentRef}
+            dangerouslySetInnerHTML={{ __html: text }}
+          ></div>
         </div>
       </div>
       <div className={styles.buttons}>
