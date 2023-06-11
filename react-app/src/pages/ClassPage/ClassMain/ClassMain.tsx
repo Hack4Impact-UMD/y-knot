@@ -15,7 +15,7 @@ const ClassMain = (): JSX.Element => {
 
   const handleEdit = (): void => {
     if (editText && emailContentRef.current) {
-      const newText = emailContentRef.current.innerHTML;
+      const newText = emailContentRef.current.innerHTML; // Stores the HTML to preserve formatting
 
       if (newText !== null && newText !== undefined) {
         setText(newText);
