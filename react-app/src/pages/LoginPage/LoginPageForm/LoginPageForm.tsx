@@ -12,12 +12,12 @@ import yKnotLogo from '../../../assets/yknot-logo.png';
 const LoginPageForm = ({ redirect }: { redirect: string }): JSX.Element => {
   const navigate = useNavigate();
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [openForgotModal, setOpenForgotModal] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [failureMessage, setFailureMessage] = useState('');
-  const [showLoading, setShowLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [openForgotModal, setOpenForgotModal] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [failureMessage, setFailureMessage] = useState<string>('');
+  const [showLoading, setShowLoading] = useState<boolean>(false);
 
   const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -72,7 +72,6 @@ const LoginPageForm = ({ redirect }: { redirect: string }): JSX.Element => {
               }}
             ></input>
           </div>
-
           <div className={styles.passwordContainer}>
             <input
               required

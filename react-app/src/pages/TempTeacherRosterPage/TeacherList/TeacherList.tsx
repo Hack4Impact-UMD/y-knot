@@ -1,22 +1,20 @@
 import { useEffect, useState } from 'react';
 import { type StudentID } from '../../../types/StudentType';
 import { Link } from 'react-router-dom';
-import styles from './StudentList.module.css';
+import styles from './TeacherList.module.css';
 import eyeIcon from '../../../assets/view.svg';
 import trashIcon from '../../../assets/trash.svg';
-import { deleteStudent } from '../../../backend/FirestoreCalls';
+import { TeacherID } from '../../../types/UserType';
+import { deleteUser } from '../../../backend/CloudFunctionsCalls';
 
-const StudentList = (props: {
+const TeacherList = (props: {
   search: string;
-  students: Array<Partial<StudentID>>;
+  teachers: Array<Partial<TeacherID>>;
 }) => {
   const [studentList, setStudentList] = useState<any[]>([]);
   useEffect(() => {
-    const list = props.students.reduce((result: any[], student, i) => {
-      const firstName = student.firstName ? student.firstName + ' ' : '';
-      const middleName = student.middleName ? student.middleName + ' ' : '';
-      const lastName = student.lastName ? student.lastName + ' ' : '';
-      const fullName = firstName + middleName + lastName;
+    const list = props.teachers.reduce((result: any[], teacher, i) => {
+      const fullName = teacher.name!;
       if (fullName.toLowerCase().includes(props.search.toLowerCase())) {
         result.push(
           <div
@@ -27,7 +25,7 @@ const StudentList = (props: {
           >
             <p className={styles.name}>{fullName}</p>
             <div className={styles.icons}>
-              <Link to={`/student/${student.id}`}>
+              <Link to={`/teacher/${teacher.id}`}>
                 <button className={`${styles.button} ${styles.profileIcon}`}>
                   <img src={eyeIcon} alt="View Profile" />
                 </button>
@@ -35,12 +33,12 @@ const StudentList = (props: {
               <button
                 className={`${styles.button} ${styles.trashIcon}`}
                 onClick={() =>
-                  deleteStudent(student.id!).then(() => {
+                  deleteUser(teacher?.auth_id!).then(() => {
                     window.location.reload();
                   })
                 }
               >
-                <img src={trashIcon} alt="Delete Student" />
+                <img src={trashIcon} alt="Delete Teacher" />
               </button>
             </div>
           </div>,
@@ -54,7 +52,7 @@ const StudentList = (props: {
 
   return (
     <>
-      {props.students.length === 0 ? (
+      {props.teachers.length === 0 ? (
         <h4 className={styles.noStudent}>No Students Currently in Roster</h4>
       ) : studentList.length === 0 ? (
         <h4 className={styles.noStudent}>
@@ -67,4 +65,4 @@ const StudentList = (props: {
   );
 };
 
-export default StudentList;
+export default TeacherList;

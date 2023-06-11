@@ -3,11 +3,11 @@ export interface Course {
   startDate: string; // "YYYY-MM-DD"
   endDate: string; // "YYYY-MM-DD"
   meetingTime: string;
-  students: Set<string>;
-  teachers: Set<string>;
+  students: string[];
+  teachers: string[];
   application: boolean;
   courseType: CourseType;
-  prerequisites: Set<string>;
+  prerequisites: string[];
   formId: string;
   introEmail: IntroEmail;
   attendance: Attendance[];
