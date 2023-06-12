@@ -1,0 +1,84 @@
+.header {
+  background: white;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.close {
+  height: 0.5rem;
+  margin: 1.25rem 1.5rem 0 0;
+  align-self: end;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.heading {
+  width: 100%;
+  color: black;
+  font-size: 27px;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.error {
+  height: 20px;
+  margin: 0;
+  padding: 0;
+  font-size: 0.8rem;
+  color: red;
+}
+
+.nameInput {
+  width: 50vh;
+  padding: 11px 15px;
+  margin-bottom: 16px;
+  border: none;
+  border-radius: 10px;
+  outline: none;
+  background-color: var(--color-grey);
+}
+
+.noteInput {
+  width: 50vh;
+  height: 150px;
+  padding: 15px 15px;
+  margin: 0px 0px 16px 0px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  border: none;
+  border-radius: 10px;
+  outline: none;
+  background-color: var(--color-grey);
+  align-self: center;
+  resize: none;
+}
+
+.button {
+  background-color: var(--color-orange);
+  padding: 11px 0 11px 0;
+  font-size: 0.8rem;
+  width: 16.67vh;
+  min-width: 180px;
+  border: none;
+  border-radius: 30px;
+  color: white;
+  outline: none;
+  text-align: center;
+}
+
+.button:hover {
+  cursor: pointer;
+  background: var(--color-yellow-orange);
+}

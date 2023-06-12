@@ -19,6 +19,7 @@ import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import TeacherRosterPage from './pages/TempTeacherRosterPage/TeacherRosterPage';
 import { createUser } from './backend/CloudFunctionsCalls';
+import HomeworkPage from './pages/ClassPage/HomeworkPage/HomeworkPage';
 
 function App(): JSX.Element {
   const customTheme = theme;
@@ -134,6 +135,14 @@ function App(): JSX.Element {
               element={
                 <RequireAuth>
                   <CertificatePage name="Fiona Love" course="Math" />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/homework"
+              element={
+                <RequireAuth>
+                  <HomeworkPage />
                 </RequireAuth>
               }
             />
