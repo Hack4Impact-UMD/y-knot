@@ -2,6 +2,8 @@ import { useState } from 'react';
 import styles from './ClassHomework.module.css';
 import noteIcon from '../../../assets/note.svg';
 import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
+import AddHomework from './AddHomework/AddHomework';
+import RemoveHomework from './RemoveHomework/RemoveHomework';
 
 const ClassHomework = (): JSX.Element => {
   const students: string[] = [
@@ -14,9 +16,19 @@ const ClassHomework = (): JSX.Element => {
 
   const dates = ['Homework 2', 'Exam 1', 'Exam 2'];
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
+  const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
+  const [openRemoveHwModal, setOpenRemoveHwModal] = useState<boolean>(false);
 
   const handleSelectAllChange = () => {
     setSelectAllChecked(true);
+  };
+
+  const handleAddModal = () => {
+    setOpenAddHwModal(!openAddHwModal);
+  };
+
+  const handleRemoveModal = () => {
+    setOpenRemoveHwModal(!openRemoveHwModal);
   };
 
   return (
@@ -65,11 +77,25 @@ const ClassHomework = (): JSX.Element => {
         <button className={styles.bottomButton} onClick={handleSelectAllChange}>
           Select All
         </button>
-        <button className={styles.bottomButton}>Remove</button>
-        <button className={styles.bottomButton}>Add</button>
+        <button className={styles.bottomButton} onClick={handleRemoveModal}>
+          Remove
+        </button>
+        <button className={styles.bottomButton} onClick={handleAddModal}>
+          Add
+        </button>
       </div>
-      <br></br>
-      <br></br>
+      <RemoveHomework
+        open={openRemoveHwModal}
+        onClose={() => {
+          setOpenRemoveHwModal(!openRemoveHwModal);
+        }}
+      />
+      <AddHomework
+        open={openAddHwModal}
+        onClose={() => {
+          setOpenAddHwModal(!openAddHwModal);
+        }}
+      />
     </div>
   );
 };

@@ -5,6 +5,7 @@ interface modalPropsType {
   onClose: any;
   children: React.ReactNode;
   height: number;
+  width: number;
 }
 
 const Modal = ({
@@ -12,8 +13,10 @@ const Modal = ({
   onClose,
   children,
   height,
+  width,
 }: modalPropsType): React.ReactElement => {
   const heightString = height + 'px';
+  const widthString = width + 'px';
   return (
     <div
       onClick={(e) => {
@@ -24,7 +27,7 @@ const Modal = ({
         <>
           <div className={styles.background} onClick={() => onClose()} />
           <div className={styles.centered}>
-            <div className={styles.modal} style={{ height: heightString }}>
+            <div className={styles.modal} style={{ height: heightString, width: widthString }}>
               {children}
             </div>
           </div>
@@ -34,6 +37,10 @@ const Modal = ({
       )}
     </div>
   );
+};
+
+Modal.defaultProps = {
+  width: 400
 };
 
 export default Modal;

@@ -67,8 +67,6 @@ const ClassAttendance = (): JSX.Element => {
           Select All
         </button>
       </div>
-      <br></br>
-      <br></br>
     </div>
   );
 };

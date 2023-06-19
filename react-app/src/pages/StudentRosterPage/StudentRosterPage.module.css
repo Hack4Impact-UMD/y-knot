@@ -31,7 +31,7 @@
   border: none;
   border-radius: 10px;
   outline: none;
-  background-color: lightgrey;
+  background-color: var(--color-grey);
 }
 
 .heading {
