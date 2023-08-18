@@ -1,22 +1,41 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { type StudentID } from '../../../types/StudentType';
 import { Link } from 'react-router-dom';
 import styles from './StudentList.module.css';
 import eyeIcon from '../../../assets/view.svg';
 import trashIcon from '../../../assets/trash.svg';
-import { deleteStudent } from '../../../backend/FirestoreCalls';
+import DeleteStudentConfirmation from './DeleteStudentConfirmation/DeleteStudentConfirmation';
 
 const StudentList = (props: {
   search: string;
   students: Array<Partial<StudentID>>;
+  setStudents: Function;
+  setOpenSuccess: Function;
+  setOpenFailure: Function;
 }) => {
   const [studentList, setStudentList] = useState<any[]>([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupName, setPopupName] = useState<String>();
+  const [popupEmail, setPopupEmail] = useState<String>();
+  const [removeStudentId, setStudentId] = useState<String>();
+  const [reloadList, setReloadList] = useState<Boolean>(false);
+  const [numToShow, setNumToShow] = useState<number>(50);
+  const navigate = useNavigate();
+  const handleClick = () => {
+    setShowPopup(true);
+  };
+
   useEffect(() => {
+    setReloadList(false);
+
     const list = props.students.reduce((result: any[], student, i) => {
       const firstName = student.firstName ? student.firstName + ' ' : '';
       const middleName = student.middleName ? student.middleName + ' ' : '';
       const lastName = student.lastName ? student.lastName + ' ' : '';
       const fullName = firstName + middleName + lastName;
+      const email = student.email;
+      const id = student.id;
       if (fullName.toLowerCase().includes(props.search.toLowerCase())) {
         result.push(
           <div
@@ -27,30 +46,43 @@ const StudentList = (props: {
           >
             <p className={styles.name}>{fullName}</p>
             <div className={styles.icons}>
-              <Link to={`/student/${student.id}`}>
-                <button className={`${styles.button} ${styles.profileIcon}`}>
-                  <img src={eyeIcon} alt="View Profile" />
-                </button>
-              </Link>
-              <button
-                className={`${styles.button} ${styles.trashIcon}`}
-                onClick={() =>
-                  deleteStudent(student.id!).then(() => {
-                    window.location.reload();
-                  })
-                }
-              >
-                <img src={trashIcon} alt="Delete Student" />
+              <button className={`${styles.button} ${styles.profileIcon}`}>
+                <img
+                  src={eyeIcon}
+                  alt="View Profile"
+                  onClick={() => {
+                    navigate(`/profile/${id}`);
+                  }}
+                />
+              </button>
+              <button className={`${styles.button} ${styles.trashIcon}`}>
+                <img
+                  src={trashIcon}
+                  alt="Delete Student"
+                  onClick={() => {
+                    setPopupEmail(email);
+                    setPopupName(fullName);
+                    setStudentId(id);
+                    handleClick();
+                  }}
+                />
               </button>
             </div>
           </div>,
         );
       }
-
       return result;
     }, []);
     setStudentList(list);
-  }, [props.search]);
+  }, [props.search, reloadList]);
+
+  const handleLoadMore = () => {
+    if (numToShow + 50 > props.students.length) {
+      setNumToShow(props.students.length);
+    } else {
+      setNumToShow(numToShow + 50);
+    }
+  };
 
   return (
     <>
@@ -61,7 +93,33 @@ const StudentList = (props: {
           No Student Found Matching "{props.search}"
         </h4>
       ) : (
-        <div className={styles.listBox}>{studentList}</div>
+        <>
+          <div className={styles.listBox}>
+            {studentList.slice(0, numToShow)}
+          </div>
+          {showPopup && (
+            <DeleteStudentConfirmation
+              open={showPopup}
+              onClose={() => {
+                setShowPopup(!showPopup);
+              }}
+              popupName={popupName ? popupName : 'undefined'}
+              popupEmail={popupEmail ? popupEmail : 'undefined'}
+              removeStudentId={removeStudentId ? removeStudentId : 'undefined'}
+              setReloadList={setReloadList}
+              reloadList={reloadList}
+              students={props.students}
+              setStudents={props.setStudents}
+              setOpenSuccess={props.setOpenSuccess}
+              setOpenFailure={props.setOpenFailure}
+            />
+          )}
+          {numToShow < props.students.length && (
+            <button className={styles.loadMore} onClick={handleLoadMore}>
+              Load More
+            </button>
+          )}
+        </>
       )}
     </>
   );
