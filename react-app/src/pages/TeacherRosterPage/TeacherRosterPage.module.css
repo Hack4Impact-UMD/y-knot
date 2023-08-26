@@ -30,11 +30,6 @@
   background-color: var(--color-grey);
 }
 
-.heading {
-  width: 100%;
-  text-align: center;
-}
-
 .failureMessage {
   width: 100%;
   margin-top: 120px;
@@ -45,4 +40,32 @@
 
 html {
   overflow-y: overlay;
+}
+
+.teacherHeader {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+.heading {
+  width: 100%;
+  text-align: center;
+}
+
+.addTeacher {
+  border-radius: 30px;
+  border: none;
+  background-color: var(--color-orange);
+  font-size: 1.05rem;
+  width: 150px;
+  height: 40px;
+  color: white;
+  margin-left: -200px;
+  margin-right: 10%;
+  cursor: pointer;
+}
+
+.addTeacher:hover {
+  background-color: var(--color-yellow-orange);
 }

@@ -2,15 +2,14 @@ export interface YKNOTUser {
   name: string;
   auth_id: string;
   type: Role;
-  userInfo?: Teacher;
+  userInfo?: { email: string; courses: string[] };
 }
 
 export interface Teacher extends YKNOTUser {
-  email: string;
-  courses: string[];
+  userInfo: { email: string; courses: string[] };
 }
 
 export interface TeacherID extends Teacher {
-  id: string
+  id: string;
 }
 export type Role = 'ADMIN' | 'TEACHER';

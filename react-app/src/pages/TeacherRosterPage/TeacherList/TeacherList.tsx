@@ -2,23 +2,24 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { type StudentID } from '../../../types/StudentType';
 import { Link } from 'react-router-dom';
-import styles from './StudentList.module.css';
+import styles from './TeacherList.module.css';
 import eyeIcon from '../../../assets/view.svg';
 import trashIcon from '../../../assets/trash.svg';
-import DeleteStudentConfirmation from './DeleteStudentConfirmation/DeleteStudentConfirmation';
+import DeleteTeacherConfirmation from './DeleteTeacherConfirmation/DeleteTeacherConfirmation';
+import { TeacherID } from '../../../types/UserType';
 
-const StudentList = (props: {
+const TeacherList = (props: {
   search: string;
-  students: Array<Partial<StudentID>>;
-  setStudents: Function;
+  teachers: Array<Partial<TeacherID>>;
+  setTeachers: Function;
   setOpenSuccess: Function;
   setOpenFailure: Function;
 }) => {
-  const [studentList, setStudentList] = useState<any[]>([]);
+  const [teacherList, setTeacherList] = useState<any[]>([]);
   const [showPopup, setShowPopup] = useState(false);
   const [popupName, setPopupName] = useState<String>();
   const [popupEmail, setPopupEmail] = useState<String>();
-  const [removeStudentId, setRemoveStudentId] = useState<String>();
+  const [removeTeacherId, setRemoveTeacherId] = useState<String>();
   const [reloadList, setReloadList] = useState<Boolean>(false);
   const [numToShow, setNumToShow] = useState<number>(50);
   const navigate = useNavigate();
@@ -29,14 +30,11 @@ const StudentList = (props: {
   useEffect(() => {
     setReloadList(false);
 
-    const list = props.students.reduce((result: any[], student, i) => {
-      const firstName = student.firstName ? student.firstName + ' ' : '';
-      const middleName = student.middleName ? student.middleName + ' ' : '';
-      const lastName = student.lastName ? student.lastName + ' ' : '';
-      const fullName = firstName + middleName + lastName;
-      const email = student.email;
-      const id = student.id;
-      if (fullName.toLowerCase().includes(props.search.toLowerCase())) {
+    const list = props.teachers.reduce((result: any[], teacher, i) => {
+      const fullName = teacher.name;
+      const email = teacher.userInfo!.email;
+      const id = teacher.id;
+      if (fullName!.toLowerCase().includes(props.search.toLowerCase())) {
         result.push(
           <div
             key={i}
@@ -51,18 +49,18 @@ const StudentList = (props: {
                   src={eyeIcon}
                   alt="View Profile"
                   onClick={() => {
-                    navigate(`/profile/${id}`);
+                    navigate(`/teacher/${id}`);
                   }}
                 />
               </button>
               <button className={`${styles.button} ${styles.trashIcon}`}>
                 <img
                   src={trashIcon}
-                  alt="Delete Student"
+                  alt="Delete Teacher"
                   onClick={() => {
                     setPopupEmail(email);
                     setPopupName(fullName);
-                    setRemoveStudentId(id);
+                    setRemoveTeacherId(teacher.auth_id);
                     handleClick();
                   }}
                 />
@@ -73,12 +71,12 @@ const StudentList = (props: {
       }
       return result;
     }, []);
-    setStudentList(list);
+    setTeacherList(list);
   }, [props.search, reloadList]);
 
   const handleLoadMore = () => {
-    if (numToShow + 50 > props.students.length) {
-      setNumToShow(props.students.length);
+    if (numToShow + 50 > props.teachers.length) {
+      setNumToShow(props.teachers.length);
     } else {
       setNumToShow(numToShow + 50);
     }
@@ -86,35 +84,35 @@ const StudentList = (props: {
 
   return (
     <>
-      {props.students.length === 0 ? (
-        <h4 className={styles.noStudent}>No Students Currently in Roster</h4>
-      ) : studentList.length === 0 ? (
+      {props.teachers.length === 0 ? (
+        <h4 className={styles.noStudent}>No Teachers Currently in Roster</h4>
+      ) : teacherList.length === 0 ? (
         <h4 className={styles.noStudent}>
-          No Student Found Matching "{props.search}"
+          No Teacher Found Matching "{props.search}"
         </h4>
       ) : (
         <>
           <div className={styles.listBox}>
-            {studentList.slice(0, numToShow)}
+            {teacherList.slice(0, numToShow)}
           </div>
           {showPopup && (
-            <DeleteStudentConfirmation
+            <DeleteTeacherConfirmation
               open={showPopup}
               onClose={() => {
                 setShowPopup(!showPopup);
               }}
               popupName={popupName ? popupName : 'undefined'}
               popupEmail={popupEmail ? popupEmail : 'undefined'}
-              removeStudentId={removeStudentId ? removeStudentId : 'undefined'}
+              removeTeacherId={removeTeacherId ? removeTeacherId : 'undefined'}
               setReloadList={setReloadList}
               reloadList={reloadList}
-              students={props.students}
-              setStudents={props.setStudents}
+              teachers={props.teachers}
+              setTeachers={props.setTeachers}
               setOpenSuccess={props.setOpenSuccess}
               setOpenFailure={props.setOpenFailure}
             />
           )}
-          {numToShow < props.students.length && (
+          {numToShow < props.teachers.length && (
             <button className={styles.loadMore} onClick={handleLoadMore}>
               Load More
             </button>
@@ -125,4 +123,4 @@ const StudentList = (props: {
   );
 };
 
-export default StudentList;
+export default TeacherList;

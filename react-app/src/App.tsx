@@ -17,7 +17,7 @@ import TranscriptPage from './pages/TranscriptPage/TranscriptPage';
 import CertificatePage from './pages/CertificatePage/CertificatePage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import NavigationBar from './components/NavigationBar/NavigationBar';
-import TeacherRosterPage from './pages/TempTeacherRosterPage/TeacherRosterPage';
+import TeacherRosterPage from './pages/TeacherRosterPage/TeacherRosterPage';
 import { createUser } from './backend/CloudFunctionsCalls';
 
 function App(): JSX.Element {
@@ -98,7 +98,13 @@ function App(): JSX.Element {
                 <RequireAuth>
                   <button
                     onClick={() => {
-                      // addSampleStudent({ firstName: 'Bob' });
+                      createUser(
+                        'sgaba@terpmail.umd.edu',
+                        'Teach One',
+                        'TEACHER',
+                      )
+                        .then(() => {})
+                        .catch((err) => console.log(err));
                     }}
                   ></button>
                 </RequireAuth>
