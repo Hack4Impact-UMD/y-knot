@@ -10,25 +10,47 @@ import { useAuth } from '../../auth/AuthProvider';
 import styles from './TeacherRosterPage.module.css';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
-import StudentList from './TeacherList/TeacherList';
-import { Teacher, TeacherID } from '../../types/UserType';
 import TeacherList from './TeacherList/TeacherList';
+import { Alert, Snackbar } from '@mui/material';
+import { TeacherID } from '../../types/UserType';
 import AddTeacher from './AddTeacher/AddTeacher';
 
 const TeacherRosterPage = (): JSX.Element => {
+  const [addTeacher, setAddTeacher] = useState<boolean>(false);
   const [teachers, setTeachers] = useState<Array<Partial<TeacherID>>>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
-  const [addTeacher, setAddTeacher] = useState<boolean>(false);
+
+  //Used to handle Deletion alert
+  const [openSuccess, setOpenSuccess] = useState<boolean>(false);
+  const [openFailure, setOpenFailure] = useState<boolean>(false);
+  const handleToClose = (event: any, reason: any) => {
+    setOpenSuccess(false);
+    setOpenFailure(false);
+  };
+
   const auth = useAuth();
+
   // Used to detect time in between keystrokes when using the search bar
   let timer: NodeJS.Timeout | null = null;
 
   useEffect(() => {
+    setLoading(true);
+
     getAllTeachers()
       .then((allTeachers) => {
-        setTeachers(allTeachers);
+        const partialTeachers: Array<Partial<TeacherID>> = [];
+        allTeachers.map((currTeacher) => {
+          const newTeacher: Partial<TeacherID> = {};
+          newTeacher.name = currTeacher.name;
+          newTeacher.auth_id = currTeacher.auth_id;
+          newTeacher.id = currTeacher.id;
+          newTeacher.courses = [];
+          newTeacher.email = currTeacher.email;
+          partialTeachers.push(newTeacher);
+        });
+        setTeachers(partialTeachers);
       })
       .catch((err) => {
         setError(true);
@@ -102,12 +124,45 @@ const TeacherRosterPage = (): JSX.Element => {
               </div>
             ) : error ? (
               <h4 className={styles.failureMessage}>
-                Error retrieving students. Please try again later.
+                Error retrieving teachers. Please try again later.
               </h4>
             ) : (
-              <TeacherList search={search} teachers={teachers} />
+              <TeacherList
+                search={search}
+                teachers={teachers}
+                setTeachers={setTeachers}
+                setOpenSuccess={setOpenSuccess}
+                setOpenFailure={setOpenFailure}
+              />
             )}
           </div>
+          <Snackbar
+            anchorOrigin={{
+              horizontal: 'right',
+              vertical: 'bottom',
+            }}
+            open={openSuccess}
+            autoHideDuration={3000}
+            onClose={handleToClose}
+          >
+            <Alert severity="success" sx={{ width: '100%' }}>
+              Teacher was Successfully Removed
+            </Alert>
+          </Snackbar>
+
+          <Snackbar
+            anchorOrigin={{
+              horizontal: 'right',
+              vertical: 'bottom',
+            }}
+            open={openFailure}
+            autoHideDuration={3000}
+            onClose={handleToClose}
+          >
+            <Alert severity="error" sx={{ width: '100%' }}>
+              Teacher could not be Removed
+            </Alert>
+          </Snackbar>
         </>
       )}
     </>

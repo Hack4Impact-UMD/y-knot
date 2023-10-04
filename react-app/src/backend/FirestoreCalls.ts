@@ -106,10 +106,11 @@ export function deleteStudent(id: string): Promise<void> {
           students.push(course.students);
         });
       });
-      // TODO: UPDATE THIS FOR ARRAY
-      // students.forEach((studentList) => {
-      //   studentList.delete(id);
-      // });
+      students.forEach((studentList) => {
+        studentList = studentList.filter((student) => {
+          return student !== id;
+        });
+      });
       idOrder.map((id, index) => {
         transaction.update(doc(db, 'Courses', id), {
           students: students[index],

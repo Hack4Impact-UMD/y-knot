@@ -11,11 +11,7 @@
   width: calc(100% - 250px);
   display: flex;
   flex-direction: column;
-}
-
-.rightPane::-webkit-scrollbar {
-  width: 200px;
-  background: -webkit-linear-gradient(0, blue 50%, white 100%);
+  overflow: hidden;
 }
 
 .searchContainer {
