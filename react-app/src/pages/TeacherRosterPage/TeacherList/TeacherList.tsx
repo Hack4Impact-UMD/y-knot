@@ -32,7 +32,7 @@ const TeacherList = (props: {
 
     const list = props.teachers.reduce((result: any[], teacher, i) => {
       const fullName = teacher.name;
-      const email = teacher.userInfo!.email;
+      const email = teacher.email;
       const id = teacher.id;
       if (fullName!.toLowerCase().includes(props.search.toLowerCase())) {
         result.push(

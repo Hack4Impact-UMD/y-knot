@@ -3,7 +3,6 @@ import { AuthProvider, useAuth } from './auth/AuthProvider';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './muiTheme';
 import { addSampleCourse, addSampleStudent } from './backendTesting/test';
-import { Upload } from './components/Upload/Upload';
 import RequireAuth from './auth/RequireAuth/RequireAuth';
 import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
 import LoginPage from './pages/LoginPage/LoginPage';
@@ -99,8 +98,8 @@ function App(): JSX.Element {
                   <button
                     onClick={() => {
                       createUser(
-                        'sgaba@terpmail.umd.edu',
-                        'Teach One',
+                        'stsai123@terpmail.umd.edu',
+                        'The Best Teacher',
                         'TEACHER',
                       )
                         .then(() => {})
@@ -110,7 +109,6 @@ function App(): JSX.Element {
                 </RequireAuth>
               }
             />
-            <Route path="/upload" element={<Upload />} />
             <Route
               path="/student/:id"
               element={

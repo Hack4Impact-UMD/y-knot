@@ -24,7 +24,7 @@ const TeacherProfilePage = (): JSX.Element => {
         .then((data) => {
           setTeacher(data);
           setName(data.name!);
-          setEmail(data.userInfo.email!);
+          setEmail(data.email!);
           setLoading(false);
         })
         .catch((err) => {

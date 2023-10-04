@@ -43,11 +43,11 @@ const TeacherRosterPage = (): JSX.Element => {
         const partialTeachers: Array<Partial<TeacherID>> = [];
         allTeachers.map((currTeacher) => {
           const newTeacher: Partial<TeacherID> = {};
-          newTeacher.userInfo = { email: '', courses: [] };
-          newTeacher.userInfo!.email = currTeacher.userInfo.email;
           newTeacher.name = currTeacher.name;
           newTeacher.auth_id = currTeacher.auth_id;
           newTeacher.id = currTeacher.id;
+          newTeacher.courses = [];
+          newTeacher.email = currTeacher.email;
           partialTeachers.push(newTeacher);
         });
         setTeachers(partialTeachers);
