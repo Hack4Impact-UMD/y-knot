@@ -115,7 +115,7 @@ const CoursesPage = (): JSX.Element => {
                 </div>
 
                 <div className={styles.courseHeader}>
-                  <iframe src="https://yknot-42027.web.app/login" />
+                  <iframe src="https://yknot-42027--pr65-41-security-updates-unib0u0u.web.app/courses" />
                   <h1 className={styles.courseStatus}>Active Courses</h1>
 
                   {authContext?.token?.claims.role === 'ADMIN' ? (
