@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Select from 'react-select';
 import styles from './ClassAttendance.module.css';
 import noteIcon from '../../../assets/note.svg';
 import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
@@ -25,14 +26,19 @@ const ClassAttendance = (): JSX.Element => {
         <button className={styles.noteButton}>
           <img className={styles.noteIcon} src={noteIcon}></img>
         </button>
-        <select defaultValue="" className={styles.dateSelection}>
-          <option value="" disabled hidden>
-            Date:
-          </option>
-          {dates.map(function (date, i) {
-            return <option value={date}>{date}</option>;
+        <Select
+          placeholder="Date"
+          className={styles.dateSelection}
+          styles={{
+            control: (baseStyles) => ({
+              ...baseStyles,
+              borderColor: 'black',
+            }),
+          }}
+          options={dates.map((date) => {
+            return { value: date, label: date };
           })}
-        </select>
+        />
       </div>
       {students.length === 0 ? (
         <h4 className={styles.noStudent}>No Students Currently in Roster</h4>

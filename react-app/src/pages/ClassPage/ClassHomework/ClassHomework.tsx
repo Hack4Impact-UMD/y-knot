@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Select from 'react-select';
 import styles from './ClassHomework.module.css';
 import noteIcon from '../../../assets/note.svg';
 import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
@@ -14,7 +15,7 @@ const ClassHomework = (): JSX.Element => {
     'Ariana Apple',
   ];
 
-  const dates = ['Homework 2', 'Exam 1', 'Exam 2'];
+  const assignments = ['Homework 2', 'Exam 1', 'Exam 2'];
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
   const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
   const [openRemoveHwModal, setOpenRemoveHwModal] = useState<boolean>(false);
@@ -37,14 +38,19 @@ const ClassHomework = (): JSX.Element => {
         <button className={styles.noteButton}>
           <img className={styles.noteIcon} src={noteIcon}></img>
         </button>
-        <select defaultValue="" className={styles.selection}>
-          <option value="" disabled hidden>
-            Assignment:
-          </option>
-          {dates.map(function (date, i) {
-            return <option value={date}>{date}</option>;
+        <Select
+          placeholder="Assignment"
+          className={styles.selection}
+          styles={{
+            control: (baseStyles) => ({
+              ...baseStyles,
+              borderColor: 'black',
+            }),
+          }}
+          options={assignments.map((assignment) => {
+            return { value: assignment, label: assignment };
           })}
-        </select>
+        />
       </div>
       {students.length === 0 ? (
         <h4 className={styles.noStudent}>No Students Currently in Roster</h4>
