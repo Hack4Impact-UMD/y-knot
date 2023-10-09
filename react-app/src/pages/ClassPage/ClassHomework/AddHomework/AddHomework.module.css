@@ -40,7 +40,7 @@
 }
 
 .nameInput {
-  width: 50vh;
+  width: 40vh;
   padding: 11px 15px;
   margin-bottom: 16px;
   border: none;
@@ -50,7 +50,7 @@
 }
 
 .noteInput {
-  width: 50vh;
+  width: 40vh;
   height: 150px;
   padding: 15px 15px;
   margin: 0px 0px 16px 0px;
