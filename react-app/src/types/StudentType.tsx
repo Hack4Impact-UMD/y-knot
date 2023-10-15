@@ -13,8 +13,10 @@ export interface Student {
   state: string;
   zipCode: number;
   email: string;
+  phone: number;
+  guardianFirstName: string;
+  guardianLastName: string;
   birthDate: string; // "YYYY-MM-DD"
-  minor: boolean;
   gradeLevel?: string;
   schoolName?: string;
   courseInformation: StudentCourse[];
