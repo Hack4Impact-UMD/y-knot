@@ -149,20 +149,6 @@ const TeacherRosterPage = (): JSX.Element => {
               Teacher was Successfully Removed
             </Alert>
           </Snackbar>
-
-          <Snackbar
-            anchorOrigin={{
-              horizontal: 'right',
-              vertical: 'bottom',
-            }}
-            open={openFailure}
-            autoHideDuration={3000}
-            onClose={handleToClose}
-          >
-            <Alert severity="error" sx={{ width: '100%' }}>
-              Teacher could not be Removed
-            </Alert>
-          </Snackbar>
         </>
       )}
     </>

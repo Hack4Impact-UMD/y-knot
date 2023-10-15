@@ -17,10 +17,8 @@ const StudentRosterPage = (): JSX.Element => {
 
   //Used to handle Deletion alert
   const [openSuccess, setOpenSuccess] = useState<boolean>(false);
-  const [openFailure, setOpenFailure] = useState<boolean>(false);
   const handleToClose = (event: any, reason: any) => {
     setOpenSuccess(false);
-    setOpenFailure(false);
   };
 
   const auth = useAuth();
@@ -125,7 +123,6 @@ const StudentRosterPage = (): JSX.Element => {
                 students={students}
                 setStudents={setStudents}
                 setOpenSuccess={setOpenSuccess}
-                setOpenFailure={setOpenFailure}
               />
             )}
           </div>
@@ -140,20 +137,6 @@ const StudentRosterPage = (): JSX.Element => {
           >
             <Alert severity="success" sx={{ width: '100%' }}>
               Student was Successfully Removed
-            </Alert>
-          </Snackbar>
-
-          <Snackbar
-            anchorOrigin={{
-              horizontal: 'right',
-              vertical: 'bottom',
-            }}
-            open={openFailure}
-            autoHideDuration={3000}
-            onClose={handleToClose}
-          >
-            <Alert severity="error" sx={{ width: '100%' }}>
-              Student could not be Removed
             </Alert>
           </Snackbar>
         </>

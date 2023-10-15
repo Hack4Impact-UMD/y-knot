@@ -35,6 +35,7 @@ const DeleteTeacherConfirmation = ({
   setOpenFailure,
 }: popupModalType): React.ReactElement => {
   const [submittedError, setSubmittedError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   function handleConfirm() {
     if (removeTeacherId != 'undefined') {
@@ -49,7 +50,7 @@ const DeleteTeacherConfirmation = ({
           setOpenSuccess(true);
         })
         .catch((err) => {
-          setOpenFailure(true);
+          setErrorMessage('*Teacher could not be removed');
         });
     }
     onClose();
@@ -62,7 +63,7 @@ const DeleteTeacherConfirmation = ({
 
   return (
     <Modal
-      height={260}
+      height={270}
       open={open}
       onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
         handleOnClose();
@@ -82,7 +83,8 @@ const DeleteTeacherConfirmation = ({
         </div>
         <div className={styles.content}>
           <h2 className={styles.title}>Remove Teacher Confirmation</h2>
-          <p>
+          <p className={styles.error}>{errorMessage}</p>
+          <p className={styles.contentBody}>
             {submittedError ? (
               'Log out failed. Try again later.'
             ) : (
