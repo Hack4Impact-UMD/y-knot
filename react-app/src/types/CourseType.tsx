@@ -3,11 +3,10 @@ export interface Course {
   startDate: string; // "YYYY-MM-DD"
   endDate: string; // "YYYY-MM-DD"
   meetingTime: string;
-  students: string[];
-  teachers: string[];
-  application: boolean;
+  students: string[]; // list of student ids
+  teachers: string[]; // list of teacher ids
+  leadershipApp: boolean; // is this a leadership class, which requires an application
   courseType: CourseType;
-  prerequisites: string[];
   formId: string;
   introEmail: IntroEmail;
   attendance: Attendance[];
@@ -28,4 +27,4 @@ export interface Homework {
   notes: string;
 }
 
-export type CourseType = 'ADULT' | 'MINOR' | 'LEADERSHIP';
+export type CourseType = 'PROGRAM' | 'ACADEMY' | 'CLUB';

@@ -24,10 +24,12 @@ const StudentProfilePage = (): JSX.Element => {
     state: '',
     zipCode: 0,
     email: '',
+    phone: 0,
+    guardianFirstName: '',
+    guardianLastName: '',
     birthDate: '',
     gradeLevel: '',
     schoolName: '',
-    minor: false,
     courseInformation: [],
   };
   const [student, setStudent] = useState<Student>(blankStudent);
