@@ -31,11 +31,13 @@ const NavigationBar = (): JSX.Element => {
       ) : (
         <>
           <div className={styles.titleContainer}>
-            <img
-              className={styles.yKnotLogo}
-              src={yKnotLogo}
-              alt="y-knot logo"
-            />
+            <NavLink to="/">
+              <img
+                className={styles.yKnotLogo}
+                src={yKnotLogo}
+                alt="y-knot logo"
+              />
+            </NavLink>
             <h2 className={styles.header}>
               {authContext?.token?.claims.role === 'ADMIN'
                 ? 'Admin'
