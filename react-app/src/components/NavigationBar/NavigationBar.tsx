@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
 import styles from './NavigationBar.module.css';
 import yKnotLogo from '../../assets/yknot-logo.png';
@@ -31,11 +31,13 @@ const NavigationBar = (): JSX.Element => {
       ) : (
         <>
           <div className={styles.titleContainer}>
-            <img
+            <NavLink to ='/'>
+              <img
               className={styles.yKnotLogo}
               src={yKnotLogo}
               alt="y-knot logo"
-            />
+              />
+            </NavLink>
             <h2 className={styles.header}>
               {authContext?.token?.claims.role === 'ADMIN'
                 ? 'Admin'

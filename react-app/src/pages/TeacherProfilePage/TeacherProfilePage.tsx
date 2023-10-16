@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
 import { getTeacher } from '../../backend/FirestoreCalls';
 import { authenticateUser } from '../../backend/FirebaseCalls';
@@ -12,6 +12,7 @@ import CourseCard from '../../components/CourseCard/CourseCard';
 const TeacherProfilePage = (): JSX.Element => {
   const [teacher, setTeacher] = useState<Teacher>();
   const [editName, setEditName] = useState<boolean>(false);
+  const [pageError, setPageError] = useState<boolean>(false);
   const [name, setName] = useState<string>('Fiona Love');
   const [email, setEmail] = useState<string>('f.love@gmail.com');
   const [loading, setLoading] = useState<boolean>(true);
@@ -30,6 +31,7 @@ const TeacherProfilePage = (): JSX.Element => {
             .catch((err) => {
               console.error(err);
               setLoading(false);
+              setPageError(true);
             }),
         )
         .catch((err) => {
@@ -38,6 +40,10 @@ const TeacherProfilePage = (): JSX.Element => {
         });
     }
   }, []);
+
+  if (pageError) {
+    return <Navigate to="/*"></Navigate>
+  }
 
   return (
     <>

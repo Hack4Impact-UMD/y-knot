@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
 import { getStudent, updateStudent } from '../../backend/FirestoreCalls';
 import { type Student } from '../../types/StudentType';
@@ -15,6 +15,7 @@ const StudentProfilePage = (): JSX.Element => {
   const [editing, setEditing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
+  const [pageError, setPageError] = useState<boolean>(false);
   const blankStudent: Student = {
     firstName: '',
     middleName: '',
@@ -42,10 +43,15 @@ const StudentProfilePage = (): JSX.Element => {
         })
         .catch(() => {
           setError(true);
+          setPageError(true);
         })
         .finally(() => setLoading(false));
     }
   }, []);
+
+   if (pageError) {
+    return <Navigate to="/*"></Navigate>
+  }
 
   return (
     <>
