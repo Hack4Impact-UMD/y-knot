@@ -55,8 +55,9 @@
   width: 150px;
   height: 40px;
   color: white;
-  margin-right: 12%;
   cursor: pointer;
+  justify-content: flex-end;
+  margin-right: 10%;
 }
 
 .addCourse:hover {

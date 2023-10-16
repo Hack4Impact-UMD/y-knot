@@ -40,8 +40,10 @@
 }
 
 .selection {
-  width: 40vh;
+  width: 33vh;
   height: 35px;
+  min-width: 180px;
+  min-height:fit-content;
   font-size: large;
   border-radius: 10px;
   padding: 5px;
