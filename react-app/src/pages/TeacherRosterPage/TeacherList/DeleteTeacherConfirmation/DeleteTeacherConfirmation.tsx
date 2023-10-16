@@ -46,6 +46,7 @@ const DeleteTeacherConfirmation = ({
               return teacher.auth_id !== removeTeacherId.valueOf();
             }),
           );
+          onClose();
           setReloadList(true);
           setOpenSuccess(true);
         })
@@ -53,7 +54,6 @@ const DeleteTeacherConfirmation = ({
           setErrorMessage('*Teacher could not be removed');
         });
     }
-    onClose();
   }
 
   const handleOnClose = (): void => {
