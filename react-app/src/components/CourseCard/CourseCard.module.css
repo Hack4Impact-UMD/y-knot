@@ -1,5 +1,4 @@
 .container {
-  font-family: 'Poppins';
   width: 275px;
   height: 215px;
   display: flex;
@@ -18,23 +17,21 @@
   padding: 15px;
   justify-content: center;
   color: white;
-  gap: 5px;
+  gap: 10%;
 }
 
 .course {
   font-weight: 500;
-  font-size: 25px;
+  font-size: 1.6rem;
 }
 
 .section {
   font-style: italic;
-  font-weight: 400;
-  font-size: 16px;
 }
+
 .description {
   padding: 15px;
   height: 50%;
-  font-size: 16px;
   gap: 3px;
   color: black;
 }

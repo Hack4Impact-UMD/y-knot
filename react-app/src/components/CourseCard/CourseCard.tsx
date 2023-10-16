@@ -24,18 +24,12 @@ const CourseCard = ({
         className={styles.background}
         style={{
           backgroundColor: color || 'var(--color-orange)',
-          color: color ? 'white' : 'black',
         }}
       >
         <div className={styles.course}>{course}</div>
         <div className={styles.section}>{section}</div>
       </div>
-      <div
-        className={styles.description}
-        style={{
-          backgroundColor: color ? '' : 'var(--color-grey)',
-        }}
-      >
+      <div className={styles.description}>
         {authContext?.token?.claims.role === 'ADMIN' ? teacher : ''}
       </div>
     </div>

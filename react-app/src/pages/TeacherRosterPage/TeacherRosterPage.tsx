@@ -1,16 +1,23 @@
 import { Student, type StudentID } from '../../types/StudentType';
 import { useState, useEffect } from 'react';
-import { getAllStudents, getStudent } from '../../backend/FirestoreCalls';
+import {
+  getAllStudents,
+  getAllTeachers,
+  getStudent,
+} from '../../backend/FirestoreCalls';
 import { authenticateUser } from '../../backend/FirebaseCalls';
 import { useAuth } from '../../auth/AuthProvider';
-import styles from './StudentRosterPage.module.css';
+import styles from './TeacherRosterPage.module.css';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
-import StudentList from './StudentList/StudentList';
+import TeacherList from './TeacherList/TeacherList';
 import { Alert, Snackbar } from '@mui/material';
+import { TeacherID } from '../../types/UserType';
+import AddTeacher from './AddTeacher/AddTeacher';
 
-const StudentRosterPage = (): JSX.Element => {
-  const [students, setStudents] = useState<Array<Partial<StudentID>>>([]);
+const TeacherRosterPage = (): JSX.Element => {
+  const [addTeacher, setAddTeacher] = useState<boolean>(false);
+  const [teachers, setTeachers] = useState<Array<Partial<TeacherID>>>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
@@ -28,38 +35,22 @@ const StudentRosterPage = (): JSX.Element => {
   // Used to detect time in between keystrokes when using the search bar
   let timer: NodeJS.Timeout | null = null;
 
-  function createStudentList() {
-    let studentList: Array<Partial<StudentID>> = [];
-    for (let i = 1; i <= 51; i++) {
-      let student: Partial<StudentID> = {};
-      student.id = i.toString();
-      student.firstName = 'John';
-      student.middleName = 'Doe';
-      student.lastName = 'Smith';
-      student.email = `student${i}@example.com`;
-      studentList.push(student);
-    }
-    return studentList;
-  }
-
-  const fakeStudentList = createStudentList();
-
   useEffect(() => {
     setLoading(true);
 
-    getAllStudents()
-      .then((allStudents) => {
-        const partialStudents: Array<Partial<StudentID>> = [];
-        allStudents.map((currStudent) => {
-          const newStudent: Partial<StudentID> = {};
-          newStudent.id = currStudent.id;
-          newStudent.firstName = currStudent.firstName;
-          newStudent.middleName = currStudent.middleName;
-          newStudent.lastName = currStudent.lastName;
-          newStudent.email = currStudent.email;
-          partialStudents.push(newStudent);
+    getAllTeachers()
+      .then((allTeachers) => {
+        const partialTeachers: Array<Partial<TeacherID>> = [];
+        allTeachers.map((currTeacher) => {
+          const newTeacher: Partial<TeacherID> = {};
+          newTeacher.name = currTeacher.name;
+          newTeacher.auth_id = currTeacher.auth_id;
+          newTeacher.id = currTeacher.id;
+          newTeacher.courses = [];
+          newTeacher.email = currTeacher.email;
+          partialTeachers.push(newTeacher);
         });
-        setStudents(partialStudents);
+        setTeachers(partialTeachers);
       })
       .catch((err) => {
         setError(true);
@@ -95,7 +86,7 @@ const StudentRosterPage = (): JSX.Element => {
             <div className={styles.searchContainer}>
               <input
                 type="text"
-                placeholder="Search Students"
+                placeholder="Search Teachers"
                 onChange={(event) => {
                   handleSearch(event);
                 }}
@@ -109,7 +100,23 @@ const StudentRosterPage = (): JSX.Element => {
               />
             </div>
 
-            <h1 className={styles.heading}>Student Roster</h1>
+            <div className={styles.teacherHeader}>
+              <h1 className={styles.heading}>Teacher Roster </h1>
+              <button
+                className={styles.addTeacher}
+                onClick={() => {
+                  setAddTeacher(true);
+                }}
+              >
+                Add Teacher
+              </button>
+              <AddTeacher
+                open={addTeacher}
+                onClose={() => {
+                  setAddTeacher(!addTeacher);
+                }}
+              />
+            </div>
             {loading ? (
               // Used to center the loading spinner
               <div className={styles.failureMessage}>
@@ -117,13 +124,13 @@ const StudentRosterPage = (): JSX.Element => {
               </div>
             ) : error ? (
               <h4 className={styles.failureMessage}>
-                Error retrieving students. Please try again later.
+                Error retrieving teachers. Please try again later.
               </h4>
             ) : (
-              <StudentList
+              <TeacherList
                 search={search}
-                students={students}
-                setStudents={setStudents}
+                teachers={teachers}
+                setTeachers={setTeachers}
                 setOpenSuccess={setOpenSuccess}
                 setOpenFailure={setOpenFailure}
               />
@@ -139,7 +146,7 @@ const StudentRosterPage = (): JSX.Element => {
             onClose={handleToClose}
           >
             <Alert severity="success" sx={{ width: '100%' }}>
-              Student was Successfully Removed
+              Teacher was Successfully Removed
             </Alert>
           </Snackbar>
 
@@ -153,7 +160,7 @@ const StudentRosterPage = (): JSX.Element => {
             onClose={handleToClose}
           >
             <Alert severity="error" sx={{ width: '100%' }}>
-              Student could not be Removed
+              Teacher could not be Removed
             </Alert>
           </Snackbar>
         </>
@@ -162,4 +169,4 @@ const StudentRosterPage = (): JSX.Element => {
   );
 };
 
-export default StudentRosterPage;
+export default TeacherRosterPage;

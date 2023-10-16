@@ -1,7 +1,10 @@
 import { useState } from 'react';
+import Select from 'react-select';
 import styles from './ClassHomework.module.css';
 import noteIcon from '../../../assets/note.svg';
 import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
+import AddHomework from './AddHomework/AddHomework';
+import RemoveHomework from './RemoveHomework/RemoveHomework';
 
 const ClassHomework = (): JSX.Element => {
   const students: string[] = [
@@ -12,11 +15,21 @@ const ClassHomework = (): JSX.Element => {
     'Ariana Apple',
   ];
 
-  const dates = ['Homework 2', 'Exam 1', 'Exam 2'];
+  const assignments = ['Homework 2', 'Exam 1', 'Exam 2'];
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
+  const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
+  const [openRemoveHwModal, setOpenRemoveHwModal] = useState<boolean>(false);
 
   const handleSelectAllChange = () => {
     setSelectAllChecked(true);
+  };
+
+  const handleAddModal = () => {
+    setOpenAddHwModal(!openAddHwModal);
+  };
+
+  const handleRemoveModal = () => {
+    setOpenRemoveHwModal(!openRemoveHwModal);
   };
 
   return (
@@ -25,14 +38,19 @@ const ClassHomework = (): JSX.Element => {
         <button className={styles.noteButton}>
           <img className={styles.noteIcon} src={noteIcon}></img>
         </button>
-        <select defaultValue="" className={styles.selection}>
-          <option value="" disabled hidden>
-            Assignment:
-          </option>
-          {dates.map(function (date, i) {
-            return <option value={date}>{date}</option>;
+        <Select
+          placeholder="Assignment"
+          className={styles.selection}
+          styles={{
+            control: (baseStyles) => ({
+              ...baseStyles,
+              borderColor: 'black',
+            }),
+          }}
+          options={assignments.map((assignment) => {
+            return { value: assignment, label: assignment };
           })}
-        </select>
+        />
       </div>
       {students.length === 0 ? (
         <h4 className={styles.noStudent}>No Students Currently in Roster</h4>
@@ -65,11 +83,25 @@ const ClassHomework = (): JSX.Element => {
         <button className={styles.bottomButton} onClick={handleSelectAllChange}>
           Select All
         </button>
-        <button className={styles.bottomButton}>Remove</button>
-        <button className={styles.bottomButton}>Add</button>
+        <button className={styles.bottomButton} onClick={handleRemoveModal}>
+          Remove
+        </button>
+        <button className={styles.bottomButton} onClick={handleAddModal}>
+          Add
+        </button>
       </div>
-      <br></br>
-      <br></br>
+      <RemoveHomework
+        open={openRemoveHwModal}
+        onClose={() => {
+          setOpenRemoveHwModal(!openRemoveHwModal);
+        }}
+      />
+      <AddHomework
+        open={openAddHwModal}
+        onClose={() => {
+          setOpenAddHwModal(!openAddHwModal);
+        }}
+      />
     </div>
   );
 };

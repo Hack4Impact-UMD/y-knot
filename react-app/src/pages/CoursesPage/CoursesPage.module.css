@@ -1,7 +1,21 @@
+.loading {
+  width: 100%;
+  height: 99vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .rightPane {
   float: right;
   height: 100%;
   width: calc(100% - 250px);
+}
+
+.message {
+  width: 100%;
+  margin-top: 250px;
+  text-align: center;
 }
 
 .searchContainer {
@@ -16,27 +30,21 @@
   border: none;
   border-radius: 10px;
   outline: none;
-  background-color: lightgrey;
-}
-
-.courseStatus {
-  margin: 10px auto 30px 100px;
-  font-weight: normal;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 8px;
-}
-
-.cardLayout {
-  display: flex;
-  flex-wrap: wrap;
-  margin-left: 100px;
+  background-color: var(--color-grey);
 }
 
 .courseHeader {
   display: flex;
   width: 100%;
   align-items: center;
+}
+
+.courseStatus {
+  margin: 10px auto 30px 10%;
+  font-weight: normal;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 8px;
 }
 
 .addCourse {
@@ -53,4 +61,14 @@
 
 .addCourse:hover {
   background-color: var(--color-yellow-orange);
+}
+
+.cardLayout {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 10%;
+}
+
+.card {
+  text-decoration: none;
 }

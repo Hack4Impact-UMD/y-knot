@@ -29,7 +29,6 @@
   width: 140px;
   margin-right: 10%;
   height: 25px;
-  font-size: large;
 }
 
 .noStudent {
@@ -75,6 +74,7 @@
   display: flex;
   justify-content: center;
   gap: 5%;
+  margin-bottom: 30px;
 }
 
 .bottomButton {

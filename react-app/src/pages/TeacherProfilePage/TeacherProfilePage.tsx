@@ -13,8 +13,8 @@ const TeacherProfilePage = (): JSX.Element => {
   const [teacher, setTeacher] = useState<Teacher>();
   const [editName, setEditName] = useState<boolean>(false);
   const [pageError, setPageError] = useState<boolean>(false);
-  const [name, setName] = useState<string>('Fiona Love');
-  const [email, setEmail] = useState<string>('f.love@gmail.com');
+  const [name, setName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const authContext = useAuth();
   const teacherID = useParams().id;
@@ -27,6 +27,8 @@ const TeacherProfilePage = (): JSX.Element => {
             .then((data) => {
               setTeacher(data);
               setLoading(false);
+              setName(data.name!);
+              setEmail(data.email!);
             })
             .catch((err) => {
               console.error(err);
