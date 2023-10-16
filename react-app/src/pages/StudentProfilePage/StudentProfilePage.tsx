@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
 import { getStudent, updateStudent } from '../../backend/FirestoreCalls';
 import { type Student } from '../../types/StudentType';
@@ -10,6 +10,7 @@ import editImage from '../../assets/edit.svg';
 import saveImage from '../../assets/save.svg';
 import transcriptIcon from '../../assets/transcript.svg';
 import CourseCard from '../../components/CourseCard/CourseCard';
+import NotFoundPage from '../NotFoundPage/NotFoundPage';
 
 const StudentProfilePage = (): JSX.Element => {
   const [editing, setEditing] = useState<boolean>(false);
@@ -52,8 +53,8 @@ const StudentProfilePage = (): JSX.Element => {
     }
   }, []);
 
-   if (pageError) {
-    return <Navigate to="/*"></Navigate>
+  if (pageError) {
+    return <NotFoundPage />;
   }
 
   return (

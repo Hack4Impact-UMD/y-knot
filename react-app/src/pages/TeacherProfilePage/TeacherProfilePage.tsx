@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Navigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
 import { getTeacher } from '../../backend/FirestoreCalls';
-import { authenticateUser } from '../../backend/FirebaseCalls';
 import { type Teacher } from '../../types/UserType';
 import styles from './TeacherProfilePage.module.css';
 import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import CourseCard from '../../components/CourseCard/CourseCard';
+import NotFoundPage from '../NotFoundPage/NotFoundPage';
 
 const TeacherProfilePage = (): JSX.Element => {
   const [teacher, setTeacher] = useState<Teacher>();
@@ -21,30 +21,23 @@ const TeacherProfilePage = (): JSX.Element => {
 
   useEffect(() => {
     if (teacherID) {
-      authenticateUser('sgaba@umd.edu', '123abc')
-        .then(() =>
-          getTeacher(teacherID)
-            .then((data) => {
-              setTeacher(data);
-              setLoading(false);
-              setName(data.name!);
-              setEmail(data.email!);
-            })
-            .catch((err) => {
-              console.error(err);
-              setLoading(false);
-              setPageError(true);
-            }),
-        )
+      getTeacher(teacherID)
+        .then((data) => {
+          setTeacher(data);
+          setLoading(false);
+          setName(data.name!);
+          setEmail(data.email!);
+        })
         .catch((err) => {
           console.error(err);
           setLoading(false);
+          setPageError(true);
         });
     }
   }, []);
 
   if (pageError) {
-    return <Navigate to="/*"></Navigate>
+    return <NotFoundPage />;
   }
 
   return (
