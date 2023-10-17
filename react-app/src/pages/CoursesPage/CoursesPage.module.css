@@ -57,7 +57,7 @@
   color: white;
   cursor: pointer;
   justify-content: flex-end;
-  margin-right: 10%;
+ 
 }
 
 .addCourse:hover {
@@ -68,6 +68,7 @@
   display: flex;
   flex-wrap: wrap;
   margin-left: 10%;
+  justify-content: flex-start;
 }
 
 .card {
