@@ -3,6 +3,7 @@ import Select from 'react-select';
 import styles from './ClassAttendance.module.css';
 import noteIcon from '../../../assets/note.svg';
 import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
+import AddNote from '../AddNote/AddNote'
 
 const ClassAttendance = (): JSX.Element => {
   const students: string[] = [
@@ -15,18 +16,25 @@ const ClassAttendance = (): JSX.Element => {
 
   const dates = ['1/1/2023', '1/8/2023', '1/16/2023'];
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
+  const [selectedDate, setDate] = useState<string>('');
+  const [openAddNoteModal, setOpenAddNoteModal] = useState<boolean>(false);
 
   const handleSelectAllChange = () => {
     setSelectAllChecked(true);
   };
 
+  const handleAddNoteModal = () => {
+    setOpenAddNoteModal(!openAddNoteModal);
+  };
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.topLevel}>
-        <button className={styles.noteButton}>
+        <button className={styles.noteButton} onClick={handleAddNoteModal}>
           <img className={styles.noteIcon} src={noteIcon}></img>
         </button>
         <Select
+          onChange={(date) => setDate(date!.value)}
           placeholder="Date"
           className={styles.dateSelection}
           styles={{
@@ -73,6 +81,15 @@ const ClassAttendance = (): JSX.Element => {
           Select All
         </button>
       </div>
+      <AddNote
+        title="Attendance"
+        allValues={dates}
+        selected={selectedDate ? selectedDate : ''}
+        open={openAddNoteModal}
+        onClose={() => {
+          setOpenAddNoteModal(!openAddNoteModal);
+        }}
+      />
     </div>
   );
 };
