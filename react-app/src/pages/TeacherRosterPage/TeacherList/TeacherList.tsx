@@ -49,7 +49,7 @@ const TeacherList = (props: {
                   src={eyeIcon}
                   alt="View Profile"
                   onClick={() => {
-                    navigate(`/teacher/${id}`);
+                    navigate(`/teachers/${id}`);
                   }}
                 />
               </button>

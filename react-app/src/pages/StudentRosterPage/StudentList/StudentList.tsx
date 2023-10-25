@@ -51,7 +51,7 @@ const StudentList = (props: {
                   src={eyeIcon}
                   alt="View Profile"
                   onClick={() => {
-                    navigate(`/student/${id}`);
+                    navigate(`/students/${id}`);
                   }}
                 />
               </button>
