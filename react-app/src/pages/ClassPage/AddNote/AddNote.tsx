@@ -11,7 +11,7 @@ interface modalType {
   onClose: any;
   title: string;
   selected: string;
-  allValues: string[];
+  currNote: string;
 }
 
 const AddNote = ({
@@ -19,7 +19,7 @@ const AddNote = ({
   onClose,
   title,
   selected,
-  allValues,
+  currNote,
 }: modalType): React.ReactElement => {
   const [note, setNote] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -85,7 +85,10 @@ const AddNote = ({
               className={styles.noteInput}
               onChange={(event) => setNote(event.target.value)}
               disabled={!canWrite}
-            />
+            >
+                {currNote}
+                </textarea>
+            
           </div>
         </div>
       </div>

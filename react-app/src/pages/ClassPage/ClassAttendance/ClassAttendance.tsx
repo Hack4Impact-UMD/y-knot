@@ -83,7 +83,7 @@ const ClassAttendance = (): JSX.Element => {
       </div>
       <AddNote
         title="Attendance"
-        allValues={dates}
+        currNote="existing note here"
         selected={selectedDate ? selectedDate : ''}
         open={openAddNoteModal}
         onClose={() => {

@@ -111,7 +111,7 @@ const ClassHomework = (): JSX.Element => {
       />
       <AddNote
         title="Homework"
-        allValues={assignments}
+        currNote="existing note here"
         selected={selectedAssignment? selectedAssignment: ''}
         open={openAddNoteModal}
         onClose={() => {
