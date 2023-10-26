@@ -3,7 +3,9 @@ import Select from 'react-select';
 import styles from './ClassAttendance.module.css';
 import noteIcon from '../../../assets/note.svg';
 import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
-import AddNote from '../AddNote/AddNote'
+import AddNote from '../AddNote/AddNote';
+import RemoveAttendance from './RemoveAttendance/RemoveAttendance';
+import AddAttendance from './AddAttendance/AddAttendance';
 
 const ClassAttendance = (): JSX.Element => {
   const students: string[] = [
@@ -17,10 +19,20 @@ const ClassAttendance = (): JSX.Element => {
   const dates = ['1/1/2023', '1/8/2023', '1/16/2023'];
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
   const [selectedDate, setDate] = useState<string>('');
+  const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
+  const [openRemoveHwModal, setOpenRemoveHwModal] = useState<boolean>(false);
   const [openAddNoteModal, setOpenAddNoteModal] = useState<boolean>(false);
 
   const handleSelectAllChange = () => {
     setSelectAllChecked(true);
+  };
+
+  const handleAddModal = () => {
+    setOpenAddHwModal(!openAddHwModal);
+  };
+
+  const handleRemoveModal = () => {
+    setOpenRemoveHwModal(!openRemoveHwModal);
   };
 
   const handleAddNoteModal = () => {
@@ -80,7 +92,25 @@ const ClassAttendance = (): JSX.Element => {
         <button className={styles.bottomButton} onClick={handleSelectAllChange}>
           Select All
         </button>
+        <button className={styles.bottomButton} onClick={handleRemoveModal}>
+          Remove
+        </button>
+        <button className={styles.bottomButton} onClick={handleAddModal}>
+          Add
+        </button>
       </div>
+      <RemoveAttendance
+        open={openRemoveHwModal}
+        onClose={() => {
+          setOpenRemoveHwModal(!openRemoveHwModal);
+        }}
+      />
+      <AddAttendance
+        open={openAddHwModal}
+        onClose={() => {
+          setOpenAddHwModal(!openAddHwModal);
+        }}
+      />
       <AddNote
         title="Attendance"
         currNote="existing note here"
