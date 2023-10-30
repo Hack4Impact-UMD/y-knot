@@ -29,6 +29,8 @@ const StudentProfilePage = (): JSX.Element => {
     phone: 0,
     guardianFirstName: '',
     guardianLastName: '',
+    guardianEmail: '',
+    guardianPhone: 0,
     birthDate: '',
     gradeLevel: '',
     schoolName: '',
