@@ -16,6 +16,8 @@ export interface Student {
   phone: number;
   guardianFirstName: string;
   guardianLastName: string;
+  guardianEmail: string;
+  guardianPhone: number;
   birthDate: string; // "YYYY-MM-DD"
   gradeLevel?: string;
   schoolName?: string;
