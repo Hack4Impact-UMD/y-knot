@@ -110,7 +110,7 @@ function App(): JSX.Element {
               }
             />
             <Route
-              path="/student/:id"
+              path="/students/:id"
               element={
                 <RequireAuth>
                   <StudentProfilePage />
@@ -118,7 +118,7 @@ function App(): JSX.Element {
               }
             />
             <Route
-              path="/teacher/:id"
+              path="/teachers/:id"
               element={
                 <RequireAdminAuth>
                   <TeacherProfilePage />

@@ -85,7 +85,6 @@ const NavigationBar = (): JSX.Element => {
                   }
                   to="/teachers"
                   id="teachers"
-                  end
                 >
                   <div className={styles.tab}>
                     <img
@@ -114,7 +113,6 @@ const NavigationBar = (): JSX.Element => {
                 }
                 to="/students"
                 id="students"
-                end
               >
                 <div className={styles.tab}>
                   <img

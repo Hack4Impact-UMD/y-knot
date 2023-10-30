@@ -5,6 +5,7 @@ import noteIcon from '../../../assets/note.svg';
 import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
 import AddHomework from './AddHomework/AddHomework';
 import RemoveHomework from './RemoveHomework/RemoveHomework';
+import AddNote from '../AddNote/AddNote'
 
 const ClassHomework = (): JSX.Element => {
   const students: string[] = [
@@ -19,7 +20,8 @@ const ClassHomework = (): JSX.Element => {
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
   const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
   const [openRemoveHwModal, setOpenRemoveHwModal] = useState<boolean>(false);
-
+  const [openAddNoteModal, setOpenAddNoteModal] = useState<boolean>(false);
+  const [selectedAssignment, setAssignment] = useState<string>("");
   const handleSelectAllChange = () => {
     setSelectAllChecked(true);
   };
@@ -32,14 +34,19 @@ const ClassHomework = (): JSX.Element => {
     setOpenRemoveHwModal(!openRemoveHwModal);
   };
 
+  const handleAddNoteModal = () => {
+    setOpenAddNoteModal(!openAddNoteModal);
+  };
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.topLevel}>
-        <button className={styles.noteButton}>
+        <button className={styles.noteButton} onClick={handleAddNoteModal}>
           <img className={styles.noteIcon} src={noteIcon}></img>
         </button>
         <Select
           placeholder="Assignment"
+          onChange={(assignment) => setAssignment(assignment!.value)}
           className={styles.selection}
           styles={{
             control: (baseStyles) => ({
@@ -100,6 +107,15 @@ const ClassHomework = (): JSX.Element => {
         open={openAddHwModal}
         onClose={() => {
           setOpenAddHwModal(!openAddHwModal);
+        }}
+      />
+      <AddNote
+        title="Homework"
+        currNote="existing note here"
+        selected={selectedAssignment? selectedAssignment: ''}
+        open={openAddNoteModal}
+        onClose={() => {
+          setOpenAddNoteModal(!openAddNoteModal);
         }}
       />
     </div>
