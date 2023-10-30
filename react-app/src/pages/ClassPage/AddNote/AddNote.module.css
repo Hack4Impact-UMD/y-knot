@@ -10,7 +10,7 @@
 
 .close {
   height: 0.5rem;
-  margin: 1.25rem 1.5rem 0 0;
+  margin: 1.25rem 1rem 0 0;
   align-self: end;
   background: none;
   border: none;
@@ -42,28 +42,27 @@
   color: red;
 }
 
-
 .editButton {
-    height: 40px;
+  height: 25px;
 }
 
 .nameContainer {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    margin-bottom: 16px;
-    justify-content: space-between;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  justify-content: space-between;
 }
 
 .nameInput {
-    width: 73%;
-    height: 100%;
-    padding: 11px 15px;
-    border: none;
-    border-radius: 10px;
-    outline: none;
-    background-color: var(--color-grey);
-    color: black;
+  width: 73%;
+  height: 100%;
+  padding: 11px 15px;
+  border: none;
+  border-radius: 10px;
+  outline: none;
+  background-color: var(--color-grey);
+  color: black;
 }
 
 .noteContainer {
@@ -84,24 +83,19 @@
   border-radius: 10px;
   outline: none;
   background-color: var(--color-grey);
-  /* align-self: center; */
   resize: none;
 }
 
 .button {
   background-color: var(--color-orange);
-  padding: 11px 0 11px 0;
-  font-size: 0.8rem;
-  width: 16.67vh;
-  min-width: 180px;
+  width: 65px;
+  height: 40px;
   border: none;
-  border-radius: 30px;
-  color: white;
+  border-radius: 15px;
   outline: none;
-  text-align: center;
+  cursor: pointer;
 }
 
 .button:hover {
-  cursor: pointer;
   background: var(--color-yellow-orange);
 }

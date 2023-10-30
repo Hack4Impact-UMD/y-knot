@@ -3,8 +3,8 @@ import Select from 'react-select';
 import styles from './AddNote.module.css';
 import Modal from '../../../components/ModalWrapper/Modal';
 import x from '../../../assets/x.svg';
-import edit from '../../../assets/orange-edit.svg';
-import save from '../../../assets/orange-save.svg';
+import editImage from '../../../assets/edit.svg';
+import saveImage from '../../../assets/save.svg';
 
 interface modalType {
   open: boolean;
@@ -63,21 +63,21 @@ const AddNote = ({
           <p className={styles.error}>{errorMessage}</p>
           <div className={styles.nameContainer}>
             <div className={styles.nameInput}>{selected}</div>
-            {canWrite ? (
+            <button
+              className={styles.button}
+              onClick={() => {
+                if (canWrite) {
+                  handleEditNote();
+                } else {
+                  setCanWrite(!canWrite);
+                }
+              }}
+            >
               <img
                 className={styles.editButton}
-                onClick={(e) => handleEditNote()}
-                src={save}
-                alt="Save note"
+                src={canWrite ? saveImage : editImage}
               />
-            ) : (
-              <img
-                className={styles.editButton}
-                onClick={(e) => setCanWrite(!canWrite)}
-                src={edit}
-                alt="Edit note"
-              />
-            )}
+            </button>
           </div>
           <div className={styles.noteContainer}>
             <textarea
@@ -86,9 +86,8 @@ const AddNote = ({
               onChange={(event) => setNote(event.target.value)}
               disabled={!canWrite}
             >
-                {currNote}
-                </textarea>
-            
+              {currNote}
+            </textarea>
           </div>
         </div>
       </div>
