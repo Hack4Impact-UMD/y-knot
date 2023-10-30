@@ -25,7 +25,11 @@ const NavigationBar = (): JSX.Element => {
   };
 
   return (
-    <nav className={styles.navigationBar}>
+    <nav
+      className={
+        showPopup ? styles.navigationBarPopupOpen : styles.navigationBar
+      }
+    >
       {authContext?.loading ? (
         <></>
       ) : (
