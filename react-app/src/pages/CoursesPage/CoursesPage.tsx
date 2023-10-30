@@ -128,10 +128,16 @@ const CoursesPage = (): JSX.Element => {
                   {displayCourseCards(currentCourses)}
                 </div>
 
-                <h1 className={styles.courseStatus}>Past Courses</h1>
-                <div className={styles.cardLayout}>
-                  {displayCourseCards(pastCourses)}
-                </div>
+                {authContext?.token?.claims.role != 'TEACHER' ? (
+                  <>
+                    <h1 className={styles.courseStatus}>Past Courses</h1>
+                    <div className={styles.cardLayout}>
+                      {displayCourseCards(pastCourses)}
+                    </div>
+                  </>
+                ) : (
+                  <></>
+                )}
 
                 <h1 className={styles.courseStatus}>Upcoming Courses</h1>
                 <div className={styles.cardLayout}>
