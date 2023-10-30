@@ -19,6 +19,7 @@ const Modal = ({
   const widthString = width + 'px';
   return (
     <div
+      className={styles.modalContainer}
       onClick={(e) => {
         e.stopPropagation();
       }}
@@ -27,7 +28,10 @@ const Modal = ({
         <>
           <div className={styles.background} onClick={() => onClose()} />
           <div className={styles.centered}>
-            <div className={styles.modal} style={{ height: heightString, width: widthString }}>
+            <div
+              className={styles.modal}
+              style={{ height: heightString, width: widthString }}
+            >
               {children}
             </div>
           </div>
@@ -40,7 +44,7 @@ const Modal = ({
 };
 
 Modal.defaultProps = {
-  width: 400
+  width: 400,
 };
 
 export default Modal;
