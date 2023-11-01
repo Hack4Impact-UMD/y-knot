@@ -4,14 +4,15 @@
 
 For inquiries about the project, contact
 
-- Sahil Gaba (sgaba9778@gmail.com)
 - Sophie Tsai (sophietsai31@gmail.com)
+- Shreenitha Chikyala (schikyal@terpmail.umd.edu)
+- Sahil Gaba (sgaba9778@gmail.com)
 
 # Project Info
 
 [Y-KNOT](https://www.yknotinc.org/home) is an organization founded by Regina Gibbons that provides educational programs to students and adults in the Prince George’s County area.
 
-Currently, Y-KNOT relies on various technologies including [Wix](https://www.wix.com/), [Jotform](https://www.jotform.com/), Microsoft Excel, and email to manage class and student data. These platforms are used for a range of functions such as student sign up, payment collection, storage of student information, sending class information and certificates, and more. However, this fragmented system requires Regina and teachers to manually navigate between different patforms to retreive necessary information and manage classroom tasks, which can be time-consuming. So, Y-KNOT would like a course management tool which integrates and centralizes all of these functions and allows teachers to automate classroom management tasks.
+Currently, Y-KNOT relies on various technologies including [Wix](https://www.wix.com/), [Jotform](https://www.jotform.com/), Microsoft Excel, and email to manage class and student data. These platforms are used for a range of functions such as student sign-up, payment collection, storage of student information, sending class information and certificates, and more. However, this fragmented system requires Regina and teachers to manually navigate between different platforms to retrieve necessary information and manage classroom tasks, which can be time-consuming. So, Y-KNOT would like a course management tool that integrates and centralizes all of these functions and allows teachers to automate classroom management tasks.
 
 # Tech Stack
 
@@ -43,7 +44,7 @@ Contact Sahil or Sophie to gain access to our Firebase Console.
 
 Once logged in to the Firebase Console, you can view our stored data by clicking on the "Firestore Database" tab.
 
-We currently have 3 collections which corresponds to our project Types:
+We currently have 3 collections that correspond to our project Types:
 
 - Courses
 - Students
