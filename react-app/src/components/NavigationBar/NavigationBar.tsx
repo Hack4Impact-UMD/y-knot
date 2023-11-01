@@ -25,17 +25,23 @@ const NavigationBar = (): JSX.Element => {
   };
 
   return (
-    <nav className={styles.navigationBar}>
+    <nav
+      className={
+        showPopup ? styles.navigationBarPopupOpen : styles.navigationBar
+      }
+    >
       {authContext?.loading ? (
         <></>
       ) : (
         <>
           <div className={styles.titleContainer}>
-            <img
-              className={styles.yKnotLogo}
-              src={yKnotLogo}
-              alt="y-knot logo"
-            />
+            <NavLink to="/">
+              <img
+                className={styles.yKnotLogo}
+                src={yKnotLogo}
+                alt="y-knot logo"
+              />
+            </NavLink>
             <h2 className={styles.header}>
               {authContext?.token?.claims.role === 'ADMIN'
                 ? 'Admin'
@@ -83,7 +89,6 @@ const NavigationBar = (): JSX.Element => {
                   }
                   to="/teachers"
                   id="teachers"
-                  end
                 >
                   <div className={styles.tab}>
                     <img
@@ -112,7 +117,6 @@ const NavigationBar = (): JSX.Element => {
                 }
                 to="/students"
                 id="students"
-                end
               >
                 <div className={styles.tab}>
                   <img

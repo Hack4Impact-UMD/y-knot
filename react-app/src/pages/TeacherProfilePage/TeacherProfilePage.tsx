@@ -2,16 +2,17 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
 import { getTeacher } from '../../backend/FirestoreCalls';
-import { authenticateUser } from '../../backend/FirebaseCalls';
 import { type Teacher } from '../../types/UserType';
 import styles from './TeacherProfilePage.module.css';
 import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import CourseCard from '../../components/CourseCard/CourseCard';
+import NotFoundPage from '../NotFoundPage/NotFoundPage';
 
 const TeacherProfilePage = (): JSX.Element => {
   const [teacher, setTeacher] = useState<Teacher>();
   const [editName, setEditName] = useState<boolean>(false);
+  const [pageError, setPageError] = useState<boolean>(false);
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
@@ -23,16 +24,21 @@ const TeacherProfilePage = (): JSX.Element => {
       getTeacher(teacherID)
         .then((data) => {
           setTeacher(data);
+          setLoading(false);
           setName(data.name!);
           setEmail(data.email!);
-          setLoading(false);
         })
         .catch((err) => {
           console.error(err);
           setLoading(false);
+          setPageError(true);
         });
     }
   }, []);
+
+  if (pageError) {
+    return <NotFoundPage />;
+  }
 
   return (
     <>

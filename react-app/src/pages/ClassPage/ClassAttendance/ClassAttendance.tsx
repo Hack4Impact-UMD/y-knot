@@ -1,7 +1,11 @@
 import { useState } from 'react';
+import Select from 'react-select';
 import styles from './ClassAttendance.module.css';
 import noteIcon from '../../../assets/note.svg';
 import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
+import AddNote from '../AddNote/AddNote';
+import RemoveAttendance from './RemoveAttendance/RemoveAttendance';
+import AddAttendance from './AddAttendance/AddAttendance';
 
 const ClassAttendance = (): JSX.Element => {
   const students: string[] = [
@@ -14,25 +18,47 @@ const ClassAttendance = (): JSX.Element => {
 
   const dates = ['1/1/2023', '1/8/2023', '1/16/2023'];
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
+  const [selectedDate, setDate] = useState<string>('');
+  const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
+  const [openRemoveHwModal, setOpenRemoveHwModal] = useState<boolean>(false);
+  const [openAddNoteModal, setOpenAddNoteModal] = useState<boolean>(false);
 
   const handleSelectAllChange = () => {
     setSelectAllChecked(true);
   };
 
+  const handleAddModal = () => {
+    setOpenAddHwModal(!openAddHwModal);
+  };
+
+  const handleRemoveModal = () => {
+    setOpenRemoveHwModal(!openRemoveHwModal);
+  };
+
+  const handleAddNoteModal = () => {
+    setOpenAddNoteModal(!openAddNoteModal);
+  };
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.topLevel}>
-        <button className={styles.noteButton}>
+        <button className={styles.noteButton} onClick={handleAddNoteModal}>
           <img className={styles.noteIcon} src={noteIcon}></img>
         </button>
-        <select defaultValue="" className={styles.dateSelection}>
-          <option value="" disabled hidden>
-            Date:
-          </option>
-          {dates.map(function (date, i) {
-            return <option value={date}>{date}</option>;
+        <Select
+          onChange={(date) => setDate(date!.value)}
+          placeholder="Date"
+          className={styles.dateSelection}
+          styles={{
+            control: (baseStyles) => ({
+              ...baseStyles,
+              borderColor: 'black',
+            }),
+          }}
+          options={dates.map((date) => {
+            return { value: date, label: date };
           })}
-        </select>
+        />
       </div>
       {students.length === 0 ? (
         <h4 className={styles.noStudent}>No Students Currently in Roster</h4>
@@ -66,7 +92,34 @@ const ClassAttendance = (): JSX.Element => {
         <button className={styles.bottomButton} onClick={handleSelectAllChange}>
           Select All
         </button>
+        <button className={styles.bottomButton} onClick={handleRemoveModal}>
+          Remove
+        </button>
+        <button className={styles.bottomButton} onClick={handleAddModal}>
+          Add
+        </button>
       </div>
+      <RemoveAttendance
+        open={openRemoveHwModal}
+        onClose={() => {
+          setOpenRemoveHwModal(!openRemoveHwModal);
+        }}
+      />
+      <AddAttendance
+        open={openAddHwModal}
+        onClose={() => {
+          setOpenAddHwModal(!openAddHwModal);
+        }}
+      />
+      <AddNote
+        title="Attendance"
+        currNote="existing note here"
+        selected={selectedDate ? selectedDate : ''}
+        open={openAddNoteModal}
+        onClose={() => {
+          setOpenAddNoteModal(!openAddNoteModal);
+        }}
+      />
     </div>
   );
 };

@@ -61,7 +61,7 @@ const ClassStudents = (): JSX.Element => {
                   </button>
                   {authContext?.token?.claims.role === 'ADMIN' && (
                     // See student profile only if admin
-                    <Link to={`/student/${student.id}`}>
+                    <Link to={`/students/${student.id}`}>
                       <button className={styles.button}>
                         <img src={EyeIcon} className={styles.profileIcon} />
                       </button>

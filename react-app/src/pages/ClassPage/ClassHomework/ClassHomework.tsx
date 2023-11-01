@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import Select from 'react-select';
 import styles from './ClassHomework.module.css';
 import noteIcon from '../../../assets/note.svg';
 import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
 import AddHomework from './AddHomework/AddHomework';
 import RemoveHomework from './RemoveHomework/RemoveHomework';
+import AddNote from '../AddNote/AddNote'
 
 const ClassHomework = (): JSX.Element => {
   const students: string[] = [
@@ -14,11 +16,12 @@ const ClassHomework = (): JSX.Element => {
     'Ariana Apple',
   ];
 
-  const dates = ['Homework 2', 'Exam 1', 'Exam 2'];
+  const assignments = ['Homework 2', 'Exam 1', 'Exam 2'];
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
   const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
   const [openRemoveHwModal, setOpenRemoveHwModal] = useState<boolean>(false);
-
+  const [openAddNoteModal, setOpenAddNoteModal] = useState<boolean>(false);
+  const [selectedAssignment, setAssignment] = useState<string>("");
   const handleSelectAllChange = () => {
     setSelectAllChecked(true);
   };
@@ -31,20 +34,30 @@ const ClassHomework = (): JSX.Element => {
     setOpenRemoveHwModal(!openRemoveHwModal);
   };
 
+  const handleAddNoteModal = () => {
+    setOpenAddNoteModal(!openAddNoteModal);
+  };
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.topLevel}>
-        <button className={styles.noteButton}>
+        <button className={styles.noteButton} onClick={handleAddNoteModal}>
           <img className={styles.noteIcon} src={noteIcon}></img>
         </button>
-        <select defaultValue="" className={styles.selection}>
-          <option value="" disabled hidden>
-            Assignment:
-          </option>
-          {dates.map(function (date, i) {
-            return <option value={date}>{date}</option>;
+        <Select
+          placeholder="Assignment"
+          onChange={(assignment) => setAssignment(assignment!.value)}
+          className={styles.selection}
+          styles={{
+            control: (baseStyles) => ({
+              ...baseStyles,
+              borderColor: 'black',
+            }),
+          }}
+          options={assignments.map((assignment) => {
+            return { value: assignment, label: assignment };
           })}
-        </select>
+        />
       </div>
       {students.length === 0 ? (
         <h4 className={styles.noStudent}>No Students Currently in Roster</h4>
@@ -94,6 +107,15 @@ const ClassHomework = (): JSX.Element => {
         open={openAddHwModal}
         onClose={() => {
           setOpenAddHwModal(!openAddHwModal);
+        }}
+      />
+      <AddNote
+        title="Homework"
+        currNote="existing note here"
+        selected={selectedAssignment? selectedAssignment: ''}
+        open={openAddNoteModal}
+        onClose={() => {
+          setOpenAddNoteModal(!openAddNoteModal);
         }}
       />
     </div>
