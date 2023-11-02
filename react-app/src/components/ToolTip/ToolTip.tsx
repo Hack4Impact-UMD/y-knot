@@ -9,6 +9,7 @@ export const ToolTip = styled(({ className, ...props }: TooltipProps) => (
   },
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
     fontSize: 12,
   },
 }));

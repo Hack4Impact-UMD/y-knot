@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import Select from 'react-select';
 import styles from './ClassAttendance.module.css';
 import noteIcon from '../../../assets/note.svg';
@@ -42,9 +43,11 @@ const ClassAttendance = (): JSX.Element => {
   return (
     <div className={styles.mainContainer}>
       <div className={styles.topLevel}>
-        <button className={styles.noteButton} onClick={handleAddNoteModal}>
-          <img className={styles.noteIcon} src={noteIcon}></img>
-        </button>
+        <ToolTip title="Attendance Note" placement="top">
+          <button className={styles.noteButton} onClick={handleAddNoteModal}>
+            <img className={styles.noteIcon} src={noteIcon}></img>
+          </button>
+        </ToolTip>
         <Select
           onChange={(date) => setDate(date!.value)}
           placeholder="Date"

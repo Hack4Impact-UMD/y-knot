@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { type StudentID } from '../../../types/StudentType';
-import { Link } from 'react-router-dom';
+import { TeacherID } from '../../../types/UserType';
+import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import styles from './TeacherList.module.css';
 import eyeIcon from '../../../assets/view.svg';
 import trashIcon from '../../../assets/trash.svg';
 import DeleteTeacherConfirmation from './DeleteTeacherConfirmation/DeleteTeacherConfirmation';
-import { TeacherID } from '../../../types/UserType';
 
 const TeacherList = (props: {
   search: string;
@@ -44,27 +43,31 @@ const TeacherList = (props: {
           >
             <p className={styles.name}>{fullName}</p>
             <div className={styles.icons}>
-              <button className={`${styles.button} ${styles.profileIcon}`}>
-                <img
-                  src={eyeIcon}
-                  alt="View Profile"
-                  onClick={() => {
-                    navigate(`/teachers/${id}`);
-                  }}
-                />
-              </button>
-              <button className={`${styles.button} ${styles.trashIcon}`}>
-                <img
-                  src={trashIcon}
-                  alt="Delete Teacher"
-                  onClick={() => {
-                    setPopupEmail(email);
-                    setPopupName(fullName);
-                    setRemoveTeacherId(teacher.auth_id);
-                    handleClick();
-                  }}
-                />
-              </button>
+              <ToolTip title="View Profile" placement="top">
+                <button className={`${styles.button} ${styles.profileIcon}`}>
+                  <img
+                    src={eyeIcon}
+                    alt="View Profile"
+                    onClick={() => {
+                      navigate(`/teachers/${id}`);
+                    }}
+                  />
+                </button>
+              </ToolTip>
+              <ToolTip title="Remove" placement="top">
+                <button className={`${styles.button} ${styles.trashIcon}`}>
+                  <img
+                    src={trashIcon}
+                    alt="Delete Teacher"
+                    onClick={() => {
+                      setPopupEmail(email);
+                      setPopupName(fullName);
+                      setRemoveTeacherId(teacher.auth_id);
+                      handleClick();
+                    }}
+                  />
+                </button>
+              </ToolTip>
             </div>
           </div>,
         );

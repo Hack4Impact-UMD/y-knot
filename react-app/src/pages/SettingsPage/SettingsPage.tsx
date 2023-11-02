@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../auth/AuthProvider';
+import { getTeacherWithAuth, updateUser } from '../../backend/FirestoreCalls';
+import { TeacherID } from '../../types/UserType';
+import { ToolTip } from '../../components/ToolTip/ToolTip';
 import styles from './SettingsPage.module.css';
 import ResetEmail from './ResetEmail/ResetEmail';
 import ResetPassword from './ResetPassword/ResetPassword';
@@ -7,9 +10,6 @@ import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import editIcon from '../../assets/gray-pencil.svg';
 import saveIcon from '../../assets/save.svg';
-import { getTeacherWithAuth, updateUser } from '../../backend/FirestoreCalls';
-import { TeacherID } from '../../types/UserType';
-import { ToolTip } from '../../components/ToolTip/ToolTip';
 
 const SettingsPage = (): JSX.Element => {
   const [editName, setEditName] = useState<boolean>(false);
@@ -69,7 +69,7 @@ const SettingsPage = (): JSX.Element => {
                 </a>
                 <ToolTip
                   title={editName === true ? 'Save' : 'Edit'}
-                  placement="right"
+                  placement="top"
                 >
                   <button
                     className={styles.editButton}
@@ -111,7 +111,7 @@ const SettingsPage = (): JSX.Element => {
             <div className={styles.box} id="Email">
               <a className={styles.boxTitle}>Email</a>
               <a className={styles.boxData}>{authContext.user?.email}</a>
-              <ToolTip title="Edit" placement="right">
+              <ToolTip title="Edit" placement="top">
                 <button
                   className={styles.editButton}
                   onClick={() => {
@@ -132,7 +132,7 @@ const SettingsPage = (): JSX.Element => {
             <div className={styles.bottomBox} id="Password">
               <a className={styles.boxTitle}>Password</a>
               <a className={styles.boxData}>******************</a>
-              <ToolTip title="Edit" placement="right">
+              <ToolTip title="Edit" placement="top">
                 <button
                   className={styles.editButton}
                   onClick={() => {

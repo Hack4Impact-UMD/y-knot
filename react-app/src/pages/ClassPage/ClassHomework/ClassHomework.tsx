@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import Select from 'react-select';
 import styles from './ClassHomework.module.css';
 import noteIcon from '../../../assets/note.svg';
 import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
 import AddHomework from './AddHomework/AddHomework';
 import RemoveHomework from './RemoveHomework/RemoveHomework';
-import AddNote from '../AddNote/AddNote'
+import AddNote from '../AddNote/AddNote';
 
 const ClassHomework = (): JSX.Element => {
   const students: string[] = [
@@ -21,7 +22,7 @@ const ClassHomework = (): JSX.Element => {
   const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
   const [openRemoveHwModal, setOpenRemoveHwModal] = useState<boolean>(false);
   const [openAddNoteModal, setOpenAddNoteModal] = useState<boolean>(false);
-  const [selectedAssignment, setAssignment] = useState<string>("");
+  const [selectedAssignment, setAssignment] = useState<string>('');
   const handleSelectAllChange = () => {
     setSelectAllChecked(true);
   };
@@ -41,9 +42,11 @@ const ClassHomework = (): JSX.Element => {
   return (
     <div className={styles.mainContainer}>
       <div className={styles.topLevel}>
-        <button className={styles.noteButton} onClick={handleAddNoteModal}>
-          <img className={styles.noteIcon} src={noteIcon}></img>
-        </button>
+        <ToolTip title="Homework Note" placement="top">
+          <button className={styles.noteButton} onClick={handleAddNoteModal}>
+            <img className={styles.noteIcon} src={noteIcon}></img>
+          </button>
+        </ToolTip>
         <Select
           placeholder="Assignment"
           onChange={(assignment) => setAssignment(assignment!.value)}
@@ -112,7 +115,7 @@ const ClassHomework = (): JSX.Element => {
       <AddNote
         title="Homework"
         currNote="existing note here"
-        selected={selectedAssignment? selectedAssignment: ''}
+        selected={selectedAssignment ? selectedAssignment : ''}
         open={openAddNoteModal}
         onClose={() => {
           setOpenAddNoteModal(!openAddNoteModal);
