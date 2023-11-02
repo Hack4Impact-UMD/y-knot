@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import styles from './ClassMain.module.css';
 import editIcon from '../../../assets/gray-pencil.svg';
 import saveIcon from '../../../assets/save.svg';
@@ -31,21 +32,28 @@ const ClassMain = (): JSX.Element => {
           <p>Class Intro</p>
           <div className={styles.introButtons}>
             {editText && (
-              <button className={styles.uploadButton}>
-                <img
-                  src={uploadIcon}
-                  alt="Upload"
-                  className={`${styles.icon} ${styles.uploadIcon}`}
-                />
-              </button>
+              <ToolTip title="Upload File" placement="top">
+                <button className={styles.uploadButton}>
+                  <img
+                    src={uploadIcon}
+                    alt="Upload"
+                    className={`${styles.icon} ${styles.uploadIcon}`}
+                  />
+                </button>
+              </ToolTip>
             )}
-            <button className={styles.editButton} onClick={handleEdit}>
-              {editText ? (
-                <img src={saveIcon} alt="Save Text" className={styles.icon} />
-              ) : (
-                <img src={editIcon} alt="Edit Text" className={styles.icon} />
-              )}
-            </button>
+            <ToolTip
+              title={editText === true ? 'Save' : 'Edit'}
+              placement="top"
+            >
+              <button className={styles.editButton} onClick={handleEdit}>
+                {editText ? (
+                  <img src={saveIcon} alt="Save Text" className={styles.icon} />
+                ) : (
+                  <img src={editIcon} alt="Edit Text" className={styles.icon} />
+                )}
+              </button>
+            </ToolTip>
           </div>
         </div>
         <div className={styles.introContent}>
@@ -58,16 +66,20 @@ const ClassMain = (): JSX.Element => {
         </div>
       </div>
       <div className={styles.buttons}>
-        <button className={styles.certificate}>
-          <img
-            src={certificateIcon}
-            alt="Certificate"
-            className={styles.certificateIcon}
-          />
-        </button>
-        <button className={styles.email}>
-          <img src={emailIcon} alt="Email" className={styles.emailIcon} />
-        </button>
+        <ToolTip title="Send All Certificates" placement="top">
+          <button className={styles.certificate}>
+            <img
+              src={certificateIcon}
+              alt="Certificate"
+              className={styles.certificateIcon}
+            />
+          </button>
+        </ToolTip>
+        <ToolTip title="Send Email" placement="top">
+          <button className={styles.email}>
+            <img src={emailIcon} alt="Email" className={styles.emailIcon} />
+          </button>
+        </ToolTip>
       </div>
     </div>
   );

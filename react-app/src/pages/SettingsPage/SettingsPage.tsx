@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../auth/AuthProvider';
+import { getTeacherWithAuth, updateUser } from '../../backend/FirestoreCalls';
+import { TeacherID } from '../../types/UserType';
+import { ToolTip } from '../../components/ToolTip/ToolTip';
 import styles from './SettingsPage.module.css';
 import ResetEmail from './ResetEmail/ResetEmail';
 import ResetPassword from './ResetPassword/ResetPassword';
@@ -7,8 +10,6 @@ import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import editIcon from '../../assets/gray-pencil.svg';
 import saveIcon from '../../assets/save.svg';
-import { getTeacherWithAuth, updateUser } from '../../backend/FirestoreCalls';
-import { TeacherID } from '../../types/UserType';
 
 const SettingsPage = (): JSX.Element => {
   const [editName, setEditName] = useState<boolean>(false);
@@ -66,37 +67,42 @@ const SettingsPage = (): JSX.Element => {
                     name
                   )}
                 </a>
-                <button
-                  className={styles.editButton}
-                  onClick={() => {
-                    if (!editName) {
-                      setUpdatedName(name);
-                    } else {
-                      if (updatedName !== name) {
-                        setName(updatedName);
-                        updateUser(
-                          { ...teacher!, name: updatedName },
-                          teacher!.id,
-                        );
-                      }
-                    }
-                    setEditName(!editName);
-                  }}
+                <ToolTip
+                  title={editName === true ? 'Save' : 'Edit'}
+                  placement="top"
                 >
-                  {editName ? (
-                    <img
-                      src={saveIcon}
-                      alt="Save"
-                      className={styles.editIcon}
-                    />
-                  ) : (
-                    <img
-                      src={editIcon}
-                      alt="Edit"
-                      className={styles.editIcon}
-                    />
-                  )}
-                </button>
+                  <button
+                    className={styles.editButton}
+                    onClick={() => {
+                      if (!editName) {
+                        setUpdatedName(name);
+                      } else {
+                        if (updatedName !== name) {
+                          setName(updatedName);
+                          updateUser(
+                            { ...teacher!, name: updatedName },
+                            teacher!.id,
+                          );
+                        }
+                      }
+                      setEditName(!editName);
+                    }}
+                  >
+                    {editName ? (
+                      <img
+                        src={saveIcon}
+                        alt="Save"
+                        className={styles.editIcon}
+                      />
+                    ) : (
+                      <img
+                        src={editIcon}
+                        alt="Edit"
+                        className={styles.editIcon}
+                      />
+                    )}
+                  </button>
+                </ToolTip>
               </div>
             ) : (
               <></>
@@ -105,14 +111,16 @@ const SettingsPage = (): JSX.Element => {
             <div className={styles.box} id="Email">
               <a className={styles.boxTitle}>Email</a>
               <a className={styles.boxData}>{authContext.user?.email}</a>
-              <button
-                className={styles.editButton}
-                onClick={() => {
-                  setOpenEmailModal(!openEmailModal);
-                }}
-              >
-                <img src={editIcon} alt="Edit" className={styles.editIcon} />
-              </button>
+              <ToolTip title="Edit" placement="top">
+                <button
+                  className={styles.editButton}
+                  onClick={() => {
+                    setOpenEmailModal(!openEmailModal);
+                  }}
+                >
+                  <img src={editIcon} alt="Edit" className={styles.editIcon} />
+                </button>
+              </ToolTip>
               <ResetEmail
                 open={openEmailModal}
                 onClose={() => {
@@ -124,14 +132,16 @@ const SettingsPage = (): JSX.Element => {
             <div className={styles.bottomBox} id="Password">
               <a className={styles.boxTitle}>Password</a>
               <a className={styles.boxData}>******************</a>
-              <button
-                className={styles.editButton}
-                onClick={() => {
-                  setOpenPasswordModal(!openPasswordModal);
-                }}
-              >
-                <img src={editIcon} alt="Edit" className={styles.editIcon} />
-              </button>
+              <ToolTip title="Edit" placement="top">
+                <button
+                  className={styles.editButton}
+                  onClick={() => {
+                    setOpenPasswordModal(!openPasswordModal);
+                  }}
+                >
+                  <img src={editIcon} alt="Edit" className={styles.editIcon} />
+                </button>
+              </ToolTip>
               <ResetPassword
                 open={openPasswordModal}
                 onClose={() => {

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../../../auth/AuthProvider';
 import { Link } from 'react-router-dom';
+import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import styles from './ClassStudents.module.css';
 import Loading from '../../../components/LoadingScreen/Loading';
 import CertificateIcon from '../../../assets/certificate.svg';
@@ -53,23 +54,29 @@ const ClassStudents = (): JSX.Element => {
                   <p>{student.email}</p>
                 </div>
                 <div className={styles.icons}>
-                  <button className={styles.button}>
-                    <img
-                      src={CertificateIcon}
-                      className={styles.certificateIcon}
-                    />
-                  </button>
+                  <ToolTip title="Send Certificate" placement="top">
+                    <button className={styles.button}>
+                      <img
+                        src={CertificateIcon}
+                        className={styles.certificateIcon}
+                      />
+                    </button>
+                  </ToolTip>
                   {authContext?.token?.claims.role === 'ADMIN' && (
                     // See student profile only if admin
                     <Link to={`/students/${student.id}`}>
-                      <button className={styles.button}>
-                        <img src={EyeIcon} className={styles.profileIcon} />
-                      </button>
+                      <ToolTip title="View Profile" placement="top">
+                        <button className={styles.button}>
+                          <img src={EyeIcon} className={styles.profileIcon} />
+                        </button>
+                      </ToolTip>
                     </Link>
                   )}
-                  <button className={styles.button}>
-                    <img src={TrashIcon} className={styles.trashIcon} />
-                  </button>
+                  <ToolTip title="Remove" placement="top">
+                    <button className={styles.button}>
+                      <img src={TrashIcon} className={styles.trashIcon} />
+                    </button>
+                  </ToolTip>
                 </div>
               </div>
             );

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
 import { getStudent, updateStudent } from '../../backend/FirestoreCalls';
 import { type Student } from '../../types/StudentType';
+import { ToolTip } from '../../components/ToolTip/ToolTip';
 import styles from './StudentProfilePage.module.css';
 import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
@@ -78,35 +79,42 @@ const StudentProfilePage = (): JSX.Element => {
             <h1 className={styles.title}>Student Profile</h1>
 
             <div className={styles.topButtons}>
-              <button
-                className={styles.button}
-                onClick={() => {
-                  navigate('/transcript');
-                }}
+              <ToolTip title="View Transcript" placement="top">
+                <button
+                  className={styles.button}
+                  onClick={() => {
+                    navigate('/transcript');
+                  }}
+                >
+                  <img className={styles.icon} src={transcriptIcon} />
+                </button>
+              </ToolTip>
+              <ToolTip
+                title={editing === true ? 'Save' : 'Edit'}
+                placement="top"
               >
-                <img className={styles.icon} src={transcriptIcon} />
-              </button>
-              <button
-                className={styles.button}
-                onClick={() => {
-                  if (editing) {
-                    updateStudent(student, studentID!)
-                      .catch(() => {
-                        window.location.reload();
-                      })
-                      .finally(() => {
-                        setEditing(!editing);
-                      });
-                  } else {
-                    setEditing(!editing);
-                  }
-                }}
-              >
-                <img
-                  className={styles.icon}
-                  src={editing ? saveImage : editImage}
-                />
-              </button>
+                <button
+                  className={styles.button}
+                  onClick={() => {
+                    if (editing) {
+                      updateStudent(student, studentID!)
+                        .catch(() => {
+                          window.location.reload();
+                        })
+                        .finally(() => {
+                          setEditing(!editing);
+                        });
+                    } else {
+                      setEditing(!editing);
+                    }
+                  }}
+                >
+                  <img
+                    className={styles.icon}
+                    src={editing ? saveImage : editImage}
+                  />
+                </button>
+              </ToolTip>
             </div>
           </div>
 

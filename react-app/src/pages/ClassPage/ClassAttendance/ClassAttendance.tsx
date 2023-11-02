@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import Select from 'react-select';
 import styles from './ClassAttendance.module.css';
 import noteIcon from '../../../assets/note.svg';
@@ -42,9 +43,11 @@ const ClassAttendance = (): JSX.Element => {
   return (
     <div className={styles.mainContainer}>
       <div className={styles.topLevel}>
-        <button className={styles.noteButton} onClick={handleAddNoteModal}>
-          <img className={styles.noteIcon} src={noteIcon}></img>
-        </button>
+        <ToolTip title="Attendance Note" placement="top">
+          <button className={styles.noteButton} onClick={handleAddNoteModal}>
+            <img className={styles.noteIcon} src={noteIcon}></img>
+          </button>
+        </ToolTip>
         <Select
           onChange={(date) => setDate(date!.value)}
           placeholder="Date"
@@ -88,16 +91,16 @@ const ClassAttendance = (): JSX.Element => {
         </div>
       )}
       <div className={styles.bottomLevel}>
-        <button className={styles.bottomButton}>Save</button>
-        <button className={styles.bottomButton} onClick={handleSelectAllChange}>
-          Select All
+        <button className={styles.bottomButton} onClick={handleAddModal}>
+          Add
         </button>
         <button className={styles.bottomButton} onClick={handleRemoveModal}>
           Remove
         </button>
-        <button className={styles.bottomButton} onClick={handleAddModal}>
-          Add
+        <button className={styles.bottomButton} onClick={handleSelectAllChange}>
+          Select All
         </button>
+        <button className={styles.bottomButton}>Save</button>
       </div>
       <RemoveAttendance
         open={openRemoveHwModal}
