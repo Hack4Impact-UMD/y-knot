@@ -89,16 +89,16 @@ const ClassHomework = (): JSX.Element => {
         </div>
       )}
       <div className={styles.bottomLevel}>
-        <button className={styles.bottomButton}>Save</button>
-        <button className={styles.bottomButton} onClick={handleSelectAllChange}>
-          Select All
+        <button className={styles.bottomButton} onClick={handleAddModal}>
+          Add
         </button>
         <button className={styles.bottomButton} onClick={handleRemoveModal}>
           Remove
         </button>
-        <button className={styles.bottomButton} onClick={handleAddModal}>
-          Add
+        <button className={styles.bottomButton} onClick={handleSelectAllChange}>
+          Select All
         </button>
+        <button className={styles.bottomButton}>Save</button>
       </div>
       <RemoveHomework
         open={openRemoveHwModal}
