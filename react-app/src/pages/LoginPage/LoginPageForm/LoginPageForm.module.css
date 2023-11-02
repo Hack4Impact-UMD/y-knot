@@ -88,15 +88,15 @@
   cursor: pointer;
   background: var(--color-yellow-orange);
 }
-
-.hideFailureMsg {
-  display: none;
+.errorContainer {
+  height: 18px;
+  visibility: hidden;
 }
-
 .showFailureMessage {
   color: var(--color-red);
   padding-top: 1%;
   font-size: 14px;
   width: 50%;
   text-align: center;
+
 }

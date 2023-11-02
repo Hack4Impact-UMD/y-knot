@@ -16,7 +16,6 @@ interface popupModalType {
   setStudents: Function;
   reloadList: Boolean;
   setOpenSuccess: Function;
-  setOpenFailure: Function;
 }
 
 const DeleteStudentConfirmation = ({
@@ -30,9 +29,8 @@ const DeleteStudentConfirmation = ({
   students,
   reloadList,
   setOpenSuccess,
-  setOpenFailure,
 }: popupModalType): React.ReactElement => {
-  const [submittedError, setSubmittedError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   function handleConfirm() {
     if (removeStudentId != 'undefined') {
@@ -44,81 +42,73 @@ const DeleteStudentConfirmation = ({
             }),
           );
           setReloadList(true);
+          onClose();
           setOpenSuccess(true);
         })
         .catch((err) => {
-          setOpenFailure(true);
+          setErrorMessage('*Student could not be Removed');
         });
     }
-    onClose();
   }
 
   const handleOnClose = (): void => {
-    setSubmittedError(false);
     onClose();
   };
 
   return (
     <Modal
-      height={260}
+      height={270}
       open={open}
       onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
         handleOnClose();
       }}
     >
-      <div>
-        <div className={styles.header}>
-          <button
-            type="button"
-            className={styles.close}
-            onClick={() => {
-              handleOnClose();
-            }}
-          >
-            <img src={x} alt="Close popup" />
-          </button>
-        </div>
-        <div className={styles.content}>
-          <h2 className={styles.title}>Remove Student Confirmation</h2>
-          <p>
-            {submittedError ? (
-              'Log out failed. Try again later.'
-            ) : (
-              <div className={styles.bodyText}>
-                Are you sure you would like to remove?
-                <div className={styles.name}>
-                  {popupName === 'undefined' ? '' : popupName}
-                </div>
-                <div className={styles.email}>
-                  {popupEmail === 'undefined' ? '' : <>({popupEmail})</>}
-                </div>
-              </div>
-            )}
-          </p>
-        </div>
-        <div className={styles.actions}>
-          <div className={styles.actionsContainer}>
-            {submittedError ? (
-              <></>
-            ) : (
-              <>
-                <button
-                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                    handleConfirm();
-                  }}
-                >
-                  Yes
-                </button>
-                <button
-                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                    handleOnClose();
-                  }}
-                >
-                  No
-                </button>
-              </>
-            )}
+      <div className={styles.header}>
+        <button
+          type="button"
+          className={styles.close}
+          onClick={() => {
+            handleOnClose();
+          }}
+        >
+          <img src={x} alt="Close popup" />
+        </button>
+      </div>
+      <div className={styles.titleContent}>
+        <h2 className={styles.title}>Remove Student Confirmation</h2>
+      </div>
+      <p className={styles.error}>{errorMessage}</p>
+      <div className={styles.content}>
+        <p>
+          <div className={styles.bodyText}>
+            Are you sure you would like to remove?
+            <div className={styles.name}>
+              {popupName === 'undefined' ? '' : popupName}
+            </div>
+            <div className={styles.email}>
+              {popupEmail === 'undefined' ? '' : <>({popupEmail})</>}
+            </div>
           </div>
+        </p>
+      </div>
+      <div className={styles.actions}>
+        <div className={styles.actionsContainer}>
+          <>
+            <button
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                handleConfirm();
+              }}
+            >
+              Yes
+            </button>
+            <button
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                handleOnClose();
+              }}
+            >
+              No
+            </button>
+          </>
         </div>
       </div>
     </Modal>

@@ -12,7 +12,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { type StudentID, type Student } from '../types/StudentType';
-import { type Course } from '../types/CourseType';
+import { type Course, type CourseID } from '../types/CourseType';
 import { TeacherID, type Teacher, type YKNOTUser } from '../types/UserType';
 
 export function getAllStudents(): Promise<StudentID[]> {
@@ -55,13 +55,17 @@ export function getAllTeachers(): Promise<TeacherID[]> {
   });
 }
 
-export function getAllCourses(): Promise<Course[]> {
+export function getAllCourses(): Promise<CourseID[]> {
   const coursesRef = collection(db, 'Courses');
   return new Promise((resolve, reject) => {
     getDocs(coursesRef)
       .then((snapshot) => {
-        const courses = snapshot.docs.map((doc) => doc.data() as Course);
-        resolve(courses);
+        const courseID: CourseID[] = [];
+        const courses = snapshot.docs.map((doc) => {
+          const course = doc.data() as Course;
+          courseID.push({ ...course, id: doc.id });
+        });
+        resolve(courseID);
       })
       .catch((e) => {
         reject(e);

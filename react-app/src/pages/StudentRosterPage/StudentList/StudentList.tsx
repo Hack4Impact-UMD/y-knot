@@ -12,7 +12,6 @@ const StudentList = (props: {
   students: Array<Partial<StudentID>>;
   setStudents: Function;
   setOpenSuccess: Function;
-  setOpenFailure: Function;
 }) => {
   const [studentList, setStudentList] = useState<any[]>([]);
   const [showPopup, setShowPopup] = useState(false);
@@ -51,7 +50,7 @@ const StudentList = (props: {
                   src={eyeIcon}
                   alt="View Profile"
                   onClick={() => {
-                    navigate(`/student/${id}`);
+                    navigate(`/students/${id}`);
                   }}
                 />
               </button>
@@ -111,7 +110,6 @@ const StudentList = (props: {
               students={props.students}
               setStudents={props.setStudents}
               setOpenSuccess={props.setOpenSuccess}
-              setOpenFailure={props.setOpenFailure}
             />
           )}
           {numToShow < props.students.length && (

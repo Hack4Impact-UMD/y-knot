@@ -40,8 +40,10 @@
 }
 
 .selection {
-  width: 50vh;
+  width: 75%;
   height: 35px;
+  min-width: 180px;
+  min-height: fit-content;
   font-size: large;
   border-radius: 10px;
   padding: 5px;
@@ -52,7 +54,7 @@
   background-color: var(--color-orange);
   padding: 11px 0 11px 0;
   font-size: 0.8rem;
-  width: 16.67vh;
+  width: 20%;
   min-width: 180px;
   border: none;
   border-radius: 30px;

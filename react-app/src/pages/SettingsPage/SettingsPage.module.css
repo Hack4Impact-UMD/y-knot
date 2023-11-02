@@ -85,8 +85,6 @@
 
 .editIcon {
   width: 25px;
-  filter: brightness(0) saturate(100%) invert(68%) sepia(6%) saturate(0%)
-    hue-rotate(192deg) brightness(89%) contrast(97%);
 }
 
 .editIcon:hover {
