@@ -65,7 +65,7 @@ const StudentProfilePage = (): JSX.Element => {
     addrFirstLine: Yup.string().required('*Required'),
     city: Yup.string().required('*Required'),
     state: Yup.string().required('*Required'),
-    zipCode: Yup.number().required('*Required'),
+    zipCode: Yup.number().min(501, '*Enter a valid zipcode').max(99950, '*Enter a valid zipcode').required('*Required'),
     email: Yup.string().email('*Must be an email').required('*Required'),
     phone: Yup.number().min(0).max(10000000000).required('*Required'),
     guardianFirstName: Yup.string().required('*Required'),
@@ -419,7 +419,7 @@ const StudentProfilePage = (): JSX.Element => {
                           });
                         }}
                         placeholder="Zip Code"
-                        value={student.zipCode}
+                        value={isNaN(student.zipCode)? '': student.zipCode}
                       ></input>
                       {'zipCode' in fieldErrors ? (
                         <div className={styles.errorMessage}>
@@ -543,7 +543,7 @@ const StudentProfilePage = (): JSX.Element => {
                           guardianPhone: parseInt(event.target.value),
                         });
                       }}
-                      value={student.guardianPhone}
+                      value={isNaN(student.guardianPhone)? '': student.guardianPhone}
                     ></input>
                     {'guardianPhone' in fieldErrors ? (
                       <div className={styles.errorMessage}>
