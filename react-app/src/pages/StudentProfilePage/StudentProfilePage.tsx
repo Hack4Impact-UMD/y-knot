@@ -213,7 +213,7 @@ const StudentProfilePage = (): JSX.Element => {
                     </div>
                   </div>
                 ) : (
-                  `${student?.firstName} ${student?.middleName} ${student?.lastName}`
+                  `${student?.firstName} ${student?.middleName? student?.middleName: ''} ${student?.lastName}`
                 )}
               </a>
             </div>
