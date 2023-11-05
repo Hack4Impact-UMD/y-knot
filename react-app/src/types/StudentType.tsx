@@ -1,4 +1,6 @@
-export interface StudentID extends Student {
+import { Course } from "./CourseType";
+
+export interface StudentID extends Student{
   // Contains an id as well
   id: string;
 }
