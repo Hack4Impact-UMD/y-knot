@@ -13,9 +13,13 @@ const CoursesPage = (): JSX.Element => {
   const authContext = useAuth();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
-  const [currentCourses, setCurrentCourses] = useState<Course[]>([]);
-  const [pastCourses, setPastCourses] = useState<Course[]>([]);
-  const [upcomingCourses, setUpcomingCourses] = useState<Course[]>([]);
+  const [filteredCurrentCourses, setFilteredCurrentCourses] = useState<
+    Course[]
+  >([]);
+  const [filteredPastCourses, setFilteredPastCourses] = useState<Course[]>([]);
+  const [filteredUpcomingCourses, setFilteredUpcomingCourses] = useState<
+    Course[]
+  >([]);
   const [search, setSearch] = useState<string>('');
   const [allCurrentCourses, setAllCurrentCourses] = useState<Course[]>([]);
   const [allPastCourses, setAllPastCourses] = useState<Course[]>([]);
@@ -50,9 +54,9 @@ const CoursesPage = (): JSX.Element => {
         setAllUpcomingCourses(tempAllUpcomingCourses);
         setAllCurrentCourses(tempAllCurrentCourses);
 
-        setPastCourses(tempAllPastCourses);
-        setUpcomingCourses(tempAllUpcomingCourses);
-        setCurrentCourses(tempAllCurrentCourses);
+        setFilteredPastCourses(tempAllPastCourses);
+        setFilteredUpcomingCourses(tempAllUpcomingCourses);
+        setFilteredCurrentCourses(tempAllCurrentCourses);
       })
       .catch((error) => {
         setError(true);
@@ -102,13 +106,13 @@ const CoursesPage = (): JSX.Element => {
         course.name.toLowerCase().includes(searchVal.toLowerCase()),
       );
 
-      setUpcomingCourses(tempUpcomingCourses);
-      setCurrentCourses(tempCurrentCourses);
-      setPastCourses(tempPastCourses);
+      setFilteredUpcomingCourses(tempUpcomingCourses);
+      setFilteredCurrentCourses(tempCurrentCourses);
+      setFilteredPastCourses(tempPastCourses);
     } else {
-      setCurrentCourses(allCurrentCourses);
-      setPastCourses(allPastCourses);
-      setUpcomingCourses(allUpcomingCourses);
+      setFilteredCurrentCourses(allCurrentCourses);
+      setFilteredPastCourses(allPastCourses);
+      setFilteredUpcomingCourses(allUpcomingCourses);
     }
   };
 
@@ -178,12 +182,12 @@ const CoursesPage = (): JSX.Element => {
                 <div className={styles.cardLayout}>
                   {allCurrentCourses.length === 0 ? (
                     <h4 className={styles.noStudent}>No Active Courses</h4>
-                  ) : currentCourses.length === 0 ? (
+                  ) : filteredCurrentCourses.length === 0 ? (
                     <h4 className={styles.noStudent}>
                       No Active Courses Matching "{search}"
                     </h4>
                   ) : (
-                    displayCourseCards(currentCourses)
+                    displayCourseCards(filteredCurrentCourses)
                   )}
                 </div>
 
@@ -193,12 +197,12 @@ const CoursesPage = (): JSX.Element => {
                     <div className={styles.cardLayout}>
                       {allPastCourses.length === 0 ? (
                         <h4 className={styles.noStudent}>No Past Courses</h4>
-                      ) : pastCourses.length === 0 ? (
+                      ) : filteredPastCourses.length === 0 ? (
                         <h4 className={styles.noStudent}>
                           No Past Courses Matching "{search}"
                         </h4>
                       ) : (
-                        displayCourseCards(pastCourses)
+                        displayCourseCards(filteredPastCourses)
                       )}
                     </div>
                   </>
@@ -210,12 +214,12 @@ const CoursesPage = (): JSX.Element => {
                 <div className={styles.cardLayout}>
                   {allUpcomingCourses.length === 0 ? (
                     <h4 className={styles.noStudent}>No Upcoming Courses</h4>
-                  ) : upcomingCourses.length === 0 ? (
+                  ) : filteredUpcomingCourses.length === 0 ? (
                     <h4 className={styles.noStudent}>
                       No Upcoming Courses Matching "{search}"
                     </h4>
                   ) : (
-                    displayCourseCards(upcomingCourses)
+                    displayCourseCards(filteredUpcomingCourses)
                   )}
                 </div>
               </>
