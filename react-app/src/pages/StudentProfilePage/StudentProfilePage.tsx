@@ -92,10 +92,8 @@ const StudentProfilePage = (): JSX.Element => {
         }),
     );
   };
+
   const displayCourseCards = () => {
-    {
-      getStudentCourse;
-    }
     return courses.map((course, i) => {
       let color = colors[i % colors.length];
       const now = DateTime.now();
