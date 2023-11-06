@@ -1,3 +1,8 @@
+export interface CourseID extends Course {
+  // Contains an id as well
+  id: string;
+}
+
 export interface Course {
   name: string;
   startDate: string; // "YYYY-MM-DD"

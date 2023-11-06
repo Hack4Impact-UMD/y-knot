@@ -54,7 +54,7 @@ form {
 }
 
 .textInput {
-  width: 33vh;
+  width: 75%;
   min-width: 180px;
   background: var(--color-grey);
   border: none;
@@ -75,7 +75,7 @@ form {
 }
 
 .resetButton {
-  width: 16.67vh;
+  width: 20%;
   min-width: 180px;
   height: 35px;
   padding: 11px 0 11px 0;

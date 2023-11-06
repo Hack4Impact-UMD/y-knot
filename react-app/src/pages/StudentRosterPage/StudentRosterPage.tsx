@@ -1,13 +1,12 @@
-import { Student, type StudentID } from '../../types/StudentType';
+import { type StudentID } from '../../types/StudentType';
 import { useState, useEffect } from 'react';
-import { getAllStudents, getStudent } from '../../backend/FirestoreCalls';
-import { authenticateUser } from '../../backend/FirebaseCalls';
+import { getAllStudents } from '../../backend/FirestoreCalls';
 import { useAuth } from '../../auth/AuthProvider';
+import { Alert, Snackbar } from '@mui/material';
 import styles from './StudentRosterPage.module.css';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
 import StudentList from './StudentList/StudentList';
-import { Alert, Snackbar } from '@mui/material';
 
 const StudentRosterPage = (): JSX.Element => {
   const [students, setStudents] = useState<Array<Partial<StudentID>>>([]);

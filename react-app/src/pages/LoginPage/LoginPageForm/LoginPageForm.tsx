@@ -22,11 +22,11 @@ const LoginPageForm = ({ redirect }: { redirect: string }): JSX.Element => {
   const handleSignIn = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setShowLoading(true);
+
     if (email && password) {
       authenticateUser(email, password)
         .then(() => {
           setShowLoading(false);
-          setFailureMessage('');
           navigate(redirect);
         })
         .catch((error) => {
@@ -122,7 +122,12 @@ const LoginPageForm = ({ redirect }: { redirect: string }): JSX.Element => {
       >
         {showLoading ? <Loading></Loading> : 'Sign In'}
       </button>
-      <p className={'' ? styles.hideFailureMsg : styles.showFailureMessage}>
+      <p
+        className={
+          failureMessage ? styles.showFailureMessage : styles.errorContainer
+        }
+      >
+        {' '}
         {failureMessage}
       </p>
     </form>
