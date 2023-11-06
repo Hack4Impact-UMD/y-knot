@@ -65,15 +65,30 @@ const StudentProfilePage = (): JSX.Element => {
     addrFirstLine: Yup.string().required('*Required'),
     city: Yup.string().required('*Required'),
     state: Yup.string().required('*Required'),
-    zipCode: Yup.number().min(501, '*Enter a valid zipcode').max(99950, '*Enter a valid zipcode').required('*Required'),
+    zipCode: Yup.number()
+      .transform((value) => (isNaN(value) ? undefined : value))
+      .nullable()
+      .min(501, '*Enter a valid zipcode')
+      .max(99950, '*Enter a valid zipcode')
+      .required('*Required'),
     email: Yup.string().email('*Must be an email').required('*Required'),
-    phone: Yup.number().min(0).max(10000000000).required('*Required'),
+    phone: Yup.number()
+      .transform((value) => (isNaN(value) ? undefined : value))
+      .nullable()
+      .min(0)
+      .max(10000000000)
+      .required('*Required'),
     guardianFirstName: Yup.string().required('*Required'),
     guardianLastName: Yup.string().required('*Required'),
     guardianEmail: Yup.string()
       .email('*Must be an email')
       .required('*Required'),
-    guardianPhone: Yup.number().min(0).max(10000000000).required('*Required'),
+    guardianPhone: Yup.number()
+      .transform((value) => (isNaN(value) ? undefined : value))
+      .nullable()
+      .min(0)
+      .max(10000000000)
+      .required('*Required'),
     birthDate: Yup.string(),
     gradeLevel: Yup.string().required('*Required'),
     schoolName: Yup.string().required('*Required'),
@@ -113,8 +128,6 @@ const StudentProfilePage = (): JSX.Element => {
               <button
                 className={styles.button}
                 onClick={() => {
-                  setFieldErrors({});
-
                   if (editing) {
                     studentSchema
                       .validate(student, {
@@ -126,18 +139,21 @@ const StudentProfilePage = (): JSX.Element => {
                             window.location.reload();
                           })
                           .finally(() => {
+                            setFieldErrors({});
                             setEditing(!editing);
                           });
                       })
                       .catch((error: Yup.ValidationError) => {
+                        let newErrors = {} as Record<string, string>;
+
                         for (let i = 0; i < error.inner.length; i++) {
                           const path = error.inner[i].path;
 
                           if (path !== undefined) {
-                            fieldErrors[path] = error.inner[i].message;
+                            newErrors[path] = error.inner[i].message;
                           }
                         }
-                        setFieldErrors(fieldErrors);
+                        setFieldErrors(newErrors);
                       });
                   } else {
                     setEditing(!editing);
@@ -213,7 +229,9 @@ const StudentProfilePage = (): JSX.Element => {
                     </div>
                   </div>
                 ) : (
-                  `${student?.firstName} ${student?.middleName? student?.middleName: ''} ${student?.lastName}`
+                  `${student?.firstName} ${
+                    student?.middleName ? student?.middleName : ''
+                  } ${student?.lastName}`
                 )}
               </a>
             </div>
@@ -257,7 +275,7 @@ const StudentProfilePage = (): JSX.Element => {
                           phone: parseInt(event.target.value),
                         });
                       }}
-                      value={isNaN(student.phone)? '': student.phone}
+                      value={isNaN(student.phone) ? '' : student.phone}
                     ></input>
                     {'phone' in fieldErrors ? (
                       <div className={styles.errorMessage}>
@@ -419,7 +437,7 @@ const StudentProfilePage = (): JSX.Element => {
                           });
                         }}
                         placeholder="Zip Code"
-                        value={isNaN(student.zipCode)? '': student.zipCode}
+                        value={isNaN(student.zipCode) ? '' : student.zipCode}
                       ></input>
                       {'zipCode' in fieldErrors ? (
                         <div className={styles.errorMessage}>
@@ -543,7 +561,11 @@ const StudentProfilePage = (): JSX.Element => {
                           guardianPhone: parseInt(event.target.value),
                         });
                       }}
-                      value={isNaN(student.guardianPhone)? '': student.guardianPhone}
+                      value={
+                        isNaN(student.guardianPhone)
+                          ? ''
+                          : student.guardianPhone
+                      }
                     ></input>
                     {'guardianPhone' in fieldErrors ? (
                       <div className={styles.errorMessage}>
