@@ -52,7 +52,7 @@ function App(): JSX.Element {
               }
             />
             <Route
-              path="/courses/class"
+              path="/courses/class/:id"
               element={
                 <RequireAuth>
                   <ClassPage />

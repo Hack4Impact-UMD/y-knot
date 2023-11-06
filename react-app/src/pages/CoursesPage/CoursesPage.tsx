@@ -1,7 +1,7 @@
 import { useAuth } from '../../../src/auth/AuthProvider';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { type Course } from '../../types/CourseType';
+import { type CourseID } from '../../types/CourseType';
 import { getAllCourses } from '../../../src/backend/FirestoreCalls';
 import { DateTime } from 'luxon';
 import styles from './CoursesPage.module.css';
@@ -13,9 +13,9 @@ const CoursesPage = (): JSX.Element => {
   const authContext = useAuth();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
-  const [currentCourses, setCurrentCourses] = useState<Course[]>([]);
-  const [pastCourses, setPastCourses] = useState<Course[]>([]);
-  const [upcomingCourses, setUpcomingCourses] = useState<Course[]>([]);
+  const [currentCourses, setCurrentCourses] = useState<CourseID[]>([]);
+  const [pastCourses, setPastCourses] = useState<CourseID[]>([]);
+  const [upcomingCourses, setUpcomingCourses] = useState<CourseID[]>([]);
   const colors = [
     'var(--color-green)',
     'var(--color-orange)',
@@ -52,7 +52,7 @@ const CoursesPage = (): JSX.Element => {
       });
   }, []);
 
-  const displayCourseCards = (courses: Course[]) => {
+  const displayCourseCards = (courses: CourseID[]) => {
     return courses.map((course, i) => {
       let color = colors[i % colors.length];
       const now = DateTime.now();
@@ -63,7 +63,11 @@ const CoursesPage = (): JSX.Element => {
         color = 'gray';
       }
       return (
-        <Link to="/courses/class" key={i} className={styles.card}>
+        <Link
+          to={`/courses/class/${course.id}`}
+          key={i}
+          className={styles.card}
+        >
           <CourseCard
             teacher={course.teachers}
             course={course.name}
