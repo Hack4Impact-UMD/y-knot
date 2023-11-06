@@ -74,8 +74,8 @@ const StudentProfilePage = (): JSX.Element => {
     phone: Yup.number()
       .transform((value) => (isNaN(value) ? undefined : value))
       .nullable()
-      .min(0)
-      .max(10000000000)
+      .min(1000000000, "*Enter a valid phone number")
+      .max(10000000000, "*Enter a valid phone number")
       .required('*Required'),
     guardianFirstName: Yup.string().required('*Required'),
     guardianLastName: Yup.string().required('*Required'),
@@ -85,8 +85,8 @@ const StudentProfilePage = (): JSX.Element => {
     guardianPhone: Yup.number()
       .transform((value) => (isNaN(value) ? undefined : value))
       .nullable()
-      .min(0)
-      .max(10000000000)
+      .min(1000000000, "*Enter a valid phone number")
+      .max(10000000000, "*Enter a valid phone number")
       .required('*Required'),
     birthDate: Yup.string(),
     gradeLevel: Yup.string().required('*Required'),
