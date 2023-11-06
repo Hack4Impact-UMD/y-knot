@@ -9,7 +9,7 @@ import ClassHomework from './ClassHomework/ClassHomework';
 import ClassTeachers from './ClassTeachers/ClassTeachers';
 import ClassStudents from './ClassStudents/ClassStudents';
 import { useParams } from 'react-router-dom';
-import { Course, CourseID } from '../../types/CourseType';
+import type { Course, CourseID } from '../../types/CourseType';
 import { getCourse } from '../../backend/FirestoreCalls';
 import { DateTime } from 'luxon';
 
@@ -46,19 +46,22 @@ const ClassPage = (): JSX.Element => {
   const authContext = useAuth();
   const courseID = useParams().id;
 
-  const handleTabChange = (tab: Tab) => {
+  const handleTabChange = (tab: Tab): void => {
     setCurrentTab(tab);
-    console.log(tab);
   };
 
   useEffect(() => {
-    if (courseID) {
+    if (courseID !== undefined) {
       getCourse(courseID)
         .then((data) => {
           setCourse(data);
         })
-        .catch(() => {})
-        .finally(() => {});
+        .catch(() => {
+          // add error handling
+        })
+        .finally(() => {
+          // add handling
+        });
     }
   }, []);
 
@@ -153,8 +156,8 @@ const ClassPage = (): JSX.Element => {
           </div>
 
           {/* For rendering the corresponding component whenever tab value changes */}
-          {currentTab == Tab.Main && <ClassMain />}
-          {currentTab == Tab.Students && <ClassStudents />}
+          {currentTab === Tab.Main && <ClassMain />}
+          {currentTab === Tab.Students && <ClassStudents />}
           {currentTab === Tab.Attendance && <ClassAttendance />}
           {currentTab === Tab.Homework && <ClassHomework />}
           {currentTab === Tab.Teachers && <ClassTeachers />}
