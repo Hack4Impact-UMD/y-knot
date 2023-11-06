@@ -26,7 +26,7 @@ const StudentProfilePage = (): JSX.Element => {
     addrFirstLine: '',
     city: '',
     state: '',
-    zipCode: 0,
+    zipCode: '',
     email: '',
     phone: 0,
     guardianFirstName: '',
@@ -65,11 +65,10 @@ const StudentProfilePage = (): JSX.Element => {
     addrFirstLine: Yup.string().required('*Required'),
     city: Yup.string().required('*Required'),
     state: Yup.string().required('*Required'),
-    zipCode: Yup.number()
-      .transform((value) => (isNaN(value) ? undefined : value))
-      .nullable()
-      .min(501, '*Enter a valid zipcode')
-      .max(99950, '*Enter a valid zipcode')
+    zipCode: Yup.string()
+      .min(5, '*Must be a valid zipcode')
+      .max(5, '*Must be a valid zipcode')
+      .matches(/^\d+$/, "*Must be only digits")
       .required('*Required'),
     email: Yup.string().email('*Must be an email').required('*Required'),
     phone: Yup.number()
@@ -433,11 +432,11 @@ const StudentProfilePage = (): JSX.Element => {
                         onChange={(event) => {
                           setStudent({
                             ...student,
-                            zipCode: parseInt(event.target.value),
+                            zipCode: event.target.value,
                           });
                         }}
                         placeholder="Zip Code"
-                        value={isNaN(student.zipCode) ? '' : student.zipCode}
+                        value={student.zipCode}
                       ></input>
                       {'zipCode' in fieldErrors ? (
                         <div className={styles.errorMessage}>

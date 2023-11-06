@@ -11,7 +11,7 @@ export interface Student {
   addrSecondLine?: string;
   city: string;
   state: string;
-  zipCode: number;
+  zipCode: string;
   email: string;
   phone: number;
   guardianFirstName: string;
