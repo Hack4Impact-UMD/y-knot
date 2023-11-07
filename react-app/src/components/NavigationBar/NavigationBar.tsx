@@ -13,10 +13,13 @@ import whiteSettingsIcon from '../../assets/settings-white.svg';
 import blackSettingsIcon from '../../assets/settings-black.svg';
 import blackLogoutIcon from '../../assets/logout-black.svg';
 import LogOutConfirmation from './LogOutConfirmation/LogOutConfirmation';
+import hamburger from '../../assets/edit.svg';
+import x from '../../assets/x.svg';
 
 const NavigationBar = (): JSX.Element => {
   const authContext = useAuth();
   const [showPopup, setShowPopup] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (e.currentTarget.id === 'logOut') {
@@ -42,44 +45,21 @@ const NavigationBar = (): JSX.Element => {
                 alt="y-knot logo"
               />
             </NavLink>
+            <button
+              className={styles.menuBtn}
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              <img src={menuOpen ? x : hamburger} alt="hamburger" />
+            </button>
+          </div>
+          <div className={menuOpen ? styles.openMenu : styles.closedMenu}>
             <h2 className={styles.header}>
               {authContext?.token?.claims.role === 'ADMIN'
                 ? 'Admin'
                 : 'Teacher'}
             </h2>
-          </div>
-          <hr className={styles.breakLine}></hr>
-          <div className={styles.linkOptionsContainer}>
-            <div>
-              <NavLink
-                className={({ isActive }) =>
-                  isActive
-                    ? `${styles.linkOptions} ${styles.highlightOn}`
-                    : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
-                }
-                to="/courses"
-                id="home"
-              >
-                <div className={styles.tab}>
-                  <img
-                    className={styles.iconActive}
-                    src={whiteHomeIcon}
-                    alt="House icon"
-                  />
-                  <img
-                    className={styles.iconInactive}
-                    src={blackHomeIcon}
-                    alt="House Icon"
-                  />
-                  {authContext?.token?.claims.role === 'ADMIN' ? (
-                    <div>Home</div>
-                  ) : (
-                    <div>Courses</div>
-                  )}
-                </div>
-              </NavLink>
-            </div>
-            {authContext?.token?.claims.role === 'ADMIN' ? (
+            <hr className={styles.breakLine}></hr>
+            <div className={styles.linkOptionsContainer}>
               <div>
                 <NavLink
                   className={({ isActive }) =>
@@ -87,91 +67,122 @@ const NavigationBar = (): JSX.Element => {
                       ? `${styles.linkOptions} ${styles.highlightOn}`
                       : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
                   }
-                  to="/teachers"
-                  id="teachers"
+                  to="/courses"
+                  id="home"
                 >
                   <div className={styles.tab}>
                     <img
                       className={styles.iconActive}
-                      src={whiteTeachersIcon}
-                      alt="People icon"
+                      src={whiteHomeIcon}
+                      alt="House icon"
                     />
                     <img
                       className={styles.iconInactive}
-                      src={blackTeachersIcon}
-                      alt="People icon"
+                      src={blackHomeIcon}
+                      alt="House Icon"
                     />
-                    Teachers
+                    {authContext?.token?.claims.role === 'ADMIN' ? (
+                      <div>Home</div>
+                    ) : (
+                      <div>Courses</div>
+                    )}
                   </div>
                 </NavLink>
               </div>
-            ) : (
-              <></>
-            )}
-            <div>
-              <NavLink
-                className={({ isActive }) =>
-                  isActive
-                    ? `${styles.linkOptions} ${styles.highlightOn}`
-                    : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
-                }
-                to="/students"
-                id="students"
-              >
-                <div className={styles.tab}>
-                  <img
-                    className={styles.iconActive}
-                    src={whiteCapIcon}
-                    alt="Graduation cap icon"
-                  />
-                  <img
-                    className={styles.iconInactive}
-                    src={blackCapIcon}
-                    alt="Graduation cap icon"
-                  />
-                  Students
+              {authContext?.token?.claims.role === 'ADMIN' ? (
+                <div>
+                  <NavLink
+                    className={({ isActive }) =>
+                      isActive
+                        ? `${styles.linkOptions} ${styles.highlightOn}`
+                        : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
+                    }
+                    to="/teachers"
+                    id="teachers"
+                  >
+                    <div className={styles.tab}>
+                      <img
+                        className={styles.iconActive}
+                        src={whiteTeachersIcon}
+                        alt="People icon"
+                      />
+                      <img
+                        className={styles.iconInactive}
+                        src={blackTeachersIcon}
+                        alt="People icon"
+                      />
+                      Teachers
+                    </div>
+                  </NavLink>
                 </div>
-              </NavLink>
-            </div>
-            <div>
-              <NavLink
-                className={({ isActive }) =>
-                  isActive
-                    ? `${styles.linkOptions} ${styles.highlightOn}`
-                    : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
-                }
-                to="/settings"
-                id="settings"
-                end
-              >
-                <div className={styles.tab}>
-                  <img
-                    className={styles.iconActive}
-                    src={whiteSettingsIcon}
-                    alt="Gear icon"
-                  />
-                  <img
-                    className={styles.iconInactive}
-                    src={blackSettingsIcon}
-                    alt="Gear icon"
-                  />
-                  Settings
-                </div>
-              </NavLink>
-            </div>
-            <div>
-              <NavLink
-                className={`${styles.linkOptionsUnselected} ${styles.highlightOff}`}
-                id="logOut"
-                onClick={handleClick}
-                to=""
-                end
-              >
-                <div className={styles.tab}>
-                  <img src={blackLogoutIcon} alt="Logout icon" />
-                  Log Out
-                </div>
-              </NavLink>
+              ) : (
+                <></>
+              )}
+              <div>
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${styles.linkOptions} ${styles.highlightOn}`
+                      : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
+                  }
+                  to="/students"
+                  id="students"
+                >
+                  <div className={styles.tab}>
+                    <img
+                      className={styles.iconActive}
+                      src={whiteCapIcon}
+                      alt="Graduation cap icon"
+                    />
+                    <img
+                      className={styles.iconInactive}
+                      src={blackCapIcon}
+                      alt="Graduation cap icon"
+                    />
+                    Students
+                  </div>
+                </NavLink>
+              </div>
+              <div>
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive
+                      ? `${styles.linkOptions} ${styles.highlightOn}`
+                      : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
+                  }
+                  to="/settings"
+                  id="settings"
+                  end
+                >
+                  <div className={styles.tab}>
+                    <img
+                      className={styles.iconActive}
+                      src={whiteSettingsIcon}
+                      alt="Gear icon"
+                    />
+                    <img
+                      className={styles.iconInactive}
+                      src={blackSettingsIcon}
+                      alt="Gear icon"
+                    />
+                    Settings
+                  </div>
+                </NavLink>
+              </div>
+              <div>
+                <NavLink
+                  className={`${styles.linkOptionsUnselected} ${styles.highlightOff}`}
+                  id="logOut"
+                  onClick={handleClick}
+                  to=""
+                  end
+                >
+                  <div className={styles.tab}>
+                    <img src={blackLogoutIcon} alt="Logout icon" />
+                    Log Out
+                  </div>
+                </NavLink>
+              </div>
             </div>
           </div>
           {showPopup && (
