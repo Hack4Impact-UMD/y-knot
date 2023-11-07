@@ -57,20 +57,20 @@ const StudentProfilePage = (): JSX.Element => {
   useEffect(() => {
     if (studentID) {
       getStudent(studentID)
-        .then((data) => {
+        .then(async (data) => {
           setStudent(data || blankStudent);
-          /*if (data.courseInformation) {
-            data.courseInformation.map((course) =>
-              getCourse(course.id)
-                .then((dataCourse) => {
-                  setCourses((courses) => [...courses, dataCourse]);
-                })
-                .catch(() => {
-                  setError(true);
-                  setPageError(true);
-                }),
-            );
-          }*/
+          if (data.courseInformation) {
+            let dataCourses = await Promise.all(
+              data.courseInformation.map(async (course) => {
+                let courseResp = await getCourse(course.id);
+                return courseResp;
+              }),
+            ).catch(() => {
+              setError(true);
+              setPageError(true);
+            });
+            setCourses(dataCourses!);
+          }
         })
         .catch(() => {
           setError(true);
