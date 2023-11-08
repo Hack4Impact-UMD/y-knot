@@ -1,4 +1,4 @@
-export interface StudentID extends Student{
+export interface StudentID extends Student {
   // Contains an id as well
   id: string;
 }
