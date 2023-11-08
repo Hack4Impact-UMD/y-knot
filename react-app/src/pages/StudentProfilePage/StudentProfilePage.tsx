@@ -80,19 +80,6 @@ const StudentProfilePage = (): JSX.Element => {
     }
   }, []);
 
-  const getStudentCourse = () => {
-    student.courseInformation.map((course) =>
-      getCourse(course.id)
-        .then((dataCourse) => {
-          setCourses((courses) => [...courses, dataCourse]);
-        })
-        .catch(() => {
-          setError(true);
-          setPageError(true);
-        }),
-    );
-  };
-
   const displayCourseCards = () => {
     return courses.map((course, i) => {
       let color = colors[i % colors.length];
