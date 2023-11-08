@@ -2,7 +2,11 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './auth/AuthProvider';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './muiTheme';
-import { addSampleCourse, addSampleStudent, addStudentInCourse } from './backendTesting/test';
+import {
+  addSampleCourse,
+  addSampleStudent,
+  addStudentInCourse,
+} from './backendTesting/test';
 import RequireAuth from './auth/RequireAuth/RequireAuth';
 import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
 import LoginPage from './pages/LoginPage/LoginPage';
@@ -18,7 +22,7 @@ import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import TeacherRosterPage from './pages/TeacherRosterPage/TeacherRosterPage';
 import { createUser } from './backend/CloudFunctionsCalls';
-import { addCourse } from './backend/FirestoreCalls';
+import { addCourse, addTeacherCourse } from './backend/FirestoreCalls';
 
 function App(): JSX.Element {
   const customTheme = theme;
@@ -97,23 +101,31 @@ function App(): JSX.Element {
               element={
                 <RequireAuth>
                   <button
-                    onClick={async () => {
-                      const course = addCourse({
-                        name: 'Digital Marketing',
-                        startDate: '2022-08-14',
-                        endDate: '2023-10-30',
-                        students: [],
-                        courseType: 'PROGRAM',
-                        teachers: [],
-                        meetingTime: 'Tuesdays 9:30AM',
-                        leadershipApp: false,
-                        formId: '',
-                        introEmail: { content: 'this is an intro email.' },
-                        attendance: [],
-                        homeworks: []
-                      })
-                      addStudentInCourse(await course);
-                    }}
+                    onClick={
+                      () => {
+                        addTeacherCourse(
+                          'Li3x7GK5XwAk8UqhskKV',
+                          'tL77SdWoQF3y9F6duXnN',
+                        );
+                      }
+                      //   async () => {
+                      //   const course = addCourse({
+                      //     name: 'Digital Marketing',
+                      //     startDate: '2022-08-14',
+                      //     endDate: '2023-10-30',
+                      //     students: [],
+                      //     courseType: 'PROGRAM',
+                      //     teachers: [],
+                      //     meetingTime: 'Tuesdays 9:30AM',
+                      //     leadershipApp: false,
+                      //     formId: '',
+                      //     introEmail: { content: 'this is an intro email.' },
+                      //     attendance: [],
+                      //     homeworks: []
+                      //   })
+                      //   addStudentInCourse(await course);
+                      // }
+                    }
                   ></button>
                 </RequireAuth>
               }
