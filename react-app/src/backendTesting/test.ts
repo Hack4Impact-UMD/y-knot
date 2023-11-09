@@ -1,6 +1,14 @@
-import { addStudent, addCourse, updateCourse, getCourse, updateStudent } from '../backend/FirestoreCalls';
-import { StudentCourse, type Student } from '../types/StudentType';
+import {
+  addStudent,
+  addCourse,
+  updateCourse,
+  getCourse,
+  updateStudent,
+  getStudent,
+} from '../backend/FirestoreCalls';
+import { type StudentCourse, type Student } from '../types/StudentType';
 import { type Course, type CourseType } from '../types/CourseType';
+import { DateTime } from 'luxon';
 
 export const addSampleStudent = ({
   firstName = 'firstname',
@@ -103,17 +111,19 @@ export async function addStudentInCourse(courseId: string): Promise<void> {
       guardianFirstName: '',
       guardianLastName: '',
       birthDate: '',
-      courseInformation: []
-    }
+      courseInformation: [],
+      guardianEmail: '',
+      guardianPhone: 0,
+    };
 
     const studentCourse: StudentCourse = {
-      id: courseId, 
+      id: courseId,
       attendance: [],
       homeworks: [],
-      progress: 'INPROGRESS'
-    }
+      progress: 'INPROGRESS',
+    };
 
-    /* Add student and update their course information with the given courseId */ 
+    /* Add student and update their course information with the given courseId */
     student.courseInformation.push(studentCourse);
     const studentId = await addStudent(student);
 
@@ -122,8 +132,46 @@ export async function addStudentInCourse(courseId: string): Promise<void> {
     course.students.push(studentId);
     await updateCourse(course, courseId);
 
-    console.log("added student in course");
+    console.log('added student in course');
   } catch (error) {
-    console.error("could not add student in course", error);
+    console.error('could not add student in course', error);
+  }
+}
+
+export async function addExistingStudentToCourse(
+  studentID: string,
+  courseID: string,
+) {
+  try {
+    const studentObj = await getStudent(studentID);
+    console.log('got student');
+    const courseObj = await getCourse(courseID);
+    console.log('got course');
+
+    // courseObj.students.push(studentID);
+    // await updateCourse(courseObj, courseID);
+    // console.log('add student to course');
+
+    const studentCourse: StudentCourse = {
+      id: courseID,
+      attendance: [],
+      homeworks: [],
+      progress: 'INPROGRESS',
+    };
+
+    const now = DateTime.now();
+    if (DateTime.fromISO(courseObj.startDate) > now) {
+      studentCourse.progress = 'NA';
+    } else if (DateTime.fromISO(courseObj.endDate) < now) {
+      studentCourse.progress = Math.random() < 0.5 ? 'PASS' : 'FAIL';
+    } else {
+      studentCourse.progress = 'INPROGRESS';
+    }
+
+    studentObj.courseInformation.push(studentCourse);
+    await updateStudent(studentObj, studentID);
+    console.log('Added course to student');
+  } catch (error) {
+    console.error('could not add student to course');
   }
 }
