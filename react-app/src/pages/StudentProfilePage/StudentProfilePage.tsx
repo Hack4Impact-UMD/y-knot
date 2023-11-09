@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
 import {
   getStudent,
@@ -17,9 +17,8 @@ import transcriptIcon from '../../assets/transcript.svg';
 import CourseCard from '../../components/CourseCard/CourseCard';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import CoursesPage from '../CoursesPage/CoursesPage';
-import { Course } from '../../types/CourseType';
+import { type Course } from '../../types/CourseType';
 import { DateTime } from 'luxon';
-import { Link } from 'react-router-dom';
 
 const StudentProfilePage = (): JSX.Element => {
   const [editing, setEditing] = useState<boolean>(false);
@@ -63,9 +62,9 @@ const StudentProfilePage = (): JSX.Element => {
         .then(async (data) => {
           setStudent(data || blankStudent);
           if (data.courseInformation) {
-            let dataCourses = await Promise.all(
+            const dataCourses = await Promise.all(
               data.courseInformation.map(async (course) => {
-                let courseResp = await getCourse(course.id);
+                const courseResp = await getCourse(course.id);
                 return courseResp;
               }),
             ).catch(() => {
@@ -79,7 +78,9 @@ const StudentProfilePage = (): JSX.Element => {
           setError(true);
           setPageError(true);
         })
-        .finally(() => setLoading(false));
+        .finally(() => {
+          setLoading(false);
+        });
     }
   }, []);
 
@@ -135,16 +136,13 @@ const StudentProfilePage = (): JSX.Element => {
                 <button
                   className={styles.button}
                   onClick={() => {
-                    navigate('/transcript');
+                    navigate(`/transcript/${studentID}`);
                   }}
                 >
                   <img className={styles.icon} src={transcriptIcon} />
                 </button>
               </ToolTip>
-              <ToolTip
-                title={editing === true ? 'Save' : 'Edit'}
-                placement="top"
-              >
+              <ToolTip title={editing ? 'Save' : 'Edit'} placement="top">
                 <button
                   className={styles.button}
                   onClick={() => {

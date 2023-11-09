@@ -2,7 +2,11 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './auth/AuthProvider';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './muiTheme';
-import { addSampleCourse, addSampleStudent, addStudentInCourse } from './backendTesting/test';
+import {
+  addSampleCourse,
+  addSampleStudent,
+  addStudentInCourse,
+} from './backendTesting/test';
 import RequireAuth from './auth/RequireAuth/RequireAuth';
 import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
 import LoginPage from './pages/LoginPage/LoginPage';
@@ -110,8 +114,8 @@ function App(): JSX.Element {
                         formId: '',
                         introEmail: { content: 'this is an intro email.' },
                         attendance: [],
-                        homeworks: []
-                      })
+                        homeworks: [],
+                      });
                       addStudentInCourse(await course);
                     }}
                   ></button>
@@ -135,7 +139,7 @@ function App(): JSX.Element {
               }
             />
             <Route
-              path="/transcript"
+              path="/transcript/:id"
               element={
                 <RequireAuth>
                   <TranscriptPage />
