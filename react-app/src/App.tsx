@@ -105,7 +105,7 @@ function App(): JSX.Element {
                       () => {
                         addTeacherCourse(
                           'Li3x7GK5XwAk8UqhskKV',
-                          'tL77SdWoQF3y9F6duXnN',
+                          '629B8D6g5MFK8CoupeIt',
                         );
                       }
                       //   async () => {

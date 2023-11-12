@@ -143,15 +143,23 @@ export function addTeacherCourse(
         throw 'Document does not exist!';
       }
       const teacher: Teacher = teacherRef.data() as Teacher;
-      teacher.courses.push(courseId);
-      await transaction.update(doc(db, 'Users', teacherId), {
-        courses: teacher.courses,
-      });
+      if (!teacher.courses.includes(courseId)) {
+        teacher.courses.push(courseId);
+        await transaction.update(doc(db, 'Users', teacherId), {
+          courses: teacher.courses,
+        });
+      } else {
+        reject(new Error('Course is already added to teacher'));
+      }
       const course: Course = courseRef.data() as Course;
-      course.teachers.push(teacherId);
-      await transaction.update(doc(db, 'Courses', courseId), {
-        teachers: course.teachers,
-      });
+      if (!course.teachers.includes(teacherId)) {
+        course.teachers.push(teacherId);
+        await transaction.update(doc(db, 'Courses', courseId), {
+          teachers: course.teachers,
+        });
+      } else {
+        reject(new Error('Teacher is already added to course'));
+      }
     })
       .then(() => {
         resolve();
