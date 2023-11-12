@@ -24,7 +24,7 @@ enum Tab {
 
 const ClassPage = (): JSX.Element => {
   const [currentTab, setCurrentTab] = useState<Tab>(Tab.Main);
-  const dateFormat = 'LLL dd';
+  const dateFormat = 'LLL dd, yyyy';
   const blankCourse: CourseID = {
     name: '',
     startDate: '',
