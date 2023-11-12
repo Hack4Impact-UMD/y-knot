@@ -1,4 +1,10 @@
-import { addStudent, addCourse, updateCourse, getCourse, updateStudent } from '../backend/FirestoreCalls';
+import {
+  addStudent,
+  addCourse,
+  updateCourse,
+  getCourse,
+  updateStudent,
+} from '../backend/FirestoreCalls';
 import { StudentCourse, type Student } from '../types/StudentType';
 import { type Course, type CourseType } from '../types/CourseType';
 
@@ -103,17 +109,17 @@ export async function addStudentInCourse(courseId: string): Promise<void> {
       guardianFirstName: '',
       guardianLastName: '',
       birthDate: '',
-      courseInformation: []
-    }
+      courseInformation: [],
+    };
 
     const studentCourse: StudentCourse = {
-      id: courseId, 
+      id: courseId,
       attendance: [],
       homeworks: [],
-      progress: 'INPROGRESS'
-    }
+      progress: 'INPROGRESS',
+    };
 
-    /* Add student and update their course information with the given courseId */ 
+    /* Add student and update their course information with the given courseId */
     student.courseInformation.push(studentCourse);
     const studentId = await addStudent(student);
 
@@ -122,8 +128,8 @@ export async function addStudentInCourse(courseId: string): Promise<void> {
     course.students.push(studentId);
     await updateCourse(course, courseId);
 
-    console.log("added student in course");
+    console.log('added student in course');
   } catch (error) {
-    console.error("could not add student in course", error);
+    console.error('could not add student in course', error);
   }
 }
