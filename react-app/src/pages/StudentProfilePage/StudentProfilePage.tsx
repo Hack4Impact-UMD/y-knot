@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
-import { getStudent, updateStudent } from '../../backend/FirestoreCalls';
+import {
+  getStudent,
+  updateStudent,
+  getCourse,
+} from '../../backend/FirestoreCalls';
 import { type Student } from '../../types/StudentType';
 import { ToolTip } from '../../components/ToolTip/ToolTip';
 import styles from './StudentProfilePage.module.css';
@@ -12,6 +16,10 @@ import saveImage from '../../assets/save.svg';
 import transcriptIcon from '../../assets/transcript.svg';
 import CourseCard from '../../components/CourseCard/CourseCard';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
+import CoursesPage from '../CoursesPage/CoursesPage';
+import { Course } from '../../types/CourseType';
+import { DateTime } from 'luxon';
+import { Link } from 'react-router-dom';
 
 const StudentProfilePage = (): JSX.Element => {
   const [editing, setEditing] = useState<boolean>(false);
@@ -41,12 +49,31 @@ const StudentProfilePage = (): JSX.Element => {
   const authContext = useAuth();
   const studentID = useParams().id;
   const navigate = useNavigate();
+  const [courses, setCourses] = useState<Course[]>([]);
+  const colors = [
+    'var(--color-green)',
+    'var(--color-orange)',
+    'var(--color-blue)',
+    'var(--color-red)',
+  ];
 
   useEffect(() => {
     if (studentID) {
       getStudent(studentID)
-        .then((data) => {
+        .then(async (data) => {
           setStudent(data || blankStudent);
+          if (data.courseInformation) {
+            let dataCourses = await Promise.all(
+              data.courseInformation.map(async (course) => {
+                let courseResp = await getCourse(course.id);
+                return courseResp;
+              }),
+            ).catch(() => {
+              setError(true);
+              setPageError(true);
+            });
+            setCourses(dataCourses!);
+          }
         })
         .catch(() => {
           setError(true);
@@ -55,6 +82,31 @@ const StudentProfilePage = (): JSX.Element => {
         .finally(() => setLoading(false));
     }
   }, []);
+
+  const displayCourseCards = () => {
+    return courses.map((course, i) => {
+      let color = colors[i % colors.length];
+      const now = DateTime.now();
+      if (
+        DateTime.fromISO(course.startDate) > now ||
+        DateTime.fromISO(course.endDate) < now
+      ) {
+        color = 'gray';
+      }
+      return (
+        <Link to="/courses/class" key={i} className={styles.card}>
+          <CourseCard
+            teacher={course.teachers}
+            course={course.name}
+            section={course.meetingTime}
+            startDate={course.startDate}
+            endDate={course.endDate}
+            color={color}
+          />
+        </Link>
+      );
+    });
+  };
 
   if (pageError) {
     return <NotFoundPage />;
@@ -223,40 +275,7 @@ const StudentProfilePage = (): JSX.Element => {
           </div>
 
           <h1 className={styles.coursesTitle}>Courses</h1>
-          <div className={styles.courseList}>
-            <CourseCard
-              teacher={['bob']}
-              course="Hack4Impact"
-              section="[Section]"
-              startDate="2023-01-01"
-              endDate="2023-04-01"
-              color="gray"
-            />
-            <CourseCard
-              teacher={['bob']}
-              course="Math"
-              section="[Section]"
-              startDate="2023-01-01"
-              endDate="2023-04-01"
-              color="gray"
-            />
-            <CourseCard
-              teacher={['bob']}
-              course="Sign Language"
-              section="[Section]"
-              startDate="2023-01-01"
-              endDate="2023-04-01"
-              color="gray"
-            />
-            <CourseCard
-              teacher={['bob']}
-              course="English"
-              section="[Section]"
-              startDate="2023-01-01"
-              endDate="2023-04-01"
-              color="gray"
-            />
-          </div>
+          <div className={styles.courseList}>{displayCourseCards()}</div>
         </div>
       )}
     </>
