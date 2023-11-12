@@ -7,7 +7,9 @@ import {
   getCourse,
 } from '../../backend/FirestoreCalls';
 import { type Student } from '../../types/StudentType';
+import { type Course } from '../../types/CourseType';
 import { ToolTip } from '../../components/ToolTip/ToolTip';
+import { DateTime } from 'luxon';
 import styles from './StudentProfilePage.module.css';
 import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
@@ -16,9 +18,6 @@ import saveImage from '../../assets/save.svg';
 import transcriptIcon from '../../assets/transcript.svg';
 import CourseCard from '../../components/CourseCard/CourseCard';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
-import CoursesPage from '../CoursesPage/CoursesPage';
-import { type Course } from '../../types/CourseType';
-import { DateTime } from 'luxon';
 
 const StudentProfilePage = (): JSX.Element => {
   const [editing, setEditing] = useState<boolean>(false);
@@ -136,7 +135,7 @@ const StudentProfilePage = (): JSX.Element => {
                 <button
                   className={styles.button}
                   onClick={() => {
-                    navigate(`/transcript/${studentID}`);
+                    window.open(`/transcript/${studentID}`, '_blank');
                   }}
                 >
                   <img className={styles.icon} src={transcriptIcon} />

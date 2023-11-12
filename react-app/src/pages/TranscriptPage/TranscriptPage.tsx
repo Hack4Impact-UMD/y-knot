@@ -3,27 +3,12 @@ import styles from './PDFStyles';
 import otherStyles from './TranscriptPage.module.css';
 import { getCourse, getStudent } from '../../backend/FirestoreCalls';
 import { useEffect, useState } from 'react';
-import { addExistingStudentToCourse } from '../../backendTesting/test';
 import { useParams } from 'react-router';
 import { type Student } from '../../types/StudentType';
 import { type Course } from '../../types/CourseType';
 import { DateTime } from 'luxon';
 
 const TranscriptPage = (): JSX.Element => {
-  // let activeCourses = [
-  //   { course: 'Biology', date: '1/1/2023-3/3/2023', grade: 'IP' },
-  //   { course: 'Math', date: '1/1/2023-3/3/2023', grade: 'IP' },
-  //   { course: 'Sign Language', date: '1/1/2023-3/3/2023', grade: 'IP' },
-  // ];
-  // let upcomingCourses = [
-  //   { course: 'History', date: '3/4/2023-6/3/2023', grade: 'N/A' },
-  //   { course: 'Spanish', date: '3/4/2023-6/3/2023', grade: 'N/A' },
-  // ];
-  // let pastCourses = [
-  //   { course: 'Science', date: '1/1/2022-3/3/2022', grade: 'P' },
-  //   { course: 'UX', date: '1/1/2022-3/3/2022', grade: 'P' },
-  // ];
-
   interface CourseTranscript {
     course: string;
     date: string;
