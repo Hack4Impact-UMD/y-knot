@@ -16,8 +16,7 @@ import saveImage from '../../assets/save.svg';
 import transcriptIcon from '../../assets/transcript.svg';
 import CourseCard from '../../components/CourseCard/CourseCard';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
-import CoursesPage from '../CoursesPage/CoursesPage';
-import { Course } from '../../types/CourseType';
+import { CourseID } from '../../types/CourseType';
 import { DateTime } from 'luxon';
 import { Link } from 'react-router-dom';
 
@@ -49,7 +48,7 @@ const StudentProfilePage = (): JSX.Element => {
   const authContext = useAuth();
   const studentID = useParams().id;
   const navigate = useNavigate();
-  const [courses, setCourses] = useState<Course[]>([]);
+  const [courses, setCourses] = useState<CourseID[]>([]);
   const colors = [
     'var(--color-green)',
     'var(--color-orange)',
@@ -66,7 +65,7 @@ const StudentProfilePage = (): JSX.Element => {
             let dataCourses = await Promise.all(
               data.courseInformation.map(async (course) => {
                 let courseResp = await getCourse(course.id);
-                return courseResp;
+                return { ...courseResp, id: course.id };
               }),
             ).catch(() => {
               setError(true);
@@ -94,7 +93,11 @@ const StudentProfilePage = (): JSX.Element => {
         color = 'gray';
       }
       return (
-        <Link to="/courses/class" key={i} className={styles.card}>
+        <Link
+          to={`/courses/class/${course.id}`}
+          key={i}
+          className={styles.card}
+        >
           <CourseCard
             teacher={course.teachers}
             course={course.name}
