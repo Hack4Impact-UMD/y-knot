@@ -27,7 +27,7 @@ const TranscriptPage = (): JSX.Element => {
     addrFirstLine: '',
     city: '',
     state: '',
-    zipCode: 0,
+    zipCode: '',
     email: '',
     phone: 0,
     guardianFirstName: '',
