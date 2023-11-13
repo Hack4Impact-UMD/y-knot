@@ -25,6 +25,8 @@ const styles = StyleSheet.create({
   },
   page: {
     overflow: 'hidden',
+    paddingTop: '40px',
+    paddingBottom: '40px',
   },
   section: { color: 'white', textAlign: 'center' },
   doc: {
@@ -81,7 +83,7 @@ const styles = StyleSheet.create({
   },
   header: {
     textAlign: 'center',
-    paddingTop: '45px',
+    paddingTop: '5px',
     paddingBottom: '20px',
     fontFamily: 'Poppins',
     fontWeight: 500,
