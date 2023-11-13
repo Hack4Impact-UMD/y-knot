@@ -152,3 +152,7 @@
   margin-left: 10%;
   flex-wrap: wrap;
 }
+
+.card {
+  text-decoration: none;
+}

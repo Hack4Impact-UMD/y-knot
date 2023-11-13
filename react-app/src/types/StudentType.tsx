@@ -41,4 +41,4 @@ export interface StudentHomework {
   completed: boolean;
 }
 
-export type Progress = 'INPROGRESS' | 'PASS' | 'FAIL';
+export type Progress = 'INPROGRESS' | 'PASS' | 'FAIL' | 'NA';
