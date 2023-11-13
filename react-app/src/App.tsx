@@ -147,7 +147,7 @@ function App(): JSX.Element {
               }
             />
             <Route
-              path="/transcript"
+              path="/transcript/:id"
               element={
                 <RequireAuth>
                   <TranscriptPage />

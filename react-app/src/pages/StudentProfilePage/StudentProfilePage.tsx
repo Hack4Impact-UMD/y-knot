@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
 import {
   getStudent,
@@ -8,6 +8,7 @@ import {
 } from '../../backend/FirestoreCalls';
 import { type Student } from '../../types/StudentType';
 import { ToolTip } from '../../components/ToolTip/ToolTip';
+import { DateTime } from 'luxon';
 import styles from './StudentProfilePage.module.css';
 import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
@@ -17,8 +18,6 @@ import transcriptIcon from '../../assets/transcript.svg';
 import CourseCard from '../../components/CourseCard/CourseCard';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
 import { CourseID } from '../../types/CourseType';
-import { DateTime } from 'luxon';
-import { Link } from 'react-router-dom';
 
 const StudentProfilePage = (): JSX.Element => {
   const [editing, setEditing] = useState<boolean>(false);
@@ -62,7 +61,7 @@ const StudentProfilePage = (): JSX.Element => {
         .then(async (data) => {
           setStudent(data || blankStudent);
           if (data.courseInformation) {
-            let dataCourses = await Promise.all(
+            const dataCourses = await Promise.all(
               data.courseInformation.map(async (course) => {
                 let courseResp = await getCourse(course.id);
                 return { ...courseResp, id: course.id };
@@ -78,7 +77,9 @@ const StudentProfilePage = (): JSX.Element => {
           setError(true);
           setPageError(true);
         })
-        .finally(() => setLoading(false));
+        .finally(() => {
+          setLoading(false);
+        });
     }
   }, []);
 
@@ -138,16 +139,13 @@ const StudentProfilePage = (): JSX.Element => {
                 <button
                   className={styles.button}
                   onClick={() => {
-                    navigate('/transcript');
+                    window.open(`/transcript/${studentID}`, '_blank');
                   }}
                 >
                   <img className={styles.icon} src={transcriptIcon} />
                 </button>
               </ToolTip>
-              <ToolTip
-                title={editing === true ? 'Save' : 'Edit'}
-                placement="top"
-              >
+              <ToolTip title={editing ? 'Save' : 'Edit'} placement="top">
                 <button
                   className={styles.button}
                   onClick={() => {

@@ -7,6 +7,7 @@ import {
 } from '../backend/FirestoreCalls';
 import { StudentCourse, type Student } from '../types/StudentType';
 import { type Course, type CourseType } from '../types/CourseType';
+import { DateTime } from 'luxon';
 
 export const addSampleStudent = ({
   firstName = 'firstname',
@@ -108,8 +109,8 @@ export async function addStudentInCourse(courseId: string): Promise<void> {
       phone: 0,
       guardianFirstName: '',
       guardianLastName: '',
-      guardianEmail: 'guardian@gmail.com',
-      guardianPhone: 1111112222,
+      guardianEmail: '',
+      guardianPhone: 0,
       birthDate: '',
       courseInformation: [],
     };
