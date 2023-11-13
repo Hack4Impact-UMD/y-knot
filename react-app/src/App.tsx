@@ -7,11 +7,6 @@ import {
   addSampleStudent,
   addStudentInCourse,
 } from './backendTesting/test';
-import {
-  addSampleCourse,
-  addSampleStudent,
-  addStudentInCourse,
-} from './backendTesting/test';
 import RequireAuth from './auth/RequireAuth/RequireAuth';
 import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
 import LoginPage from './pages/LoginPage/LoginPage';

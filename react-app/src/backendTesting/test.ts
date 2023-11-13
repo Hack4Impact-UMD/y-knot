@@ -109,12 +109,10 @@ export async function addStudentInCourse(courseId: string): Promise<void> {
       phone: 0,
       guardianFirstName: '',
       guardianLastName: '',
-      guardianEmail: 'guardian@gmail.com',
-      guardianPhone: 1111112222,
-      birthDate: '',
-      courseInformation: [],
       guardianEmail: '',
       guardianPhone: 0,
+      birthDate: '',
+      courseInformation: [],
     };
 
     const studentCourse: StudentCourse = {
