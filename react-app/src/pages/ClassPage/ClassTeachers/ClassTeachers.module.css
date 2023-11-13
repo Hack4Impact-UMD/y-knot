@@ -19,7 +19,6 @@
   border-bottom: 1px solid black;
   display: flex;
   padding: 10px;
-  justify-content: space-between;
   align-items: center;
 }
 
@@ -47,21 +46,6 @@
   justify-content: center;
 }
 
-.icons {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transform: scale(0.75);
-  gap: 25px;
-}
-
-.button {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-}
-
 .addButton {
   width: 150px;
   height: 40px;
@@ -75,16 +59,4 @@
 .addButton:hover {
   background: var(--color-yellow-orange);
   cursor: pointer;
-}
-
-.profileIcon:hover {
-  cursor: pointer;
-  filter: invert(72%) sepia(14%) saturate(6705%) hue-rotate(334deg)
-    brightness(94%) contrast(89%);
-}
-
-.trashIcon:hover {
-  cursor: pointer;
-  filter: invert(8%) sepia(100%) saturate(7043%) hue-rotate(352deg)
-    brightness(87%) contrast(104%);
 }
