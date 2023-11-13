@@ -4,9 +4,8 @@ import {
   updateCourse,
   getCourse,
   updateStudent,
-  getStudent,
 } from '../backend/FirestoreCalls';
-import { type StudentCourse, type Student } from '../types/StudentType';
+import { StudentCourse, type Student } from '../types/StudentType';
 import { type Course, type CourseType } from '../types/CourseType';
 import { DateTime } from 'luxon';
 
@@ -110,6 +109,8 @@ export async function addStudentInCourse(courseId: string): Promise<void> {
       phone: 0,
       guardianFirstName: '',
       guardianLastName: '',
+      guardianEmail: 'guardian@gmail.com',
+      guardianPhone: 1111112222,
       birthDate: '',
       courseInformation: [],
       guardianEmail: '',
@@ -135,43 +136,5 @@ export async function addStudentInCourse(courseId: string): Promise<void> {
     console.log('added student in course');
   } catch (error) {
     console.error('could not add student in course', error);
-  }
-}
-
-export async function addExistingStudentToCourse(
-  studentID: string,
-  courseID: string,
-) {
-  try {
-    const studentObj = await getStudent(studentID);
-    console.log('got student');
-    const courseObj = await getCourse(courseID);
-    console.log('got course');
-
-    // courseObj.students.push(studentID);
-    // await updateCourse(courseObj, courseID);
-    // console.log('add student to course');
-
-    const studentCourse: StudentCourse = {
-      id: courseID,
-      attendance: [],
-      homeworks: [],
-      progress: 'INPROGRESS',
-    };
-
-    const now = DateTime.now();
-    if (DateTime.fromISO(courseObj.startDate) > now) {
-      studentCourse.progress = 'NA';
-    } else if (DateTime.fromISO(courseObj.endDate) < now) {
-      studentCourse.progress = Math.random() < 0.5 ? 'PASS' : 'FAIL';
-    } else {
-      studentCourse.progress = 'INPROGRESS';
-    }
-
-    studentObj.courseInformation.push(studentCourse);
-    await updateStudent(studentObj, studentID);
-    console.log('Added course to student');
-  } catch (error) {
-    console.error('could not add student to course');
   }
 }

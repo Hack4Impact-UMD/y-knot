@@ -7,7 +7,6 @@ import {
   getCourse,
 } from '../../backend/FirestoreCalls';
 import { type Student } from '../../types/StudentType';
-import { type Course } from '../../types/CourseType';
 import { ToolTip } from '../../components/ToolTip/ToolTip';
 import { DateTime } from 'luxon';
 import styles from './StudentProfilePage.module.css';
@@ -18,6 +17,7 @@ import saveImage from '../../assets/save.svg';
 import transcriptIcon from '../../assets/transcript.svg';
 import CourseCard from '../../components/CourseCard/CourseCard';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
+import { CourseID } from '../../types/CourseType';
 
 const StudentProfilePage = (): JSX.Element => {
   const [editing, setEditing] = useState<boolean>(false);
@@ -47,7 +47,7 @@ const StudentProfilePage = (): JSX.Element => {
   const authContext = useAuth();
   const studentID = useParams().id;
   const navigate = useNavigate();
-  const [courses, setCourses] = useState<Course[]>([]);
+  const [courses, setCourses] = useState<CourseID[]>([]);
   const colors = [
     'var(--color-green)',
     'var(--color-orange)',
@@ -63,8 +63,8 @@ const StudentProfilePage = (): JSX.Element => {
           if (data.courseInformation) {
             const dataCourses = await Promise.all(
               data.courseInformation.map(async (course) => {
-                const courseResp = await getCourse(course.id);
-                return courseResp;
+                let courseResp = await getCourse(course.id);
+                return { ...courseResp, id: course.id };
               }),
             ).catch(() => {
               setError(true);
@@ -94,7 +94,11 @@ const StudentProfilePage = (): JSX.Element => {
         color = 'gray';
       }
       return (
-        <Link to="/courses/class" key={i} className={styles.card}>
+        <Link
+          to={`/courses/class/${course.id}`}
+          key={i}
+          className={styles.card}
+        >
           <CourseCard
             teacher={course.teachers}
             course={course.name}
