@@ -67,27 +67,27 @@ const StudentProfilePage = (): JSX.Element => {
     city: Yup.string().required('*Required'),
     state: Yup.string().required('*Required'),
     zipCode: Yup.string()
-      .min(5, '*Must be a valid zipcode')
-      .max(5, '*Must be a valid zipcode')
-      .matches(/^\d+$/, "*Must be only digits")
+      .min(5, '*Enter a valid zipcode')
+      .max(5, '*Enter a valid zipcode')
+      .matches(/^\d+$/, '*Must be only digits')
       .required('*Required'),
-    email: Yup.string().email('*Must be an email').required('*Required'),
+    email: Yup.string().email('*Enter a valid email').required('*Required'),
     phone: Yup.number()
       .transform((value) => (isNaN(value) ? undefined : value))
       .nullable()
-      .min(1000000000, "*Enter a valid phone number")
-      .max(10000000000, "*Enter a valid phone number")
+      .min(1000000000, '*Enter a valid phone number')
+      .max(10000000000, '*Enter a valid phone number')
       .required('*Required'),
     guardianFirstName: Yup.string().required('*Required'),
     guardianLastName: Yup.string().required('*Required'),
     guardianEmail: Yup.string()
-      .email('*Must be an email')
+      .email('*Enter a valid email')
       .required('*Required'),
     guardianPhone: Yup.number()
       .transform((value) => (isNaN(value) ? undefined : value))
       .nullable()
-      .min(1000000000, "*Enter a valid phone number")
-      .max(10000000000, "*Enter a valid phone number")
+      .min(1000000000, '*Enter a valid phone number')
+      .max(10000000000, '*Enter a valid phone number')
       .required('*Required'),
     birthDate: Yup.string(),
     gradeLevel: Yup.string().required('*Required'),
@@ -136,31 +136,31 @@ const StudentProfilePage = (): JSX.Element => {
                   onClick={() => {
                     if (editing) {
                       studentSchema
-                      .validate(student, {
-                        abortEarly: false,
-                      })
-                      .then(() => {
-                        updateStudent(student, studentID!)
+                        .validate(student, {
+                          abortEarly: false,
+                        })
+                        .then(() => {
+                          updateStudent(student, studentID!)
                             .catch(() => {
                               window.location.reload();
                             })
                             .finally(() => {
                               setFieldErrors({});
-                            setEditing(!editing);
+                              setEditing(!editing);
                             });
-                      })
-                      .catch((error: Yup.ValidationError) => {
-                        let newErrors = {} as Record<string, string>;
+                        })
+                        .catch((error: Yup.ValidationError) => {
+                          let newErrors = {} as Record<string, string>;
 
-                        for (let i = 0; i < error.inner.length; i++) {
-                          const path = error.inner[i].path;
+                          for (let i = 0; i < error.inner.length; i++) {
+                            const path = error.inner[i].path;
 
-                          if (path !== undefined) {
-                            newErrors[path] = error.inner[i].message;
+                            if (path !== undefined) {
+                              newErrors[path] = error.inner[i].message;
+                            }
                           }
-                        }
-                        setFieldErrors(newErrors);
-                      });
+                          setFieldErrors(newErrors);
+                        });
                     } else {
                       setEditing(!editing);
                     }
@@ -390,7 +390,7 @@ const StudentProfilePage = (): JSX.Element => {
                             addrSecondLine: event.target.value,
                           });
                         }}
-                        placeholder="(Optional) Address Line 2"
+                        placeholder="Street Address Line 2"
                         value={student.addrSecondLine}
                       ></input>
                     </div>
