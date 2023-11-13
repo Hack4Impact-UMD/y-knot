@@ -6,7 +6,6 @@ interface studentDetails {
   name: string;
   course: string;
 }
-
 const CertificatePage = ({ name, course }: studentDetails): JSX.Element => {
   return (
     <div>

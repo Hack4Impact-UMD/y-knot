@@ -7,11 +7,65 @@ import yellowCurve from '../../assets/yellow-curve.png';
 import blueCurve from '../../assets/blue-curve.png';
 import orangeCurve from '../../assets/orange-curve.png';
 import greenCurve from '../../assets/green-curve.png';
+import { type Student } from '../../types/StudentType';
+import { useEffect, useState } from 'react';
+import { useAuth } from '../../auth/AuthProvider';
+import { useNavigate, useParams, Link } from 'react-router-dom';
+import { CourseID } from '../../types/CourseType';
+import {
+  getStudent,
+  updateStudent,
+  getCourse,
+} from '../../backend/FirestoreCalls';
 
 interface studentDetails {
   name: string;
   course: string;
 }
+const blankStudent: Student = {
+  firstName: '',
+  middleName: '',
+  lastName: '',
+  addrFirstLine: '',
+  city: '',
+  state: '',
+  zipCode: '',
+  email: '',
+  phone: 0,
+  guardianFirstName: '',
+  guardianLastName: '',
+  guardianEmail: '',
+  guardianPhone: 0,
+  birthDate: '',
+  gradeLevel: '',
+  schoolName: '',
+  courseInformation: [],
+};
+const [student, setStudent] = useState<Student>(blankStudent);
+const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+const authContext = useAuth();
+const studentID = useParams().id;
+const navigate = useNavigate();
+const [courses, setCourses] = useState<CourseID[]>([]);
+const [error, setError] = useState<boolean>(false);
+const [pageError, setPageError] = useState<boolean>(false);
+const [loading, setLoading] = useState<boolean>(true);
+
+useEffect(() => {
+  if (studentID) {
+    getStudent(studentID)
+      .then(async (data) => {
+        setStudent(data || blankStudent);
+      })
+      .catch(() => {
+        setError(true);
+        setPageError(true);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }
+}, []);
 
 const Certificate = ({ name, course }: studentDetails): JSX.Element => {
   return (
@@ -22,10 +76,12 @@ const Certificate = ({ name, course }: studentDetails): JSX.Element => {
         <View style={styles.textView}>
           <Text style={styles.title}>Certificate of Completion</Text>
           <Text style={styles.text}>
-            Y-KNOT is proud to award this certificate to
+            Y-KNOT is proud to award this certificate to {student.firstName}
           </Text>
           <Text style={styles.name}>{name}</Text>
-          <Text style={styles.text}>for completion of the course:</Text>
+          <Text style={styles.text}>
+            for completion of the course: {course}{' '}
+          </Text>
           <Text style={styles.course}>{course}</Text>
         </View>
 
