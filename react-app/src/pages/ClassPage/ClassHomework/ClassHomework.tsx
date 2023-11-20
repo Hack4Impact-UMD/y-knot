@@ -8,7 +8,14 @@ import AddHomework from './AddHomework/AddHomework';
 import RemoveHomework from './RemoveHomework/RemoveHomework';
 import AddNote from '../AddNote/AddNote';
 
-const ClassHomework = (): JSX.Element => {
+interface homeworkObj {
+  name: String;
+  notes: String;
+}
+
+const ClassHomework = (props: {
+  homework: Array<homeworkObj>;
+}): JSX.Element => {
   const students: string[] = [
     'Fiona Love',
     'Alicia Jacobs',
@@ -17,7 +24,6 @@ const ClassHomework = (): JSX.Element => {
     'Ariana Apple',
   ];
 
-  const assignments = ['Homework 2', 'Exam 1', 'Exam 2'];
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
   const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
   const [openRemoveHwModal, setOpenRemoveHwModal] = useState<boolean>(false);
@@ -49,7 +55,6 @@ const ClassHomework = (): JSX.Element => {
         </ToolTip>
         <Select
           placeholder="Assignment"
-          onChange={(assignment) => setAssignment(assignment!.value)}
           className={styles.selection}
           styles={{
             control: (baseStyles) => ({
@@ -57,8 +62,8 @@ const ClassHomework = (): JSX.Element => {
               borderColor: 'black',
             }),
           }}
-          options={assignments.map((assignment) => {
-            return { value: assignment, label: assignment };
+          options={props.homework.map((assignment) => {
+            return { value: assignment.name, label: assignment.name };
           })}
         />
       </div>

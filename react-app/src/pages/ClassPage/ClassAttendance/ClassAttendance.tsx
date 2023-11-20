@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import Select from 'react-select';
 import styles from './ClassAttendance.module.css';
@@ -8,7 +8,18 @@ import AddNote from '../AddNote/AddNote';
 import RemoveAttendance from './RemoveAttendance/RemoveAttendance';
 import AddAttendance from './AddAttendance/AddAttendance';
 
-const ClassAttendance = (): JSX.Element => {
+interface attendanceObj {
+  date: String;
+  notes: String;
+}
+
+const ClassAttendance = (props: {
+  attendance: Array<attendanceObj>;
+}): JSX.Element => {
+  useEffect(() => {
+    console.log(props.attendance);
+  }, []);
+
   const students: string[] = [
     'Fiona Love',
     'Alicia Jacobs',
@@ -17,7 +28,6 @@ const ClassAttendance = (): JSX.Element => {
     'Ariana Apple',
   ];
 
-  const dates = ['1/1/2023', '1/8/2023', '1/16/2023'];
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
   const [selectedDate, setDate] = useState<string>('');
   const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
@@ -39,7 +49,6 @@ const ClassAttendance = (): JSX.Element => {
   const handleAddNoteModal = () => {
     setOpenAddNoteModal(!openAddNoteModal);
   };
-
   return (
     <div className={styles.mainContainer}>
       <div className={styles.topLevel}>
@@ -49,7 +58,6 @@ const ClassAttendance = (): JSX.Element => {
           </button>
         </ToolTip>
         <Select
-          onChange={(date) => setDate(date!.value)}
           placeholder="Date"
           className={styles.dateSelection}
           styles={{
@@ -58,8 +66,8 @@ const ClassAttendance = (): JSX.Element => {
               borderColor: 'black',
             }),
           }}
-          options={dates.map((date) => {
-            return { value: date, label: date };
+          options={props.attendance.map((attendance) => {
+            return { value: attendance.date, label: attendance.date };
           })}
         />
       </div>
