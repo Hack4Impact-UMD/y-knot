@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import styles from './CheckboxWithLabel.module.css';
 
-type CheckboxWithLabelProps = {
+interface CheckboxWithLabelProps {
   checkedText: string;
   uncheckedText: string;
   isChecked: boolean;
   setIsChecked: Function;
-};
+}
 
 const CheckboxWithLabel = ({
   checkedText,
@@ -17,13 +17,13 @@ const CheckboxWithLabel = ({
   const [localIsChecked, setlocalIsChecked] = useState(isChecked);
 
   useEffect(() => {
-    if (isChecked === true) {
+    if (isChecked) {
       setlocalIsChecked(isChecked);
     }
   }, [isChecked]);
 
   function handleCheckboxChange() {
-    if (localIsChecked === true) {
+    if (localIsChecked) {
       setIsChecked(false);
     }
     setlocalIsChecked(!localIsChecked);

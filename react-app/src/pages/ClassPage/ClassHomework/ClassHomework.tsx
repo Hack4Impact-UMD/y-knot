@@ -49,7 +49,9 @@ const ClassHomework = (): JSX.Element => {
         </ToolTip>
         <Select
           placeholder="Assignment"
-          onChange={(assignment) => setAssignment(assignment!.value)}
+          onChange={(assignment) => {
+            setAssignment(assignment!.value);
+          }}
           className={styles.selection}
           styles={{
             control: (baseStyles) => ({
@@ -115,7 +117,7 @@ const ClassHomework = (): JSX.Element => {
       <AddNote
         title="Homework"
         currNote="existing note here"
-        selected={selectedAssignment ? selectedAssignment : ''}
+        selected={selectedAssignment || ''}
         open={openAddNoteModal}
         onClose={() => {
           setOpenAddNoteModal(!openAddNoteModal);

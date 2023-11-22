@@ -18,7 +18,7 @@ import saveImage from '../../assets/save.svg';
 import transcriptIcon from '../../assets/transcript.svg';
 import CourseCard from '../../components/CourseCard/CourseCard';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
-import { CourseID } from '../../types/CourseType';
+import { type CourseID } from '../../types/CourseType';
 
 const StudentProfilePage = (): JSX.Element => {
   const [editing, setEditing] = useState<boolean>(false);
@@ -66,14 +66,14 @@ const StudentProfilePage = (): JSX.Element => {
           if (data.courseInformation) {
             const dataCourses = await Promise.all(
               data.courseInformation.map(async (course) => {
-                let courseResp = await getCourse(course.id);
+                const courseResp = await getCourse(course.id);
                 return { ...courseResp, id: course.id };
               }),
             ).catch(() => {
               setError(true);
               setPageError(true);
             });
-            setCourses(dataCourses!);
+            setCourses(dataCourses);
           }
         })
         .catch(() => {
@@ -203,7 +203,7 @@ const StudentProfilePage = (): JSX.Element => {
                             });
                         })
                         .catch((error: Yup.ValidationError) => {
-                          let newErrors = {} as Record<string, string>;
+                          const newErrors = {} as Record<string, string>;
 
                           for (let i = 0; i < error.inner.length; i++) {
                             const path = error.inner[i].path;

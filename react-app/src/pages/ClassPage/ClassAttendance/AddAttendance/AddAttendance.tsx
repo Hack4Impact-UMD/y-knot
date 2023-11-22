@@ -56,12 +56,16 @@ const AddAttendance = ({ open, onClose }: modalType): React.ReactElement => {
             type="text"
             placeholder="Name:"
             className={styles.nameInput}
-            onChange={(event) => setName(event.target.value)}
+            onChange={(event) => {
+              setName(event.target.value);
+            }}
           />
           <textarea
             placeholder="Create note here:"
             className={styles.noteInput}
-            onChange={(event) => setNote(event.target.value)}
+            onChange={(event) => {
+              setNote(event.target.value);
+            }}
           />
           <button
             className={styles.button}

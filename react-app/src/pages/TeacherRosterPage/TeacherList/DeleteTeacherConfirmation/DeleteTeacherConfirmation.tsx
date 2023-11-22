@@ -4,19 +4,19 @@ import Modal from '../../../../components/ModalWrapper/Modal';
 import x from '../../../../assets/x.svg';
 import { deleteStudent } from '../../../../backend/FirestoreCalls';
 import { type StudentID } from '../../../../types/StudentType';
-import { TeacherID } from '../../../../types/UserType';
+import { type TeacherID } from '../../../../types/UserType';
 import { deleteUser } from '../../../../backend/CloudFunctionsCalls';
 
 interface popupModalType {
   onClose: () => void;
   open: any;
-  popupName: String;
-  popupEmail: String;
-  removeTeacherId: String;
+  popupName: string;
+  popupEmail: string;
+  removeTeacherId: string;
   setReloadList: Function;
   teachers: Array<Partial<TeacherID>>;
   setTeachers: Function;
-  reloadList: Boolean;
+  reloadList: boolean;
   setOpenSuccess: Function;
   setOpenFailure: Function;
 }

@@ -49,7 +49,9 @@ const ClassAttendance = (): JSX.Element => {
           </button>
         </ToolTip>
         <Select
-          onChange={(date) => setDate(date!.value)}
+          onChange={(date) => {
+            setDate(date!.value);
+          }}
           placeholder="Date"
           className={styles.dateSelection}
           styles={{
@@ -117,7 +119,7 @@ const ClassAttendance = (): JSX.Element => {
       <AddNote
         title="Attendance"
         currNote="existing note here"
-        selected={selectedDate ? selectedDate : ''}
+        selected={selectedDate || ''}
         open={openAddNoteModal}
         onClose={() => {
           setOpenAddNoteModal(!openAddNoteModal);

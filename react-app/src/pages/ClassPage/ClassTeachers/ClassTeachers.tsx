@@ -4,13 +4,21 @@ import { useAuth } from '../../../auth/AuthProvider';
 import { type YKNOTUser } from '../../../types/UserType';
 import styles from '../ClassTeachers/ClassTeachers.module.css';
 import Loading from '../../../components/LoadingScreen/Loading';
+import RemoveHomework from '../ClassHomework/RemoveHomework/RemoveHomework';
+import AddTeacher from './RemoveTeacher/AddTeacher';
 
 const ClassTeachers = (): JSX.Element => {
   const [teachers, setTeachers] = useState<Array<Partial<YKNOTUser>>>([]);
   const [teacherList, setTeacherList] = useState<JSX.Element[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
+  const [openRemoveTeacherModal, setOpenRemoveTeacherModal] =
+    useState<boolean>(false);
   const authContext = useAuth();
+
+  const handleRemoveTeacherModal = () => {
+    setOpenRemoveTeacherModal(!openRemoveTeacherModal);
+  };
 
   useEffect(() => {
     getAllTeachers()
@@ -62,10 +70,21 @@ const ClassTeachers = (): JSX.Element => {
             <>
               <div className={styles.teachersContainer}>{teacherList}</div>
               <div className={styles.bottomLevel}>
-                <button className={styles.addButton}>Add</button>
+                <button
+                  className={styles.addButton}
+                  onClick={handleRemoveTeacherModal}
+                >
+                  Add
+                </button>
               </div>
             </>
           )}
+          <AddTeacher
+            open={openRemoveTeacherModal}
+            onClose={() => {
+              setOpenRemoveTeacherModal(!openRemoveTeacherModal);
+            }}
+          />
         </div>
       )}
     </>
