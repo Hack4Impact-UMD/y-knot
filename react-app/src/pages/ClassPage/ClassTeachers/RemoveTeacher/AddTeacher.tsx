@@ -12,7 +12,6 @@ interface modalType {
 }
 
 const InputOption: React.FC<OptionProps<any, true, any>> = ({
-  isFocused,
   isSelected,
   innerProps,
   children,
@@ -21,11 +20,7 @@ const InputOption: React.FC<OptionProps<any, true, any>> = ({
 
   const style = {
     alignItems: 'center',
-    backgroundColor: isSelected
-      ? 'var(--color-orange)'
-      : isFocused
-      ? 'transparent'
-      : 'transparent',
+    backgroundColor: isSelected ? 'var(--color-orange)' : 'transparent',
     color: isSelected ? 'var(--color-white)' : 'black',
     display: 'flex ',
     fontSize: 'large',
@@ -66,6 +61,7 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
   const [teachers, setTeachers] = useState<Array<Partial<YKNOTUser>>>([]);
   const [teacherList, setTeacherList] = useState<Array<Partial<YKNOTUser>>>([]);
   const [selectedTeacher, setSelectedTeacher] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const selectBoxStyle = {
     control: (provided: any, state: any) => ({
@@ -117,7 +113,7 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
 
   const handleAddTeacher = () => {
     if (selectedTeacher === '') {
-      // setErrorMessage('*Please select a teacher');
+      setErrorMessage('*Please select a teacher');
     } else {
       // TODO: Confirmation popup(?) & add teacher
       handleOnClose();
@@ -127,7 +123,7 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
   const handleOnClose = (): void => {
     onClose();
     setSelectedTeacher('');
-    // setErrorMessage('');
+    setErrorMessage('');
   };
 
   return (
@@ -152,8 +148,7 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
         </div>
         <div className={styles.content}>
           <h1 className={styles.heading}>Add Teacher</h1>
-          <p className={styles.error}>{}</p>
-
+          <p className={styles.error}>{errorMessage}</p>
           <Select
             defaultValue={null}
             isMulti
@@ -174,7 +169,6 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
             placeholder="Text Input"
             styles={selectBoxStyle}
           />
-
           <button
             className={styles.button}
             onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
