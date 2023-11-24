@@ -18,7 +18,7 @@ const InputOption: React.FC<OptionProps<any, true, any>> = ({
 }) => {
   const { onMouseDown, onMouseUp, onMouseLeave, ...restInnerProps } = innerProps || {};
 
-  const style = {
+  const selectionStyle = {
     alignItems: 'center',
     backgroundColor: isSelected ? 'var(--color-orange)' : 'transparent',
     color: isSelected ? 'var(--color-white)' : 'black',
@@ -36,9 +36,8 @@ const InputOption: React.FC<OptionProps<any, true, any>> = ({
     fontSize: 'large',
     width: '20px',
     height: '20px',
-    color: isSelected ? 'var(--color-orange)' : 'transparent',
+    color: isSelected ? 'var(--color-white)' : 'transparent',
     backgroundColor: 'var(--color-orange)',
-    borderColor: 'var(--color-orange)',
     accentColor: 'var(--color-orange)',
     opacity: "50%",
   };
@@ -49,7 +48,7 @@ const InputOption: React.FC<OptionProps<any, true, any>> = ({
       onMouseDown={onMouseDown}
       onMouseUp={onMouseUp}
       onMouseLeave={onMouseLeave}
-      style={style}
+      style={selectionStyle}
     >
       <input type="checkbox" checked={isSelected} style={checkboxStyle} />
       {children}
@@ -66,8 +65,8 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
   const selectBoxStyle = {
     control: (provided: any, state: any) => ({
       ...provided,
-      width: '225px',
-      height: '50px',
+      width: '300px',
+      height: 'fit-content',
       overflow: 'hidden',
       fontSize: 'large',
       marginBottom: 'auto',
@@ -87,9 +86,7 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
       ...provided,
       position: 'absolute',
       right: '8px',
-      top: '15%',
-      opacity: "100%"
-    }),
+    })
   };
 
   useEffect(() => {
@@ -163,6 +160,7 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
             }))}
             components={{
               Option: InputOption,
+              /* Remove the separator and clear indicators from the main selection box */
               IndicatorSeparator: () => null,
               ClearIndicator: () => null,
             }}
