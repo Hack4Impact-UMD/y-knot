@@ -10,7 +10,7 @@ import emailIcon from '../../../assets/email.svg';
 import x from '../../../assets/x.svg';
 
 import { StudentFile } from '../../../types/StudentType';
-import { Description as DescriptionIcon } from '@mui/icons-material';
+import DescriptionIcon from '@mui/icons-material/Description';
 
 const ClassMain = (): JSX.Element => {
   const emailContentRef = useRef<HTMLDivElement>(null);
