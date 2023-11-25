@@ -1,21 +1,92 @@
 import { Page, Text, View, Document, PDFViewer } from '@react-pdf/renderer';
 import styles from './PDFStyles';
 import otherStyles from './TranscriptPage.module.css';
+import { getCourse, getStudent } from '../../backend/FirestoreCalls';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
+import { type Student } from '../../types/StudentType';
+import { type Course } from '../../types/CourseType';
+import { DateTime } from 'luxon';
 
 const TranscriptPage = (): JSX.Element => {
-  const activeCourses = [
-    { course: 'Biology', date: '1/1/2023-3/3/2023', grade: 'IP' },
-    { course: 'Math', date: '1/1/2023-3/3/2023', grade: 'IP' },
-    { course: 'Sign Language', date: '1/1/2023-3/3/2023', grade: 'IP' },
-  ];
-  const upcomingCourses = [
-    { course: 'History', date: '3/4/2023-6/3/2023', grade: 'N/A' },
-    { course: 'Spanish', date: '3/4/2023-6/3/2023', grade: 'N/A' },
-  ];
-  const pastCourses = [
-    { course: 'Science', date: '1/1/2022-3/3/2022', grade: 'P' },
-    { course: 'UX', date: '1/1/2022-3/3/2022', grade: 'P' },
-  ];
+  interface CourseTranscript {
+    course: string;
+    date: string;
+    grade: string;
+  }
+
+  const [activeCourses, setActiveCourses] = useState<CourseTranscript[]>([]);
+  const [upcomingCourses, setUpcomingCourses] = useState<CourseTranscript[]>(
+    [],
+  );
+  const [pastCourses, setPastCourses] = useState<CourseTranscript[]>([]);
+  const blankStudent: Student = {
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    addrFirstLine: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    email: '',
+    phone: 0,
+    guardianFirstName: '',
+    guardianLastName: '',
+    guardianEmail: '',
+    guardianPhone: 0,
+    birthDate: '',
+    gradeLevel: '',
+    schoolName: '',
+    courseInformation: [],
+  };
+  const [student, setStudent] = useState<Student>(blankStudent);
+  const studentId = useParams().id;
+
+  useEffect(() => {
+    if (studentId) {
+      const upcomingCoursesTemp: CourseTranscript[] = [];
+      const activeCoursesTemp: CourseTranscript[] = [];
+      const pastCoursesTemp: CourseTranscript[] = [];
+      const getTranscriptDate = (course: Course) => {
+        const startDate = DateTime.fromISO(course.startDate);
+        const endDate = DateTime.fromISO(course.endDate);
+
+        const formattedStartDate = startDate.toFormat('MM/dd/yyyy');
+        const formattedEndDate = endDate.toFormat('MM/dd/yyyy');
+        const transcriptDate = `${formattedStartDate}-${formattedEndDate}`;
+        return transcriptDate;
+      };
+
+      getStudent(studentId).then(async (studentData) => {
+        setStudent(studentData || blankStudent);
+        if (studentData.courseInformation) {
+          await Promise.all(
+            studentData.courseInformation.map(async (studentCourseObj) => {
+              const courseObj = await getCourse(studentCourseObj.id);
+              const transcriptObject = { course: '', date: '', grade: '' };
+              transcriptObject.date = getTranscriptDate(courseObj);
+              transcriptObject.course = courseObj.name;
+              if (studentCourseObj.progress === 'NA') {
+                transcriptObject.grade = 'N/A';
+                upcomingCoursesTemp.push(transcriptObject);
+              } else if (studentCourseObj.progress === 'INPROGRESS') {
+                transcriptObject.grade = 'IP';
+                activeCoursesTemp.push(transcriptObject);
+              } else {
+                transcriptObject.grade = studentCourseObj.progress.charAt(0);
+                pastCoursesTemp.push(transcriptObject);
+              }
+            }),
+          );
+
+          setUpcomingCourses(upcomingCoursesTemp);
+          setActiveCourses(activeCoursesTemp);
+          setPastCourses(pastCoursesTemp);
+        }
+      });
+    }
+  }, []);
+
   return (
     // A container is used to get rid of a bug with iframes where there are 2 scrollbars
     <div className={otherStyles.container}>
@@ -24,7 +95,9 @@ const TranscriptPage = (): JSX.Element => {
           <Page size="A4" style={styles.page}>
             <View style={styles.table}>
               <Text style={styles.header}>Y-KNOT Transcript</Text>
-              <Text style={styles.name}>Fiona Jones</Text>
+              <Text style={styles.name}>
+                {student.firstName} {student.lastName}
+              </Text>
               <View style={styles.activeCourses}>
                 <View style={styles.coursesTableCol}>
                   <Text style={[styles.boldHeader, styles.noMargin]}>

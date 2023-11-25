@@ -11,7 +11,7 @@ export interface Student {
   addrSecondLine?: string;
   city: string;
   state: string;
-  zipCode: number;
+  zipCode: string;
   email: string;
   phone: number;
   guardianFirstName: string;
@@ -41,4 +41,4 @@ export interface StudentHomework {
   completed: boolean;
 }
 
-export type Progress = 'INPROGRESS' | 'PASS' | 'FAIL';
+export type Progress = 'INPROGRESS' | 'PASS' | 'FAIL' | 'NA';

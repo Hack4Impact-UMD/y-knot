@@ -1,6 +1,13 @@
-import { addStudent, addCourse } from '../backend/FirestoreCalls';
-import { type Student } from '../types/StudentType';
+import {
+  addStudent,
+  addCourse,
+  updateCourse,
+  getCourse,
+  updateStudent,
+} from '../backend/FirestoreCalls';
+import { StudentCourse, type Student } from '../types/StudentType';
 import { type Course, type CourseType } from '../types/CourseType';
+import { DateTime } from 'luxon';
 
 export const addSampleStudent = ({
   firstName = 'firstname',
@@ -10,7 +17,7 @@ export const addSampleStudent = ({
   addrSecondLine = 'addr second',
   city = 'sample city',
   state = 'sample state',
-  zipCode = 11111,
+  zipCode = '11111',
   email = 'sample@gmail.com',
   phone = 1111111111,
   guardianFirstName = 'guardianFirstName',
@@ -87,3 +94,45 @@ export const addSampleCourse = ({
       console.log(error);
     });
 };
+
+export async function addStudentInCourse(courseId: string): Promise<void> {
+  try {
+    /* Add student to backend */
+    const student: Student = {
+      firstName: 'Milky',
+      lastName: 'Way',
+      addrFirstLine: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      email: '',
+      phone: 0,
+      guardianFirstName: '',
+      guardianLastName: '',
+      guardianEmail: '',
+      guardianPhone: 0,
+      birthDate: '',
+      courseInformation: [],
+    };
+
+    const studentCourse: StudentCourse = {
+      id: courseId,
+      attendance: [],
+      homeworks: [],
+      progress: 'INPROGRESS',
+    };
+
+    /* Add student and update their course information with the given courseId */
+    student.courseInformation.push(studentCourse);
+    const studentId = await addStudent(student);
+
+    /* add the student in the course's Students array */
+    const course = await getCourse(courseId);
+    course.students.push(studentId);
+    await updateCourse(course, courseId);
+
+    console.log('added student in course');
+  } catch (error) {
+    console.error('could not add student in course', error);
+  }
+}

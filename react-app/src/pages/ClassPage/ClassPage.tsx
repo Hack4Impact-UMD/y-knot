@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../auth/AuthProvider';
 import styles from '../../pages/ClassPage/ClassPage.module.css';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
@@ -8,6 +8,10 @@ import ClassAttendance from './ClassAttendance/ClassAttendance';
 import ClassHomework from './ClassHomework/ClassHomework';
 import ClassTeachers from './ClassTeachers/ClassTeachers';
 import ClassStudents from './ClassStudents/ClassStudents';
+import { useParams } from 'react-router-dom';
+import type { Course, CourseID } from '../../types/CourseType';
+import { getCourse } from '../../backend/FirestoreCalls';
+import { DateTime } from 'luxon';
 
 enum Tab {
   Main = 'Main',
@@ -20,13 +24,46 @@ enum Tab {
 
 const ClassPage = (): JSX.Element => {
   const [currentTab, setCurrentTab] = useState<Tab>(Tab.Main);
+  const dateFormat = 'LLL dd, yyyy';
+  const blankCourse: CourseID = {
+    name: '',
+    startDate: '',
+    endDate: '',
+    meetingTime: '',
+    students: [],
+    teachers: [],
+    leadershipApp: false,
+    courseType: 'ACADEMY',
+    formId: '',
+    introEmail: { content: '' },
+    attendance: [],
+    homeworks: [],
+    id: '',
+  };
+
+  const [course, setCourse] = useState<Course>(blankCourse);
 
   const authContext = useAuth();
+  const courseID = useParams().id;
 
-  const handleTabChange = (tab: Tab) => {
+  const handleTabChange = (tab: Tab): void => {
     setCurrentTab(tab);
-    console.log(tab);
   };
+
+  useEffect(() => {
+    if (courseID !== undefined) {
+      getCourse(courseID)
+        .then((data) => {
+          setCourse(data);
+        })
+        .catch(() => {
+          // add error handling
+        })
+        .finally(() => {
+          // add handling
+        });
+    }
+  }, []);
 
   return (
     <div>
@@ -38,9 +75,13 @@ const ClassPage = (): JSX.Element => {
       ) : (
         <div className={styles.rightPane}>
           <div className={styles.classInfo}>
-            <h1 className={styles.title}>Math</h1>
-            <h2 className={styles.date}>January 31st - May 20th</h2>
-            <h2 className={styles.time}>3:00 - 4:00 pm</h2>
+            <h1 className={styles.title}>{course?.name}</h1>
+            <h2 className={styles.date}>
+              {`${DateTime.fromISO(course.startDate).toFormat(
+                dateFormat,
+              )} - ${DateTime.fromISO(course.endDate).toFormat(dateFormat)}`}
+            </h2>
+            <h2 className={styles.time}>{course.meetingTime}</h2>
           </div>
 
           <div className={styles.content}>
@@ -115,8 +156,8 @@ const ClassPage = (): JSX.Element => {
           </div>
 
           {/* For rendering the corresponding component whenever tab value changes */}
-          {currentTab == Tab.Main && <ClassMain />}
-          {currentTab == Tab.Students && <ClassStudents />}
+          {currentTab === Tab.Main && <ClassMain />}
+          {currentTab === Tab.Students && <ClassStudents />}
           {currentTab === Tab.Attendance && <ClassAttendance />}
           {currentTab === Tab.Homework && <ClassHomework />}
           {currentTab === Tab.Teachers && <ClassTeachers />}
