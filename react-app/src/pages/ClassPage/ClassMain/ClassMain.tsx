@@ -34,10 +34,6 @@ const ClassMain = (): JSX.Element => {
         setText(newText);
       }
     }
-    setFiles({
-      uploaded: [],
-      deleted: [],
-    });
     setEditText(!editText);
   };
 
@@ -85,35 +81,37 @@ const ClassMain = (): JSX.Element => {
             </ToolTip>
           </div>
         </div>
-        {editText? (
-          <div className={styles.fileContainer}>
-            {files.uploaded?.map((file) => {
-              return (
-                <div className={styles.containerLines}>
-                  <div className={styles.informationText}>
-                    <DescriptionIcon/>
-                    {file.name.length > 30
-                      ? file.name.substring(0, 28) +
-                        '. . . ' +
-                        file.name.substring(file.name.indexOf('.') - 3)
-                      : file.name}
-                  </div>
-                  <button
-                    onClick={() => {
-                      setFiles({
-                        ...files,
-                        uploaded: files.uploaded.filter((ele) => ele != file),
-                      });
-                    }}
-                    className={styles.deleteButton}
-                  >
-                    <img className={styles.icon} alt="Delete Icon" src={x} />
-                  </button>
+
+        <div className={styles.fileContainer}>
+          {files.uploaded?.map((file) => {
+            return (
+              <div className={styles.containerLines}>
+                <div className={styles.informationText}>
+                  <DescriptionIcon />
+                  {file.name.length > 30
+                    ? file.name.substring(0, 28) +
+                      '. . . ' +
+                      file.name.substring(file.name.indexOf('.') - 3)
+                    : file.name}
                 </div>
-              );
-            })}
-          </div>
-        ): <></>}
+                <button
+                  onClick={() => {
+                    setFiles({
+                      ...files,
+                      uploaded: files.uploaded.filter((ele) => ele != file),
+                    });
+                  }}
+                  className={styles.deleteButton}
+                  hidden={!editText}
+                >
+                  <img className={styles.icon} alt="Delete Icon" src={x} />
+                </button>
+              </div>
+            );
+          })}
+        </div>
+
+
         <div className={styles.introContent}>
           <div
             className={`${styles.introText} ${editText && styles.editing}`}
