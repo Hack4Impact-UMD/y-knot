@@ -13,7 +13,7 @@ import whiteSettingsIcon from '../../assets/settings-white.svg';
 import blackSettingsIcon from '../../assets/settings-black.svg';
 import blackLogoutIcon from '../../assets/logout-black.svg';
 import LogOutConfirmation from './LogOutConfirmation/LogOutConfirmation';
-import hamburger from '../../assets/edit.svg';
+import MenuIcon from '@mui/icons-material/Menu';
 import x from '../../assets/x.svg';
 
 const NavigationBar = (): JSX.Element => {
@@ -49,7 +49,13 @@ const NavigationBar = (): JSX.Element => {
               className={styles.menuBtn}
               onClick={() => setMenuOpen(!menuOpen)}
             >
-              <img src={menuOpen ? x : hamburger} alt="hamburger" />
+              {menuOpen ? (
+                <img src={x} alt="Exit" />
+              ) : (
+                <MenuIcon
+                  style={{ color: "e3853a", width: "30px" }}
+                />
+              )}
             </button>
           </div>
           <div className={menuOpen ? styles.openMenu : styles.closedMenu}>
@@ -59,7 +65,9 @@ const NavigationBar = (): JSX.Element => {
                 : 'Teacher'}
             </h2>
             <hr className={styles.breakLine}></hr>
-            <div className={styles.linkOptionsContainer}>
+            <div className={styles.linkOptionsContainer} onClick={() => {
+                setMenuOpen(false);
+            }}>
               <div>
                 <NavLink
                   className={({ isActive }) =>
