@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
-import { getAllTeachers, getTeacher } from '../../../backend/FirestoreCalls';
+import { getAllTeachers } from '../../../backend/FirestoreCalls';
 import { useAuth } from '../../../auth/AuthProvider';
-import { TeacherID, type YKNOTUser } from '../../../types/UserType';
+import { TeacherID } from '../../../types/UserType';
 import styles from '../ClassTeachers/ClassTeachers.module.css';
 import Loading from '../../../components/LoadingScreen/Loading';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import { Link } from 'react-router-dom';
 import EyeIcon from '../../../assets/view.svg';
 import TrashIcon from '../../../assets/trash.svg';
-import DeleteTeacherConfirmation from '../../TeacherRosterPage/TeacherList/DeleteTeacherConfirmation/DeleteTeacherConfirmation';
+import DeleteTeacherClassConfirmation from './DeleteTeacherClassConfirmation/DeleteTeacherClassConfirmation';
 import { Snackbar, Alert } from '@mui/material';
 
 const ClassTeachers = (): JSX.Element => {
@@ -16,7 +16,6 @@ const ClassTeachers = (): JSX.Element => {
   const [teacherList, setTeacherList] = useState<JSX.Element[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
-
 
   const [showPopup, setShowPopup] = useState(false);
   const [popupName, setPopupName] = useState<String>();
@@ -68,23 +67,25 @@ const ClassTeachers = (): JSX.Element => {
           <p className={styles.name}>{teacher.name}</p>
           <div className={styles.icons}>
             {authContext?.token?.claims.role === 'ADMIN' && (
-            <Link to={`/teachers/${teacher.id}`}>
-              <ToolTip title="View Profile" placement="top">
-                <button className={styles.button}>
-                  <img src={EyeIcon} className={styles.profileIcon} />
-                </button>
-              </ToolTip>
-            </Link>
+              <Link to={`/teachers/${teacher.id}`}>
+                <ToolTip title="View Profile" placement="top">
+                  <button className={styles.button}>
+                    <img src={EyeIcon} className={styles.profileIcon} />
+                  </button>
+                </ToolTip>
+              </Link>
             )}
             <ToolTip title="Remove" placement="top">
               <button className={styles.button}>
-                <img src={TrashIcon} className={styles.trashIcon}
-                 onClick={() => {
-                  setPopupEmail(teacher.email);
-                  setPopupName(teacher.name);
-                  setRemoveTeacherId(teacher.auth_id);
-                  handleClick();
-                }}
+                <img
+                  src={TrashIcon}
+                  className={styles.trashIcon}
+                  onClick={() => {
+                    setPopupEmail(teacher.email);
+                    setPopupName(teacher.name);
+                    setRemoveTeacherId(teacher.id);
+                    handleClick();
+                  }}
                 />
               </button>
             </ToolTip>
@@ -118,7 +119,7 @@ const ClassTeachers = (): JSX.Element => {
             </>
           )}
           {showPopup && (
-            <DeleteTeacherConfirmation
+            <DeleteTeacherClassConfirmation
               open={showPopup}
               onClose={() => {
                 setShowPopup(!showPopup);
