@@ -13,7 +13,7 @@ interface popupModalType {
   removeTeacherId: String;
   setReloadList: Function;
   teachers: Array<Partial<TeacherID>>;
-  setTeachers: Function;
+  // setTeachers: Function;
   reloadList: Boolean;
   setOpenSuccess: Function;
   setOpenFailure: Function;
@@ -26,7 +26,7 @@ const DeleteTeacherClassConfirmation = ({
   popupEmail,
   removeTeacherId,
   setReloadList,
-  setTeachers,
+  // setTeachers,
   teachers,
   setOpenSuccess,
   setOpenFailure,

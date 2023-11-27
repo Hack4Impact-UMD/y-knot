@@ -35,4 +35,5 @@
   height: 50%;
   gap: 3px;
   color: black;
+  word-wrap: break-word;
 }

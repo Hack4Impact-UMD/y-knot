@@ -14,6 +14,7 @@ import { db } from '../config/firebase';
 import { type StudentID, type Student } from '../types/StudentType';
 import { type Course, type CourseID } from '../types/CourseType';
 import { TeacherID, type Teacher, type YKNOTUser } from '../types/UserType';
+import { promises } from 'dns';
 
 export function getAllStudents(): Promise<StudentID[]> {
   const studentsRef = collection(db, 'Students');
@@ -261,6 +262,18 @@ export function getTeacher(id: string): Promise<Teacher> {
   });
 }
 
+export function getTeachersFromList(
+  idList: Array<string>,
+): Promise<Array<TeacherID>> {
+  let res = idList.map(async (id) => {
+    const teacher = await getTeacher(id);
+    const teacherWithId: TeacherID = { ...teacher, id };
+    return teacherWithId;
+  });
+
+  return Promise.all(res);
+}
+
 export function getTeacherWithAuth(auth_id: string): Promise<TeacherID> {
   return new Promise((resolve, reject) => {
     const teachersRef = query(
@@ -296,6 +309,18 @@ export function getStudent(id: string): Promise<Student> {
         reject(e);
       });
   });
+}
+
+export function getStudentsFromList(
+  idList: Array<string>,
+): Promise<Array<StudentID>> {
+  let res = idList.map(async (id) => {
+    const student = await getStudent(id);
+    const studentWithId: StudentID = { ...student, id };
+    return studentWithId;
+  });
+
+  return Promise.all(res);
 }
 
 export function getCourse(id: string): Promise<Course> {
