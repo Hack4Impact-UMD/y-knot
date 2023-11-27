@@ -3,7 +3,7 @@ import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../auth/AuthProvider';
 import Loading from '../../components/LoadingScreen/Loading';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import type { Course, CourseID } from '../../types/CourseType';
 import { getCourse } from '../../backend/FirestoreCalls';
 import { DateTime } from 'luxon';
@@ -14,8 +14,12 @@ import Select from 'react-select';
 
 function AddCoursePage() {
   const dropdownOptions = ['Program', 'Academy', 'Club'];
-
+  const navigate = useNavigate();
   const authContext = useAuth();
+
+  const handleClose = () => {
+    navigate('/courses');
+  };
   return (
     <div>
       {authContext?.loading ? (
@@ -119,7 +123,9 @@ function AddCoursePage() {
               <button className={styles.createCourseButton}>
                 Create Course
               </button>
-              <button className={styles.cancelButton}>Cancel</button>
+              <button className={styles.cancelButton} onClick={handleClose}>
+                Cancel
+              </button>
             </div>
           </div>
         </>

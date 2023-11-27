@@ -1,6 +1,6 @@
 import { useAuth } from '../../../src/auth/AuthProvider';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { type CourseID } from '../../types/CourseType';
 import { getAllCourses } from '../../../src/backend/FirestoreCalls';
 import { DateTime } from 'luxon';
@@ -26,6 +26,7 @@ const CoursesPage = (): JSX.Element => {
   const [allCurrentCourses, setAllCurrentCourses] = useState<CourseID[]>([]);
   const [allPastCourses, setAllPastCourses] = useState<CourseID[]>([]);
   const [allUpcomingCourses, setAllUpcomingCourses] = useState<CourseID[]>([]);
+  const navigate = useNavigate();
 
   const colors = [
     'var(--color-green)',
@@ -136,6 +137,10 @@ const CoursesPage = (): JSX.Element => {
     }, 500);
   };
 
+  const handleAddCourse = () => {
+    navigate('/courses/add');
+  };
+
   return (
     <>
       {authContext.loading ? (
@@ -179,7 +184,12 @@ const CoursesPage = (): JSX.Element => {
                   <h1 className={styles.courseStatus}>Active Courses</h1>
 
                   {authContext?.token?.claims.role === 'ADMIN' ? (
-                    <button className={styles.addCourse}>Add Course</button>
+                    <button
+                      className={styles.addCourse}
+                      onClick={handleAddCourse}
+                    >
+                      Add Course
+                    </button>
                   ) : (
                     <></>
                   )}
