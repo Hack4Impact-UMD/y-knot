@@ -33,7 +33,7 @@ const StudentProfilePage = (): JSX.Element => {
     addrFirstLine: '',
     city: '',
     state: '',
-    zipCode: 0,
+    zipCode: '',
     email: '',
     phone: 0,
     guardianFirstName: '',
@@ -520,7 +520,7 @@ const StudentProfilePage = (): JSX.Element => {
                         onChange={(event) => {
                           setStudent({
                             ...student,
-                            zipCode: parseInt(event.target.value, 10),
+                            zipCode: event.target.value,
                           });
                         }}
                         placeholder="Zip Code"
