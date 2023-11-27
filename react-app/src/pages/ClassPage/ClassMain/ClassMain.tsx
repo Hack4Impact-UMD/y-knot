@@ -81,7 +81,14 @@ const ClassMain = (): JSX.Element => {
             </ToolTip>
           </div>
         </div>
-
+        <div className={styles.introContent}>
+          <div
+            className={`${styles.introText} ${editText && styles.editing}`}
+            contentEditable={editText}
+            ref={emailContentRef}
+            dangerouslySetInnerHTML={{ __html: text }}
+          ></div>
+        </div>
         <div className={styles.fileContainer}>
           {files.uploaded?.map((file) => {
             return (
@@ -109,16 +116,6 @@ const ClassMain = (): JSX.Element => {
               </div>
             );
           })}
-        </div>
-
-
-        <div className={styles.introContent}>
-          <div
-            className={`${styles.introText} ${editText && styles.editing}`}
-            contentEditable={editText}
-            ref={emailContentRef}
-            dangerouslySetInnerHTML={{ __html: text }}
-          ></div>
         </div>
       </div>
       <div className={styles.buttons}>
