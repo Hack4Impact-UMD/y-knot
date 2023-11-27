@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
+import type { StudentID } from '../../../types/StudentType';
 import Select from 'react-select';
 import styles from './ClassHomework.module.css';
 import noteIcon from '../../../assets/note.svg';
@@ -15,15 +16,8 @@ interface homeworkObj {
 
 const ClassHomework = (props: {
   homework: Array<homeworkObj>;
+  students: Array<StudentID>;
 }): JSX.Element => {
-  const students: string[] = [
-    'Fiona Love',
-    'Alicia Jacobs',
-    'Emily Lee',
-    'Brian Bailey',
-    'Ariana Apple',
-  ];
-
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
   const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
   const [openRemoveHwModal, setOpenRemoveHwModal] = useState<boolean>(false);
@@ -67,22 +61,24 @@ const ClassHomework = (props: {
           })}
         />
       </div>
-      {students.length === 0 ? (
+      {props.students.length === 0 ? (
         <h4 className={styles.noStudent}>No Students Currently in Roster</h4>
       ) : (
         <div className={styles.inputs}>
-          {students.map(function (name, i) {
+          {props.students.map(function (student, i) {
             const roundTop = i === 0 ? styles.roundTop : '';
             const roundBottom =
-              i === students.length - 1 ? styles.roundBottom : '';
+              i === props.students.length - 1 ? styles.roundBottom : '';
             return (
               <div
                 className={`${styles.box} ${roundTop} ${roundBottom}`}
-                key={name}
+                key={student.id}
               >
-                <p className={styles.boxTitle}>{name}</p>
+                <p
+                  className={styles.boxTitle}
+                >{`${student.firstName} ${student.lastName}`}</p>
                 <CheckboxWithLabel
-                  key={name}
+                  key={`${student.firstName} ${student.lastName}`}
                   checkedText="Complete"
                   uncheckedText="Incomplete"
                   isChecked={selectAllChecked}

@@ -10,7 +10,14 @@ import ClassTeachers from './ClassTeachers/ClassTeachers';
 import ClassStudents from './ClassStudents/ClassStudents';
 import { useParams } from 'react-router-dom';
 import type { Course, CourseID } from '../../types/CourseType';
-import { getCourse } from '../../backend/FirestoreCalls';
+import type { StudentID } from '../../types/StudentType';
+import type { TeacherID } from '../../types/UserType';
+
+import {
+  getCourse,
+  getStudentsFromList,
+  getTeachersFromList,
+} from '../../backend/FirestoreCalls';
 import { DateTime } from 'luxon';
 
 enum Tab {
@@ -22,26 +29,29 @@ enum Tab {
   Settings = 'Settings',
 }
 
+const dateFormat = 'LLL dd, yyyy';
+const blankCourse: CourseID = {
+  name: '',
+  startDate: '',
+  endDate: '',
+  meetingTime: '',
+  students: [],
+  teachers: [],
+  leadershipApp: false,
+  courseType: 'ACADEMY',
+  formId: '',
+  introEmail: { content: '' },
+  attendance: [],
+  homeworks: [],
+  id: '',
+};
+
 const ClassPage = (): JSX.Element => {
   const [currentTab, setCurrentTab] = useState<Tab>(Tab.Main);
-  const dateFormat = 'LLL dd, yyyy';
-  const blankCourse: CourseID = {
-    name: '',
-    startDate: '',
-    endDate: '',
-    meetingTime: '',
-    students: [],
-    teachers: [],
-    leadershipApp: false,
-    courseType: 'ACADEMY',
-    formId: '',
-    introEmail: { content: '' },
-    attendance: [],
-    homeworks: [],
-    id: '',
-  };
-
   const [course, setCourse] = useState<Course>(blankCourse);
+  const [isLoading, setLoading] = useState<Boolean>(true);
+  const [students, setStudents] = useState<Array<StudentID>>([]);
+  const [teachers, setTeachers] = useState<Array<TeacherID>>([]);
 
   const authContext = useAuth();
   const courseID = useParams().id;
@@ -53,14 +63,20 @@ const ClassPage = (): JSX.Element => {
   useEffect(() => {
     if (courseID !== undefined) {
       getCourse(courseID)
-        .then((data) => {
-          setCourse(data);
+        .then(async (courseData) => {
+          setCourse(courseData);
+          getStudentsFromList(courseData.students).then((data) => {
+            setStudents(data);
+          });
+          getTeachersFromList(courseData.teachers).then((data) => {
+            setTeachers(data);
+          });
         })
         .catch(() => {
-          // add error handling
+          console.log('Failed to get Course Information in Class Page');
         })
         .finally(() => {
-          // add handling
+          setLoading(false);
         });
     }
   }, []);
@@ -72,6 +88,8 @@ const ClassPage = (): JSX.Element => {
         <div className={styles.loadingContainer}>
           <Loading />
         </div>
+      ) : isLoading ? (
+        <Loading />
       ) : (
         <div className={styles.rightPane}>
           <div className={styles.classInfo}>
@@ -157,14 +175,17 @@ const ClassPage = (): JSX.Element => {
 
           {/* For rendering the corresponding component whenever tab value changes */}
           {currentTab === Tab.Main && <ClassMain />}
-          {currentTab === Tab.Students && <ClassStudents />}
+          {currentTab === Tab.Students && <ClassStudents students={students} />}
           {currentTab === Tab.Attendance && (
-            <ClassAttendance attendance={course.attendance} />
+            <ClassAttendance
+              attendance={course.attendance}
+              students={students}
+            />
           )}
           {currentTab === Tab.Homework && (
-            <ClassHomework homework={course.homeworks} />
+            <ClassHomework homework={course.homeworks} students={students} />
           )}
-          {currentTab === Tab.Teachers && <ClassTeachers />}
+          {currentTab === Tab.Teachers && <ClassTeachers teachers={teachers} />}
         </div>
       )}
     </div>

@@ -7,6 +7,7 @@ import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
 import AddNote from '../AddNote/AddNote';
 import RemoveAttendance from './RemoveAttendance/RemoveAttendance';
 import AddAttendance from './AddAttendance/AddAttendance';
+import type { Student } from '../../../types/StudentType';
 
 interface attendanceObj {
   date: String;
@@ -15,19 +16,8 @@ interface attendanceObj {
 
 const ClassAttendance = (props: {
   attendance: Array<attendanceObj>;
+  students: Array<Student>;
 }): JSX.Element => {
-  useEffect(() => {
-    console.log(props.attendance);
-  }, []);
-
-  const students: string[] = [
-    'Fiona Love',
-    'Alicia Jacobs',
-    'Emily Lee',
-    'Brian Bailey',
-    'Ariana Apple',
-  ];
-
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
   const [selectedDate, setDate] = useState<string>('');
   const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
@@ -71,23 +61,25 @@ const ClassAttendance = (props: {
           })}
         />
       </div>
-      {students.length === 0 ? (
+      {props.students.length === 0 ? (
         <h4 className={styles.noStudent}>No Students Currently in Roster</h4>
       ) : (
         <div className={styles.inputs}>
-          {students.map(function (name, i) {
+          {props.students.map(function (student, i) {
             const roundTop = i === 0 ? styles.roundTop : '';
             const roundBottom =
-              i === students.length - 1 ? styles.roundBottom : '';
+              i === props.students.length - 1 ? styles.roundBottom : '';
 
             return (
               <div
                 className={`${styles.box} ${roundTop} ${roundBottom}`}
-                key={name}
+                key={student.firstName}
               >
-                <p className={styles.boxTitle}>{name}</p>
+                <p
+                  className={styles.boxTitle}
+                >{`${student.firstName} ${student.lastName}`}</p>
                 <CheckboxWithLabel
-                  key={name}
+                  key={student.firstName}
                   checkedText="Present"
                   uncheckedText="Absent"
                   isChecked={selectAllChecked}
