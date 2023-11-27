@@ -47,23 +47,44 @@ exports.createUser = functions
                     role: req.body.data.role,
                   })
                   .then(async () => {
-                    await db
-                      .collection("Users")
-                      .add({
-                        auth_id: userRecord.uid,
-                        email: req.body.data.email,
-                        name: req.body.data.name,
-                        type: req.body.data.role.toUpperCase(),
-                      })
-                      .then(() => {
-                        res.json({ result: "Complete" });
-                      })
-                      .catch((error) => {
-                        throw new functions.https.HttpsError(
-                          "Unknown",
-                          "Failed to add user to database"
-                        );
-                      });
+                    if (req.body.data.role.toUpperCase() === "TEACHER") {
+                      await db
+                        .collection("Users")
+                        .add({
+                          auth_id: userRecord.uid,
+                          email: req.body.data.email,
+                          name: req.body.data.name,
+                          type: req.body.data.role.toUpperCase(),
+                          courses: [],
+                        })
+                        .then(() => {
+                          res.json({ result: "Complete" });
+                        })
+                        .catch((error) => {
+                          throw new functions.https.HttpsError(
+                            "Unknown",
+                            "Failed to add user to database"
+                          );
+                        });
+                    } else {
+                      await db
+                        .collection("Users")
+                        .add({
+                          auth_id: userRecord.uid,
+                          email: req.body.data.email,
+                          name: req.body.data.name,
+                          type: req.body.data.role.toUpperCase(),
+                        })
+                        .then(() => {
+                          res.json({ result: "Complete" });
+                        })
+                        .catch((error) => {
+                          throw new functions.https.HttpsError(
+                            "Unknown",
+                            "Failed to add user to database"
+                          );
+                        });
+                    }
                   })
                   .catch((error) => {
                     throw new functions.https.HttpsError(

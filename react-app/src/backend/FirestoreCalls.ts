@@ -132,6 +132,49 @@ export function deleteStudent(id: string): Promise<void> {
   });
 }
 
+export function addTeacherCourse(
+  teacherId: string,
+  courseId: string,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    /* runTransaction provides protection against race conditions where
+       2 people are modifying the data at once. It also ensures that either
+       all of these writes succeed or none of them do.
+    */
+    runTransaction(db, async (transaction) => {
+      const teacherRef = await transaction.get(doc(db, 'Users', teacherId));
+      const courseRef = await transaction.get(doc(db, 'Courses', courseId));
+      if (!teacherRef.exists() || !courseRef.exists()) {
+        throw 'Document does not exist!';
+      }
+      const teacher: Teacher = teacherRef.data() as Teacher;
+      if (!teacher.courses.includes(courseId)) {
+        teacher.courses.push(courseId);
+        await transaction.update(doc(db, 'Users', teacherId), {
+          courses: teacher.courses,
+        });
+      } else {
+        reject(new Error('Course is already added to teacher'));
+      }
+      const course: Course = courseRef.data() as Course;
+      if (!course.teachers.includes(teacherId)) {
+        course.teachers.push(teacherId);
+        await transaction.update(doc(db, 'Courses', courseId), {
+          teachers: course.teachers,
+        });
+      } else {
+        reject(new Error('Teacher is already added to course'));
+      }
+    })
+      .then(() => {
+        resolve();
+      })
+      .catch(() => {
+        reject();
+      });
+  });
+}
+
 export function addCourse(course: Course): Promise<string> {
   return new Promise((resolve, reject) => {
     addDoc(collection(db, 'Courses'), course)
