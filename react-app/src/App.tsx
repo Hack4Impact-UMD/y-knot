@@ -155,7 +155,7 @@ function App(): JSX.Element {
               }
             />
             <Route
-              path="/certificate"
+              path="/certificate/:id"
               element={
                 <RequireAuth>
                   <CertificatePage name="Fiona Love" course="Math" />

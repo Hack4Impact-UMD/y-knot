@@ -8,6 +8,7 @@ import ClassAttendance from './ClassAttendance/ClassAttendance';
 import ClassHomework from './ClassHomework/ClassHomework';
 import ClassTeachers from './ClassTeachers/ClassTeachers';
 import ClassStudents from './ClassStudents/ClassStudents';
+import ClassSettings from './ClassSettings/ClassSettings';
 import { useParams } from 'react-router-dom';
 import type { Course, CourseID } from '../../types/CourseType';
 import { getCourse } from '../../backend/FirestoreCalls';
@@ -161,6 +162,7 @@ const ClassPage = (): JSX.Element => {
           {currentTab === Tab.Attendance && <ClassAttendance />}
           {currentTab === Tab.Homework && <ClassHomework />}
           {currentTab === Tab.Teachers && <ClassTeachers />}
+          {currentTab === Tab.Settings && <ClassSettings />}
         </div>
       )}
     </div>
