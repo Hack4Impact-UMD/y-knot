@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import Select from 'react-select';
 import styles from './ClassAttendance.module.css';
@@ -7,17 +7,17 @@ import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
 import AddNote from '../AddNote/AddNote';
 import RemoveAttendance from './RemoveAttendance/RemoveAttendance';
 import AddAttendance from './AddAttendance/AddAttendance';
+import type { Student } from '../../../types/StudentType';
 
-const ClassAttendance = (): JSX.Element => {
-  const students: string[] = [
-    'Fiona Love',
-    'Alicia Jacobs',
-    'Emily Lee',
-    'Brian Bailey',
-    'Ariana Apple',
-  ];
+interface attendanceObj {
+  date: String;
+  notes: String;
+}
 
-  const dates = ['1/1/2023', '1/8/2023', '1/16/2023'];
+const ClassAttendance = (props: {
+  attendance: Array<attendanceObj>;
+  students: Array<Student>;
+}): JSX.Element => {
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
   const [selectedDate, setDate] = useState<string>('');
   const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
@@ -39,7 +39,6 @@ const ClassAttendance = (): JSX.Element => {
   const handleAddNoteModal = () => {
     setOpenAddNoteModal(!openAddNoteModal);
   };
-
   return (
     <div className={styles.mainContainer}>
       <div className={styles.topLevel}>
@@ -49,9 +48,6 @@ const ClassAttendance = (): JSX.Element => {
           </button>
         </ToolTip>
         <Select
-          onChange={(date) => {
-            setDate(date!.value);
-          }}
           placeholder="Date"
           className={styles.dateSelection}
           styles={{
@@ -60,28 +56,30 @@ const ClassAttendance = (): JSX.Element => {
               borderColor: 'black',
             }),
           }}
-          options={dates.map((date) => {
-            return { value: date, label: date };
+          options={props.attendance.map((attendance) => {
+            return { value: attendance.date, label: attendance.date };
           })}
         />
       </div>
-      {students.length === 0 ? (
+      {props.students.length === 0 ? (
         <h4 className={styles.noStudent}>No Students Currently in Roster</h4>
       ) : (
         <div className={styles.inputs}>
-          {students.map(function (name, i) {
+          {props.students.map(function (student, i) {
             const roundTop = i === 0 ? styles.roundTop : '';
             const roundBottom =
-              i === students.length - 1 ? styles.roundBottom : '';
+              i === props.students.length - 1 ? styles.roundBottom : '';
 
             return (
               <div
                 className={`${styles.box} ${roundTop} ${roundBottom}`}
-                key={name}
+                key={student.firstName}
               >
-                <p className={styles.boxTitle}>{name}</p>
+                <p
+                  className={styles.boxTitle}
+                >{`${student.firstName} ${student.lastName}`}</p>
                 <CheckboxWithLabel
-                  key={name}
+                  key={student.firstName}
                   checkedText="Present"
                   uncheckedText="Absent"
                   isChecked={selectAllChecked}
