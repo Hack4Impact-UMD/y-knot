@@ -5,7 +5,7 @@ import {
   getCourse,
   updateStudent,
 } from '../backend/FirestoreCalls';
-import { StudentCourse, type Student } from '../types/StudentType';
+import { type StudentCourse, type Student } from '../types/StudentType';
 import { type Course, type CourseType } from '../types/CourseType';
 import { DateTime } from 'luxon';
 

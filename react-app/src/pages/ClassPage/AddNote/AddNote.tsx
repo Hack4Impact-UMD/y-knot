@@ -83,7 +83,9 @@ const AddNote = ({
             <textarea
               placeholder="Create note here:"
               className={styles.noteInput}
-              onChange={(event) => setNote(event.target.value)}
+              onChange={(event) => {
+                setNote(event.target.value);
+              }}
               disabled={!canWrite}
             >
               {currNote}

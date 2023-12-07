@@ -8,13 +8,13 @@ import { deleteUser } from '../../../../backend/CloudFunctionsCalls';
 interface popupModalType {
   onClose: () => void;
   open: any;
-  popupName: String;
-  popupEmail: String;
-  removeTeacherId: String;
+  popupName: string;
+  popupEmail: string;
+  removeTeacherId: string;
   setReloadList: Function;
   teachers: Array<Partial<TeacherID>>;
   setTeachers: Function;
-  reloadList: Boolean;
+  reloadList: boolean;
   setOpenSuccess: Function;
   setOpenFailure: Function;
 }

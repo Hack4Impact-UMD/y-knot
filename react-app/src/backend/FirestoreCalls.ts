@@ -98,7 +98,7 @@ export function deleteStudent(id: string): Promise<void> {
         await transaction.get(doc(db, 'Students', id))
       ).data() as Student;
       const idOrder: string[] = [];
-      const students: Array<string[]> = [];
+      const students: string[][] = [];
       await Promise.all(
         studentRef.courseInformation.map(async (course) => {
           idOrder.push(course.id);

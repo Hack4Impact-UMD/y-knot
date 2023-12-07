@@ -27,7 +27,7 @@ const ClassMain = (): JSX.Element => {
   });
 
   const handleEdit = (): void => {
-    if (editText && emailContentRef.current) {
+    if (editText && emailContentRef.current != null) {
       const newText = emailContentRef.current.innerHTML; // Stores the HTML to preserve formatting
 
       if (newText !== null && newText !== undefined) {
@@ -67,10 +67,7 @@ const ClassMain = (): JSX.Element => {
                 </button>
               </ToolTip>
             )}
-            <ToolTip
-              title={editText === true ? 'Save' : 'Edit'}
-              placement="top"
-            >
+            <ToolTip title={editText ? 'Save' : 'Edit'} placement="top">
               <button className={styles.editButton} onClick={handleEdit}>
                 {editText ? (
                   <img src={saveIcon} alt="Save Text" className={styles.icon} />

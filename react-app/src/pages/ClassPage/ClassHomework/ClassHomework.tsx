@@ -116,7 +116,7 @@ const ClassHomework = (props: {
       <AddNote
         title="Homework"
         currNote="existing note here"
-        selected={selectedAssignment ? selectedAssignment : ''}
+        selected={selectedAssignment || ''}
         open={openAddNoteModal}
         onClose={() => {
           setOpenAddNoteModal(!openAddNoteModal);

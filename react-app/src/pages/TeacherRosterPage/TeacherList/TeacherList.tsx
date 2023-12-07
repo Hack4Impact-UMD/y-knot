@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { TeacherID } from '../../../types/UserType';
+import { type TeacherID } from '../../../types/UserType';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import styles from './TeacherList.module.css';
 import eyeIcon from '../../../assets/view.svg';
@@ -16,10 +16,10 @@ const TeacherList = (props: {
 }) => {
   const [teacherList, setTeacherList] = useState<any[]>([]);
   const [showPopup, setShowPopup] = useState(false);
-  const [popupName, setPopupName] = useState<String>();
-  const [popupEmail, setPopupEmail] = useState<String>();
-  const [removeTeacherId, setRemoveTeacherId] = useState<String>();
-  const [reloadList, setReloadList] = useState<Boolean>(false);
+  const [popupName, setPopupName] = useState<string>();
+  const [popupEmail, setPopupEmail] = useState<string>();
+  const [removeTeacherId, setRemoveTeacherId] = useState<string>();
+  const [reloadList, setReloadList] = useState<boolean>(false);
   const [numToShow, setNumToShow] = useState<number>(50);
   const navigate = useNavigate();
   const handleClick = () => {
@@ -104,9 +104,11 @@ const TeacherList = (props: {
               onClose={() => {
                 setShowPopup(!showPopup);
               }}
-              popupName={popupName ? popupName : 'undefined'}
-              popupEmail={popupEmail ? popupEmail : 'undefined'}
-              removeTeacherId={removeTeacherId ? removeTeacherId : 'undefined'}
+              popupName={popupName != null ? popupName : 'undefined'}
+              popupEmail={popupEmail != null ? popupEmail : 'undefined'}
+              removeTeacherId={
+                removeTeacherId != null ? removeTeacherId : 'undefined'
+              }
               setReloadList={setReloadList}
               reloadList={reloadList}
               teachers={props.teachers}
