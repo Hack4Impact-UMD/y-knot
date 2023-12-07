@@ -144,7 +144,6 @@ const StudentProfilePage = (): JSX.Element => {
 
   const studentSchema = Yup.object().shape({
     firstName: Yup.string().required('*Required'),
-    middleName: Yup.string().required('*Required'),
     lastName: Yup.string().required('*Required'),
     addrFirstLine: Yup.string().required('*Required'),
     city: Yup.string().required('*Required'),
