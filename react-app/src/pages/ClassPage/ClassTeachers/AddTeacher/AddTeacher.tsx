@@ -16,7 +16,8 @@ const InputOption: React.FC<OptionProps<any, true, any>> = ({
   innerProps,
   children,
 }) => {
-  const { onMouseDown, onMouseUp, onMouseLeave, ...restInnerProps } = innerProps || {};
+  const { onMouseDown, onMouseUp, onMouseLeave, ...restInnerProps } =
+    innerProps || {};
 
   const selectionStyle = {
     alignItems: 'center',
@@ -27,7 +28,7 @@ const InputOption: React.FC<OptionProps<any, true, any>> = ({
     paddingTop: '5px',
     paddingBottom: '5px',
     borderRadius: '5px',
-    margin: '5px'
+    margin: '5px',
   };
 
   const checkboxStyle = {
@@ -39,7 +40,7 @@ const InputOption: React.FC<OptionProps<any, true, any>> = ({
     color: isSelected ? 'var(--color-white)' : 'transparent',
     backgroundColor: 'var(--color-orange)',
     accentColor: 'var(--color-orange)',
-    opacity: "50%",
+    opacity: '50%',
   };
 
   return (
@@ -74,8 +75,7 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
       borderColor: state.isFocused
         ? 'var(--color-orange)'
         : 'var(--color-orange)',
-      '&:hover': {
-      },
+      '&:hover': {},
       borderWidth: '2px',
     }),
     menu: (provided: any) => ({
@@ -86,7 +86,11 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
       ...provided,
       position: 'absolute',
       right: '8px',
-    })
+    }),
+    multiValueRemove: (provided: any) => ({
+      ...provided,
+      color: 'var(--color-orange)',
+    }),
   };
 
   useEffect(() => {
@@ -164,7 +168,7 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
               IndicatorSeparator: () => null,
               ClearIndicator: () => null,
             }}
-            placeholder="Text Input"
+            placeholder="Add Teacher"
             styles={selectBoxStyle}
           />
           <button

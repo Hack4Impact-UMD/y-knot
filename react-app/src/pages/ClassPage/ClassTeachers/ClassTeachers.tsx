@@ -4,7 +4,7 @@ import { useAuth } from '../../../auth/AuthProvider';
 import { TeacherID, YKNOTUser } from '../../../types/UserType';
 import styles from '../ClassTeachers/ClassTeachers.module.css';
 import Loading from '../../../components/LoadingScreen/Loading';
-import AddTeacher from './RemoveTeacher/AddTeacher';
+import AddTeacher from './AddTeacher/AddTeacher';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import { Link } from 'react-router-dom';
 import EyeIcon from '../../../assets/view.svg';
