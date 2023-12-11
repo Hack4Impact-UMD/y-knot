@@ -112,3 +112,16 @@
 .radioButton:checked {
   accent-color: black; /* Change this to your desired color */
 }
+
+.errorMessage {
+  font: 26;
+  color: red;
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+.inputContainer {
+  width: 100%;
+  display: flex;
+  gap: 5px;
+}

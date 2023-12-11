@@ -4,22 +4,73 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../auth/AuthProvider';
 import Loading from '../../components/LoadingScreen/Loading';
 import { useNavigate, useParams } from 'react-router-dom';
-import type { Course, CourseID } from '../../types/CourseType';
-import { getCourse } from '../../backend/FirestoreCalls';
+import type { Course, CourseID, CourseType } from '../../types/CourseType';
+import {
+  addCourse,
+  getCourse,
+  updateCourse,
+} from '../../backend/FirestoreCalls';
 import { DateTime } from 'luxon';
 import { ToolTip } from '../../components/ToolTip/ToolTip';
 import styles from './AddCoursePage.module.css';
 import { DatePicker } from '@mui/x-date-pickers';
 import Select from 'react-select';
+import * as Yup from 'yup';
+import { Alert, Snackbar } from '@mui/material';
 
 function AddCoursePage() {
   const dropdownOptions = ['Program', 'Academy', 'Club'];
   const navigate = useNavigate();
   const authContext = useAuth();
 
+  const courseSchema = Yup.object().shape({
+    name: Yup.string().required('*Required'),
+    startDate: Yup.date().required('*Required'),
+    endDate: Yup.date()
+      .required('*Required')
+      .min(Yup.ref('startDate'), '*End date must be after start date'),
+    courseType: Yup.string()
+      .required('*Required')
+      .oneOf(['PROGRAM', 'ACADEMY', 'CLUB'], '*Invalid course type'),
+    leadershipApp: Yup.boolean().required('*Required'),
+    formId: Yup.string().required('*Required'),
+  });
+
+  const blankCourse: Course = {
+    name: '',
+    startDate: '',
+    endDate: '',
+    meetingTime: '',
+    students: [],
+    teachers: [],
+    leadershipApp: true, // is this a leadership class, which requires an application
+    courseType: 'PROGRAM',
+    formId: '',
+    introEmail: { content: '' },
+    attendance: [],
+    homeworks: [],
+  };
+  const [course, setCourse] = useState<Course>(blankCourse);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [openSuccess, setOpenSuccess] = useState<boolean>(false);
+
+  function formatDateToYYYYMMDD(dateTime: DateTime) {
+    const date = dateTime.toJSDate();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
+  const handleToClose = (event: any, reason: any) => {
+    setOpenSuccess(false);
+  };
+
   const handleClose = () => {
     navigate('/courses');
   };
+
   return (
     <div>
       {authContext?.loading ? (
@@ -40,21 +91,69 @@ function AddCoursePage() {
                 <div className={styles.inputContainer}>
                   <input
                     className={styles.inputBox}
+                    onChange={(event) => {
+                      setCourse({
+                        ...course,
+                        name: event.target.value,
+                      });
+                    }}
                     placeholder="Enter Name"
+                    value={course.name}
                   ></input>
+                  {'name' in fieldErrors ? (
+                    <div className={styles.errorMessage}>
+                      {fieldErrors.name}
+                    </div>
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </div>
               <div className={styles.studentBox}>
                 <p className={styles.name}>Start Date</p>
                 <div className={styles.inputContainer}>
-                  <DatePicker label="January 31, 2023" />
+                  <DatePicker
+                    label="January 31, 2023"
+                    onChange={(newValue: DateTime | null) =>
+                      setCourse({
+                        ...course,
+                        startDate: newValue
+                          ? formatDateToYYYYMMDD(newValue)
+                          : '',
+                      })
+                    }
+                  />
+                  {'startDate' in fieldErrors ? (
+                    <div className={styles.errorMessage}>
+                      {fieldErrors.startDate}
+                    </div>
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </div>
               <div className={styles.studentBox}>
                 <p className={styles.name}>End Date</p>
                 <div className={styles.inputContainer}>
                   <div className={styles.inputContainer}>
-                    <DatePicker label="January 31, 2023" />
+                    <DatePicker
+                      label="January 31, 2023"
+                      onChange={(newValue: DateTime | null) =>
+                        setCourse({
+                          ...course,
+                          endDate: newValue
+                            ? formatDateToYYYYMMDD(newValue)
+                            : '',
+                        })
+                      }
+                    />
+                    {'endDate' in fieldErrors ? (
+                      <div className={styles.errorMessage}>
+                        {fieldErrors.endDate}
+                      </div>
+                    ) : (
+                      <></>
+                    )}
                   </div>
                 </div>
               </div>
@@ -74,6 +173,13 @@ function AddCoursePage() {
                     options={dropdownOptions.map((option) => {
                       return { value: option, label: option };
                     })}
+                    onChange={(newValue) => {
+                      setCourse({
+                        ...course,
+                        endDate: newValue ? newValue.value.toUpperCase() : '',
+                      });
+                    }}
+                    defaultValue={{ value: 'Program', label: 'Program' }}
                   />
                 </div>
               </div>
@@ -91,7 +197,10 @@ function AddCoursePage() {
                       type="radio"
                       name="radioGroup"
                       value="yes"
-                      checked
+                      checked={course.leadershipApp === true}
+                      onChange={() =>
+                        setCourse({ ...course, leadershipApp: true })
+                      }
                     />
                     <label className={styles.yesLabel} htmlFor="Yes">
                       Yes
@@ -102,6 +211,10 @@ function AddCoursePage() {
                       type="radio"
                       name="radioGroup"
                       value="no"
+                      checked={course.leadershipApp === false}
+                      onChange={() =>
+                        setCourse({ ...course, leadershipApp: false })
+                      }
                     />
                     <label className={styles.noLabel} htmlFor="No">
                       No
@@ -115,12 +228,58 @@ function AddCoursePage() {
                   <input
                     className={styles.inputBox}
                     placeholder="Enter ID"
+                    onChange={(event) => {
+                      setCourse({
+                        ...course,
+                        formId: event.target.value,
+                      });
+                    }}
                   ></input>
+                  {'formId' in fieldErrors ? (
+                    <div className={styles.errorMessage}>
+                      {fieldErrors.formId}
+                    </div>
+                  ) : (
+                    <></>
+                  )}
                 </div>
               </div>
             </div>
             <div className={styles.bottomButtons}>
-              <button className={styles.createCourseButton}>
+              <button
+                className={styles.createCourseButton}
+                onClick={() => {
+                  courseSchema
+                    .validate(course, { abortEarly: false })
+                    .then(() => {
+                      addCourse(course)
+                        .then(() => {
+                          setOpenSuccess(true);
+                          handleClose();
+                        })
+                        .catch((error) => {})
+                        .finally(() => {
+                          setFieldErrors({});
+                        });
+                    })
+                    .catch((error: Yup.ValidationError) => {
+                      let newErrors = {} as Record<string, string>;
+
+                      for (let i = 0; i < error.inner.length; i++) {
+                        const path = error.inner[i].path;
+
+                        if (path !== undefined) {
+                          newErrors[path] = error.inner[i].message.includes(
+                            'must be a `date` type',
+                          )
+                            ? '*Required'
+                            : error.inner[i].message;
+                        }
+                      }
+                      setFieldErrors(newErrors);
+                    });
+                }}
+              >
                 Create Course
               </button>
               <button className={styles.cancelButton} onClick={handleClose}>
@@ -128,6 +287,19 @@ function AddCoursePage() {
               </button>
             </div>
           </div>
+          <Snackbar
+            anchorOrigin={{
+              horizontal: 'right',
+              vertical: 'bottom',
+            }}
+            open={openSuccess}
+            autoHideDuration={3000}
+            onClose={handleToClose}
+          >
+            <Alert severity="success" sx={{ width: '100%' }}>
+              Course was Successfully Added
+            </Alert>
+          </Snackbar>
         </>
       )}
     </div>
