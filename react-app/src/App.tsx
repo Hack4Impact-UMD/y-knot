@@ -26,9 +26,13 @@ import { addCourse, addTeacherCourse } from './backend/FirestoreCalls';
 import AddCoursePage from './pages/AddCoursesPage/AddCoursePage';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+import { useState } from 'react';
 
 function App(): JSX.Element {
   const customTheme = theme;
+
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
       <ThemeProvider theme={customTheme}>
@@ -56,7 +60,10 @@ function App(): JSX.Element {
                 path="/courses"
                 element={
                   <RequireAuth>
-                    <CoursesPage />
+                    <CoursesPage
+                      formSubmitted={formSubmitted}
+                      setFormSubmitted={setFormSubmitted}
+                    />
                   </RequireAuth>
                 }
               />
@@ -64,7 +71,10 @@ function App(): JSX.Element {
                 path="/courses/add"
                 element={
                   <RequireAuth>
-                    <AddCoursePage />
+                    <AddCoursePage
+                      formSubmitted={formSubmitted}
+                      setFormSubmitted={setFormSubmitted}
+                    />
                   </RequireAuth>
                 }
               />

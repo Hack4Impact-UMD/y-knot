@@ -18,7 +18,7 @@ import Select from 'react-select';
 import * as Yup from 'yup';
 import { Alert, Snackbar } from '@mui/material';
 
-function AddCoursePage() {
+function AddCoursePage({ setFormSubmitted, history }: any) {
   const dropdownOptions = ['Program', 'Academy', 'Club'];
   const navigate = useNavigate();
   const authContext = useAuth();
@@ -52,7 +52,6 @@ function AddCoursePage() {
   };
   const [course, setCourse] = useState<Course>(blankCourse);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
-  const [openSuccess, setOpenSuccess] = useState<boolean>(false);
 
   function formatDateToYYYYMMDD(dateTime: DateTime) {
     const date = dateTime.toJSDate();
@@ -63,11 +62,8 @@ function AddCoursePage() {
     return `${year}-${month}-${day}`;
   }
 
-  const handleToClose = (event: any, reason: any) => {
-    setOpenSuccess(false);
-  };
-
   const handleClose = () => {
+    setFormSubmitted(true);
     navigate('/courses');
   };
 
@@ -254,7 +250,6 @@ function AddCoursePage() {
                     .then(() => {
                       addCourse(course)
                         .then(() => {
-                          setOpenSuccess(true);
                           handleClose();
                         })
                         .catch((error) => {})
@@ -287,19 +282,6 @@ function AddCoursePage() {
               </button>
             </div>
           </div>
-          <Snackbar
-            anchorOrigin={{
-              horizontal: 'right',
-              vertical: 'bottom',
-            }}
-            open={openSuccess}
-            autoHideDuration={3000}
-            onClose={handleToClose}
-          >
-            <Alert severity="success" sx={{ width: '100%' }}>
-              Course was Successfully Added
-            </Alert>
-          </Snackbar>
         </>
       )}
     </div>
