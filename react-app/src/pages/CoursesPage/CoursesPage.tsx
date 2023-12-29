@@ -148,15 +148,6 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
     setFormSubmitted(false);
   };
 
-  // useEffect(() => {
-  //   if (formSubmitted) {
-  //     // Display your snackbar here
-
-  //     // Reset the formSubmitted state after displaying the snackbar
-  //     setFormSubmitted(false);
-  //   }
-  // }, [formSubmitted]);
-
   return (
     <>
       {authContext.loading ? (

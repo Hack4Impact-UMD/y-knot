@@ -57,7 +57,6 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
   }
 
   const handleClose = () => {
-    setFormSubmitted(true);
     navigate('/courses');
   };
 
@@ -209,7 +208,7 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                       type="radio"
                       name="radioGroup"
                       value="yes"
-                      checked={course.leadershipApp === false}
+                      checked={course.leadershipApp === true}
                       onChange={() =>
                         setCourse({ ...course, leadershipApp: true })
                       }
@@ -223,7 +222,7 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                       type="radio"
                       name="radioGroup"
                       value="no"
-                      checked={course.leadershipApp === true}
+                      checked={course.leadershipApp === false}
                       onChange={() =>
                         setCourse({ ...course, leadershipApp: false })
                       }
@@ -266,6 +265,7 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                     .then(() => {
                       addCourse(course)
                         .then(() => {
+                          setFormSubmitted(true);
                           handleClose();
                         })
                         .catch((error) => {})
@@ -281,7 +281,7 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
 
                         if (path !== undefined) {
                           newErrors[path] = error.inner[i].message.includes(
-                            'must be a `date` type',
+                            'must be a Date',
                           )
                             ? '*Required'
                             : error.inner[i].message;
