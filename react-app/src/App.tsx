@@ -23,149 +23,172 @@ import NavigationBar from './components/NavigationBar/NavigationBar';
 import TeacherRosterPage from './pages/TeacherRosterPage/TeacherRosterPage';
 import { createUser } from './backend/CloudFunctionsCalls';
 import { addCourse, addTeacherCourse } from './backend/FirestoreCalls';
+import AddCoursePage from './pages/AddCoursesPage/AddCoursePage';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+import { useState } from 'react';
 
 function App(): JSX.Element {
   const customTheme = theme;
+
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
   return (
-    <ThemeProvider theme={customTheme}>
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route
-              path="/"
-              element={
-                <RequireAuth>
-                  <Navigate to="/courses" />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="*"
-              element={
-                <RequireAuth>
-                  <NotFoundPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/courses"
-              element={
-                <RequireAuth>
-                  <CoursesPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/courses/class/:id"
-              element={
-                <RequireAuth>
-                  <ClassPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/students"
-              element={
-                <RequireAdminAuth>
-                  <StudentRosterPage />
-                </RequireAdminAuth>
-              }
-            />
-            <Route
-              path="/teachers"
-              element={
-                <RequireAdminAuth>
-                  <TeacherRosterPage />
-                </RequireAdminAuth>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <RequireAuth>
-                  <SettingsPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/nav"
-              element={
-                <RequireAuth>
-                  <NavigationBar />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/testfunctions"
-              element={
-                <RequireAuth>
-                  <button
-                    onClick={
-                      () => {
-                        addTeacherCourse(
-                          'Li3x7GK5XwAk8UqhskKV',
-                          '629B8D6g5MFK8CoupeIt',
-                        );
+    <LocalizationProvider dateAdapter={AdapterLuxon}>
+      <ThemeProvider theme={customTheme}>
+        <AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route
+                path="/"
+                element={
+                  <RequireAuth>
+                    <Navigate to="/courses" />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="*"
+                element={
+                  <RequireAuth>
+                    <NotFoundPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/courses"
+                element={
+                  <RequireAuth>
+                    <CoursesPage
+                      formSubmitted={formSubmitted}
+                      setFormSubmitted={setFormSubmitted}
+                    />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/courses/add"
+                element={
+                  <RequireAuth>
+                    <AddCoursePage
+                      formSubmitted={formSubmitted}
+                      setFormSubmitted={setFormSubmitted}
+                    />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/courses/class/:id"
+                element={
+                  <RequireAuth>
+                    <ClassPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/students"
+                element={
+                  <RequireAdminAuth>
+                    <StudentRosterPage />
+                  </RequireAdminAuth>
+                }
+              />
+              <Route
+                path="/teachers"
+                element={
+                  <RequireAdminAuth>
+                    <TeacherRosterPage />
+                  </RequireAdminAuth>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <RequireAuth>
+                    <SettingsPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/nav"
+                element={
+                  <RequireAuth>
+                    <NavigationBar />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/testfunctions"
+                element={
+                  <RequireAuth>
+                    <button
+                      onClick={
+                        () => {
+                          addTeacherCourse(
+                            'Li3x7GK5XwAk8UqhskKV',
+                            '629B8D6g5MFK8CoupeIt',
+                          );
+                        }
+                        //   async () => {
+                        //   const course = addCourse({
+                        //     name: 'Digital Marketing',
+                        //     startDate: '2022-08-14',
+                        //     endDate: '2023-10-30',
+                        //     students: [],
+                        //     courseType: 'PROGRAM',
+                        //     teachers: [],
+                        //     meetingTime: 'Tuesdays 9:30AM',
+                        //     leadershipApp: false,
+                        //     formId: '',
+                        //     introEmail: { content: 'this is an intro email.' },
+                        //     attendance: [],
+                        //     homeworks: []
+                        //   })
+                        //   addStudentInCourse(await course);
+                        // }
                       }
-                      //   async () => {
-                      //   const course = addCourse({
-                      //     name: 'Digital Marketing',
-                      //     startDate: '2022-08-14',
-                      //     endDate: '2023-10-30',
-                      //     students: [],
-                      //     courseType: 'PROGRAM',
-                      //     teachers: [],
-                      //     meetingTime: 'Tuesdays 9:30AM',
-                      //     leadershipApp: false,
-                      //     formId: '',
-                      //     introEmail: { content: 'this is an intro email.' },
-                      //     attendance: [],
-                      //     homeworks: []
-                      //   })
-                      //   addStudentInCourse(await course);
-                      // }
-                    }
-                  ></button>
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/students/:id"
-              element={
-                <RequireAuth>
-                  <StudentProfilePage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/teachers/:id"
-              element={
-                <RequireAdminAuth>
-                  <TeacherProfilePage />
-                </RequireAdminAuth>
-              }
-            />
-            <Route
-              path="/transcript/:id"
-              element={
-                <RequireAuth>
-                  <TranscriptPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/certificate"
-              element={
-                <RequireAuth>
-                  <CertificatePage name="Fiona Love" course="Math" />
-                </RequireAuth>
-              }
-            />
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
-    </ThemeProvider>
+                    ></button>
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/students/:id"
+                element={
+                  <RequireAuth>
+                    <StudentProfilePage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/teachers/:id"
+                element={
+                  <RequireAdminAuth>
+                    <TeacherProfilePage />
+                  </RequireAdminAuth>
+                }
+              />
+              <Route
+                path="/transcript/:id"
+                element={
+                  <RequireAuth>
+                    <TranscriptPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/certificate"
+                element={
+                  <RequireAuth>
+                    <CertificatePage name="Fiona Love" course="Math" />
+                  </RequireAuth>
+                }
+              />
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
+      </ThemeProvider>
+    </LocalizationProvider>
   );
 }
 
