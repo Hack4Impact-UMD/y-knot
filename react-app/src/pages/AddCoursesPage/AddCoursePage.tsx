@@ -1,22 +1,16 @@
 import React from 'react';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../../auth/AuthProvider';
 import Loading from '../../components/LoadingScreen/Loading';
-import { useNavigate, useParams } from 'react-router-dom';
-import type { Course, CourseID, CourseType } from '../../types/CourseType';
-import {
-  addCourse,
-  getCourse,
-  updateCourse,
-} from '../../backend/FirestoreCalls';
+import { useNavigate } from 'react-router-dom';
+import type { Course } from '../../types/CourseType';
+import { addCourse } from '../../backend/FirestoreCalls';
 import { DateTime } from 'luxon';
-import { ToolTip } from '../../components/ToolTip/ToolTip';
 import styles from './AddCoursePage.module.css';
 import { DatePicker } from '@mui/x-date-pickers';
 import Select from 'react-select';
 import * as Yup from 'yup';
-import { Alert, Snackbar } from '@mui/material';
 
 function AddCoursePage({ setFormSubmitted, history }: any) {
   const dropdownOptions = ['Program', 'Academy', 'Club'];
@@ -43,7 +37,7 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
     meetingTime: '',
     students: [],
     teachers: [],
-    leadershipApp: true, // is this a leadership class, which requires an application
+    leadershipApp: false, // is this a leadership class, which requires an application
     courseType: 'PROGRAM',
     formId: '',
     introEmail: { content: '' },
@@ -109,7 +103,7 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                 <p className={styles.name}>Start Date</p>
                 <div className={styles.inputContainer}>
                   <DatePicker
-                    label="January 31, 2023"
+                    label=""
                     onChange={(newValue: DateTime | null) =>
                       setCourse({
                         ...course,
@@ -118,6 +112,13 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                           : '',
                       })
                     }
+                    slotProps={{ textField: { size: 'small' } }}
+                    sx={{
+                      '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline':
+                        { border: '1px solid black' }, // at page load
+                      '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                        { border: '2px solid black' }, // at focused state
+                    }}
                   />
                   {'startDate' in fieldErrors ? (
                     <div className={styles.errorMessage}>
@@ -133,7 +134,7 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                 <div className={styles.inputContainer}>
                   <div className={styles.inputContainer}>
                     <DatePicker
-                      label="January 31, 2023"
+                      label=""
                       onChange={(newValue: DateTime | null) =>
                         setCourse({
                           ...course,
@@ -142,6 +143,13 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                             : '',
                         })
                       }
+                      slotProps={{ textField: { size: 'small' } }}
+                      sx={{
+                        '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline':
+                          { border: '1px solid black' }, // at page load
+                        '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                          { border: '2px solid black' }, // at focused state
+                      }}
                     />
                     {'endDate' in fieldErrors ? (
                       <div className={styles.errorMessage}>
@@ -162,8 +170,16 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                     styles={{
                       control: (baseStyles) => ({
                         ...baseStyles,
+                        minWidth: '300px',
+                        height: '40px',
                         borderColor: 'black',
-                        width: '300px',
+                        boxShadow: 'none',
+                        '&:focus-within': {
+                          border: '2px solid black',
+                        },
+                        '&:hover': {
+                          border: '1px solid black',
+                        },
                       }),
                     }}
                     options={dropdownOptions.map((option) => {
@@ -184,7 +200,7 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                 <div className={styles.inputContainer}></div>
               </div>
               <div className={styles.studentBox}>
-                <p className={styles.name}>Leader Application</p>
+                <p className={styles.name}>Leadership Application</p>
                 <div className={styles.inputContainer}>
                   <div className={styles.radioButtonGroup}>
                     <input
@@ -193,7 +209,7 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                       type="radio"
                       name="radioGroup"
                       value="yes"
-                      checked={course.leadershipApp === true}
+                      checked={course.leadershipApp === false}
                       onChange={() =>
                         setCourse({ ...course, leadershipApp: true })
                       }
@@ -207,7 +223,7 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                       type="radio"
                       name="radioGroup"
                       value="no"
-                      checked={course.leadershipApp === false}
+                      checked={course.leadershipApp === true}
                       onChange={() =>
                         setCourse({ ...course, leadershipApp: false })
                       }
@@ -219,7 +235,7 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                 </div>
               </div>
               <div className={styles.studentBox}>
-                <p className={styles.name}>Form ID</p>
+                <p className={styles.name}>JotForm ID</p>
                 <div className={styles.inputContainer}>
                   <input
                     className={styles.inputBox}
