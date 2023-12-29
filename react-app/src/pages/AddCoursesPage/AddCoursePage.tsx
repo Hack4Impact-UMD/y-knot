@@ -199,7 +199,7 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                 <div className={styles.inputContainer}></div>
               </div>
               <div className={styles.studentBox}>
-                <p className={styles.name}>Leadership Application</p>
+                <p className={styles.name}>Leadership Academy</p>
                 <div className={styles.inputContainer}>
                   <div className={styles.radioButtonGroup}>
                     <input
