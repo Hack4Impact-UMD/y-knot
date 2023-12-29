@@ -281,7 +281,7 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
 
                         if (path !== undefined) {
                           newErrors[path] = error.inner[i].message.includes(
-                            'must be a Date',
+                            'must be a `date` type',
                           )
                             ? '*Required'
                             : error.inner[i].message;
