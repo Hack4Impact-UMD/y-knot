@@ -59,7 +59,9 @@ const RemoveAttendance = ({ open, onClose }: modalType): React.ReactElement => {
           <select
             className={styles.selection}
             defaultValue=""
-            onChange={(event) => setSelectedDate(event.target.value)}
+            onChange={(event) => {
+              setSelectedDate(event.target.value);
+            }}
           >
             <option value="" disabled hidden>
               Select Attendance:

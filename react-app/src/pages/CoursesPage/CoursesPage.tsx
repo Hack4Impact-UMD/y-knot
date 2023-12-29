@@ -133,7 +133,7 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
       clearTimeout(timer);
     }
     timer = setTimeout(function () {
-      let searchVal = e.target.value;
+      const searchVal = e.target.value;
       setSearch(searchVal);
       filterWithSearchValue(searchVal);
     }, 500);
