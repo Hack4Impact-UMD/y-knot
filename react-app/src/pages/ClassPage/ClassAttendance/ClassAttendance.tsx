@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import Select from 'react-select';
 import styles from './ClassAttendance.module.css';
@@ -7,7 +7,8 @@ import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
 import AddNote from '../AddNote/AddNote';
 import RemoveAttendance from './RemoveAttendance/RemoveAttendance';
 import AddAttendance from './AddAttendance/AddAttendance';
-import type { Student } from '../../../types/StudentType';
+import type { StudentID } from '../../../types/StudentType';
+import type { Course } from '../../../types/CourseType';
 
 interface attendanceObj {
   date: String;
@@ -16,10 +17,17 @@ interface attendanceObj {
 
 const ClassAttendance = (props: {
   attendance: Array<attendanceObj>;
-  students: Array<Student>;
+  students: Array<StudentID>;
+  setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
+  course: Course;
+  courseID: string | undefined;
+  setCourse: React.Dispatch<React.SetStateAction<Course>>;
 }): JSX.Element => {
+  const [selectedAttDate, setDate] = useState<string>(
+    'Please select an attendance date',
+  );
+  const [selectedAttNote, setNote] = useState<string>('');
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
-  const [selectedDate, setDate] = useState<string>('');
   const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
   const [openRemoveHwModal, setOpenRemoveHwModal] = useState<boolean>(false);
   const [openAddNoteModal, setOpenAddNoteModal] = useState<boolean>(false);
@@ -39,6 +47,18 @@ const ClassAttendance = (props: {
   const handleAddNoteModal = () => {
     setOpenAddNoteModal(!openAddNoteModal);
   };
+
+  const parseAttendance = (date: string): void => {
+    if (date.length > 0) {
+      props.course.attendance.forEach((att) => {
+        if (att.date === date) {
+          setDate(date);
+          setNote(att.notes);
+        }
+      });
+    }
+  };
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.topLevel}>
@@ -50,10 +70,14 @@ const ClassAttendance = (props: {
         <Select
           placeholder="Date"
           className={styles.dateSelection}
+          onChange={(option) => {
+            parseAttendance(option?.label.toString() ?? '');
+          }}
           styles={{
             control: (baseStyles) => ({
               ...baseStyles,
               borderColor: 'black',
+              width: '150px',
             }),
           }}
           options={props.attendance.map((attendance) => {
@@ -113,15 +137,23 @@ const ClassAttendance = (props: {
         onClose={() => {
           setOpenAddHwModal(!openAddHwModal);
         }}
+        students={props.students}
+        setStudents={props.setStudents}
+        course={props.course}
+        setCourse={props.setCourse}
+        courseID={props.courseID !== undefined ? props.courseID : ''}
       />
       <AddNote
         title="Attendance"
-        currNote="existing note here"
-        selected={selectedDate || ''}
+        currNote={selectedAttNote}
+        selected={selectedAttDate}
         open={openAddNoteModal}
         onClose={() => {
           setOpenAddNoteModal(!openAddNoteModal);
         }}
+        course={props.course}
+        courseID={props.courseID ?? ''}
+        setCourse={props.setCourse}
       />
     </div>
   );

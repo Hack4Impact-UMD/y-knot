@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import type { StudentID } from '../../../types/StudentType';
+import type { Course } from '../../../types/CourseType';
 import Select from 'react-select';
 import styles from './ClassHomework.module.css';
 import noteIcon from '../../../assets/note.svg';
@@ -8,6 +9,7 @@ import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
 import AddHomework from './AddHomework/AddHomework';
 import RemoveHomework from './RemoveHomework/RemoveHomework';
 import AddNote from '../AddNote/AddNote';
+import { parse } from 'path';
 
 interface homeworkObj {
   name: String;
@@ -17,12 +19,20 @@ interface homeworkObj {
 const ClassHomework = (props: {
   homework: Array<homeworkObj>;
   students: Array<StudentID>;
+  setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
+  course: Course;
+  courseID: string | undefined;
+  setCourse: React.Dispatch<React.SetStateAction<Course>>;
 }): JSX.Element => {
+  const [selectedHomeworkName, setHomeworkName] = useState<string>(
+    'Please select an assignment',
+  );
+  const [selectedHomeworkNote, setHomeworkNote] = useState<string>('');
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
   const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
   const [openRemoveHwModal, setOpenRemoveHwModal] = useState<boolean>(false);
   const [openAddNoteModal, setOpenAddNoteModal] = useState<boolean>(false);
-  const [selectedAssignment, setAssignment] = useState<string>('');
+
   const handleSelectAllChange = () => {
     setSelectAllChecked(true);
   };
@@ -39,6 +49,17 @@ const ClassHomework = (props: {
     setOpenAddNoteModal(!openAddNoteModal);
   };
 
+  const parseHomework = (name: string): void => {
+    if (name.length > 0) {
+      props.course.homeworks.forEach((hw) => {
+        if (hw.name == name) {
+          setHomeworkName(name);
+          setHomeworkNote(hw.notes);
+        }
+      });
+    }
+  };
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.topLevel}>
@@ -50,6 +71,9 @@ const ClassHomework = (props: {
         <Select
           placeholder="Assignment"
           className={styles.selection}
+          onChange={(option) => {
+            parseHomework(option?.label.toString() ?? '');
+          }}
           styles={{
             control: (baseStyles) => ({
               ...baseStyles,
@@ -112,15 +136,23 @@ const ClassHomework = (props: {
         onClose={() => {
           setOpenAddHwModal(!openAddHwModal);
         }}
+        students={props.students}
+        setStudents={props.setStudents}
+        course={props.course}
+        setCourse={props.setCourse}
+        courseID={props.courseID !== undefined ? props.courseID : ''}
       />
       <AddNote
         title="Homework"
-        currNote="existing note here"
-        selected={selectedAssignment || ''}
+        currNote={selectedHomeworkNote}
+        selected={selectedHomeworkName || ''}
         open={openAddNoteModal}
         onClose={() => {
           setOpenAddNoteModal(!openAddNoteModal);
         }}
+        course={props.course}
+        courseID={props.courseID ?? ''}
+        setCourse={props.setCourse}
       />
     </div>
   );

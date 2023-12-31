@@ -180,10 +180,21 @@ const ClassPage = (): JSX.Element => {
             <ClassAttendance
               attendance={course.attendance}
               students={students}
+              setStudents={setStudents}
+              course={course}
+              courseID={courseID}
+              setCourse={setCourse}
             />
           )}
           {currentTab === Tab.Homework && (
-            <ClassHomework homework={course.homeworks} students={students} />
+            <ClassHomework
+              homework={course.homeworks}
+              students={students}
+              setStudents={setStudents}
+              course={course}
+              courseID={courseID}
+              setCourse={setCourse}
+            />
           )}
           {currentTab === Tab.Teachers && <ClassTeachers teachers={teachers} />}
         </div>

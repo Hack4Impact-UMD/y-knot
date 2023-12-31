@@ -11,10 +11,21 @@ import {
   runTransaction,
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
-import { type StudentID, type Student } from '../types/StudentType';
-import { type Course, type CourseID } from '../types/CourseType';
+import {
+  StudentAttendance,
+  StudentHomework,
+  type StudentID,
+  type Student,
+} from '../types/StudentType';
+import {
+  Attendance,
+  Homework,
+  type Course,
+  type CourseID,
+} from '../types/CourseType';
 import { TeacherID, type Teacher, type YKNOTUser } from '../types/UserType';
 import { promises } from 'dns';
+import { rejects } from 'assert';
 
 export function getAllStudents(): Promise<StudentID[]> {
   const studentsRef = collection(db, 'Students');
@@ -372,6 +383,172 @@ export function updateCourse(course: Course, id: string): Promise<void> {
       .catch((e) => {
         reject(e);
       });
+  });
+}
+
+export function addCourseAttendance(
+  course: Course,
+  courseID: string,
+  newAttendance: { date: string; notes: string },
+): Promise<Course> {
+  return new Promise((resolve, reject) => {
+    let failed: boolean = false;
+    course.attendance.forEach((prevAttendance) => {
+      if (prevAttendance.date === newAttendance.date) {
+        failed = true;
+      }
+    });
+    if (failed) {
+      reject(new Error('Attendance already exists for date'));
+      return;
+    }
+
+    course.attendance.push(newAttendance);
+    updateCourse(course, courseID)
+      .then(() => {
+        resolve(course);
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+}
+
+export function updateCourseAttendance(
+  course: Course,
+  courseID: string,
+  updatedAttendance: { date: string; notes: string },
+): Promise<Course> {
+  return new Promise((resolve, reject) => {
+    let noReplace: boolean = true;
+    const newAttendance = course.attendance.map((prevAttendance) => {
+      if (prevAttendance.date === updatedAttendance.date) {
+        noReplace = false;
+        return updatedAttendance;
+      } else {
+        return prevAttendance;
+      }
+    });
+    if (noReplace) {
+      reject(new Error('Attendance does not exist'));
+      return;
+    }
+
+    course.attendance = newAttendance;
+    updateCourse(course, courseID)
+      .then(() => {
+        resolve(course);
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+}
+
+export function addCourseHomework(
+  course: Course,
+  courseID: string,
+  newHomework: { name: string; notes: string },
+): Promise<Course> {
+  return new Promise((resolve, reject) => {
+    let failed: boolean = false;
+    course.homeworks.forEach((prevAttendance) => {
+      if (prevAttendance.name === newHomework.name) {
+        failed = true;
+      }
+    });
+    if (failed) {
+      reject(new Error('Assignment with duplicate name exists'));
+      return;
+    }
+
+    course.homeworks.push(newHomework);
+    updateCourse(course, courseID)
+      .then(() => {
+        resolve(course);
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+}
+
+export function updateCourseHomework(
+  course: Course,
+  courseID: string,
+  updatedHomework: { name: string; notes: string },
+): Promise<Course> {
+  return new Promise((resolve, reject) => {
+    let noReplace: boolean = true;
+    const newHomework = course.homeworks.map((prevHomework) => {
+      if (prevHomework.name === updatedHomework.name) {
+        noReplace = false;
+        return updatedHomework;
+      } else {
+        return prevHomework;
+      }
+    });
+    if (noReplace) {
+      reject(new Error('Attendance does not exist'));
+      return;
+    }
+
+    course.homeworks = newHomework;
+    updateCourse(course, courseID)
+      .then(() => {
+        resolve(course);
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+}
+
+export function addAttendanceToStudents(
+  courseID: string,
+  date: string,
+  students: Array<StudentID>,
+): Promise<Array<StudentID>> {
+  return new Promise((resolve, reject) => {
+    const res = students.map((student) => {
+      const newCourseInfo = student.courseInformation.map((course) => {
+        if (course.id === courseID) {
+          course.attendance.push({ date: date, attended: false });
+        }
+        return course;
+      });
+      student.courseInformation = newCourseInfo;
+      updateStudent(student, student.id).catch((e) => {
+        reject(e);
+        return;
+      });
+      return student;
+    });
+    resolve(res);
+  });
+}
+
+export function addHomeworkToStudents(
+  courseID: string,
+  name: string,
+  students: Array<StudentID>,
+): Promise<Array<StudentID>> {
+  return new Promise((resolve, reject) => {
+    const res = students.map((student) => {
+      const newCourseInfo = student.courseInformation.map((course) => {
+        if (course.id === courseID) {
+          course.homeworks.push({ name: name, completed: false });
+        }
+        return course;
+      });
+      student.courseInformation = newCourseInfo;
+      updateStudent(student, student.id).catch((e) => {
+        reject(e);
+        return;
+      });
+      return student;
+    });
+    resolve(res);
   });
 }
 
