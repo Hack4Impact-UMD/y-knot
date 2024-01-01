@@ -154,6 +154,14 @@
   flex-wrap: wrap;
 }
 
+@media screen and (max-width: 600px) {
+  .rightPane,
+  .loadingContainer {
+    width: 100%;
+    position: absolute;
+    top: 80px;
+  }
+}
 .card {
   text-decoration: none;
 }
