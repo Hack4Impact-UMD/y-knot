@@ -26,6 +26,7 @@ import {
 import { TeacherID, type Teacher, type YKNOTUser } from '../types/UserType';
 import { promises } from 'dns';
 import { rejects } from 'assert';
+import dayjs from 'dayjs';
 
 export function getAllStudents(): Promise<StudentID[]> {
   const studentsRef = collection(db, 'Students');
@@ -386,6 +387,13 @@ export function updateCourse(course: Course, id: string): Promise<void> {
   });
 }
 
+const compareDayJSDates = (
+  obj1: Attendance | StudentAttendance,
+  obj2: Attendance | StudentAttendance,
+): number => {
+  return dayjs(obj1.date).isBefore(dayjs(obj2.date)) ? -1 : 1;
+};
+
 export function addCourseAttendance(
   course: Course,
   courseID: string,
@@ -404,6 +412,7 @@ export function addCourseAttendance(
     }
 
     course.attendance.push(newAttendance);
+    course.attendance.sort(compareDayJSDates);
     updateCourse(course, courseID)
       .then(() => {
         resolve(course);
@@ -514,9 +523,11 @@ export function addAttendanceToStudents(
       const newCourseInfo = student.courseInformation.map((course) => {
         if (course.id === courseID) {
           course.attendance.push({ date: date, attended: false });
+          course.attendance.sort(compareDayJSDates);
         }
         return course;
       });
+
       student.courseInformation = newCourseInfo;
       updateStudent(student, student.id).catch((e) => {
         reject(e);

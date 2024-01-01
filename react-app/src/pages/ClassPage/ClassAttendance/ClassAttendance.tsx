@@ -24,9 +24,15 @@ const ClassAttendance = (props: {
   setCourse: React.Dispatch<React.SetStateAction<Course>>;
 }): JSX.Element => {
   const [selectedAttDate, setDate] = useState<string>(
-    'Please select an attendance date',
+    props.attendance !== undefined && props.attendance.length > 0
+      ? props.attendance.slice(-1)[0].date.toString()
+      : '',
   );
-  const [selectedAttNote, setNote] = useState<string>('');
+  const [selectedAttNote, setNote] = useState<string>(
+    props.attendance !== undefined && props.attendance.length > 0
+      ? props.attendance.slice(-1)[0].notes.toString()
+      : '',
+  );
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
   const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
   const [openRemoveHwModal, setOpenRemoveHwModal] = useState<boolean>(false);
@@ -68,7 +74,7 @@ const ClassAttendance = (props: {
           </button>
         </ToolTip>
         <Select
-          placeholder="Date"
+          placeholder={selectedAttDate !== '' ? selectedAttDate : 'Date'}
           className={styles.dateSelection}
           onChange={(option) => {
             parseAttendance(option?.label.toString() ?? '');
@@ -77,7 +83,6 @@ const ClassAttendance = (props: {
             control: (baseStyles) => ({
               ...baseStyles,
               borderColor: 'black',
-              width: '150px',
             }),
           }}
           options={props.attendance.map((attendance) => {
@@ -145,8 +150,12 @@ const ClassAttendance = (props: {
       />
       <AddNote
         title="Attendance"
-        currNote={selectedAttNote}
-        selected={selectedAttDate}
+        selected={
+          selectedAttDate !== ''
+            ? selectedAttDate
+            : 'No attendance currently exists'
+        }
+        currNote={selectedAttNote !== '' ? selectedAttNote : 'No date selected'}
         open={openAddNoteModal}
         onClose={() => {
           setOpenAddNoteModal(!openAddNoteModal);

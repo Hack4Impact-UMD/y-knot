@@ -94,8 +94,8 @@ const AddNote = (props: {
                 className={styles.button}
                 onClick={() => {
                   if (
-                    props.selected !== 'Please select an attendance date' &&
-                    props.selected !== 'Please select an assignment'
+                    props.selected !== 'No attendance currently exists' &&
+                    props.selected !== 'No homework currently exists'
                   ) {
                     if (canWrite) {
                       handleEditNote();
@@ -114,14 +114,14 @@ const AddNote = (props: {
           </div>
           <div className={styles.noteContainer}>
             <textarea
-              placeholder="No date selected"
+              placeholder={props.currNote}
               className={styles.noteInput}
               onChange={(event) => {
                 setNote(event.target.value);
               }}
               disabled={!canWrite}
               value={note}
-            ></textarea>
+            />
           </div>
         </div>
       </div>

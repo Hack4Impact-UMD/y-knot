@@ -25,9 +25,15 @@ const ClassHomework = (props: {
   setCourse: React.Dispatch<React.SetStateAction<Course>>;
 }): JSX.Element => {
   const [selectedHomeworkName, setHomeworkName] = useState<string>(
-    'Please select an assignment',
+    props.homework !== undefined && props.homework.length > 0
+      ? props.homework.slice(-1)[0].name.toString()
+      : '',
   );
-  const [selectedHomeworkNote, setHomeworkNote] = useState<string>('');
+  const [selectedHomeworkNote, setHomeworkNote] = useState<string>(
+    props.homework !== undefined && props.homework.length > 0
+      ? props.homework.slice(-1)[0].notes.toString()
+      : '',
+  );
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
   const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
   const [openRemoveHwModal, setOpenRemoveHwModal] = useState<boolean>(false);
@@ -69,7 +75,9 @@ const ClassHomework = (props: {
           </button>
         </ToolTip>
         <Select
-          placeholder="Assignment"
+          placeholder={
+            selectedHomeworkName !== '' ? selectedHomeworkName : 'Assignement'
+          }
           className={styles.selection}
           onChange={(option) => {
             parseHomework(option?.label.toString() ?? '');
@@ -144,8 +152,16 @@ const ClassHomework = (props: {
       />
       <AddNote
         title="Homework"
-        currNote={selectedHomeworkNote}
-        selected={selectedHomeworkName || ''}
+        selected={
+          selectedHomeworkName !== ''
+            ? selectedHomeworkName
+            : 'No homework currently exists'
+        }
+        currNote={
+          selectedHomeworkNote !== ''
+            ? selectedHomeworkNote
+            : 'No assignment selected'
+        }
         open={openAddNoteModal}
         onClose={() => {
           setOpenAddNoteModal(!openAddNoteModal);
