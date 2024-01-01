@@ -5,7 +5,12 @@ import editIcon from '../../../assets/gray-pencil.svg';
 import saveIcon from '../../../assets/save.svg';
 import uploadIcon from '../../../assets/upload.svg';
 import certificateIcon from '../../../assets/certificate.svg';
+import deleteIcon from '../../../assets/trash.svg';
 import emailIcon from '../../../assets/email.svg';
+import x from '../../../assets/x.svg';
+
+import { StudentFile } from '../../../types/StudentType';
+import DescriptionIcon from '@mui/icons-material/Description';
 
 const ClassMain = (): JSX.Element => {
   const emailContentRef = useRef<HTMLDivElement>(null);
@@ -13,9 +18,16 @@ const ClassMain = (): JSX.Element => {
     'Hello everyone and welcome to math! In this course we will be teaching...',
   );
   const [editText, setEditText] = useState<boolean>(false);
+  const [files, setFiles] = useState<{
+    uploaded: File[];
+    deleted: StudentFile[];
+  }>({
+    uploaded: [],
+    deleted: [],
+  });
 
   const handleEdit = (): void => {
-    if (editText && emailContentRef.current) {
+    if (editText && emailContentRef.current != null) {
       const newText = emailContentRef.current.innerHTML; // Stores the HTML to preserve formatting
 
       if (newText !== null && newText !== undefined) {
@@ -34,18 +46,28 @@ const ClassMain = (): JSX.Element => {
             {editText && (
               <ToolTip title="Upload File" placement="top">
                 <button className={styles.uploadButton}>
-                  <img
-                    src={uploadIcon}
-                    alt="Upload"
-                    className={`${styles.icon} ${styles.uploadIcon}`}
+                  <input
+                    type="file"
+                    id="upload"
+                    onChange={(e: any) =>
+                      setFiles({
+                        ...files,
+                        uploaded: [...files.uploaded, e!.target!.files[0]],
+                      })
+                    }
+                    hidden
                   />
+                  <label htmlFor="upload" className={styles.editButton}>
+                    <img
+                      src={uploadIcon}
+                      alt="Upload"
+                      className={`${styles.icon} ${styles.uploadIcon}`}
+                    />
+                  </label>
                 </button>
               </ToolTip>
             )}
-            <ToolTip
-              title={editText === true ? 'Save' : 'Edit'}
-              placement="top"
-            >
+            <ToolTip title={editText ? 'Save' : 'Edit'} placement="top">
               <button className={styles.editButton} onClick={handleEdit}>
                 {editText ? (
                   <img src={saveIcon} alt="Save Text" className={styles.icon} />
@@ -63,6 +85,34 @@ const ClassMain = (): JSX.Element => {
             ref={emailContentRef}
             dangerouslySetInnerHTML={{ __html: text }}
           ></div>
+        </div>
+        <div className={styles.fileContainer}>
+          {files.uploaded?.map((file) => {
+            return (
+              <div className={styles.containerLines}>
+                <div className={styles.informationText}>
+                  <DescriptionIcon />
+                  {file.name.length > 30
+                    ? file.name.substring(0, 28) +
+                      '. . . ' +
+                      file.name.substring(file.name.indexOf('.') - 3)
+                    : file.name}
+                </div>
+                <button
+                  onClick={() => {
+                    setFiles({
+                      ...files,
+                      uploaded: files.uploaded.filter((ele) => ele != file),
+                    });
+                  }}
+                  className={styles.deleteButton}
+                  hidden={!editText}
+                >
+                  <img className={styles.icon} alt="Delete Icon" src={x} />
+                </button>
+              </div>
+            );
+          })}
         </div>
       </div>
       <div className={styles.buttons}>

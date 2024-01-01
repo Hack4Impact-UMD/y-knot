@@ -1,0 +1,137 @@
+.loading {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rightPane {
+  float: right;
+  width: calc(100% - 250px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.listBox {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border: 1px solid black;
+  border-radius: 20px;
+  width: 80%;
+  margin: 0 auto 30px auto;
+}
+
+.studentBox {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  padding-left: 30px;
+  border-top: 1px solid black;
+}
+
+.studentBoxTop {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  padding-left: 30px;
+}
+
+.name {
+  width: 40%;
+  margin-left: 50px;
+}
+
+.headerContainer {
+  margin-top: 30px;
+}
+
+.newClassHeader {
+  width: 80%;
+  margin: 0 auto 30px auto;
+}
+
+.inputBox {
+  padding: 0px 12px 0px 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border-width: 1px;
+  min-width: 276px;
+  height: 40px;
+  border-color: black;
+  border-style: solid;
+}
+
+.bottomButtons {
+  display: flex;
+  margin-bottom: 30px;
+}
+
+.createCourseButton {
+  width: 150px;
+  height: 40px;
+  background: var(--color-orange);
+  border-radius: 30px;
+  font-size: 17px;
+  border: none;
+  color: white;
+  margin-left: 35%;
+  cursor: pointer;
+}
+
+.createCourseButton:hover {
+  background-color: var(--color-yellow-orange);
+}
+
+.cancelButton {
+  width: 150px;
+  height: 40px;
+  border-style: solid;
+  background: var(--color-white);
+  border-color: black;
+  border-radius: 30px;
+  font-size: 17px;
+  margin-left: 3%;
+  cursor: pointer;
+}
+
+.radioButtonGroup {
+  display: flex;
+  flex-direction: row;
+}
+
+.yesLabel {
+  margin-right: 20px;
+  font-size: large;
+}
+
+.noLabel {
+  font-size: large;
+}
+
+.radioButton {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+.radioButton:checked {
+  accent-color: black; /* Change this to your desired color */
+}
+
+.errorMessage {
+  font-style: italic;
+  font-weight: 500;
+  font: 26;
+  color: red;
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+.inputContainer {
+  width: 100%;
+  display: flex;
+  gap: 5px;
+}

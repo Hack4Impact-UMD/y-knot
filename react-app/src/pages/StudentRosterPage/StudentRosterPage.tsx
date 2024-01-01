@@ -14,7 +14,7 @@ const StudentRosterPage = (): JSX.Element => {
   const [error, setError] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
 
-  //Used to handle Deletion alert
+  // Used to handle Deletion alert
   const [openSuccess, setOpenSuccess] = useState<boolean>(false);
   const handleToClose = (event: any, reason: any) => {
     setOpenSuccess(false);
@@ -26,9 +26,9 @@ const StudentRosterPage = (): JSX.Element => {
   let timer: NodeJS.Timeout | null = null;
 
   function createStudentList() {
-    let studentList: Array<Partial<StudentID>> = [];
+    const studentList: Array<Partial<StudentID>> = [];
     for (let i = 1; i <= 51; i++) {
-      let student: Partial<StudentID> = {};
+      const student: Partial<StudentID> = {};
       student.id = i.toString();
       student.firstName = 'John';
       student.middleName = 'Doe';

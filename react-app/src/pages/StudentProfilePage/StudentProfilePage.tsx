@@ -58,6 +58,13 @@ const StudentProfilePage = (): JSX.Element => {
     'var(--color-red)',
   ];
 
+  const compareLuxonDates = (course1: CourseID, course2: CourseID): number => {
+    return (
+      DateTime.fromISO(course1.startDate).toMillis() -
+      DateTime.fromISO(course2.startDate).toMillis()
+    );
+  };
+
   useEffect(() => {
     if (studentID) {
       getStudent(studentID)
@@ -87,7 +94,27 @@ const StudentProfilePage = (): JSX.Element => {
   }, []);
 
   const displayCourseCards = () => {
-    return courses.map((course, i) => {
+    let inSession: CourseID[] = [];
+    let notInSession: CourseID[] = [];
+    courses.forEach((course) => {
+      const now = DateTime.now();
+      let isInSession = true;
+      if (
+        DateTime.fromISO(course.startDate) > now ||
+        DateTime.fromISO(course.endDate) < now
+      ) {
+        isInSession = false;
+      }
+      if (isInSession) {
+        inSession.push(course);
+      } else {
+        notInSession.push(course);
+      }
+    });
+
+    inSession.sort(compareLuxonDates);
+    notInSession.sort(compareLuxonDates);
+    return inSession.concat(notInSession).map((course, i) => {
       let color = colors[i % colors.length];
       const now = DateTime.now();
       if (
@@ -117,7 +144,6 @@ const StudentProfilePage = (): JSX.Element => {
 
   const studentSchema = Yup.object().shape({
     firstName: Yup.string().required('*Required'),
-    middleName: Yup.string().required('*Required'),
     lastName: Yup.string().required('*Required'),
     addrFirstLine: Yup.string().required('*Required'),
     city: Yup.string().required('*Required'),

@@ -1,6 +1,6 @@
 import { useAuth } from '../../../src/auth/AuthProvider';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { type CourseID } from '../../types/CourseType';
 import { getAllCourses } from '../../../src/backend/FirestoreCalls';
 import { DateTime } from 'luxon';
@@ -8,8 +8,9 @@ import styles from './CoursesPage.module.css';
 import CourseCard from '../../components/CourseCard/CourseCard';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
+import { Alert, Snackbar } from '@mui/material';
 
-const CoursesPage = (): JSX.Element => {
+const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
   const authContext = useAuth();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
@@ -26,6 +27,7 @@ const CoursesPage = (): JSX.Element => {
   const [allCurrentCourses, setAllCurrentCourses] = useState<CourseID[]>([]);
   const [allPastCourses, setAllPastCourses] = useState<CourseID[]>([]);
   const [allUpcomingCourses, setAllUpcomingCourses] = useState<CourseID[]>([]);
+  const navigate = useNavigate();
 
   const colors = [
     'var(--color-green)',
@@ -37,6 +39,7 @@ const CoursesPage = (): JSX.Element => {
   // Used to detect time in between keystrokes when using the search bar
   let timer: NodeJS.Timeout | null = null;
   useEffect(() => {
+    console.log('formSubmitted: ', formSubmitted);
     getAllCourses()
       .then((courses) => {
         const now = DateTime.now();
@@ -130,10 +133,19 @@ const CoursesPage = (): JSX.Element => {
       clearTimeout(timer);
     }
     timer = setTimeout(function () {
-      let searchVal = e.target.value;
+      const searchVal = e.target.value;
       setSearch(searchVal);
       filterWithSearchValue(searchVal);
     }, 500);
+  };
+
+  const handleAddCourse = () => {
+    navigate('/courses/add');
+  };
+
+  const handleToClose = (event: any, reason: any) => {
+    console.log('closing');
+    setFormSubmitted(false);
   };
 
   return (
@@ -179,7 +191,12 @@ const CoursesPage = (): JSX.Element => {
                   <h1 className={styles.courseStatus}>Active Courses</h1>
 
                   {authContext?.token?.claims.role === 'ADMIN' ? (
-                    <button className={styles.addCourse}>Add Course</button>
+                    <button
+                      className={styles.addCourse}
+                      onClick={handleAddCourse}
+                    >
+                      Add Course
+                    </button>
                   ) : (
                     <></>
                   )}
@@ -230,6 +247,19 @@ const CoursesPage = (): JSX.Element => {
                 </div>
               </>
             )}
+            <Snackbar
+              anchorOrigin={{
+                horizontal: 'right',
+                vertical: 'bottom',
+              }}
+              open={formSubmitted}
+              autoHideDuration={3000}
+              onClose={handleToClose}
+            >
+              <Alert severity="success" sx={{ width: '100%' }}>
+                Course was Successfully Added
+              </Alert>
+            </Snackbar>
           </div>
         </>
       )}

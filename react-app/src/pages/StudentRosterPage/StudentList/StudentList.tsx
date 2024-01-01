@@ -15,10 +15,10 @@ const StudentList = (props: {
 }) => {
   const [studentList, setStudentList] = useState<any[]>([]);
   const [showPopup, setShowPopup] = useState(false);
-  const [popupName, setPopupName] = useState<String>();
-  const [popupEmail, setPopupEmail] = useState<String>();
-  const [removeStudentId, setRemoveStudentId] = useState<String>();
-  const [reloadList, setReloadList] = useState<Boolean>(false);
+  const [popupName, setPopupName] = useState<string>();
+  const [popupEmail, setPopupEmail] = useState<string>();
+  const [removeStudentId, setRemoveStudentId] = useState<string>();
+  const [reloadList, setReloadList] = useState<boolean>(false);
   const [numToShow, setNumToShow] = useState<number>(50);
   const navigate = useNavigate();
   const handleClick = () => {
@@ -106,9 +106,11 @@ const StudentList = (props: {
               onClose={() => {
                 setShowPopup(!showPopup);
               }}
-              popupName={popupName ? popupName : 'undefined'}
-              popupEmail={popupEmail ? popupEmail : 'undefined'}
-              removeStudentId={removeStudentId ? removeStudentId : 'undefined'}
+              popupName={popupName != null ? popupName : 'undefined'}
+              popupEmail={popupEmail != null ? popupEmail : 'undefined'}
+              removeStudentId={
+                removeStudentId != null ? removeStudentId : 'undefined'
+              }
               setReloadList={setReloadList}
               reloadList={reloadList}
               students={props.students}

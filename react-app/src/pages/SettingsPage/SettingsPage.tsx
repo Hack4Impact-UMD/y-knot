@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../auth/AuthProvider';
 import { getTeacherWithAuth, updateUser } from '../../backend/FirestoreCalls';
-import { TeacherID } from '../../types/UserType';
+import { type TeacherID } from '../../types/UserType';
 import { ToolTip } from '../../components/ToolTip/ToolTip';
 import styles from './SettingsPage.module.css';
 import ResetEmail from './ResetEmail/ResetEmail';
@@ -29,8 +29,12 @@ const SettingsPage = (): JSX.Element => {
           setName(teacher.name);
           setTeacher(teacher);
         })
-        .catch((error) => console.log(error))
-        .finally(() => setLoading(false));
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   }, [authContext.loading]);
   return (
@@ -67,10 +71,7 @@ const SettingsPage = (): JSX.Element => {
                     name
                   )}
                 </a>
-                <ToolTip
-                  title={editName === true ? 'Save' : 'Edit'}
-                  placement="top"
-                >
+                <ToolTip title={editName ? 'Save' : 'Edit'} placement="top">
                   <button
                     className={styles.editButton}
                     onClick={() => {

@@ -14,6 +14,7 @@ import { db } from '../config/firebase';
 import { type StudentID, type Student } from '../types/StudentType';
 import { type Course, type CourseID } from '../types/CourseType';
 import { TeacherID, type Teacher, type YKNOTUser } from '../types/UserType';
+import { promises } from 'dns';
 
 export function getAllStudents(): Promise<StudentID[]> {
   const studentsRef = collection(db, 'Students');
@@ -97,7 +98,7 @@ export function deleteStudent(id: string): Promise<void> {
         await transaction.get(doc(db, 'Students', id))
       ).data() as Student;
       const idOrder: string[] = [];
-      const students: Array<string[]> = [];
+      const students: string[][] = [];
       await Promise.all(
         studentRef.courseInformation.map(async (course) => {
           idOrder.push(course.id);
@@ -121,6 +122,53 @@ export function deleteStudent(id: string): Promise<void> {
         });
       });
       transaction.delete(doc(db, 'Students', id));
+    })
+      .then(() => {
+        resolve();
+      })
+      .catch(() => {
+        reject();
+      });
+  });
+}
+
+export function removeTeacherCourse(
+  teacherId: string,
+  courseId: string,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    /* runTransaction provides protection against race conditions where
+       2 people are modifying the data at once. It also ensures that either
+       all of these writes succeed or none of them do.
+    */
+    runTransaction(db, async (transaction) => {
+      const teacherRef = await transaction.get(doc(db, 'Users', teacherId));
+      const courseRef = await transaction.get(doc(db, 'Courses', courseId));
+      if (!teacherRef.exists() || !courseRef.exists()) {
+        throw 'Document does not exist!';
+      }
+      const teacher: Teacher = teacherRef.data() as Teacher;
+      if (teacher.courses.includes(courseId)) {
+        teacher.courses = teacher.courses.filter(function (c) {
+          return c !== courseId;
+        });
+        await transaction.update(doc(db, 'Users', teacherId), {
+          courses: teacher.courses,
+        });
+      } else {
+        reject(new Error('Course does not exist in teacher'));
+      }
+      const course: Course = courseRef.data() as Course;
+      if (course.teachers.includes(teacherId)) {
+        course.teachers = course.teachers.filter(function (t) {
+          return t !== teacherId;
+        });
+        await transaction.update(doc(db, 'Courses', courseId), {
+          teachers: course.teachers,
+        });
+      } else {
+        reject(new Error('Teacher does not exist in course'));
+      }
     })
       .then(() => {
         resolve();
@@ -214,6 +262,18 @@ export function getTeacher(id: string): Promise<Teacher> {
   });
 }
 
+export function getTeachersFromList(
+  idList: Array<string>,
+): Promise<Array<TeacherID>> {
+  let res = idList.map(async (id) => {
+    const teacher = await getTeacher(id);
+    const teacherWithId: TeacherID = { ...teacher, id };
+    return teacherWithId;
+  });
+
+  return Promise.all(res);
+}
+
 export function getTeacherWithAuth(auth_id: string): Promise<TeacherID> {
   return new Promise((resolve, reject) => {
     const teachersRef = query(
@@ -249,6 +309,18 @@ export function getStudent(id: string): Promise<Student> {
         reject(e);
       });
   });
+}
+
+export function getStudentsFromList(
+  idList: Array<string>,
+): Promise<Array<StudentID>> {
+  let res = idList.map(async (id) => {
+    const student = await getStudent(id);
+    const studentWithId: StudentID = { ...student, id };
+    return studentWithId;
+  });
+
+  return Promise.all(res);
 }
 
 export function getCourse(id: string): Promise<Course> {
