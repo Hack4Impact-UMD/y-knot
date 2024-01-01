@@ -3,8 +3,12 @@ import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import styles from './ClassSettings.module.css';
 import { DateTime } from 'luxon';
 import Select from 'react-select';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 const ClassPage = (): JSX.Element => {
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [name, setName] = useState<string>('');
   const dropdownOptions = ['Program', 'Academy', 'Club'];
   return (
@@ -21,12 +25,40 @@ const ClassPage = (): JSX.Element => {
 
       <div className={styles.row}>
         <p className={styles.headerText}> Start Date </p>
-        <div className={styles.calendar}></div>
+        <div className={styles.calendar}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label=""
+              slotProps={{ textField: { size: 'small' } }}
+              sx={{
+                '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
+                  border: '1px solid black',
+                }, // at page load
+                '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                  { border: '2px solid black' }, // at focused state
+              }}
+            />{' '}
+          </LocalizationProvider>
+        </div>
       </div>
 
       <div className={styles.row}>
         <p className={styles.headerText}> End Date </p>
-        <div className={styles.calendar}></div>
+        <div className={styles.calendar}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label=""
+              slotProps={{ textField: { size: 'small' } }}
+              sx={{
+                '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
+                  border: '1px solid gray',
+                }, // at page load
+                '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                  { border: '1px solid gray' }, // at focused state
+              }}
+            />{' '}
+          </LocalizationProvider>
+        </div>
       </div>
 
       <div className={styles.row}>
