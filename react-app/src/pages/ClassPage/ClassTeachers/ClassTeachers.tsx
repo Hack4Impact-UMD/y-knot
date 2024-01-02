@@ -17,7 +17,8 @@ const ClassTeachers = (props: {
   courseID: String;
   courseName: String;
 }): JSX.Element => {
-  const [teachers, setTeachers] = useState<Array<Partial<TeacherID>>>([]);
+  const [teachers, setTeachers] = useState<any[]>(props.teachers);
+  const [teacherList, setTeacherList] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [openRemoveTeacherModal, setOpenRemoveTeacherModal] =
@@ -37,23 +38,64 @@ const ClassTeachers = (props: {
   };
 
   useEffect(() => {
-    getAllTeachers()
-      .then((allTeachers) => {
-        const partialTeachers: Array<Partial<YKNOTUser>> = allTeachers.map(
-          (currTeacher) => ({
-            name: currTeacher.name,
-            auth_id: currTeacher.auth_id,
-          }),
-        );
-        setTeachers(partialTeachers);
-      })
-      .catch((err) => {
-        setError(true);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  });
+    setReloadList(false);
+
+    const list = teachers.reduce((result: any[], teacher, i) => {
+      const roundTop = i === 0 ? styles.roundTop : '';
+      const roundBottom = i === teachers.length - 1 ? styles.roundBottom : '';
+      result.push(
+        <div key={i} className={`${styles.box} ${roundTop} ${roundBottom}`}>
+          <p className={styles.name}>{teacher.name}</p>
+          <div className={styles.icons}>
+            {authContext?.token?.claims.role === 'ADMIN' && (
+              <Link to={`/teachers/${teacher.id}`}>
+                <ToolTip title="View Profile" placement="top">
+                  <button className={styles.button}>
+                    <img src={EyeIcon} className={styles.profileIcon} />
+                  </button>
+                </ToolTip>
+              </Link>
+            )}
+            <ToolTip title="Remove" placement="top">
+              <button className={styles.button}>
+                <img
+                  src={TrashIcon}
+                  className={styles.trashIcon}
+                  onClick={() => {
+                    setPopupEmail(teacher.email);
+                    setPopupName(teacher.name);
+                    setRemoveTeacherId(teacher.id);
+                    handleClick();
+                  }}
+                />
+              </button>
+            </ToolTip>
+          </div>
+        </div>,
+      );
+      return result;
+    }, []);
+    setTeacherList(list);
+  }, [reloadList]);
+
+  // useEffect(() => {
+  //   getAllTeachers()
+  //     .then((allTeachers) => {
+  //       const partialTeachers: Array<Partial<YKNOTUser>> = allTeachers.map(
+  //         (currTeacher) => ({
+  //           name: currTeacher.name,
+  //           auth_id: currTeacher.auth_id,
+  //         }),
+  //       );
+  //       setTeachers(partialTeachers);
+  //     })
+  //     .catch((err) => {
+  //       setError(true);
+  //     })
+  //     .finally(() => {
+  //       setLoading(false);
+  //     });
+  // });
 
   const handleToClose = (event: any, reason: any) => {
     setOpenSuccess(false);
@@ -75,7 +117,8 @@ const ClassTeachers = (props: {
       ) : (
         <>
           <div className={styles.teachersContainer}>
-            {props.teachers.map((teacher, i) => {
+            {teacherList}
+            {/* {props.teachers.map((teacher, i) => {
               const roundTop = i === 0 ? styles.roundTop : '';
               const roundBottom =
                 i === props.teachers.length - 1 ? styles.roundBottom : '';
@@ -112,7 +155,7 @@ const ClassTeachers = (props: {
                   </div>
                 </div>
               );
-            })}
+            })} */}
           </div>
           <div className={styles.bottomLevel}>
             <button
@@ -144,7 +187,7 @@ const ClassTeachers = (props: {
           setReloadList={setReloadList}
           reloadList={reloadList}
           teachers={props.teachers}
-          // setTeachers={setTeachers}
+          setTeachers={setTeachers}
           setOpenSuccess={setOpenSuccess}
           setOpenFailure={setOpenFailure}
         />

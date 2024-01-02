@@ -15,7 +15,7 @@ interface popupModalType {
   courseName: String;
   setReloadList: Function;
   teachers: Array<Partial<TeacherID>>;
-  // setTeachers: Function;
+  setTeachers: Function;
   reloadList: Boolean;
   setOpenSuccess: Function;
   setOpenFailure: Function;
@@ -28,7 +28,7 @@ const DeleteTeacherClassConfirmation = ({
   popupEmail,
   removeTeacherId,
   setReloadList,
-  // setTeachers,
+  setTeachers,
   teachers,
   courseId,
   courseName,
@@ -39,24 +39,22 @@ const DeleteTeacherClassConfirmation = ({
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   function handleConfirm() {
-    setErrorMessage('*Teacher could not be removed');
-    // if (removeTeacherId != 'undefined') {
-    //   // TODO: Update CourseID and test to ensure function works
-    //   removeTeacherCourse(removeTeacherId.valueOf(), courseId.valueOf())
-    //     .then(() => {
-    //       setTeachers(
-    //         teachers.filter((teacher) => {
-    //           return teacher.id !== removeTeacherId.valueOf();
-    //         }),
-    //       );
-    //       onClose();
-    //       setReloadList(true);
-    //       setOpenSuccess(true);
-    //     })
-    //     .catch((err) => {
-    //       setErrorMessage('*Teacher could not be removed');
-    //     });
-    // }
+    if (removeTeacherId != 'undefined') {
+      removeTeacherCourse(removeTeacherId.valueOf(), courseId.valueOf())
+        .then(() => {
+          setTeachers(
+            teachers.filter((teacher) => {
+              return teacher.id !== removeTeacherId.valueOf();
+            }),
+          );
+          onClose();
+          setReloadList(true);
+          setOpenSuccess(true);
+        })
+        .catch((err) => {
+          setErrorMessage('*Teacher could not be removed');
+        });
+    }
   }
 
   const handleOnClose = (): void => {
@@ -87,7 +85,7 @@ const DeleteTeacherClassConfirmation = ({
         <div className={styles.content}>
           <h2 className={styles.title}>Remove Teacher</h2>
           <p className={styles.error}>{errorMessage}</p>
-          <p className={styles.contentBody}>
+          <div className={styles.contentBody}>
             {submittedError ? (
               'Log out failed. Try again later.'
             ) : (
@@ -102,7 +100,7 @@ const DeleteTeacherClassConfirmation = ({
                 </div>
               </>
             )}
-          </p>
+          </div>
         </div>
         <div className={styles.actions}>
           <div className={styles.actionsContainer}>
