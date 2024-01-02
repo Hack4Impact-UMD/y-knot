@@ -8,8 +8,7 @@ import noteIcon from '../../../assets/note.svg';
 import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
 import AddHomework from './AddHomework/AddHomework';
 import RemoveHomework from './RemoveHomework/RemoveHomework';
-import AddNote from '../AddNote/AddNote';
-import { parse } from 'path';
+import AddNote from './AddNote/AddNote';
 
 interface homeworkObj {
   name: String;
@@ -152,7 +151,7 @@ const ClassHomework = (props: {
       />
       <AddNote
         title="Homework"
-        selected={
+        selectedHomework={
           selectedHomeworkName !== ''
             ? selectedHomeworkName
             : 'No homework currently exists'

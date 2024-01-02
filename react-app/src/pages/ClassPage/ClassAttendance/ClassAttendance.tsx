@@ -4,7 +4,7 @@ import Select from 'react-select';
 import styles from './ClassAttendance.module.css';
 import noteIcon from '../../../assets/note.svg';
 import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
-import AddNote from '../AddNote/AddNote';
+import AddNote from './AddNote/AddNote';
 import RemoveAttendance from './RemoveAttendance/RemoveAttendance';
 import AddAttendance from './AddAttendance/AddAttendance';
 import type { StudentID } from '../../../types/StudentType';
@@ -150,7 +150,7 @@ const ClassAttendance = (props: {
       />
       <AddNote
         title="Attendance"
-        selected={
+        selectedDate={
           selectedAttDate !== ''
             ? selectedAttDate
             : 'No attendance currently exists'

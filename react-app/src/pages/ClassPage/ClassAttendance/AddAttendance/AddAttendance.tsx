@@ -12,7 +12,6 @@ import {
   addAttendanceToStudents,
   addCourseAttendance,
 } from '../../../../backend/FirestoreCalls';
-import StudentList from '../../../StudentRosterPage/StudentList/StudentList';
 
 const AddAttendance = (props: {
   open: boolean;

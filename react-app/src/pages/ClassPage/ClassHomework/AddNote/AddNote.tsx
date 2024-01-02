@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import type { Course, CourseID } from '../../../types/CourseType';
+import type { Course, CourseID } from '../../../../types/CourseType';
 import styles from './AddNote.module.css';
-import Modal from '../../../components/ModalWrapper/Modal';
-import x from '../../../assets/x.svg';
-import editImage from '../../../assets/edit.svg';
-import saveImage from '../../../assets/save.svg';
+import Modal from '../../../../components/ModalWrapper/Modal';
+import x from '../../../../assets/x.svg';
+import editImage from '../../../../assets/edit.svg';
+import saveImage from '../../../../assets/save.svg';
 import {
   updateCourseAttendance,
   updateCourseHomework,
-} from '../../../backend/FirestoreCalls';
-import { ToolTip } from '../../../components/ToolTip/ToolTip';
+} from '../../../../backend/FirestoreCalls';
+import { ToolTip } from '../../../../components/ToolTip/ToolTip';
 
 const AddNote = (props: {
   open: boolean;
   onClose: any;
   title: string;
-  selected: string;
+  selectedHomework: string;
   currNote: string;
   course: Course;
   courseID: string;
@@ -30,7 +30,7 @@ const AddNote = (props: {
     if (note !== props.currNote) {
       if (props.title === 'Attendance') {
         updateCourseAttendance(props.course, props.courseID, {
-          date: props.selected,
+          date: props.selectedHomework,
           notes: note,
         })
           .then((newCourse) => {
@@ -41,7 +41,7 @@ const AddNote = (props: {
           });
       } else {
         updateCourseHomework(props.course, props.courseID, {
-          name: props.selected,
+          name: props.selectedHomework,
           notes: note,
         })
           .then((newCourse) => {
@@ -62,7 +62,7 @@ const AddNote = (props: {
 
   useEffect(() => {
     setNote(props.currNote);
-  }, [props.selected]);
+  }, [props.selectedHomework]);
 
   return (
     <Modal
@@ -88,14 +88,13 @@ const AddNote = (props: {
           <h1 className={styles.heading}>{props.title} Note</h1>
           <p className={styles.error}>{errorMessage}</p>
           <div className={styles.nameContainer}>
-            <div className={styles.nameInput}>{props.selected}</div>
+            <div className={styles.nameInput}>{props.selectedHomework}</div>
             <ToolTip title={canWrite ? 'Save' : 'Edit'} placement="top">
               <button
                 className={styles.button}
                 onClick={() => {
                   if (
-                    props.selected !== 'No attendance currently exists' &&
-                    props.selected !== 'No homework currently exists'
+                    props.selectedHomework !== 'No homework currently exists'
                   ) {
                     if (canWrite) {
                       handleEditNote();
