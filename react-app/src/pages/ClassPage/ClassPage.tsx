@@ -185,7 +185,13 @@ const ClassPage = (): JSX.Element => {
           {currentTab === Tab.Homework && (
             <ClassHomework homework={course.homeworks} students={students} />
           )}
-          {currentTab === Tab.Teachers && <ClassTeachers teachers={teachers} />}
+          {currentTab === Tab.Teachers && (
+            <ClassTeachers
+              teachers={teachers}
+              courseID={courseID!}
+              courseName={course.name}
+            />
+          )}
         </div>
       )}
     </div>

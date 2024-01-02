@@ -11,6 +11,8 @@ interface popupModalType {
   popupName: String;
   popupEmail: String;
   removeTeacherId: String;
+  courseId: String;
+  courseName: String;
   setReloadList: Function;
   teachers: Array<Partial<TeacherID>>;
   // setTeachers: Function;
@@ -28,6 +30,8 @@ const DeleteTeacherClassConfirmation = ({
   setReloadList,
   // setTeachers,
   teachers,
+  courseId,
+  courseName,
   setOpenSuccess,
   setOpenFailure,
 }: popupModalType): React.ReactElement => {
@@ -35,23 +39,24 @@ const DeleteTeacherClassConfirmation = ({
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   function handleConfirm() {
-    if (removeTeacherId != 'undefined') {
-      // TODO: Update CourseID and test to ensure function works
-      // removeTeacherCourse(removeTeacherId.valueOf(), 'CourseID')
-      //   .then(() => {
-      //     setTeachers(
-      //       teachers.filter((teacher) => {
-      //         return teacher.id !== removeTeacherId.valueOf();
-      //       }),
-      //     );
-      //     onClose();
-      //     setReloadList(true);
-      //     setOpenSuccess(true);
-      //   })
-      //   .catch((err) => {
-      //     setErrorMessage('*Teacher could not be removed');
-      //   });
-    }
+    setErrorMessage('*Teacher could not be removed');
+    // if (removeTeacherId != 'undefined') {
+    //   // TODO: Update CourseID and test to ensure function works
+    //   removeTeacherCourse(removeTeacherId.valueOf(), courseId.valueOf())
+    //     .then(() => {
+    //       setTeachers(
+    //         teachers.filter((teacher) => {
+    //           return teacher.id !== removeTeacherId.valueOf();
+    //         }),
+    //       );
+    //       onClose();
+    //       setReloadList(true);
+    //       setOpenSuccess(true);
+    //     })
+    //     .catch((err) => {
+    //       setErrorMessage('*Teacher could not be removed');
+    //     });
+    // }
   }
 
   const handleOnClose = (): void => {
@@ -61,7 +66,7 @@ const DeleteTeacherClassConfirmation = ({
 
   return (
     <Modal
-      height={270}
+      height={280}
       open={open}
       onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
         handleOnClose();
@@ -80,23 +85,22 @@ const DeleteTeacherClassConfirmation = ({
           </button>
         </div>
         <div className={styles.content}>
-          <h2 className={styles.title}>
-            Remove Teacher from Class Confirmation
-          </h2>
+          <h2 className={styles.title}>Remove Teacher</h2>
           <p className={styles.error}>{errorMessage}</p>
           <p className={styles.contentBody}>
             {submittedError ? (
               'Log out failed. Try again later.'
             ) : (
-              <div className={styles.bodyText}>
-                Are you sure you would like to remove from this course?
+              <>
+                Are you sure you would like to remove from
+                <span className={styles.courseName}> {courseName}</span>?
                 <div className={styles.name}>
                   {popupName === 'undefined' ? '' : popupName}
                 </div>
                 <div className={styles.email}>
                   {popupEmail === 'undefined' ? '' : <>({popupEmail})</>}
                 </div>
-              </div>
+              </>
             )}
           </p>
         </div>

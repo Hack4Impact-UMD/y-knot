@@ -12,7 +12,11 @@ import TrashIcon from '../../../assets/trash.svg';
 import DeleteTeacherClassConfirmation from './DeleteTeacherClassConfirmation/DeleteTeacherClassConfirmation';
 import { Snackbar, Alert } from '@mui/material';
 
-const ClassTeachers = (props: { teachers: Array<TeacherID> }): JSX.Element => {
+const ClassTeachers = (props: {
+  teachers: Array<TeacherID>;
+  courseID: String;
+  courseName: String;
+}): JSX.Element => {
   const [teachers, setTeachers] = useState<Array<Partial<TeacherID>>>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
@@ -135,6 +139,8 @@ const ClassTeachers = (props: { teachers: Array<TeacherID> }): JSX.Element => {
           popupName={popupName ? popupName : 'undefined'}
           popupEmail={popupEmail ? popupEmail : 'undefined'}
           removeTeacherId={removeTeacherId ? removeTeacherId : 'undefined'}
+          courseId={props.courseID}
+          courseName={props.courseName}
           setReloadList={setReloadList}
           reloadList={reloadList}
           teachers={props.teachers}
