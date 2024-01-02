@@ -99,3 +99,8 @@
   border-radius: 13px;
   width: 23px;
 }
+.someIcon:hover{
+  cursor: pointer;
+  background: var(--color-yellow-orange);
+}
+

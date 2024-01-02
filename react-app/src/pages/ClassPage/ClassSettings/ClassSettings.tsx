@@ -33,10 +33,10 @@ const ClassPage = (): JSX.Element => {
                 slotProps={{ textField: { size: 'small' } }}
                 sx={{
                   '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-                    border: '1px solid black',
-                  }, // at page load
+                    border: '1px solid gray',
+                  },
                   '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
-                    { border: '2px solid black' }, // at focused state
+                    { border: '2px solid gray' },
                 }}
               />{' '}
             </LocalizationProvider>
@@ -53,9 +53,9 @@ const ClassPage = (): JSX.Element => {
                 sx={{
                   '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
                     border: '1px solid gray',
-                  }, // at page load
+                  },
                   '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
-                    { border: '1px solid gray' }, // at focused state
+                    { border: '2px solid gray' },
                 }}
               />{' '}
             </LocalizationProvider>
