@@ -105,7 +105,6 @@ const TeacherProfilePage = (): JSX.Element => {
           <CourseCard
             teacher={course.teachers}
             course={course.name}
-            section={course.meetingTime}
             startDate={course.startDate}
             endDate={course.endDate}
             color={color}
