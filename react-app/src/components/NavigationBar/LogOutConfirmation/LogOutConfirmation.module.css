@@ -71,4 +71,5 @@
 .actionsContainer button:hover {
   cursor: pointer;
   background: var(--color-orange);
+  color: white;
 }

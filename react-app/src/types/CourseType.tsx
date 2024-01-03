@@ -20,6 +20,13 @@ export interface Course {
 
 export interface IntroEmail {
   content: string;
+  files: IntroEmailFile[];
+}
+
+export interface IntroEmailFile {
+  name: string;
+  path: string;
+  downloadURL: string;
 }
 
 export interface Attendance {

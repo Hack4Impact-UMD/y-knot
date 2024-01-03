@@ -40,7 +40,7 @@ const blankCourse: CourseID = {
   leadershipApp: false,
   courseType: 'ACADEMY',
   formId: '',
-  introEmail: { content: '' },
+  introEmail: { content: '', files: [] },
   attendance: [],
   homeworks: [],
   id: '',
@@ -185,7 +185,14 @@ const ClassPage = (): JSX.Element => {
           {currentTab === Tab.Homework && (
             <ClassHomework homework={course.homeworks} students={students} />
           )}
-          {currentTab === Tab.Teachers && <ClassTeachers teachers={teachers} />}
+          {currentTab === Tab.Teachers && (
+            <ClassTeachers
+              teachers={teachers}
+              setTeachers={setTeachers}
+              courseID={courseID!}
+              courseName={course.name}
+            />
+          )}
         </div>
       )}
     </div>

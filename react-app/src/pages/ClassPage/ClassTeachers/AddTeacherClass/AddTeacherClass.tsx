@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import styles from './AddTeacher.module.css';
+import styles from './AddTeacherClass.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
 import x from '../../../../assets/x.svg';
-import { getAllTeachers } from '../../../../backend/FirestoreCalls';
-import { type YKNOTUser } from '../../../../types/UserType';
+import {
+  getAllTeachers,
+  addTeacherCourseFromList,
+} from '../../../../backend/FirestoreCalls';
+import { type TeacherID } from '../../../../types/UserType';
 import Select, { type OptionProps } from 'react-select';
 
 interface modalType {
+  courseId: string;
   open: boolean;
   onClose: any;
+  setReloadList: Function;
+  displayTeachers: Array<Partial<TeacherID>>;
+  setDisplayTeachers: Function;
+  setClassTeachers: Function;
+  setAddSuccess: Function;
 }
 
 const InputOption: React.FC<OptionProps<any, true, any>> = ({
@@ -57,10 +66,19 @@ const InputOption: React.FC<OptionProps<any, true, any>> = ({
   );
 };
 
-const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
-  const [teachers, setTeachers] = useState<Array<Partial<YKNOTUser>>>([]);
-  const [teacherList, setTeacherList] = useState<Array<Partial<YKNOTUser>>>([]);
-  const [selectedTeacher, setSelectedTeacher] = useState<string>('');
+const AddTeacherClass = ({
+  courseId,
+  open,
+  onClose,
+  setReloadList,
+  displayTeachers,
+  setDisplayTeachers,
+  setClassTeachers,
+  setAddSuccess,
+}: modalType): React.ReactElement => {
+  const [teachers, setTeachers] = useState<Array<Partial<TeacherID>>>([]);
+  const [teacherList, setTeacherList] = useState<Array<Partial<TeacherID>>>([]);
+  const [selectedTeacher, setSelectedTeacher] = useState<Array<string>>([]);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const selectBoxStyle = {
@@ -96,10 +114,10 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
   useEffect(() => {
     getAllTeachers()
       .then((allTeachers) => {
-        const partialTeachers: Array<Partial<YKNOTUser>> = allTeachers.map(
+        const partialTeachers: Array<Partial<TeacherID>> = allTeachers.map(
           (currTeacher) => ({
             name: currTeacher.name,
-            auth_id: currTeacher.auth_id,
+            id: currTeacher.id,
           }),
         );
         setTeachers(partialTeachers);
@@ -113,17 +131,39 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
   }, [teachers]);
 
   const handleAddTeacher = () => {
-    if (selectedTeacher === '') {
+    if (selectedTeacher.length == 0) {
       setErrorMessage('*Please select a teacher');
     } else {
-      // TODO: Confirmation popup(?) & add teacher
-      handleOnClose();
+      addTeacherCourseFromList(selectedTeacher, courseId)
+        .then(() => {
+          selectedTeacher.forEach((teacherId) => {
+            const existingTeacher = displayTeachers.find(
+              (teacher) => teacher.id === teacherId,
+            );
+            if (!existingTeacher) {
+              const foundTeacher = teachers.find(
+                (teacher) => teacher.id === teacherId,
+              );
+              if (foundTeacher) {
+                displayTeachers.push(foundTeacher);
+              }
+            }
+          });
+          setDisplayTeachers(displayTeachers);
+          setClassTeachers(displayTeachers);
+          handleOnClose();
+          setReloadList(true);
+          setAddSuccess(true);
+        })
+        .catch((err) => {
+          setErrorMessage('*Teacher(s) could not be added.');
+        });
     }
   };
 
   const handleOnClose = (): void => {
     onClose();
-    setSelectedTeacher('');
+    setSelectedTeacher([]);
     setErrorMessage('');
   };
 
@@ -159,7 +199,7 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
               setSelectedTeacher(selectedOptions.map((opt: any) => opt.value));
             }}
             options={teacherList.map((teacher) => ({
-              value: teacher.name,
+              value: teacher.id,
               label: teacher.name,
             }))}
             components={{
@@ -185,4 +225,4 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
   );
 };
 
-export default AddTeacher;
+export default AddTeacherClass;

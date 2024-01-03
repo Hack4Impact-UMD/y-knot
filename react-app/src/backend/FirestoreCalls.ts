@@ -179,6 +179,79 @@ export function removeTeacherCourse(
   });
 }
 
+export function addTeacherCourseFromList(
+  teacherIdList: Array<string>,
+  courseId: string,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    /* runTransaction provides protection against race conditions where
+       2 people are modifying the data at once. It also ensures that either
+       all of these writes succeed or none of them do.
+    */
+    runTransaction(db, async (transaction) => {
+      const courseRef = await transaction.get(doc(db, 'Courses', courseId));
+      if (!courseRef.exists()) {
+        throw 'Course does not exist!';
+      }
+
+      const course: Course = courseRef.data() as Course;
+      var teacherPromises = [];
+
+      for (const teacherId of teacherIdList) {
+        teacherPromises.push(transaction.get(doc(db, 'Users', teacherId)));
+      }
+
+      var teacherRefList: any[] = [];
+      await Promise.all(teacherPromises)
+        .then((teacherRef) => {
+          teacherRefList = teacherRef;
+        })
+        .catch(() => {
+          reject(new Error('A teacher does not exist!'));
+        });
+
+      var updatePromises = [];
+
+      for (let i = 0; i < teacherRefList.length; i++) {
+        var teacherRef = teacherRefList[i];
+        const teacher: Teacher = teacherRef.data() as Teacher;
+        if (
+          !teacher.courses.includes(courseId) &&
+          !course.teachers.includes(teacherIdList[i])
+        ) {
+          teacher.courses.push(courseId);
+          course.teachers.push(teacherIdList[i]);
+          updatePromises.push(
+            transaction.update(doc(db, 'Users', teacherIdList[i]), {
+              courses: teacher.courses,
+            }),
+          );
+        }
+      }
+
+      updatePromises.push(
+        transaction.update(doc(db, 'Courses', courseId), {
+          teachers: course.teachers,
+        }),
+      );
+
+      await Promise.all(updatePromises)
+        .then(() => {
+          resolve();
+        })
+        .catch(() => {
+          reject();
+        });
+    })
+      .then(() => {
+        resolve();
+      })
+      .catch(() => {
+        reject();
+      });
+  });
+}
+
 export function addTeacherCourse(
   teacherId: string,
   courseId: string,
