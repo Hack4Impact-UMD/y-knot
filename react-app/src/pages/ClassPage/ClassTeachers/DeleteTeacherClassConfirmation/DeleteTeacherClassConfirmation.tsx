@@ -16,9 +16,8 @@ interface popupModalType {
   setReloadList: Function;
   teachers: Array<Partial<TeacherID>>;
   setTeachers: Function;
-  reloadList: Boolean;
-  setOpenSuccess: Function;
-  setOpenFailure: Function;
+  setClassTeachers: Function;
+  setRemoveSuccess: Function;
 }
 
 const DeleteTeacherClassConfirmation = ({
@@ -30,10 +29,10 @@ const DeleteTeacherClassConfirmation = ({
   setReloadList,
   setTeachers,
   teachers,
+  setClassTeachers,
   courseId,
   courseName,
-  setOpenSuccess,
-  setOpenFailure,
+  setRemoveSuccess,
 }: popupModalType): React.ReactElement => {
   const [submittedError, setSubmittedError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -47,9 +46,14 @@ const DeleteTeacherClassConfirmation = ({
               return teacher.id !== removeTeacherId.valueOf();
             }),
           );
+          setClassTeachers(
+            teachers.filter((teacher) => {
+              return teacher.id !== removeTeacherId.valueOf();
+            }),
+          );
           onClose();
           setReloadList(true);
-          setOpenSuccess(true);
+          setRemoveSuccess(true);
         })
         .catch((err) => {
           setErrorMessage('*Teacher could not be removed');

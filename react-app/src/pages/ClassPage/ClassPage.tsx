@@ -188,6 +188,7 @@ const ClassPage = (): JSX.Element => {
           {currentTab === Tab.Teachers && (
             <ClassTeachers
               teachers={teachers}
+              setTeachers={setTeachers}
               courseID={courseID!}
               courseName={course.name}
             />
