@@ -10,7 +10,6 @@ const dateFormat = 'LLL dd, yyyy';
 interface courseDetails {
   teacher: string[];
   course: string;
-  section: string;
   color?: string;
   startDate: string;
   endDate: string;

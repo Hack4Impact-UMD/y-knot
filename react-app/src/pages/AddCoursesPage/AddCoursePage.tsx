@@ -34,7 +34,6 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
     name: '',
     startDate: '',
     endDate: '',
-    meetingTime: '',
     students: [],
     teachers: [],
     leadershipApp: false, // is this a leadership class, which requires an application

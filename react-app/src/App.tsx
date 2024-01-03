@@ -138,7 +138,6 @@ function App(): JSX.Element {
                         //     students: [],
                         //     courseType: 'PROGRAM',
                         //     teachers: [],
-                        //     meetingTime: 'Tuesdays 9:30AM',
                         //     leadershipApp: false,
                         //     formId: '',
                         //     introEmail: { content: 'this is an intro email.', files: [] },

@@ -35,7 +35,6 @@ const blankCourse: CourseID = {
   name: '',
   startDate: '',
   endDate: '',
-  meetingTime: '',
   students: [],
   teachers: [],
   leadershipApp: false,
@@ -82,6 +81,10 @@ const ClassPage = (): JSX.Element => {
     }
   }, []);
 
+  function titleCase(str: string) {
+    return str && str[0].toUpperCase() + str.slice(1).toLowerCase();
+  }
+
   return (
     <div>
       <NavigationBar />
@@ -100,7 +103,9 @@ const ClassPage = (): JSX.Element => {
                 dateFormat,
               )} - ${DateTime.fromISO(course.endDate).toFormat(dateFormat)}`}
             </h2>
-            <h2 className={styles.time}>{course.meetingTime}</h2>
+            <h2 className={styles.time}>
+              {titleCase(course.courseType.toString())}
+            </h2>
           </div>
 
           <div className={styles.content}>
