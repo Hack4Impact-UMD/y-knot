@@ -8,6 +8,7 @@ import ClassAttendance from './ClassAttendance/ClassAttendance';
 import ClassHomework from './ClassHomework/ClassHomework';
 import ClassTeachers from './ClassTeachers/ClassTeachers';
 import ClassStudents from './ClassStudents/ClassStudents';
+import ClassSettings from './ClassSettings/ClassSettings';
 import { useParams } from 'react-router-dom';
 import type { Course, CourseID } from '../../types/CourseType';
 import type { StudentID } from '../../types/StudentType';
@@ -193,6 +194,7 @@ const ClassPage = (): JSX.Element => {
               courseName={course.name}
             />
           )}
+          {currentTab === Tab.Settings && <ClassSettings />}
         </div>
       )}
     </div>
