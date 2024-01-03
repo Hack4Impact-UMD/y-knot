@@ -1,12 +1,15 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import type { Course } from '../../../types/CourseType';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTime } from 'luxon';
+import { updateCourse } from '../../../backend/FirestoreCalls';
+import { Snackbar, Alert } from '@mui/material';
 import styles from './ClassSettings.module.css';
 import Select from 'react-select';
 import editImage from '../../../assets/edit.svg';
 import saveImage from '../../../assets/save.svg';
+import * as Yup from 'yup';
 
 const ClassPage = (props: {
   course: Course;
@@ -15,7 +18,21 @@ const ClassPage = (props: {
   const [course, setCourse] = useState<Course>(props.course);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [editing, setEditing] = useState<boolean>(false);
+  const [courseUpdated, setCourseUpdated] = useState<boolean>(false);
   const dropdownOptions = ['Program', 'Academy', 'Club'];
+
+  const courseSchema = Yup.object().shape({
+    name: Yup.string().required('*Required'),
+    startDate: Yup.date().required('*Required'),
+    endDate: Yup.date()
+      .required('*Required')
+      .min(Yup.ref('startDate'), '*End date must be after start date'),
+    courseType: Yup.string()
+      .required('*Required')
+      .oneOf(['PROGRAM', 'ACADEMY', 'CLUB'], '*Invalid course type'),
+    leadershipApp: Yup.boolean().required('*Required'),
+    formId: Yup.string().required('*Required'),
+  });
 
   function formatDateToYYYYMMDD(dateTime: DateTime) {
     const date = dateTime.toJSDate();
@@ -29,6 +46,10 @@ const ClassPage = (props: {
   function titleCase(str: string) {
     return str && str[0].toUpperCase() + str.slice(1).toLowerCase();
   }
+
+  const snackbarClose = (event: any, reason: any) => {
+    setCourseUpdated(false);
+  };
 
   return (
     <div className={styles.mainContainer}>
@@ -202,88 +223,71 @@ const ClassPage = (props: {
           </div>
         </div>
       </div>
-      <div className={styles.bottomButtons}>
-        {/* <button
-                className={styles.createCourseButton}
-                onClick={() => {
-                  courseSchema
-                    .validate(course, { abortEarly: false })
-                    .then(() => {
-                      addCourse(course)
-                        .then(() => {
-                          setFormSubmitted(true);
-                          handleClose();
-                        })
-                        .catch((error) => {})
-                        .finally(() => {
-                          setFieldErrors({});
-                        });
-                    })
-                    .catch((error: Yup.ValidationError) => {
-                      let newErrors = {} as Record<string, string>;
-
-                      for (let i = 0; i < error.inner.length; i++) {
-                        const path = error.inner[i].path;
-
-                        if (path !== undefined) {
-                          newErrors[path] = error.inner[i].message.includes(
-                            'must be a `date` type',
-                          )
-                            ? '*Required'
-                            : error.inner[i].message;
-                        }
-                      }
-                      setFieldErrors(newErrors);
-                    });
-                }}
-              >
-                Create Course
-              </button> */}
-      </div>
+      <div className={styles.bottomButtons}></div>
       <div className={styles.bottomButton}>
-        {/* <ToolTip title={editing ? 'Save' : 'Edit'} placement="top">
-                <button
-                  className={styles.button}
-                  onClick={() => {
-                    if (editing) {
-                      studentSchema
-                        .validate(student, {
-                          abortEarly: false,
-                        })
-                        .then(() => {
-                          updateStudent(student, studentID!)
-                            .catch(() => {
-                              window.location.reload();
-                            })
-                            .finally(() => {
-                              setFieldErrors({});
-                              setEditing(!editing);
-                            });
-                        })
-                        .catch((error: Yup.ValidationError) => {
-                          let newErrors = {} as Record<string, string>;
+        <ToolTip title={editing ? 'Save' : 'Edit'} placement="top">
+          <button
+            className={styles.button}
+            onClick={() => {
+              if (editing) {
+                courseSchema
+                  .validate(course, { abortEarly: false })
+                  .then(() => {
+                    updateCourse(course, props.courseID)
+                      .then(() => {
+                        setCourseUpdated(true);
+                      })
+                      .catch((error) => {})
+                      .finally(() => {
+                        setFieldErrors({});
+                        setEditing(!editing);
+                        setCourseUpdated(true);
+                        setTimeout(function () {
+                          document.location.reload();
+                        }, 1000);
+                      });
+                  })
+                  .catch((error: Yup.ValidationError) => {
+                    let newErrors = {} as Record<string, string>;
 
-                          for (let i = 0; i < error.inner.length; i++) {
-                            const path = error.inner[i].path;
+                    for (let i = 0; i < error.inner.length; i++) {
+                      const path = error.inner[i].path;
 
-                            if (path !== undefined) {
-                              newErrors[path] = error.inner[i].message;
-                            }
-                          }
-                          setFieldErrors(newErrors);
-                        });
-                    } else {
-                      setEditing(!editing);
+                      if (path !== undefined) {
+                        newErrors[path] = error.inner[i].message.includes(
+                          'must be a `date` type',
+                        )
+                          ? '*Required'
+                          : error.inner[i].message;
+                      }
                     }
-                  }}
-                >
-                  <img
-                    className={styles.icon}
-                    src={editing ? saveImage : editImage}
-                  />
-                </button>
-              </ToolTip> */}
+                    setFieldErrors(newErrors);
+                  });
+              } else {
+                setEditing(!editing);
+              }
+            }}
+          >
+            <img
+              className={styles.icon}
+              src={editing ? saveImage : editImage}
+            />
+          </button>
+        </ToolTip>
       </div>
+      <Snackbar
+        anchorOrigin={{
+          horizontal: 'right',
+          vertical: 'bottom',
+        }}
+        open={courseUpdated}
+        autoHideDuration={3000}
+        onClose={snackbarClose}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Course Successfully Updated
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
