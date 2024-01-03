@@ -59,7 +59,9 @@ const RemoveHomework = ({ open, onClose }: modalType): React.ReactElement => {
           <select
             className={styles.selection}
             defaultValue=""
-            onChange={(event) => setSelectedHwk(event.target.value)}
+            onChange={(event) => {
+              setSelectedHwk(event.target.value);
+            }}
           >
             <option value="" disabled hidden>
               Select Homework:

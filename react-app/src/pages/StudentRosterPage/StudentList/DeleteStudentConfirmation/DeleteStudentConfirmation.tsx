@@ -8,13 +8,13 @@ import { type StudentID } from '../../../../types/StudentType';
 interface popupModalType {
   onClose: () => void;
   open: any;
-  popupName: String;
-  popupEmail: String;
-  removeStudentId: String;
+  popupName: string;
+  popupEmail: string;
+  removeStudentId: string;
   setReloadList: Function;
   students: Array<Partial<StudentID>>;
   setStudents: Function;
-  reloadList: Boolean;
+  reloadList: boolean;
   setOpenSuccess: Function;
 }
 

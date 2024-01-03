@@ -69,3 +69,11 @@ html {
 .addTeacher:hover {
   background-color: var(--color-yellow-orange);
 }
+
+@media screen and (max-width: 600px) {
+  .rightPane {
+    width: 100%;
+    position: absolute;
+    top: 80px;
+  }
+}

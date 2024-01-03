@@ -12,7 +12,7 @@ import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
 import TeacherList from './TeacherList/TeacherList';
 import { Alert, Snackbar } from '@mui/material';
-import { TeacherID } from '../../types/UserType';
+import { type TeacherID } from '../../types/UserType';
 import AddTeacher from './AddTeacher/AddTeacher';
 
 const TeacherRosterPage = (): JSX.Element => {
@@ -22,7 +22,7 @@ const TeacherRosterPage = (): JSX.Element => {
   const [error, setError] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
 
-  //Used to handle Deletion alert
+  // Used to handle Deletion alert
   const [openSuccess, setOpenSuccess] = useState<boolean>(false);
   const [openFailure, setOpenFailure] = useState<boolean>(false);
   const handleToClose = (event: any, reason: any) => {
