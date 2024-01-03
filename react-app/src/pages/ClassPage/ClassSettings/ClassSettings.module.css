@@ -140,9 +140,18 @@
   padding-left: 30px;
 }
 
-.name {
+.boxTitle {
   width: 40%;
   margin-left: 50px;
+}
+
+.boxText {
+  /* padding: 0px 12px 0px 12px; */
+  font-style: italic;
+  font-weight: 500;
+  width: 100%;
+  display: flex;
+  gap: 5px;
 }
 
 .headerContainer {

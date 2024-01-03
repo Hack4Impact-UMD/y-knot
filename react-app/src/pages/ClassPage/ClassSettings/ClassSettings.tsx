@@ -55,170 +55,224 @@ const ClassPage = (props: {
     <div className={styles.mainContainer}>
       <div className={styles.listBox}>
         <div className={styles.studentBoxTop}>
-          <p className={styles.name}>Course Name</p>
+          <p className={styles.boxTitle}>Course Name</p>
           <div className={styles.inputContainer}>
-            <input
-              className={styles.inputBox}
-              onChange={(event) => {
-                setCourse({
-                  ...course,
-                  name: event.target.value,
-                });
-              }}
-              placeholder="Enter Name"
-              value={course.name}
-            ></input>
-            {'name' in fieldErrors ? (
-              <div className={styles.errorMessage}>{fieldErrors.name}</div>
+            {editing ? (
+              <>
+                <input
+                  className={styles.inputBox}
+                  onChange={(event) => {
+                    setCourse({
+                      ...course,
+                      name: event.target.value,
+                    });
+                  }}
+                  placeholder="Enter Name"
+                  value={course.name}
+                ></input>
+                {'name' in fieldErrors ? (
+                  <div className={styles.errorMessage}>{fieldErrors.name}</div>
+                ) : (
+                  <></>
+                )}
+              </>
             ) : (
-              <></>
+              <p className={styles.boxText}>{course.name}</p>
             )}
           </div>
         </div>
         <div className={styles.studentBox}>
-          <p className={styles.name}>Start Date</p>
+          <p className={styles.boxTitle}>Start Date</p>
           <div className={styles.inputContainer}>
-            <DatePicker
-              label=""
-              defaultValue={DateTime.fromISO(course.startDate)}
-              onChange={(newValue: DateTime | null) =>
-                setCourse({
-                  ...course,
-                  startDate: newValue ? formatDateToYYYYMMDD(newValue) : '',
-                })
-              }
-              slotProps={{ textField: { size: 'small' } }}
-              sx={{
-                '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-                  border: '1px solid black',
-                }, // at page load
-                '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
-                  { border: '2px solid black' }, // at focused state
-              }}
-            />
-            {'startDate' in fieldErrors ? (
-              <div className={styles.errorMessage}>{fieldErrors.startDate}</div>
+            {editing ? (
+              <>
+                <DatePicker
+                  label=""
+                  defaultValue={DateTime.fromISO(course.startDate)}
+                  onChange={(newValue: DateTime | null) =>
+                    setCourse({
+                      ...course,
+                      startDate: newValue ? formatDateToYYYYMMDD(newValue) : '',
+                    })
+                  }
+                  slotProps={{ textField: { size: 'small' } }}
+                  sx={{
+                    '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline':
+                      {
+                        border: '1px solid black',
+                      }, // at page load
+                    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                      { border: '2px solid black' }, // at focused state
+                  }}
+                />
+                {'startDate' in fieldErrors ? (
+                  <div className={styles.errorMessage}>
+                    {fieldErrors.startDate}
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </>
             ) : (
-              <></>
+              <p className={styles.boxText}>
+                {DateTime.fromISO(course.startDate).toFormat('LLLL dd, yyyy')}
+              </p>
             )}
           </div>
         </div>
         <div className={styles.studentBox}>
-          <p className={styles.name}>End Date</p>
+          <p className={styles.boxTitle}>End Date</p>
           <div className={styles.inputContainer}>
             <div className={styles.inputContainer}>
-              <DatePicker
-                label=""
-                defaultValue={DateTime.fromISO(course.endDate)}
-                onChange={(newValue: DateTime | null) =>
-                  setCourse({
-                    ...course,
-                    endDate: newValue ? formatDateToYYYYMMDD(newValue) : '',
-                  })
-                }
-                slotProps={{ textField: { size: 'small' } }}
-                sx={{
-                  '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
-                    border: '1px solid black',
-                  }, // at page load
-                  '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
-                    { border: '2px solid black' }, // at focused state
-                }}
-              />
-              {'endDate' in fieldErrors ? (
-                <div className={styles.errorMessage}>{fieldErrors.endDate}</div>
+              {editing ? (
+                <>
+                  <DatePicker
+                    label=""
+                    defaultValue={DateTime.fromISO(course.endDate)}
+                    onChange={(newValue: DateTime | null) =>
+                      setCourse({
+                        ...course,
+                        endDate: newValue ? formatDateToYYYYMMDD(newValue) : '',
+                      })
+                    }
+                    slotProps={{ textField: { size: 'small' } }}
+                    sx={{
+                      '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline':
+                        {
+                          border: '1px solid black',
+                        }, // at page load
+                      '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                        { border: '2px solid black' }, // at focused state
+                    }}
+                  />
+                  {'endDate' in fieldErrors ? (
+                    <div className={styles.errorMessage}>
+                      {fieldErrors.endDate}
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+                </>
               ) : (
-                <></>
+                <p className={styles.boxText}>
+                  {DateTime.fromISO(course.endDate).toFormat('LLLL dd, yyyy')}
+                </p>
               )}
             </div>
           </div>
         </div>
         <div className={styles.studentBox}>
-          <p className={styles.name}>Course Type</p>
+          <p className={styles.boxTitle}>Course Type</p>
           <div className={styles.inputContainer}>
-            <Select
-              placeholder="Select Program"
-              className={styles.dateSelection}
-              styles={{
-                control: (baseStyles) => ({
-                  ...baseStyles,
-                  minWidth: '300px',
-                  height: '40px',
-                  borderColor: 'black',
-                  boxShadow: 'none',
-                  '&:focus-within': {
-                    border: '2px solid black',
-                  },
-                  '&:hover': {
-                    border: '1px solid black',
-                  },
-                }),
-              }}
-              options={dropdownOptions.map((option) => {
-                return { value: option, label: option };
-              })}
-              onChange={(newValue) => {
-                setCourse({
-                  ...course,
-                  endDate: newValue ? newValue.value.toUpperCase() : '',
-                });
-              }}
-              defaultValue={{
-                value: titleCase(course.courseType.toString()),
-                label: titleCase(course.courseType.toString()),
-              }}
-            />
-          </div>
-        </div>
-        <div className={styles.studentBox}>
-          <p className={styles.name}>Leadership Academy</p>
-          <div className={styles.inputContainer}>
-            <div className={styles.radioButtonGroup}>
-              <input
-                className={styles.radioButton}
-                id="Yes"
-                type="radio"
-                name="radioGroup"
-                value="yes"
-                checked={course.leadershipApp === true}
-                onChange={() => setCourse({ ...course, leadershipApp: true })}
+            {editing ? (
+              <Select
+                placeholder="Select Program"
+                className={styles.dateSelection}
+                styles={{
+                  control: (baseStyles) => ({
+                    ...baseStyles,
+                    minWidth: '300px',
+                    height: '40px',
+                    borderColor: 'black',
+                    boxShadow: 'none',
+                    '&:focus-within': {
+                      border: '2px solid black',
+                    },
+                    '&:hover': {
+                      border: '1px solid black',
+                    },
+                  }),
+                }}
+                options={dropdownOptions.map((option) => {
+                  return { value: option, label: option };
+                })}
+                onChange={(newValue) => {
+                  setCourse({
+                    ...course,
+                    endDate: newValue ? newValue.value.toUpperCase() : '',
+                  });
+                }}
+                defaultValue={{
+                  value: titleCase(course.courseType.toString()),
+                  label: titleCase(course.courseType.toString()),
+                }}
               />
-              <label className={styles.yesLabel} htmlFor="Yes">
-                Yes
-              </label>
-              <input
-                className={styles.radioButton}
-                id="No"
-                type="radio"
-                name="radioGroup"
-                value="no"
-                checked={course.leadershipApp === false}
-                onChange={() => setCourse({ ...course, leadershipApp: false })}
-              />
-              <label className={styles.noLabel} htmlFor="No">
-                No
-              </label>
-            </div>
-          </div>
-        </div>
-        <div className={styles.studentBox}>
-          <p className={styles.name}>JotForm ID</p>
-          <div className={styles.inputContainer}>
-            <input
-              className={styles.inputBox}
-              placeholder="Enter ID"
-              value={course.formId}
-              onChange={(event) => {
-                setCourse({
-                  ...course,
-                  formId: event.target.value,
-                });
-              }}
-            ></input>
-            {'formId' in fieldErrors ? (
-              <div className={styles.errorMessage}>{fieldErrors.formId}</div>
             ) : (
-              <></>
+              <p className={styles.boxText}>
+                {titleCase(course.courseType.toString())}
+              </p>
+            )}
+          </div>
+        </div>
+        <div className={styles.studentBox}>
+          <p className={styles.boxTitle}>Leadership Academy</p>
+          <div className={styles.inputContainer}>
+            {editing ? (
+              <>
+                <div className={styles.radioButtonGroup}>
+                  <input
+                    className={styles.radioButton}
+                    id="Yes"
+                    type="radio"
+                    name="radioGroup"
+                    value="yes"
+                    checked={course.leadershipApp === true}
+                    onChange={() =>
+                      setCourse({ ...course, leadershipApp: true })
+                    }
+                  />
+                  <label className={styles.yesLabel} htmlFor="Yes">
+                    Yes
+                  </label>
+                  <input
+                    className={styles.radioButton}
+                    id="No"
+                    type="radio"
+                    name="radioGroup"
+                    value="no"
+                    checked={course.leadershipApp === false}
+                    onChange={() =>
+                      setCourse({ ...course, leadershipApp: false })
+                    }
+                  />
+                  <label className={styles.noLabel} htmlFor="No">
+                    No
+                  </label>
+                </div>
+              </>
+            ) : (
+              <p className={styles.boxText}>
+                {course.leadershipApp ? 'Yes' : 'No'}
+              </p>
+            )}
+          </div>
+        </div>
+        <div className={styles.studentBox}>
+          <p className={styles.boxTitle}>JotForm ID</p>
+          <div className={styles.inputContainer}>
+            {editing ? (
+              <>
+                <input
+                  className={styles.inputBox}
+                  placeholder="Enter ID"
+                  value={course.formId}
+                  onChange={(event) => {
+                    setCourse({
+                      ...course,
+                      formId: event.target.value,
+                    });
+                  }}
+                ></input>
+                {'formId' in fieldErrors ? (
+                  <div className={styles.errorMessage}>
+                    {fieldErrors.formId}
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </>
+            ) : (
+              <p className={styles.boxText}>{course.formId}</p>
             )}
           </div>
         </div>
