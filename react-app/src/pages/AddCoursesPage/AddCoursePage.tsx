@@ -40,7 +40,7 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
     leadershipApp: false, // is this a leadership class, which requires an application
     courseType: 'PROGRAM',
     formId: '',
-    introEmail: { content: '' },
+    introEmail: { content: '', files: [] },
     attendance: [],
     homeworks: [],
   };

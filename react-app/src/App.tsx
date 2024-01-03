@@ -141,7 +141,7 @@ function App(): JSX.Element {
                         //     meetingTime: 'Tuesdays 9:30AM',
                         //     leadershipApp: false,
                         //     formId: '',
-                        //     introEmail: { content: 'this is an intro email.' },
+                        //     introEmail: { content: 'this is an intro email.', files: [] },
                         //     attendance: [],
                         //     homeworks: []
                         //   })

@@ -40,7 +40,7 @@ const blankCourse: CourseID = {
   leadershipApp: false,
   courseType: 'ACADEMY',
   formId: '',
-  introEmail: { content: '' },
+  introEmail: { content: '', files: [] },
   attendance: [],
   homeworks: [],
   id: '',

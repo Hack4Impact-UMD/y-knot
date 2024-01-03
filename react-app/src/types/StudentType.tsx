@@ -41,10 +41,4 @@ export interface StudentHomework {
   completed: boolean;
 }
 
-export interface StudentFile {
-  name: string;
-  path: string;
-  downloadURL: string;
-};
-
 export type Progress = 'INPROGRESS' | 'PASS' | 'FAIL' | 'NA';
