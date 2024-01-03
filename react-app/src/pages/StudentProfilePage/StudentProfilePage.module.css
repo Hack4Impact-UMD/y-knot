@@ -66,7 +66,7 @@
 }
 
 .button:hover {
-  width: 65px;
+  width: 4rem;
   height: 50px;
   border-radius: 15px;
   border: none;
@@ -91,7 +91,7 @@
 
 .box {
   border-bottom: 1px solid black;
-  padding: 20px;
+  padding: 15px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -107,7 +107,6 @@
 .boxTitle {
   font-style: normal;
   font-weight: 400;
-  font-size: 1.25rem;
   width: 30%;
   text-align: center;
   padding-top: 0.25rem;
@@ -120,7 +119,6 @@
   display: flex;
   font-style: italic;
   font-weight: 500;
-  font-size: 1.25rem;
 }
 
 .nameInputs {
