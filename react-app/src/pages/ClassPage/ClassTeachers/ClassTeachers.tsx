@@ -97,18 +97,13 @@ const ClassTeachers = (props: {
           Error retrieving teachers. Please try again later.
         </h4>
       ) : (
-        <>
-          <div className={styles.teachersContainer}>{teacherList}</div>
-          <div className={styles.bottomLevel}>
-            <button
-              className={styles.addButton}
-              onClick={handleRemoveTeacherModal}
-            >
-              Add Teacher
-            </button>
-          </div>
-        </>
+        <div className={styles.teachersContainer}>{teacherList}</div>
       )}
+      <div className={styles.bottomLevel}>
+        <button className={styles.addButton} onClick={handleRemoveTeacherModal}>
+          Add Teacher
+        </button>
+      </div>
       <AddTeacherClass
         courseId={props.courseID}
         open={openRemoveTeacherModal}
