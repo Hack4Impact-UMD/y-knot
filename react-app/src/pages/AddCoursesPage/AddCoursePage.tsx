@@ -1,14 +1,14 @@
 import React from 'react';
-import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import { useState } from 'react';
 import { useAuth } from '../../auth/AuthProvider';
-import Loading from '../../components/LoadingScreen/Loading';
 import { useNavigate } from 'react-router-dom';
 import type { Course } from '../../types/CourseType';
 import { addCourse } from '../../backend/FirestoreCalls';
 import { DateTime } from 'luxon';
-import styles from './AddCoursePage.module.css';
 import { DatePicker } from '@mui/x-date-pickers';
+import NavigationBar from '../../components/NavigationBar/NavigationBar';
+import styles from './AddCoursePage.module.css';
+import Loading from '../../components/LoadingScreen/Loading';
 import Select from 'react-select';
 import * as Yup from 'yup';
 

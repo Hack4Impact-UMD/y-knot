@@ -194,7 +194,9 @@ const ClassPage = (): JSX.Element => {
               courseName={course.name}
             />
           )}
-          {currentTab === Tab.Settings && <ClassSettings />}
+          {currentTab === Tab.Settings && (
+            <ClassSettings course={course} courseID={courseID!} />
+          )}
         </div>
       )}
     </div>
