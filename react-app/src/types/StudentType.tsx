@@ -42,7 +42,8 @@ export interface StudentHomework {
 }
 
 export interface LeadershipApplicant extends Student {
-  idx: number; // display order
+  idx: number; // display order index
+  dateApplied: string; // "YYYY-MM-DD"
   gpa: string;
   gender: string;
   textAnswer1: string;
