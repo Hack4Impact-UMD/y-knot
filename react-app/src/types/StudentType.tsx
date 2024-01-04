@@ -41,4 +41,23 @@ export interface StudentHomework {
   completed: boolean;
 }
 
+export interface LeadershipApplicant extends Student {
+  idx: number; // display order
+  gpa: string;
+  gender: string;
+  textAnswer1: string;
+  transcript: LeadershipFile;
+  reccLetter: LeadershipFile;
+  textAnswer2: string;
+  status: LeadershipStatus;
+  statusNote: string;
+}
+
+export interface LeadershipFile {
+  name: string;
+  path: string;
+  downloadURL: string;
+}
+
 export type Progress = 'INPROGRESS' | 'PASS' | 'FAIL' | 'NA';
+export type LeadershipStatus = 'ACCEPTED' | 'PENDING' | 'REJECTED' | 'NA';
