@@ -132,6 +132,55 @@ export function deleteStudent(id: string): Promise<void> {
   });
 }
 
+export function removeStudentCourse(
+  studentId: string,
+  courseId: string,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    /* runTransaction provides protection against race conditions where
+       2 people are modifying the data at once. It also ensures that either
+       all of these writes succeed or none of them do.
+    */
+    runTransaction(db, async (transaction) => {
+      const studentRef = await transaction.get(doc(db, 'Students', studentId));
+      const courseRef = await transaction.get(doc(db, 'Courses', courseId));
+      if (!studentRef.exists() || !courseRef.exists()) {
+        throw 'Document does not exist!';
+      }
+      const student: Student = studentRef.data() as Student;
+      if (
+        student.courseInformation.find((student) => student.id === courseId)
+      ) {
+        student.courseInformation = student.courseInformation.filter(
+          ({ id }) => !id.includes(courseId),
+        );
+        await transaction.update(doc(db, 'Students', studentId), {
+          courseInformation: student.courseInformation,
+        });
+      } else {
+        reject(new Error('Course does not exist in student'));
+      }
+      const course: Course = courseRef.data() as Course;
+      if (course.students.includes(studentId)) {
+        course.students = course.students.filter(function (s) {
+          return s !== studentId;
+        });
+        await transaction.update(doc(db, 'Courses', courseId), {
+          students: course.students,
+        });
+      } else {
+        reject(new Error('Student does not exist in course'));
+      }
+    })
+      .then(() => {
+        resolve();
+      })
+      .catch(() => {
+        reject();
+      });
+  });
+}
+
 export function removeTeacherCourse(
   teacherId: string,
   courseId: string,
