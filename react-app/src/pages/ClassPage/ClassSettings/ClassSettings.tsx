@@ -186,6 +186,15 @@ const ClassPage = (props: {
                 options={dropdownOptions.map((option) => {
                   return { value: option, label: option };
                 })}
+                theme={(theme) => ({
+                  ...theme,
+                  colors: {
+                    ...theme.colors,
+                    primary25: 'transparent',
+                    primary50: 'transparent',
+                    primary: 'var(--color-orange)',
+                  },
+                })}
                 onChange={(newValue) => {
                   setCourse({
                     ...course,
