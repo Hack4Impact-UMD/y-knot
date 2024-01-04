@@ -31,7 +31,7 @@ const InputOption: React.FC<OptionProps<any, true, any>> = ({
   const selectionStyle = {
     alignItems: 'center',
     backgroundColor: isSelected ? 'var(--color-orange)' : 'transparent',
-    color: isSelected ? 'var(--color-white)' : 'black',
+    color: isSelected ? 'white' : 'black',
     display: 'flex ',
     fontSize: 'large',
     paddingTop: '5px',
@@ -46,7 +46,7 @@ const InputOption: React.FC<OptionProps<any, true, any>> = ({
     fontSize: 'large',
     width: '20px',
     height: '20px',
-    color: isSelected ? 'var(--color-white)' : 'transparent',
+    color: isSelected ? 'white' : 'transparent',
     backgroundColor: 'var(--color-orange)',
     accentColor: 'var(--color-orange)',
     opacity: '50%',

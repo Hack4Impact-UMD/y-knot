@@ -295,14 +295,76 @@ export function addTeacherCourse(
   });
 }
 
-export function addCourse(course: Course): Promise<string> {
+export function addCourse(course: Course): Promise<void> {
   return new Promise((resolve, reject) => {
-    addDoc(collection(db, 'Courses'), course)
-      .then((docRef) => {
-        resolve(docRef.id);
+    // addDoc(collection(db, 'Courses'), course)
+    //   .then((docRef) => {
+    //     resolve(docRef.id);
+    //   })
+    //   .catch((e) => {
+    //     reject(e);
+    //   });
+
+    /* runTransaction provides protection against race conditions where
+       2 people are modifying the data at once. It also ensures that either
+       all of these writes succeed or none of them do.
+    */
+    runTransaction(db, async (transaction) => {
+      var courseId;
+
+      // add course
+      addDoc(collection(db, 'Courses'), course)
+        .then((docRef) => {
+          courseId = docRef.id;
+        })
+        .catch((e) => {
+          reject(e);
+        });
+
+      // get teachers added to course
+      var teacherPromises = [];
+      for (const teacherId of course.teachers) {
+        teacherPromises.push(transaction.get(doc(db, 'Users', teacherId)));
+      }
+
+      var teacherRefList: any[] = [];
+      await Promise.all(teacherPromises)
+        .then((teacherRef) => {
+          teacherRefList = teacherRef;
+        })
+        .catch(() => {
+          reject(new Error('A teacher does not exist!'));
+        });
+
+      if (courseId) {
+        var updatePromises = [];
+
+        // add course to teacher's course list
+        for (let i = 0; i < teacherRefList.length; i++) {
+          var teacherRef = teacherRefList[i];
+          const teacher: Teacher = teacherRef.data() as Teacher;
+          teacher.courses.push(courseId);
+          updatePromises.push(
+            transaction.update(doc(db, 'Users', course.teachers[i]), {
+              courses: teacher.courses,
+            }),
+          );
+        }
+
+        await Promise.all(updatePromises)
+          .then(() => {
+            resolve();
+          })
+          .catch(() => {
+            reject();
+          });
+      }
+    })
+      .then(() => {
+        resolve();
       })
-      .catch((e) => {
-        reject(e);
+      .catch(() => {
+        reject();
       });
   });
 }

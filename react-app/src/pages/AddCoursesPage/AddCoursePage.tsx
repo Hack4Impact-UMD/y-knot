@@ -1,16 +1,62 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../auth/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import type { Course } from '../../types/CourseType';
-import { addCourse } from '../../backend/FirestoreCalls';
+import { type TeacherID } from '../../types/UserType';
+import { getAllTeachers, addCourse } from '../../backend/FirestoreCalls';
 import { DateTime } from 'luxon';
 import { DatePicker } from '@mui/x-date-pickers';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import styles from './AddCoursePage.module.css';
 import Loading from '../../components/LoadingScreen/Loading';
-import Select from 'react-select';
+import Select, { type OptionProps } from 'react-select';
 import * as Yup from 'yup';
+
+const InputOption: React.FC<OptionProps<any, true, any>> = ({
+  isSelected,
+  innerProps,
+  children,
+}) => {
+  const { onMouseDown, onMouseUp, onMouseLeave, ...restInnerProps } =
+    innerProps || {};
+
+  const selectionStyle = {
+    alignItems: 'center',
+    backgroundColor: isSelected ? 'var(--color-orange)' : 'transparent',
+    color: isSelected ? 'white' : 'black',
+    display: 'flex ',
+    fontSize: 'large',
+    paddingTop: '5px',
+    paddingBottom: '5px',
+    borderRadius: '5px',
+    margin: '5px',
+  };
+
+  const checkboxStyle = {
+    marginRight: '10px',
+    marginLeft: '10px',
+    fontSize: 'large',
+    width: '20px',
+    height: '20px',
+    color: isSelected ? 'white' : 'transparent',
+    backgroundColor: 'var(--color-orange)',
+    accentColor: 'var(--color-orange)',
+    opacity: '50%',
+  };
+
+  return (
+    <div
+      {...restInnerProps}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
+      onMouseLeave={onMouseLeave}
+      style={selectionStyle}
+    >
+      <input type="checkbox" checked={isSelected} style={checkboxStyle} />
+      {children}
+    </div>
+  );
+};
 
 function AddCoursePage({ setFormSubmitted, history }: any) {
   const dropdownOptions = ['Program', 'Academy', 'Club'];
@@ -30,6 +76,26 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
     formId: Yup.string().required('*Required'),
   });
 
+  const selectBoxStyle = {
+    control: (baseStyles: any) => ({
+      ...baseStyles,
+      width: '300px',
+      height: 'fit-content',
+      borderColor: 'black',
+      boxShadow: 'none',
+      '&:focus-within': {
+        border: '2px solid black',
+      },
+      '&:hover': {
+        border: '1px solid black',
+      },
+    }),
+    multiValueRemove: (provided: any) => ({
+      ...provided,
+      color: 'var(--color-orange)',
+    }),
+  };
+
   const blankCourse: Course = {
     name: '',
     startDate: '',
@@ -44,6 +110,8 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
     homeworks: [],
   };
   const [course, setCourse] = useState<Course>(blankCourse);
+  const [teachers, setTeachers] = useState<Array<Partial<TeacherID>>>([]);
+  const [teacherList, setTeacherList] = useState<Array<Partial<TeacherID>>>([]);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   function formatDateToYYYYMMDD(dateTime: DateTime) {
@@ -58,6 +126,25 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
   const handleClose = () => {
     navigate('/courses');
   };
+
+  useEffect(() => {
+    getAllTeachers()
+      .then((allTeachers) => {
+        const partialTeachers: Array<Partial<TeacherID>> = allTeachers.map(
+          (currTeacher) => ({
+            name: currTeacher.name,
+            id: currTeacher.id,
+          }),
+        );
+        setTeachers(partialTeachers);
+      })
+      .catch((err) => {})
+      .finally(() => {});
+  });
+
+  useEffect(() => {
+    setTeacherList(teachers);
+  }, [teachers]);
 
   return (
     <div>
@@ -183,6 +270,15 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                     options={dropdownOptions.map((option) => {
                       return { value: option, label: option };
                     })}
+                    theme={(theme) => ({
+                      ...theme,
+                      colors: {
+                        ...theme.colors,
+                        primary25: 'transparent',
+                        primary50: 'transparent',
+                        primary: 'var(--color-orange)',
+                      },
+                    })}
                     onChange={(newValue) => {
                       setCourse({
                         ...course,
@@ -195,7 +291,34 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
               </div>
               <div className={styles.studentBox}>
                 <p className={styles.name}>Teacher(s)</p>
-                <div className={styles.inputContainer}></div>
+                <div className={styles.inputContainer}>
+                  <Select
+                    defaultValue={null}
+                    isMulti
+                    closeMenuOnSelect={false}
+                    hideSelectedOptions={false}
+                    onChange={(selectedOptions: any) => {
+                      setCourse({
+                        ...course,
+                        teachers: selectedOptions
+                          ? selectedOptions.map((opt: any) => opt.value)
+                          : '',
+                      });
+                    }}
+                    options={teacherList.map((teacher) => ({
+                      value: teacher.id,
+                      label: teacher.name,
+                    }))}
+                    components={{
+                      Option: InputOption,
+                      /* Remove clear indicator from the main selection box */
+                      ClearIndicator: () => null,
+                    }}
+                    placeholder="Select Teacher(s)"
+                    styles={selectBoxStyle}
+                    className={styles.dateSelection}
+                  />
+                </div>
               </div>
               <div className={styles.studentBox}>
                 <p className={styles.name}>Leadership Academy</p>
@@ -262,6 +385,7 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                   courseSchema
                     .validate(course, { abortEarly: false })
                     .then(() => {
+                      console.log(course);
                       addCourse(course)
                         .then(() => {
                           setFormSubmitted(true);
@@ -279,6 +403,7 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                         const path = error.inner[i].path;
 
                         if (path !== undefined) {
+                          console.log('date error: ' + error.inner[i].message);
                           newErrors[path] = error.inner[i].message.includes(
                             'must be a `date` type',
                           )

@@ -89,7 +89,7 @@
   width: 150px;
   height: 40px;
   border-style: solid;
-  background: var(--color-white);
+  background: white;
   border-color: black;
   border-radius: 30px;
   font-size: 17px;
