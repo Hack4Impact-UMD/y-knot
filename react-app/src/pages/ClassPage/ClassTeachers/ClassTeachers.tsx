@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../../auth/AuthProvider';
 import { TeacherID } from '../../../types/UserType';
-import styles from '../ClassTeachers/ClassTeachers.module.css';
-import AddTeacherClass from './AddTeacherClass/AddTeacherClass';
+import { Snackbar, Alert } from '@mui/material';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import { Link } from 'react-router-dom';
+import styles from '../ClassTeachers/ClassTeachers.module.css';
+import AddTeacherClass from './AddTeacherClass/AddTeacherClass';
+import DeleteTeacherClassConfirmation from './DeleteTeacherClassConfirmation/DeleteTeacherClassConfirmation';
 import EyeIcon from '../../../assets/view.svg';
 import TrashIcon from '../../../assets/trash.svg';
-import DeleteTeacherClassConfirmation from './DeleteTeacherClassConfirmation/DeleteTeacherClassConfirmation';
-import { Snackbar, Alert } from '@mui/material';
 
 const ClassTeachers = (props: {
   teachers: Array<TeacherID>;
@@ -19,7 +19,7 @@ const ClassTeachers = (props: {
   const [teachers, setTeachers] = useState<any[]>(props.teachers);
   const [teacherList, setTeacherList] = useState<any[]>([]);
   const [error, setError] = useState<boolean>(false);
-  const [openRemoveTeacherModal, setOpenRemoveTeacherModal] =
+  const [openAddTeacherModal, setOpenAddTeacherModal] =
     useState<boolean>(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupName, setPopupName] = useState<string>();
@@ -32,7 +32,7 @@ const ClassTeachers = (props: {
   const authContext = useAuth();
 
   const handleRemoveTeacherModal = () => {
-    setOpenRemoveTeacherModal(!openRemoveTeacherModal);
+    setOpenAddTeacherModal(!openAddTeacherModal);
   };
 
   useEffect(() => {
@@ -106,9 +106,9 @@ const ClassTeachers = (props: {
       </div>
       <AddTeacherClass
         courseId={props.courseID}
-        open={openRemoveTeacherModal}
+        open={openAddTeacherModal}
         onClose={() => {
-          setOpenRemoveTeacherModal(!openRemoveTeacherModal);
+          setOpenAddTeacherModal(!openAddTeacherModal);
         }}
         setReloadList={setReloadList}
         displayTeachers={teachers}
