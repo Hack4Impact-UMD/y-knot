@@ -28,29 +28,16 @@ const AddNote = (props: {
   const handleEditNote = async () => {
     setCanWrite(false);
     if (note !== props.currNote) {
-      if (props.title === 'Attendance') {
-        updateCourseAttendance(props.course, props.courseID, {
-          date: props.selectedHomework,
-          notes: note,
+      updateCourseHomework(props.course, props.courseID, {
+        name: props.selectedHomework,
+        notes: note,
+      })
+        .then((newCourse) => {
+          props.setCourse(newCourse);
         })
-          .then((newCourse) => {
-            props.setCourse(newCourse);
-          })
-          .catch((e: Error) => {
-            setErrorMessage(e.message + '**');
-          });
-      } else {
-        updateCourseHomework(props.course, props.courseID, {
-          name: props.selectedHomework,
-          notes: note,
-        })
-          .then((newCourse) => {
-            props.setCourse(newCourse);
-          })
-          .catch((e: Error) => {
-            setErrorMessage(e.message + '**');
-          });
-      }
+        .catch((e: Error) => {
+          setErrorMessage(e.message + '**');
+        });
     }
   };
 

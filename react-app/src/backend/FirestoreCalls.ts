@@ -426,24 +426,35 @@ export function addCourseAttendance(
 export function updateCourseAttendance(
   course: Course,
   courseID: string,
+  prevAttendance: { date: string; notes: string },
   updatedAttendance: { date: string; notes: string },
 ): Promise<Course> {
   return new Promise((resolve, reject) => {
-    let noReplace: boolean = true;
-    const newAttendance = course.attendance.map((prevAttendance) => {
-      if (prevAttendance.date === updatedAttendance.date) {
+    let noReplace = true;
+    let containsDuplicate = false;
+    const newAttendance: Array<Attendance> = [];
+    course.attendance.forEach((att) => {
+      if (prevAttendance.date === att.date) {
         noReplace = false;
-        return updatedAttendance;
+      } else if (updatedAttendance.date === att.date) {
+        containsDuplicate = true;
       } else {
-        return prevAttendance;
+        newAttendance.push(att);
       }
     });
+
     if (noReplace) {
-      reject(new Error('Attendance does not exist'));
+      reject(new Error('Attendance does not exist for selected date'));
       return;
     }
 
-    course.attendance = newAttendance;
+    if (containsDuplicate) {
+      reject(new Error('Attendance already exists for selected date'));
+      return;
+    }
+
+    newAttendance.push(updatedAttendance);
+    course.attendance = newAttendance.sort(compareDayJSDates);
     updateCourse(course, courseID)
       .then(() => {
         resolve(course);
@@ -519,7 +530,7 @@ export function addAttendanceToStudents(
   students: Array<StudentID>,
 ): Promise<Array<StudentID>> {
   return new Promise((resolve, reject) => {
-    const res = students.map((student) => {
+    const newStudentList = students.map((student) => {
       const newCourseInfo = student.courseInformation.map((course) => {
         if (course.id === courseID) {
           course.attendance.push({ date: date, attended: false });
@@ -535,7 +546,39 @@ export function addAttendanceToStudents(
       });
       return student;
     });
-    resolve(res);
+    resolve(newStudentList);
+  });
+}
+
+export function updateAttendanceStudents(
+  courseID: string,
+  prevDate: string,
+  updatedDate: string,
+  students: Array<StudentID>,
+): Promise<Array<StudentID>> {
+  return new Promise((resolve, reject) => {
+    const newStudentList = students.map((student) => {
+      const newCourseInfo = student.courseInformation.map((course) => {
+        if (course.id === courseID) {
+          let newCourseAttendanceList: Array<StudentAttendance> = [];
+          course.attendance.forEach((attendance) => {
+            if (attendance.date !== prevDate) {
+              newCourseAttendanceList.push(attendance);
+            }
+          });
+          newCourseAttendanceList.push({ date: updatedDate, attended: false });
+          course.attendance = newCourseAttendanceList.sort(compareDayJSDates);
+        }
+        return course;
+      });
+      student.courseInformation = newCourseInfo;
+      updateStudent(student, student.id).catch((e) => {
+        reject(e);
+        return;
+      });
+      return student;
+    });
+    resolve(newStudentList);
   });
 }
 

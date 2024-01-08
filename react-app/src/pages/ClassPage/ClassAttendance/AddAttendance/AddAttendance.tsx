@@ -29,14 +29,14 @@ const AddAttendance = (props: {
   const handleAddAttendance = async () => {
     let date = selectedDate?.format('YYYY-MM-DD');
     addCourseAttendance(props.course, props.courseID, {
-      date: date !== undefined ? date : '',
+      date: date ? date : '',
       notes: note,
     })
       .then((newCourse) => {
         props.setCourse(newCourse);
         addAttendanceToStudents(
           props.courseID,
-          date !== undefined ? date : '',
+          date ? date : '',
           props.students,
         )
           .then((newStudentList) => {
@@ -86,7 +86,7 @@ const AddAttendance = (props: {
               <DatePicker
                 label="Select Date"
                 value={selectedDate}
-                onChange={(newValue) => setSelectedDate(newValue)}
+                onChange={(newDate) => setSelectedDate(newDate)}
               />
             </LocalizationProvider>
           </div>

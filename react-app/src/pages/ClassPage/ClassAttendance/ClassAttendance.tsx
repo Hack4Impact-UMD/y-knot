@@ -23,12 +23,12 @@ const ClassAttendance = (props: {
   courseID: string | undefined;
   setCourse: React.Dispatch<React.SetStateAction<Course>>;
 }): JSX.Element => {
-  const [selectedAttDate, setDate] = useState<string>(
+  const [selectedAttDate, setSelectedDate] = useState<string>(
     props.attendance !== undefined && props.attendance.length > 0
       ? props.attendance.slice(-1)[0].date.toString()
       : '',
   );
-  const [selectedAttNote, setNote] = useState<string>(
+  const [selectedAttNote, setSelectedNote] = useState<string>(
     props.attendance !== undefined && props.attendance.length > 0
       ? props.attendance.slice(-1)[0].notes.toString()
       : '',
@@ -58,8 +58,8 @@ const ClassAttendance = (props: {
     if (date.length > 0) {
       props.course.attendance.forEach((att) => {
         if (att.date === date) {
-          setDate(date);
-          setNote(att.notes);
+          setSelectedDate(date);
+          setSelectedNote(att.notes);
         }
       });
     }
@@ -149,17 +149,22 @@ const ClassAttendance = (props: {
         courseID={props.courseID !== undefined ? props.courseID : ''}
       />
       <AddNote
-        title="Attendance"
         selectedDate={
           selectedAttDate !== ''
             ? selectedAttDate
             : 'No attendance currently exists'
         }
-        currNote={selectedAttNote !== '' ? selectedAttNote : 'No date selected'}
+        setSelectedDate={setSelectedDate}
+        selectedNote={
+          selectedAttNote !== '' ? selectedAttNote : 'No date selected'
+        }
+        setSelectedNote={setSelectedNote}
         open={openAddNoteModal}
         onClose={() => {
           setOpenAddNoteModal(!openAddNoteModal);
         }}
+        students={props.students}
+        setStudents={props.setStudents}
         course={props.course}
         courseID={props.courseID ?? ''}
         setCourse={props.setCourse}

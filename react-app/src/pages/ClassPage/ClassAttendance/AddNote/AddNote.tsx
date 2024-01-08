@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import type { Course, CourseID } from '../../../../types/CourseType';
+import type { Course } from '../../../../types/CourseType';
+import { StudentID } from '../../../../types/StudentType';
 import styles from './AddNote.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
 import x from '../../../../assets/x.svg';
@@ -11,16 +12,19 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import {
   updateCourseAttendance,
-  updateCourseHomework,
+  updateAttendanceStudents,
 } from '../../../../backend/FirestoreCalls';
 import { ToolTip } from '../../../../components/ToolTip/ToolTip';
 
 const AddNote = (props: {
   open: boolean;
   onClose: any;
-  title: string;
   selectedDate: string;
-  currNote: string;
+  setSelectedDate: React.Dispatch<React.SetStateAction<string>>;
+  selectedNote: string;
+  setSelectedNote: React.Dispatch<React.SetStateAction<string>>;
+  students: Array<StudentID>;
+  setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
   course: Course;
   courseID: string;
   setCourse: React.Dispatch<React.SetStateAction<Course>>;
@@ -28,45 +32,57 @@ const AddNote = (props: {
   const [note, setNote] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [canWrite, setCanWrite] = useState<boolean>(false);
-  const [datePickerDate, setDatePickerDate] = useState<Dayjs | null>();
+  const [datePickerDate, setDatePickerDate] = useState<Dayjs | null>(
+    props.selectedDate === '' ? dayjs() : dayjs(props.selectedDate),
+  );
 
   const handleEditNote = async () => {
     setCanWrite(false);
-    if (note !== props.currNote) {
-      if (props.title === 'Attendance') {
-        updateCourseAttendance(props.course, props.courseID, {
-          date: props.selectedDate,
+    const newDate = datePickerDate?.format('YYYY-MM-DD');
+    if (note !== props.selectedNote || newDate !== props.selectedDate) {
+      updateCourseAttendance(
+        props.course,
+        props.courseID,
+        { date: props.selectedDate, notes: props.selectedNote },
+        {
+          date: newDate ? newDate : '',
           notes: note,
+        },
+      )
+        .then((newCourse) => {
+          updateAttendanceStudents(
+            props.courseID,
+            props.selectedDate,
+            newDate ? newDate : '',
+            props.students,
+          )
+            .then((newStudentList) => {
+              props.setSelectedDate(newDate ? newDate : '');
+              props.setSelectedNote(note);
+              props.setStudents(newStudentList);
+              props.setCourse(newCourse);
+            })
+            .catch((e: Error) => {
+              setNote(props.selectedNote);
+              setErrorMessage(e.message + '**');
+            });
         })
-          .then((newCourse) => {
-            props.setCourse(newCourse);
-          })
-          .catch((e: Error) => {
-            setErrorMessage(e.message + '**');
-          });
-      } else {
-        updateCourseHomework(props.course, props.courseID, {
-          name: props.selectedDate,
-          notes: note,
-        })
-          .then((newCourse) => {
-            props.setCourse(newCourse);
-          })
-          .catch((e: Error) => {
-            setErrorMessage(e.message + '**');
-          });
-      }
+        .catch((e: Error) => {
+          setNote(props.selectedNote);
+          setErrorMessage(e.message + '**');
+        });
     }
   };
 
   const handleOnClose = (): void => {
     props.onClose();
     setCanWrite(false);
+    setNote(props.selectedNote);
     setErrorMessage('');
   };
 
   useEffect(() => {
-    setNote(props.currNote);
+    setNote(props.selectedNote);
   }, [props.selectedDate]);
 
   return (
@@ -90,10 +106,37 @@ const AddNote = (props: {
           </button>
         </div>
         <div className={styles.content}>
-          <h1 className={styles.heading}>{props.title} Note</h1>
+          <h1 className={styles.heading}>Attendance Note</h1>
           <p className={styles.error}>{errorMessage}</p>
           <div className={styles.nameContainer}>
-            <div className={styles.nameInput}>{props.selectedDate}</div>
+            {canWrite ? (
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label=""
+                  format="YYYY-MM-DD"
+                  slotProps={{ textField: { size: 'small' } }}
+                  value={
+                    props.selectedDate === ''
+                      ? dayjs()
+                      : dayjs(props.selectedDate)
+                  }
+                  onChange={(newDate) => setDatePickerDate(newDate)}
+                  sx={{
+                    backgroundColor: '#d9d9d9',
+                    borderRadius: '10px',
+                    width: '290px',
+                    '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline':
+                      {
+                        border: '0px',
+                      }, // at page load
+                    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                      { border: '1px solid black', borderRadius: '10px' }, // at focused state
+                  }}
+                />
+              </LocalizationProvider>
+            ) : (
+              <div className={styles.nameInput}>{props.selectedDate}</div>
+            )}
             <ToolTip title={canWrite ? 'Save' : 'Edit'} placement="top">
               <button
                 className={styles.button}
@@ -116,7 +159,7 @@ const AddNote = (props: {
           </div>
           <div className={styles.noteContainer}>
             <textarea
-              placeholder={props.currNote}
+              placeholder={props.selectedNote}
               className={styles.noteInput}
               onChange={(event) => {
                 setNote(event.target.value);
