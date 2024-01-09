@@ -397,7 +397,7 @@ const compareDayJSDates = (
 export function addCourseAttendance(
   course: Course,
   courseID: string,
-  newAttendance: { date: string; notes: string },
+  newAttendance: Attendance,
 ): Promise<Course> {
   return new Promise((resolve, reject) => {
     let failed: boolean = false;
@@ -426,35 +426,35 @@ export function addCourseAttendance(
 export function updateCourseAttendance(
   course: Course,
   courseID: string,
-  prevAttendance: { date: string; notes: string },
-  updatedAttendance: { date: string; notes: string },
+  prevAttendance: Attendance,
+  updatedAttendance: Attendance,
 ): Promise<Course> {
   return new Promise((resolve, reject) => {
     let noReplace = true;
     let containsDuplicate = false;
-    const newAttendance: Array<Attendance> = [];
+    let newAttendanceList: Array<Attendance> = [];
     course.attendance.forEach((att) => {
       if (prevAttendance.date === att.date) {
         noReplace = false;
       } else if (updatedAttendance.date === att.date) {
         containsDuplicate = true;
       } else {
-        newAttendance.push(att);
+        newAttendanceList.push(att);
       }
     });
 
     if (noReplace) {
-      reject(new Error('Attendance does not exist for selected date'));
+      reject(new Error('Attendance for selected date does not exist '));
       return;
     }
 
     if (containsDuplicate) {
-      reject(new Error('Attendance already exists for selected date'));
+      reject(new Error('Attendance for selected date already exists '));
       return;
     }
 
-    newAttendance.push(updatedAttendance);
-    course.attendance = newAttendance.sort(compareDayJSDates);
+    newAttendanceList.push(updatedAttendance);
+    course.attendance = newAttendanceList.sort(compareDayJSDates);
     updateCourse(course, courseID)
       .then(() => {
         resolve(course);
@@ -468,7 +468,7 @@ export function updateCourseAttendance(
 export function addCourseHomework(
   course: Course,
   courseID: string,
-  newHomework: { name: string; notes: string },
+  newHomework: Homework,
 ): Promise<Course> {
   return new Promise((resolve, reject) => {
     let failed: boolean = false;
@@ -496,24 +496,35 @@ export function addCourseHomework(
 export function updateCourseHomework(
   course: Course,
   courseID: string,
-  updatedHomework: { name: string; notes: string },
+  prevHomework: Homework,
+  updatedHomework: Homework,
 ): Promise<Course> {
   return new Promise((resolve, reject) => {
-    let noReplace: boolean = true;
-    const newHomework = course.homeworks.map((prevHomework) => {
-      if (prevHomework.name === updatedHomework.name) {
+    let noReplace = true;
+    let containsDuplicate = false;
+    let newHomeworkList: Array<Homework> = [];
+    course.homeworks.forEach((hw) => {
+      if (prevHomework.name === hw.name) {
         noReplace = false;
-        return updatedHomework;
+      } else if (updatedHomework.name === hw.name) {
+        containsDuplicate = true;
       } else {
-        return prevHomework;
+        newHomeworkList.push(hw);
       }
     });
+
     if (noReplace) {
-      reject(new Error('Attendance does not exist'));
+      reject(new Error('Homework with chosen name does not exist '));
       return;
     }
 
-    course.homeworks = newHomework;
+    if (containsDuplicate) {
+      reject(new Error('Homework  with chosen name already exists'));
+      return;
+    }
+
+    newHomeworkList.push(updatedHomework);
+    course.homeworks = newHomeworkList;
     updateCourse(course, courseID)
       .then(() => {
         resolve(course);
@@ -561,12 +572,18 @@ export function updateAttendanceStudents(
       const newCourseInfo = student.courseInformation.map((course) => {
         if (course.id === courseID) {
           let newCourseAttendanceList: Array<StudentAttendance> = [];
+          let prevAttended = false;
           course.attendance.forEach((attendance) => {
             if (attendance.date !== prevDate) {
               newCourseAttendanceList.push(attendance);
+            } else {
+              prevAttended = attendance.attended;
             }
           });
-          newCourseAttendanceList.push({ date: updatedDate, attended: false });
+          newCourseAttendanceList.push({
+            date: updatedDate,
+            attended: prevAttended,
+          });
           course.attendance = newCourseAttendanceList.sort(compareDayJSDates);
         }
         return course;
@@ -603,6 +620,44 @@ export function addHomeworkToStudents(
       return student;
     });
     resolve(res);
+  });
+}
+
+export function updateHomeworkStudents(
+  courseID: string,
+  prevHwName: string,
+  updatedHwName: string,
+  students: Array<StudentID>,
+): Promise<Array<StudentID>> {
+  return new Promise((resolve, reject) => {
+    const newStudentList = students.map((student) => {
+      const newCourseInfo = student.courseInformation.map((course) => {
+        if (course.id === courseID) {
+          let newCourseHomework: Array<StudentHomework> = [];
+          let prevCompleted = false;
+          course.homeworks.forEach((homework) => {
+            if (homework.name !== prevHwName) {
+              newCourseHomework.push(homework);
+            } else {
+              prevCompleted = homework.completed;
+            }
+          });
+          newCourseHomework.push({
+            name: updatedHwName,
+            completed: prevCompleted,
+          });
+          course.homeworks = newCourseHomework;
+        }
+        return course;
+      });
+      student.courseInformation = newCourseInfo;
+      updateStudent(student, student.id).catch((e) => {
+        reject(e);
+        return;
+      });
+      return student;
+    });
+    resolve(newStudentList);
   });
 }
 

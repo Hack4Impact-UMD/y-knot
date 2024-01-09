@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import type { StudentID } from '../../../types/StudentType';
 import type { Course } from '../../../types/CourseType';
@@ -16,7 +16,6 @@ interface homeworkObj {
 }
 
 const ClassHomework = (props: {
-  homework: Array<homeworkObj>;
   students: Array<StudentID>;
   setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
   course: Course;
@@ -24,13 +23,13 @@ const ClassHomework = (props: {
   setCourse: React.Dispatch<React.SetStateAction<Course>>;
 }): JSX.Element => {
   const [selectedHomeworkName, setHomeworkName] = useState<string>(
-    props.homework !== undefined && props.homework.length > 0
-      ? props.homework.slice(-1)[0].name.toString()
+    props.course.homeworks !== undefined && props.course.homeworks.length > 0
+      ? props.course.homeworks.slice(-1)[0].name.toString()
       : '',
   );
   const [selectedHomeworkNote, setHomeworkNote] = useState<string>(
-    props.homework !== undefined && props.homework.length > 0
-      ? props.homework.slice(-1)[0].notes.toString()
+    props.course.homeworks !== undefined && props.course.homeworks.length > 0
+      ? props.course.homeworks.slice(-1)[0].notes.toString()
       : '',
   );
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
@@ -87,7 +86,7 @@ const ClassHomework = (props: {
               borderColor: 'black',
             }),
           }}
-          options={props.homework.map((assignment) => {
+          options={props.course.homeworks.map((assignment) => {
             return { value: assignment.name, label: assignment.name };
           })}
         />
@@ -146,25 +145,28 @@ const ClassHomework = (props: {
         students={props.students}
         setStudents={props.setStudents}
         course={props.course}
-        setCourse={props.setCourse}
         courseID={props.courseID !== undefined ? props.courseID : ''}
+        setCourse={props.setCourse}
       />
       <AddNote
-        title="Homework"
-        selectedHomework={
+        selectedName={
           selectedHomeworkName !== ''
             ? selectedHomeworkName
             : 'No homework currently exists'
         }
-        currNote={
+        setSelectedName={setHomeworkName}
+        selectedNote={
           selectedHomeworkNote !== ''
             ? selectedHomeworkNote
             : 'No assignment selected'
         }
+        setSelectedNote={setHomeworkNote}
         open={openAddNoteModal}
         onClose={() => {
           setOpenAddNoteModal(!openAddNoteModal);
         }}
+        students={props.students}
+        setStudents={props.setStudents}
         course={props.course}
         courseID={props.courseID ?? ''}
         setCourse={props.setCourse}

@@ -29,14 +29,15 @@ const AddNote = (props: {
   courseID: string;
   setCourse: React.Dispatch<React.SetStateAction<Course>>;
 }): React.ReactElement => {
-  const [note, setNote] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [canWrite, setCanWrite] = useState<boolean>(false);
   const [datePickerDate, setDatePickerDate] = useState<Dayjs | null>(
     props.selectedDate === '' ? dayjs() : dayjs(props.selectedDate),
   );
+  const [note, setNote] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [canWrite, setCanWrite] = useState<boolean>(false);
 
   const handleEditNote = async () => {
+    setErrorMessage('');
     setCanWrite(false);
     const newDate = datePickerDate?.format('YYYY-MM-DD');
     if (note !== props.selectedNote || newDate !== props.selectedDate) {
@@ -82,6 +83,7 @@ const AddNote = (props: {
   };
 
   useEffect(() => {
+    setDatePickerDate(dayjs(props.selectedDate));
     setNote(props.selectedNote);
   }, [props.selectedDate]);
 

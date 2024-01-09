@@ -57,14 +57,17 @@
 
 .nameInput {
   width: 73%;
-  height: 100%;
-  padding: 11px 15px;
+  height: 20px;
+  padding: 11px 11px;
+  font-size: 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
   border: none;
   border-radius: 10px;
   outline: none;
   background-color: var(--color-grey);
-  color: black;
-  font-size: 0.9rem;
+  resize: none;
 }
 
 .noteContainer {
