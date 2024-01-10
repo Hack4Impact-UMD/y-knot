@@ -104,6 +104,44 @@
   display: none;
 }
 
+@media screen and (min-width: 601px) and (max-width: 1150px) {
+  .navigationBar {
+    width: 120px;
+  }
+
+  .yKnotLogo {
+    width: 90%;
+  }
+
+  .header {
+    text-align: center;
+    padding-right: 11%;
+    margin: 15% 0% 0% 0%;
+    font-size: 1.4rem;
+  }
+
+  .tab {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .linkOptions {
+    padding: 15% 5%;
+    margin: 15% 0;
+  }
+  
+  .linkOptionsUnselected {
+    padding: 5% 5%;
+    margin: 15% 0;
+  }
+
+  .iconInactive, .iconActive, .logOutIcon {
+    width: 1.1rem;
+  }
+
+}
+
+
 @media screen and (max-width: 600px) {
   .background {
     background-color: rgba(0, 0, 0, 0.4);
