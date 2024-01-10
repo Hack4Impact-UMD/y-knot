@@ -21,6 +21,7 @@ import CertificatePage from './pages/CertificatePage/CertificatePage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import TeacherRosterPage from './pages/TeacherRosterPage/TeacherRosterPage';
+import MergeStudentPage from './pages/MergeStudentPage/MergeStudentPage';
 import { createUser } from './backend/CloudFunctionsCalls';
 import { addCourse, addTeacherCourse } from './backend/FirestoreCalls';
 import AddCoursePage from './pages/AddCoursesPage/AddCoursePage';
@@ -180,6 +181,51 @@ function App(): JSX.Element {
                 element={
                   <RequireAuth>
                     <CertificatePage name="Fiona Love" course="Math" />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/mergestudents"
+                element={
+                  <RequireAuth>
+                    <MergeStudentPage
+                      studentA={{
+                        id: 'pEpBrMGdq8f3Dabli1Ij',
+                        firstName: 'Chris',
+                        lastName: 'Wilson',
+                        gradeLevel: '5',
+                        addrFirstLine: '1234 Street',
+                        city: 'College Park',
+                        state: 'Maryland',
+                        zipCode: '20740',
+                        email: 'chris@gmail.com',
+                        phone: 1234567890,
+                        guardianFirstName: '',
+                        guardianLastName: '',
+                        guardianEmail: '',
+                        guardianPhone: 1234567890,
+                        birthDate: '2000-01-01',
+                        courseInformation: [],
+                      }}
+                      studentB={{
+                        id: 'TKrYch0cIqbsPBN7HCm8',
+                        firstName: 'Michael',
+                        lastName: 'Smith',
+                        gradeLevel: '6',
+                        addrFirstLine: '123 Street Way',
+                        city: 'BC',
+                        state: 'Maryland',
+                        zipCode: '12345',
+                        email: '123@abc.com',
+                        phone: 1231231234,
+                        guardianFirstName: '',
+                        guardianLastName: '',
+                        guardianEmail: '',
+                        guardianPhone: 1231231123,
+                        birthDate: '1999-01-02',
+                        courseInformation: [],
+                      }}
+                    />
                   </RequireAuth>
                 }
               />

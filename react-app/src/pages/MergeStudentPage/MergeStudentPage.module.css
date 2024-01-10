@@ -1,0 +1,108 @@
+.loading {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.invalidAccess {
+  font-size: 2rem;
+  justify-content: center;
+}
+
+.rightPane {
+  float: right;
+  width: calc(100% - 250px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.backButtonContainer {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  margin-left: 75px;
+  margin-top: 30px;
+  cursor: pointer;
+  color: #535353;
+  /* this grey seems to be to light, and somewhat unreadable
+  color: var(--color-grey); */
+}
+
+.leftArrowIcon {
+  padding-right: 4px;
+}
+
+.backText {
+  font-size: 1.1rem;
+}
+
+.header {
+  width: 100%;
+  text-align: center;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 30px;
+}
+
+.studentNameContainer {
+  display: inline-flex;
+  justify-content: center;
+  gap: 250px;
+}
+
+.individualStudentContainer h3 {
+  text-align: center;
+}
+
+.studentNameDisplay {
+  font-size: 0.85rem;
+  font-weight: 650;
+  padding: 15px;
+  width: 185px;
+  background-color: var(--color-grey);
+  border-radius: 10px;
+}
+
+.studentInformationContainer {
+  display: inline-flex;
+  justify-content: center;
+  gap: 50px;
+  margin-top: 30px;
+  border: 1px solid;
+  border-radius: 20px;
+  width: 850px;
+}
+
+.individualInformationContainer {
+  margin: 20px;
+  padding: 15px;
+}
+
+.mergedStudentContainer {
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
+
+.mergedStudentContainer h3 {
+  text-align: center;
+}
+
+.confirmButton {
+  border-radius: 30px;
+  border: none;
+  background-color: var(--color-orange);
+  font-size: 1.05rem;
+  width: 150px;
+  height: 40px;
+  color: white;
+  cursor: pointer;
+}
