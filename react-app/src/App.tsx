@@ -27,6 +27,7 @@ import AddCoursePage from './pages/AddCoursesPage/AddCoursePage';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { useState } from 'react';
+import AcademyApplicationPage from './pages/AcademyApplicationPage/AcademyApplicationPage';
 
 function App(): JSX.Element {
   const customTheme = theme;
@@ -181,6 +182,14 @@ function App(): JSX.Element {
                   <RequireAuth>
                     <CertificatePage name="Fiona Love" course="Math" />
                   </RequireAuth>
+                }
+              />
+              <Route
+                path="/leadership-applications"
+                element={
+                  <RequireAdminAuth>
+                    <AcademyApplicationPage />
+                  </RequireAdminAuth>
                 }
               />
             </Routes>
