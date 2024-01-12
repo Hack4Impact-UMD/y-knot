@@ -7,6 +7,7 @@ const StudentInformationList = (props: {
   student: Student;
   whichStudent: string;
 }) => {
+  //Subscribe to merged student information from context provider
   const MergedStudentContext = useMergedStudentContext();
 
   return (
@@ -35,7 +36,7 @@ const StudentInformationList = (props: {
                   value: `${props.student.firstName} ${props.student.lastName}`,
                 });
               } else {
-                //"Unselect" the current student by setting to empty empty prop type
+                //"Unselect" the current student by setting to empty prop type
                 MergedStudentContext.setMergedStudentName(EmptyMergedPropType);
               }
             }}

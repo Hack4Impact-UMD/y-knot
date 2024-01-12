@@ -1,10 +1,10 @@
-import React from 'react';
 import styles from './MergedStudentInfoList.module.css';
 import { BsX } from 'react-icons/bs';
 import { useMergedStudentContext } from '../MergeStudentPage';
 import { EmptyMergedPropType } from '../MergeStudentPage';
 
 const MergedStudentInfoList = () => {
+  //Subscribe to merged student information from context provider
   const MergedStudentContext = useMergedStudentContext();
 
   return (

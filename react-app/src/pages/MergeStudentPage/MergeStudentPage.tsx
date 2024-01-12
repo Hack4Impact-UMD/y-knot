@@ -34,27 +34,20 @@ export const EmptyMergedPropType = {
 // Bypasses the need to pass state and setter to each of the components individually.
 const MergedStudentContext = createContext<MergedStudentType>(null!);
 
+//TODO: Add merge student functionality
 const MergeStudentPage = (props: {
   studentA: StudentID;
   studentB: StudentID;
 }): JSX.Element => {
   const authContext = useAuth();
-  const [mergedStudentName, setMergedStudentName] = useState({
-    student: '',
-    value: '-',
-  });
-  const [mergedStudentEmail, setMergedStudentEmail] = useState({
-    student: '',
-    value: '-',
-  });
-  const [mergedStudentGrade, setMergedStudentGrade] = useState({
-    student: '',
-    value: '-',
-  });
-  const [mergedStudentSchool, setMergedStudentSchool] = useState({
-    student: '',
-    value: '-',
-  });
+  const [mergedStudentName, setMergedStudentName] =
+    useState(EmptyMergedPropType);
+  const [mergedStudentEmail, setMergedStudentEmail] =
+    useState(EmptyMergedPropType);
+  const [mergedStudentGrade, setMergedStudentGrade] =
+    useState(EmptyMergedPropType);
+  const [mergedStudentSchool, setMergedStudentSchool] =
+    useState(EmptyMergedPropType);
 
   return (
     <>
