@@ -56,7 +56,7 @@
 .studentNameContainer {
   display: inline-flex;
   justify-content: center;
-  gap: 250px;
+  gap: 230px;
 }
 
 .individualStudentContainer h3 {

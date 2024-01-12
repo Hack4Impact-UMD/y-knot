@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, createContext, useContext } from 'react';
 import { StudentID } from '../../types/StudentType';
 import { useAuth } from '../../auth/AuthProvider';
 import styles from './MergeStudentPage.module.css';
@@ -8,15 +8,53 @@ import StudentInformationList from './StudentInformationList/StudentInformationL
 import { HiArrowLongLeft } from 'react-icons/hi2';
 import MergedStudentInfoList from './MergedStudentInfoList/MergedStudentInfoList';
 
+interface MergedPropType {
+  student: string;
+  value: string;
+}
+
+interface MergedStudentType {
+  mergedStudentName: MergedPropType;
+  setMergedStudentName: React.Dispatch<React.SetStateAction<MergedPropType>>;
+  mergedStudentEmail: MergedPropType;
+  setMergedStudentEmail: React.Dispatch<React.SetStateAction<MergedPropType>>;
+  mergedStudentGrade: MergedPropType;
+  setMergedStudentGrade: React.Dispatch<React.SetStateAction<MergedPropType>>;
+  mergedStudentSchool: MergedPropType;
+  setMergedStudentSchool: React.Dispatch<React.SetStateAction<MergedPropType>>;
+}
+
+//Used to reset merged student state values
+export const EmptyMergedPropType = {
+  student: '',
+  value: '-',
+};
+
+// The Merged Student Context that other components may subscribe to.
+// Bypasses the need to pass state and setter to each of the components individually.
+const MergedStudentContext = createContext<MergedStudentType>(null!);
+
 const MergeStudentPage = (props: {
   studentA: StudentID;
   studentB: StudentID;
 }): JSX.Element => {
   const authContext = useAuth();
-  const [mergedStudentName, setMergedStudentName] = useState('');
-  const [mergedStudentEmail, setMergedStudentEmail] = useState('');
-  const [mergedStudentGrade, setMergedStudentGrade] = useState('');
-  const [mergedStudentSchool, setMergedStudentSchool] = useState('');
+  const [mergedStudentName, setMergedStudentName] = useState({
+    student: '',
+    value: '-',
+  });
+  const [mergedStudentEmail, setMergedStudentEmail] = useState({
+    student: '',
+    value: '-',
+  });
+  const [mergedStudentGrade, setMergedStudentGrade] = useState({
+    student: '',
+    value: '-',
+  });
+  const [mergedStudentSchool, setMergedStudentSchool] = useState({
+    student: '',
+    value: '-',
+  });
 
   return (
     <>
@@ -57,19 +95,38 @@ const MergeStudentPage = (props: {
                 </div>
               </div>
 
-              <div className={styles.studentInformationContainer}>
-                <div className={styles.individualInformationContainer}>
-                  <StudentInformationList student={props.studentA} />
+              <MergedStudentContext.Provider
+                value={{
+                  mergedStudentName,
+                  setMergedStudentName,
+                  mergedStudentEmail,
+                  setMergedStudentEmail,
+                  mergedStudentGrade,
+                  setMergedStudentGrade,
+                  mergedStudentSchool,
+                  setMergedStudentSchool,
+                }}
+              >
+                <div className={styles.studentInformationContainer}>
+                  <div className={styles.individualInformationContainer}>
+                    <StudentInformationList
+                      student={props.studentA}
+                      whichStudent="Student A"
+                    />
+                  </div>
+                  <div className={styles.individualInformationContainer}>
+                    <StudentInformationList
+                      student={props.studentB}
+                      whichStudent="Student B"
+                    />
+                  </div>
                 </div>
-                <div className={styles.individualInformationContainer}>
-                  <StudentInformationList student={props.studentB} />
-                </div>
-              </div>
 
-              <div className={styles.mergedStudentContainer}>
-                <h3>Merged Student Profile</h3>
-                <MergedStudentInfoList mergedStudent={props.studentA} />
-              </div>
+                <div className={styles.mergedStudentContainer}>
+                  <h3>Merged Student Profile</h3>
+                  <MergedStudentInfoList />
+                </div>
+              </MergedStudentContext.Provider>
 
               <button className={styles.confirmButton}>Confirm Merge</button>
             </div>
@@ -81,3 +138,7 @@ const MergeStudentPage = (props: {
 };
 
 export default MergeStudentPage;
+
+export const useMergedStudentContext = () => {
+  return useContext(MergedStudentContext);
+};
