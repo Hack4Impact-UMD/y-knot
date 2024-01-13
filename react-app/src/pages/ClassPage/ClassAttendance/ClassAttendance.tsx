@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
-import Select from 'react-select';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import styles from './ClassAttendance.module.css';
 import noteIcon from '../../../assets/note.svg';
 import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
@@ -54,7 +55,8 @@ const ClassAttendance = (props: {
     setOpenAddNoteModal(!openAddNoteModal);
   };
 
-  const parseAttendance = (date: string): void => {
+  const parseAttendance = (event: SelectChangeEvent) => {
+    let date = event.target.value as string;
     if (date.length > 0) {
       props.course.attendance.forEach((att) => {
         if (att.date === date) {
@@ -74,21 +76,14 @@ const ClassAttendance = (props: {
           </button>
         </ToolTip>
         <Select
-          placeholder={selectedAttDate !== '' ? selectedAttDate : 'Date'}
-          className={styles.dateSelection}
-          onChange={(option) => {
-            parseAttendance(option?.label.toString() ?? '');
-          }}
-          styles={{
-            control: (baseStyles) => ({
-              ...baseStyles,
-              borderColor: 'black',
-            }),
-          }}
-          options={props.attendance.map((attendance) => {
-            return { value: attendance.date, label: attendance.date };
+          className={styles.selection}
+          onChange={parseAttendance}
+          value={selectedAttDate}
+        >
+          {props.course.attendance.map((att) => {
+            return <MenuItem value={att.date}>{att.date}</MenuItem>;
           })}
-        />
+        </Select>
       </div>
       {props.students.length === 0 ? (
         <h4 className={styles.noStudent}>No Students Currently in Roster</h4>

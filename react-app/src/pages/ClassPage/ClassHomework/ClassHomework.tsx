@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import type { StudentID } from '../../../types/StudentType';
 import type { Course } from '../../../types/CourseType';
-import Select from 'react-select';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 import styles from './ClassHomework.module.css';
 import noteIcon from '../../../assets/note.svg';
 import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
@@ -53,7 +54,8 @@ const ClassHomework = (props: {
     setOpenAddNoteModal(!openAddNoteModal);
   };
 
-  const parseHomework = (name: string): void => {
+  const parseHomework = (event: SelectChangeEvent): void => {
+    const name = event.target.value as string;
     if (name.length > 0) {
       props.course.homeworks.forEach((hw) => {
         if (hw.name == name) {
@@ -73,23 +75,14 @@ const ClassHomework = (props: {
           </button>
         </ToolTip>
         <Select
-          placeholder={
-            selectedHomeworkName !== '' ? selectedHomeworkName : 'Assignement'
-          }
           className={styles.selection}
-          onChange={(option) => {
-            parseHomework(option?.label.toString() ?? '');
-          }}
-          styles={{
-            control: (baseStyles) => ({
-              ...baseStyles,
-              borderColor: 'black',
-            }),
-          }}
-          options={props.course.homeworks.map((assignment) => {
-            return { value: assignment.name, label: assignment.name };
+          onChange={parseHomework}
+          value={selectedHomeworkName}
+        >
+          {props.course.homeworks.map((hw) => {
+            return <MenuItem value={hw.name}>{hw.name}</MenuItem>;
           })}
-        />
+        </Select>
       </div>
       {props.students.length === 0 ? (
         <h4 className={styles.noStudent}>No Students Currently in Roster</h4>
