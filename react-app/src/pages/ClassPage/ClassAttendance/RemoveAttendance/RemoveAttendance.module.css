@@ -39,29 +39,34 @@
   color: red;
 }
 
-.selection {
+.dateSelection {
   width: 75%;
   height: 35px;
   font-size: large;
+  color: black;
   border-radius: 10px;
   padding: 5px;
   margin-bottom: 25px;
 }
 
-.button {
+.animated-button {
   background-color: var(--color-orange);
   padding: 11px 0 11px 0;
+  margin-top: 10px;
   font-size: 0.8rem;
+  font-weight: 550;
   width: 20%;
-  min-width: 180px;
+  min-width: 110px;
   border: none;
   border-radius: 30px;
   color: white;
   outline: none;
   text-align: center;
+  transition: width 0.2s ease;
+  cursor: pointer;
 }
 
-.button:hover {
-  cursor: pointer;
-  background: var(--color-yellow-orange);
+.clicked {
+  background-color: red;
+  width: 160px;
 }

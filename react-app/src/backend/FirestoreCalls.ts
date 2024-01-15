@@ -14,6 +14,7 @@ import { db } from '../config/firebase';
 import {
   StudentAttendance,
   StudentHomework,
+  StudentCourse,
   type StudentID,
   type Student,
 } from '../types/StudentType';
@@ -27,6 +28,7 @@ import { TeacherID, type Teacher, type YKNOTUser } from '../types/UserType';
 import { promises } from 'dns';
 import { rejects } from 'assert';
 import dayjs from 'dayjs';
+import { resolve } from 'path';
 
 export function getAllStudents(): Promise<StudentID[]> {
   const studentsRef = collection(db, 'Students');
@@ -400,19 +402,44 @@ export function addCourseAttendance(
   newAttendance: Attendance,
 ): Promise<Course> {
   return new Promise((resolve, reject) => {
-    let failed: boolean = false;
+    let containsDuplicate: boolean = false;
     course.attendance.forEach((prevAttendance) => {
       if (prevAttendance.date === newAttendance.date) {
-        failed = true;
+        containsDuplicate = true;
       }
     });
-    if (failed) {
+
+    if (containsDuplicate) {
       reject(new Error('Attendance already exists for date'));
       return;
     }
 
     course.attendance.push(newAttendance);
     course.attendance.sort(compareDayJSDates);
+    updateCourse(course, courseID)
+      .then(() => {
+        resolve(course);
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+}
+
+export function removeCourseAttendance(
+  course: Course,
+  courseID: string,
+  attendanceDate: string,
+): Promise<Course> {
+  return new Promise((resolve, reject) => {
+    let newCourseAttendanceList: Attendance[] = [];
+    course.attendance.forEach((att) => {
+      if (att.date !== attendanceDate) {
+        newCourseAttendanceList.push(att);
+      }
+    });
+
+    course.attendance = newCourseAttendanceList;
     updateCourse(course, courseID)
       .then(() => {
         resolve(course);
@@ -548,6 +575,38 @@ export function addAttendanceToStudents(
           course.attendance.sort(compareDayJSDates);
         }
         return course;
+      });
+
+      student.courseInformation = newCourseInfo;
+      updateStudent(student, student.id).catch((e) => {
+        reject(e);
+        return;
+      });
+      return student;
+    });
+    resolve(newStudentList);
+  });
+}
+
+export function removeAttendanceFromStudents(
+  courseID: string,
+  attendanceDate: string,
+  students: Array<StudentID>,
+): Promise<Array<StudentID>> {
+  return new Promise((resolve, reject) => {
+    const newStudentList = students.map((student) => {
+      const newCourseInfo: StudentCourse[] = [];
+      student.courseInformation.forEach((course) => {
+        if (course.id === courseID) {
+          let newAttendanceList: StudentAttendance[] = [];
+          course.attendance.forEach((att) => {
+            if (att.date !== attendanceDate) {
+              newAttendanceList.push(att);
+            }
+          });
+          course.attendance = newAttendanceList;
+        }
+        newCourseInfo.push(course);
       });
 
       student.courseInformation = newCourseInfo;

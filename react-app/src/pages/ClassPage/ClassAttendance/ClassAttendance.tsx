@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import Select from 'react-select';
 import styles from './ClassAttendance.module.css';
@@ -136,6 +136,11 @@ const ClassAttendance = (props: {
         onClose={() => {
           setOpenRemoveHwModal(!openRemoveHwModal);
         }}
+        students={props.students}
+        setStudents={props.setStudents}
+        course={props.course}
+        setCourse={props.setCourse}
+        courseID={props.courseID !== undefined ? props.courseID : ''}
       />
       <AddAttendance
         open={openAddHwModal}
