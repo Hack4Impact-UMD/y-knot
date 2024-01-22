@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import type { StudentID } from '../../../types/StudentType';
 import type { Course } from '../../../types/CourseType';
@@ -9,11 +9,6 @@ import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
 import AddHomework from './AddHomework/AddHomework';
 import RemoveHomework from './RemoveHomework/RemoveHomework';
 import AddNote from './AddNote/AddNote';
-
-interface homeworkObj {
-  name: String;
-  notes: String;
-}
 
 const ClassHomework = (props: {
   students: Array<StudentID>;

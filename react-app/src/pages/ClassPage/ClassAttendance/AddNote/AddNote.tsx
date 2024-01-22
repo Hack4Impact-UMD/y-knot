@@ -19,6 +19,7 @@ import { ToolTip } from '../../../../components/ToolTip/ToolTip';
 const AddNote = (props: {
   open: boolean;
   onClose: any;
+  setSelectComponentValue: React.Dispatch<React.SetStateAction<any>>;
   selectedDate: string;
   setSelectedDate: React.Dispatch<React.SetStateAction<string>>;
   selectedNote: string;
@@ -62,6 +63,10 @@ const AddNote = (props: {
               props.setSelectedNote(note);
               props.setStudents(newStudentList);
               props.setCourse(newCourse);
+              props.setSelectComponentValue({
+                value: newDate ?? '',
+                label: newDate ?? '',
+              });
             })
             .catch((e: Error) => {
               setNote(props.selectedNote);

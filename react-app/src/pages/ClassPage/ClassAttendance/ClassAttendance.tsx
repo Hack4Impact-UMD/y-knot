@@ -23,6 +23,10 @@ const ClassAttendance = (props: {
   courseID: string | undefined;
   setCourse: React.Dispatch<React.SetStateAction<Course>>;
 }): JSX.Element => {
+  const [selectComponentValue, setSelectComponentValue] = useState<any>({
+    value: props.attendance.slice(-1)[0].date.toString() ?? '',
+    label: props.attendance.slice(-1)[0].date.toString() ?? 'Date',
+  });
   const [selectedAttDate, setSelectedDate] = useState<string>(
     props.attendance !== undefined && props.attendance.length > 0
       ? props.attendance.slice(-1)[0].date.toString()
@@ -74,9 +78,10 @@ const ClassAttendance = (props: {
           </button>
         </ToolTip>
         <Select
-          placeholder={selectedAttDate !== '' ? selectedAttDate : 'Date'}
+          value={selectComponentValue}
           className={styles.dateSelection}
           onChange={(option) => {
+            setSelectComponentValue(option);
             parseAttendance(option?.label.toString() ?? '');
           }}
           styles={{
@@ -149,6 +154,7 @@ const ClassAttendance = (props: {
         courseID={props.courseID !== undefined ? props.courseID : ''}
       />
       <AddNote
+        setSelectComponentValue={setSelectComponentValue}
         selectedDate={
           selectedAttDate !== ''
             ? selectedAttDate
