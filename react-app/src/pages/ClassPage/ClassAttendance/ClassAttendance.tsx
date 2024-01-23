@@ -8,15 +8,10 @@ import AddNote from './AddNote/AddNote';
 import RemoveAttendance from './RemoveAttendance/RemoveAttendance';
 import AddAttendance from './AddAttendance/AddAttendance';
 import type { StudentID } from '../../../types/StudentType';
-import type { Course } from '../../../types/CourseType';
-
-interface attendanceObj {
-  date: String;
-  notes: String;
-}
+import type { Course, Attendance } from '../../../types/CourseType';
 
 const ClassAttendance = (props: {
-  attendance: Array<attendanceObj>;
+  attendance: Array<Attendance>;
   students: Array<StudentID>;
   setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
   course: Course;
@@ -87,11 +82,28 @@ const ClassAttendance = (props: {
           styles={{
             control: (baseStyles) => ({
               ...baseStyles,
+              height: 'fit-content',
               borderColor: 'black',
+              boxShadow: 'none',
+              '&:focus-within': {
+                border: '1.5px solid black',
+              },
+              '&:hover': {
+                border: '1px solid black',
+              },
             }),
           }}
           options={props.attendance.map((attendance) => {
             return { value: attendance.date, label: attendance.date };
+          })}
+          theme={(theme) => ({
+            ...theme,
+            colors: {
+              ...theme.colors,
+              primary25: 'var(--color-pastel-orange)',
+              primary50: 'var(--color-bright-orange)',
+              primary: 'var(--color-orange)',
+            },
           })}
         />
       </div>

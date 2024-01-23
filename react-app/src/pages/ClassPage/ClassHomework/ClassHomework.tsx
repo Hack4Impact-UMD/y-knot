@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import type { StudentID } from '../../../types/StudentType';
-import type { Course } from '../../../types/CourseType';
+import type { Course, Homework } from '../../../types/CourseType';
 import Select from 'react-select';
 import styles from './ClassHomework.module.css';
 import noteIcon from '../../../assets/note.svg';
@@ -11,20 +11,25 @@ import RemoveHomework from './RemoveHomework/RemoveHomework';
 import AddNote from './AddNote/AddNote';
 
 const ClassHomework = (props: {
+  homeworks: Array<Homework>;
   students: Array<StudentID>;
   setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
   course: Course;
   courseID: string | undefined;
   setCourse: React.Dispatch<React.SetStateAction<Course>>;
 }): JSX.Element => {
+  const [selectComponentValue, setSelectComponentValue] = useState<any>({
+    value: props.homeworks.slice(-1)[0].name.toString() ?? '',
+    label: props.homeworks.slice(-1)[0].name.toString() ?? 'Assignment',
+  });
   const [selectedHomeworkName, setHomeworkName] = useState<string>(
-    props.course.homeworks !== undefined && props.course.homeworks.length > 0
-      ? props.course.homeworks.slice(-1)[0].name.toString()
+    props.homeworks !== undefined && props.homeworks.length > 0
+      ? props.homeworks.slice(-1)[0].name.toString()
       : '',
   );
   const [selectedHomeworkNote, setHomeworkNote] = useState<string>(
-    props.course.homeworks !== undefined && props.course.homeworks.length > 0
-      ? props.course.homeworks.slice(-1)[0].notes.toString()
+    props.homeworks !== undefined && props.homeworks.length > 0
+      ? props.homeworks.slice(-1)[0].notes.toString()
       : '',
   );
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
@@ -50,7 +55,7 @@ const ClassHomework = (props: {
 
   const parseHomework = (name: string): void => {
     if (name.length > 0) {
-      props.course.homeworks.forEach((hw) => {
+      props.homeworks.forEach((hw) => {
         if (hw.name == name) {
           setHomeworkName(name);
           setHomeworkNote(hw.notes);
@@ -68,21 +73,37 @@ const ClassHomework = (props: {
           </button>
         </ToolTip>
         <Select
-          placeholder={
-            selectedHomeworkName !== '' ? selectedHomeworkName : 'Assignement'
-          }
+          value={selectComponentValue}
           className={styles.selection}
           onChange={(option) => {
+            setSelectComponentValue(option);
             parseHomework(option?.label.toString() ?? '');
           }}
           styles={{
             control: (baseStyles) => ({
               ...baseStyles,
+              height: 'fit-content',
               borderColor: 'black',
+              boxShadow: 'none',
+              '&:focus-within': {
+                border: '1.5px solid black',
+              },
+              '&:hover': {
+                border: '1px solid black',
+              },
             }),
           }}
-          options={props.course.homeworks.map((assignment) => {
+          options={props.homeworks.map((assignment) => {
             return { value: assignment.name, label: assignment.name };
+          })}
+          theme={(theme) => ({
+            ...theme,
+            colors: {
+              ...theme.colors,
+              primary25: 'var(--color-pastel-orange)',
+              primary50: 'var(--color-bright-orange)',
+              primary: 'var(--color-orange)',
+            },
           })}
         />
       </div>
@@ -144,6 +165,7 @@ const ClassHomework = (props: {
         setCourse={props.setCourse}
       />
       <AddNote
+        setSelectComponentValue={setSelectComponentValue}
         selectedName={
           selectedHomeworkName !== ''
             ? selectedHomeworkName
