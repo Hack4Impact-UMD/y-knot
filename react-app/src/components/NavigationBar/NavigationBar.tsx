@@ -192,7 +192,7 @@ const NavigationBar = (): JSX.Element => {
                     end
                   >
                     <div className={styles.tab}>
-                      <img src={blackLogoutIcon} alt="Logout icon" />
+                      <img src={blackLogoutIcon} className={styles.logOutIcon} alt="Logout icon" />
                       Log Out
                     </div>
                   </NavLink>
