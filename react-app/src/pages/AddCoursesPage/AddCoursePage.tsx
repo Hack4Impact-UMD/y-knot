@@ -274,8 +274,8 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                       ...theme,
                       colors: {
                         ...theme.colors,
-                        primary25: 'transparent',
-                        primary50: 'transparent',
+                        primary25: 'var(--color-pastel-orange)',
+                        primary50: 'var(--color-bright-orange)',
                         primary: 'var(--color-orange)',
                       },
                     })}
