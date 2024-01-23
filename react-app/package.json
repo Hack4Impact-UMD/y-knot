@@ -16,7 +16,6 @@
     "@types/jest": "^27.5.2",
     "@types/node": "^16.11.62",
     "@types/react-select": "^5.0.1",
-    "dayjs": "^1.11.6",
     "firebase": "^9.10.0",
     "luxon": "^3.3.0",
     "randomstring": "^1.2.3",

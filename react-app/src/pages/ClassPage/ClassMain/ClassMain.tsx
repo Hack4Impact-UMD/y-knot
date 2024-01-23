@@ -1,15 +1,13 @@
 import { useState, useRef } from 'react';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
+import { IntroEmailFile } from '../../../types/CourseType';
 import styles from './ClassMain.module.css';
 import editIcon from '../../../assets/gray-pencil.svg';
 import saveIcon from '../../../assets/save.svg';
 import uploadIcon from '../../../assets/upload.svg';
 import certificateIcon from '../../../assets/certificate.svg';
-import deleteIcon from '../../../assets/trash.svg';
 import emailIcon from '../../../assets/email.svg';
 import x from '../../../assets/x.svg';
-
-import { StudentFile } from '../../../types/StudentType';
 import DescriptionIcon from '@mui/icons-material/Description';
 
 const ClassMain = (): JSX.Element => {
@@ -20,7 +18,7 @@ const ClassMain = (): JSX.Element => {
   const [editText, setEditText] = useState<boolean>(false);
   const [files, setFiles] = useState<{
     uploaded: File[];
-    deleted: StudentFile[];
+    deleted: IntroEmailFile[];
   }>({
     uploaded: [],
     deleted: [],

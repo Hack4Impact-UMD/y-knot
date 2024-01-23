@@ -2,6 +2,7 @@ import app, { functions } from '../config/firebase';
 
 import { httpsCallable } from 'firebase/functions';
 import { getAuth, sendPasswordResetEmail } from '@firebase/auth';
+import firebase from '../config/firebase';
 
 /*
  * Creates a user and sends a password reset email to that user.
@@ -29,6 +30,7 @@ export function createUser(
           });
       })
       .catch((error) => {
+        console.log(error);
         reject();
       });
   });
@@ -59,6 +61,7 @@ export function setUserRole(auth_id: string, newRole: string): Promise<void> {
 export function deleteUser(auth_id: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const deleteUserCloudFunction = httpsCallable(functions, 'deleteUser');
+    console.log(auth_id);
 
     deleteUserCloudFunction({ firebase_id: auth_id })
       .then(() => {
@@ -81,10 +84,12 @@ export function updateUserEmail(
     );
 
     updateUserEmailCloudFunction({ email: oldEmail, newEmail: currentEmail })
-      .then(() => {
+      .then(async (res) => {
+        console.log(res.data);
         resolve();
       })
       .catch((error) => {
+        console.log(error);
         reject(error);
       });
   });

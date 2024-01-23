@@ -144,6 +144,55 @@ export function deleteStudent(id: string): Promise<void> {
   });
 }
 
+export function removeStudentCourse(
+  studentId: string,
+  courseId: string,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    /* runTransaction provides protection against race conditions where
+       2 people are modifying the data at once. It also ensures that either
+       all of these writes succeed or none of them do.
+    */
+    runTransaction(db, async (transaction) => {
+      const studentRef = await transaction.get(doc(db, 'Students', studentId));
+      const courseRef = await transaction.get(doc(db, 'Courses', courseId));
+      if (!studentRef.exists() || !courseRef.exists()) {
+        throw 'Document does not exist!';
+      }
+      const student: Student = studentRef.data() as Student;
+      if (
+        student.courseInformation.find((student) => student.id === courseId)
+      ) {
+        student.courseInformation = student.courseInformation.filter(
+          ({ id }) => !id.includes(courseId),
+        );
+        await transaction.update(doc(db, 'Students', studentId), {
+          courseInformation: student.courseInformation,
+        });
+      } else {
+        reject(new Error('Course does not exist in student'));
+      }
+      const course: Course = courseRef.data() as Course;
+      if (course.students.includes(studentId)) {
+        course.students = course.students.filter(function (s) {
+          return s !== studentId;
+        });
+        await transaction.update(doc(db, 'Courses', courseId), {
+          students: course.students,
+        });
+      } else {
+        reject(new Error('Student does not exist in course'));
+      }
+    })
+      .then(() => {
+        resolve();
+      })
+      .catch(() => {
+        reject();
+      });
+  });
+}
+
 export function removeTeacherCourse(
   teacherId: string,
   courseId: string,
@@ -181,6 +230,79 @@ export function removeTeacherCourse(
       } else {
         reject(new Error('Teacher does not exist in course'));
       }
+    })
+      .then(() => {
+        resolve();
+      })
+      .catch(() => {
+        reject();
+      });
+  });
+}
+
+export function addTeacherCourseFromList(
+  teacherIdList: Array<string>,
+  courseId: string,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    /* runTransaction provides protection against race conditions where
+       2 people are modifying the data at once. It also ensures that either
+       all of these writes succeed or none of them do.
+    */
+    runTransaction(db, async (transaction) => {
+      const courseRef = await transaction.get(doc(db, 'Courses', courseId));
+      if (!courseRef.exists()) {
+        throw 'Course does not exist!';
+      }
+
+      const course: Course = courseRef.data() as Course;
+      var teacherPromises = [];
+
+      for (const teacherId of teacherIdList) {
+        teacherPromises.push(transaction.get(doc(db, 'Users', teacherId)));
+      }
+
+      var teacherRefList: any[] = [];
+      await Promise.all(teacherPromises)
+        .then((teacherRef) => {
+          teacherRefList = teacherRef;
+        })
+        .catch(() => {
+          reject(new Error('A teacher does not exist!'));
+        });
+
+      var updatePromises = [];
+
+      for (let i = 0; i < teacherRefList.length; i++) {
+        var teacherRef = teacherRefList[i];
+        const teacher: Teacher = teacherRef.data() as Teacher;
+        if (
+          !teacher.courses.includes(courseId) &&
+          !course.teachers.includes(teacherIdList[i])
+        ) {
+          teacher.courses.push(courseId);
+          course.teachers.push(teacherIdList[i]);
+          updatePromises.push(
+            transaction.update(doc(db, 'Users', teacherIdList[i]), {
+              courses: teacher.courses,
+            }),
+          );
+        }
+      }
+
+      updatePromises.push(
+        transaction.update(doc(db, 'Courses', courseId), {
+          teachers: course.teachers,
+        }),
+      );
+
+      await Promise.all(updatePromises)
+        .then(() => {
+          resolve();
+        })
+        .catch(() => {
+          reject();
+        });
     })
       .then(() => {
         resolve();
@@ -234,14 +356,76 @@ export function addTeacherCourse(
   });
 }
 
-export function addCourse(course: Course): Promise<string> {
+export function addCourse(course: Course): Promise<void> {
   return new Promise((resolve, reject) => {
-    addDoc(collection(db, 'Courses'), course)
-      .then((docRef) => {
-        resolve(docRef.id);
+    // addDoc(collection(db, 'Courses'), course)
+    //   .then((docRef) => {
+    //     resolve(docRef.id);
+    //   })
+    //   .catch((e) => {
+    //     reject(e);
+    //   });
+
+    /* runTransaction provides protection against race conditions where
+       2 people are modifying the data at once. It also ensures that either
+       all of these writes succeed or none of them do.
+    */
+    runTransaction(db, async (transaction) => {
+      var courseId;
+
+      // add course
+      addDoc(collection(db, 'Courses'), course)
+        .then((docRef) => {
+          courseId = docRef.id;
+        })
+        .catch((e) => {
+          reject(e);
+        });
+
+      // get teachers added to course
+      var teacherPromises = [];
+      for (const teacherId of course.teachers) {
+        teacherPromises.push(transaction.get(doc(db, 'Users', teacherId)));
+      }
+
+      var teacherRefList: any[] = [];
+      await Promise.all(teacherPromises)
+        .then((teacherRef) => {
+          teacherRefList = teacherRef;
+        })
+        .catch(() => {
+          reject(new Error('A teacher does not exist!'));
+        });
+
+      if (courseId) {
+        var updatePromises = [];
+
+        // add course to teacher's course list
+        for (let i = 0; i < teacherRefList.length; i++) {
+          var teacherRef = teacherRefList[i];
+          const teacher: Teacher = teacherRef.data() as Teacher;
+          teacher.courses.push(courseId);
+          updatePromises.push(
+            transaction.update(doc(db, 'Users', course.teachers[i]), {
+              courses: teacher.courses,
+            }),
+          );
+        }
+
+        await Promise.all(updatePromises)
+          .then(() => {
+            resolve();
+          })
+          .catch(() => {
+            reject();
+          });
+      }
+    })
+      .then(() => {
+        resolve();
       })
-      .catch((e) => {
-        reject(e);
+      .catch(() => {
+        reject();
       });
   });
 }
