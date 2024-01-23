@@ -632,6 +632,8 @@ export function removeCourseAttendance(
         reject(e);
       });
   });
+
+  // TODO: Update students to remove corresponding attendance from list
 }
 
 export function updateCourseAttendance(
