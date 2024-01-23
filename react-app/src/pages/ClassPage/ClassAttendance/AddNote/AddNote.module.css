@@ -89,6 +89,10 @@
   resize: none;
 }
 
+.noteInput:focus-within {
+  box-shadow: 0 0 0 1px black;
+}
+
 .button {
   background-color: var(--color-orange);
   width: 65px;

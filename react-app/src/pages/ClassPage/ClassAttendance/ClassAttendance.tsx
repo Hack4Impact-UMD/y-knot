@@ -173,9 +173,7 @@ const ClassAttendance = (props: {
             : 'No attendance currently exists'
         }
         setSelectedDate={setSelectedDate}
-        selectedNote={
-          selectedAttNote !== '' ? selectedAttNote : 'No date selected'
-        }
+        selectedNote={selectedAttNote}
         setSelectedNote={setSelectedNote}
         open={openAddNoteModal}
         onClose={() => {

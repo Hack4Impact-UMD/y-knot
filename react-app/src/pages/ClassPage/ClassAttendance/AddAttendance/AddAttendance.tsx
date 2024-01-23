@@ -61,7 +61,7 @@ const AddAttendance = (props: {
   return (
     <Modal
       open={props.open}
-      height={440}
+      height={425}
       onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
         handleOnClose();
       }}
@@ -84,9 +84,20 @@ const AddAttendance = (props: {
           <div className={styles.datepicker}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
-                label="Select Date"
+                label=""
                 value={selectedDate}
                 onChange={(newDate) => setSelectedDate(newDate)}
+                slotProps={{ textField: { size: 'small' } }}
+                sx={{
+                  backgroundColor: '#d9d9d9',
+                  borderRadius: '10px',
+                  width: '330px',
+                  '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
+                    border: '0px',
+                  }, // at page load
+                  '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                    { border: '1px solid black', borderRadius: '10px' }, // at focused state
+                }}
               />
             </LocalizationProvider>
           </div>
