@@ -1,14 +1,28 @@
 import React, { useState } from 'react';
+import { Course } from '../../../../types/CourseType';
+import { StudentID } from '../../../../types/StudentType';
 import styles from './AddHomework.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
 import x from '../../../../assets/x.svg';
+import {
+  addCourseHomework,
+  addHomeworkToStudents,
+} from '../../../../backend/FirestoreCalls';
 
 interface modalType {
   open: boolean;
   onClose: any;
 }
 
-const AddHomework = ({ open, onClose }: modalType): React.ReactElement => {
+const AddHomework = (props: {
+  open: boolean;
+  onClose: any;
+  students: Array<StudentID>;
+  setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
+  course: Course;
+  courseID: string;
+  setCourse: React.Dispatch<React.SetStateAction<Course>>;
+}): React.ReactElement => {
   const [name, setName] = useState<string>('');
   const [note, setNote] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -17,13 +31,33 @@ const AddHomework = ({ open, onClose }: modalType): React.ReactElement => {
     if (name == '') {
       setErrorMessage('*Name is required');
     } else {
-      // TODO: Save name and note
-      handleOnClose();
+      addCourseHomework(props.course, props.courseID, {
+        name: name,
+        notes: note,
+      })
+        .then((newCourse) => {
+          props.setCourse(newCourse);
+          addHomeworkToStudents(
+            props.courseID,
+            name !== undefined ? name : '',
+            props.students,
+          )
+            .then((newStudentList) => {
+              props.setStudents(newStudentList);
+              handleOnClose();
+            })
+            .catch((e: Error) => {
+              setErrorMessage(e.message + '**');
+            });
+        })
+        .catch((e: Error) => {
+          setErrorMessage(e.message + '**');
+        });
     }
   };
 
   const handleOnClose = (): void => {
-    onClose();
+    props.onClose();
     setName('');
     setNote('');
     setErrorMessage('');
@@ -31,8 +65,8 @@ const AddHomework = ({ open, onClose }: modalType): React.ReactElement => {
 
   return (
     <Modal
-      open={open}
-      height={410}
+      open={props.open}
+      height={425}
       onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
         handleOnClose();
       }}
