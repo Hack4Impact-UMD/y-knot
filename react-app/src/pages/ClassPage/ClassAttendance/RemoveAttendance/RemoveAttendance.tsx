@@ -104,11 +104,28 @@ const RemoveAttendance = (props: {
             styles={{
               control: (baseStyles) => ({
                 ...baseStyles,
+                height: 'fit-content',
                 borderColor: 'black',
+                boxShadow: 'none',
+                '&:focus-within': {
+                  border: '1.5px solid black',
+                },
+                '&:hover': {
+                  border: '1px solid black',
+                },
               }),
             }}
             options={props.course.attendance.map((attendance) => {
               return { value: attendance.date, label: attendance.date };
+            })}
+            theme={(theme) => ({
+              ...theme,
+              colors: {
+                ...theme.colors,
+                primary25: 'var(--color-pastel-orange)',
+                primary50: 'var(--color-bright-orange)',
+                primary: 'var(--color-orange)',
+              },
             })}
           />
           <button

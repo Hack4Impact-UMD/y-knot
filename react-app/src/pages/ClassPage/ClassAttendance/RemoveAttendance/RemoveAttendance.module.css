@@ -54,9 +54,8 @@
   padding: 11px 0 11px 0;
   margin-top: 10px;
   font-size: 0.8rem;
-  font-weight: 550;
-  width: 20%;
-  min-width: 110px;
+  width: 16.67vh;
+  min-width: 180px;
   border: none;
   border-radius: 30px;
   color: white;
@@ -67,6 +66,6 @@
 }
 
 .clicked {
-  background-color: red;
-  width: 160px;
+  background-color: var(--color-red);
+  /* width: 160px; */
 }
