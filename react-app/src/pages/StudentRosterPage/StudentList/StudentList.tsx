@@ -6,12 +6,17 @@ import styles from './StudentList.module.css';
 import eyeIcon from '../../../assets/view.svg';
 import trashIcon from '../../../assets/trash.svg';
 import DeleteStudentConfirmation from './DeleteStudentConfirmation/DeleteStudentConfirmation';
+import { useAuth } from '../../../auth/AuthProvider';
+import { TeacherID } from '../../../types/UserType';
+import { getAllCourses } from '../../../backend/FirestoreCalls';
+import { DateTime } from 'luxon';
 
 const StudentList = (props: {
   search: string;
   students: Array<Partial<StudentID>>;
   setStudents: Function;
   setOpenSuccess: Function;
+  teacher: TeacherID | undefined;
 }) => {
   const [studentList, setStudentList] = useState<any[]>([]);
   const [showPopup, setShowPopup] = useState(false);
@@ -21,63 +26,102 @@ const StudentList = (props: {
   const [reloadList, setReloadList] = useState<boolean>(false);
   const [numToShow, setNumToShow] = useState<number>(50);
   const navigate = useNavigate();
-  const handleClick = () => {
-    setShowPopup(true);
-  };
+  const authContext = useAuth();
 
   useEffect(() => {
     setReloadList(false);
 
-    const list = props.students.reduce((result: any[], student, i) => {
-      const firstName = student.firstName ? student.firstName + ' ' : '';
-      const middleName = student.middleName ? student.middleName + ' ' : '';
-      const lastName = student.lastName ? student.lastName + ' ' : '';
-      const fullName = firstName + middleName + lastName;
-      const email = student.email;
-      const id = student.id;
-      if (fullName.toLowerCase().includes(props.search.toLowerCase())) {
-        result.push(
-          <div
-            key={i}
-            className={
-              result.length === 0 ? styles.studentBoxTop : styles.studentBox
-            }
-          >
-            <p className={styles.name}>{fullName}</p>
-            <div className={styles.icons}>
-              <ToolTip title="View Profile" placement="top">
-                <button className={`${styles.button} ${styles.profileIcon}`}>
-                  <img
-                    src={eyeIcon}
-                    alt="View Profile"
-                    onClick={() => {
-                      navigate(`/students/${id}`);
-                    }}
-                  />
-                </button>
-              </ToolTip>
-              <ToolTip title="Remove" placement="top">
-                <button className={`${styles.button} ${styles.trashIcon}`}>
-                  <img
-                    src={trashIcon}
-                    alt="Delete Student"
-                    onClick={() => {
-                      setPopupEmail(email);
-                      setPopupName(fullName);
-                      setRemoveStudentId(id);
-                      handleClick();
-                    }}
-                  />
-                </button>
-              </ToolTip>
-            </div>
-          </div>,
+    const fetchActiveCoursesStudents = async () => {
+      try {
+        const courses = await getAllCourses();
+        const now = DateTime.now();
+
+        /* Get all active courses */
+        const allCurrentCourses = courses.filter(
+          (course) =>
+            DateTime.fromISO(course.startDate) <= now &&
+            DateTime.fromISO(course.endDate) >= now,
         );
+
+        /* Get students from active courses */
+        const filteredStudents =
+          authContext?.token?.claims?.role !== 'ADMIN'
+            ? props.students.filter((student) => {
+                const hasActiveCourse = student.courseInformation?.some(
+                  (course) =>
+                    allCurrentCourses.some(
+                      (activeCourse) => activeCourse.id === course.id,
+                    ),
+                );
+                return hasActiveCourse;
+              })
+            : props.students;
+
+        setStudentList(
+          filteredStudents.map((student, i) => {
+            const firstName = student.firstName ? student.firstName + ' ' : '';
+            const middleName = student.middleName
+              ? student.middleName + ' '
+              : '';
+            const lastName = student.lastName ? student.lastName + ' ' : '';
+            const fullName = firstName + middleName + lastName;
+            const email = student.email;
+            const id = student.id;
+
+            return (
+              <div
+                key={i}
+                className={i === 0 ? styles.studentBoxTop : styles.studentBox}
+              >
+                <p className={styles.name}>{fullName}</p>
+                {/* allow only admins to view profile and trash icons */}
+                {authContext?.token?.claims?.role === 'ADMIN' && (
+                  <div className={styles.icons}>
+                    <ToolTip title="View Profile" placement="top">
+                      <button
+                        className={`${styles.button} ${styles.profileIcon}`}
+                        onClick={() => {
+                          navigate(`/students/${id}`);
+                        }}
+                      >
+                        <img src={eyeIcon} alt="View Profile" />
+                      </button>
+                    </ToolTip>
+                    <ToolTip title="Remove" placement="top">
+                      <button
+                        className={`${styles.button} ${styles.trashIcon}`}
+                        onClick={() => {
+                          setPopupEmail(email);
+                          setPopupName(fullName);
+                          setRemoveStudentId(id);
+                          handleClick();
+                        }}
+                      >
+                        <img src={trashIcon} alt="Delete Student" />
+                      </button>
+                    </ToolTip>
+                  </div>
+                )}
+              </div>
+            );
+          }),
+        );
+      } catch (error) {
+        console.error('Error fetching courses or students:', error);
       }
-      return result;
-    }, []);
-    setStudentList(list);
-  }, [props.search, reloadList]);
+    };
+    fetchActiveCoursesStudents();
+  }, [
+    props.search,
+    reloadList,
+    props.students,
+    props.teacher,
+    authContext.token,
+  ]);
+
+  const handleClick = () => {
+    setShowPopup(true);
+  };
 
   const handleLoadMore = () => {
     if (numToShow + 50 > props.students.length) {

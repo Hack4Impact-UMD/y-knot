@@ -89,9 +89,9 @@ function App(): JSX.Element {
               <Route
                 path="/students"
                 element={
-                  <RequireAdminAuth>
+                  <RequireAuth>
                     <StudentRosterPage />
-                  </RequireAdminAuth>
+                  </RequireAuth>
                 }
               />
               <Route
