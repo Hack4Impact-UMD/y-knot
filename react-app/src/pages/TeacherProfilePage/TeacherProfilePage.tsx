@@ -126,11 +126,11 @@ const TeacherProfilePage = (): JSX.Element => {
           <Loading />
         </div>
       ) : loading ? (
-        <div className={styles.container}>
+        <div className={styles.loadingContainer}>
           <Loading />
         </div>
       ) : (
-        <div className={styles.settings}>
+        <div className={styles.rightPane}>
           <h1 className={styles.title}>Teacher Profile</h1>
 
           <div className={styles.inputs}>
