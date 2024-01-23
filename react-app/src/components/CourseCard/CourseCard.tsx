@@ -25,6 +25,7 @@ const CourseCard = ({
   const [teacherInformation, setTeacherInformation] =
     useState<Array<Teacher>>();
   const authContext = useAuth();
+
   useEffect(() => {
     const fetchData = async () => {
       const teacherInfo = await Promise.all(
