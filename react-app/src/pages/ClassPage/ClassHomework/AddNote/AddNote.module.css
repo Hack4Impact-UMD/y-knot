@@ -70,6 +70,10 @@
   resize: none;
 }
 
+.nameInput:focus-within {
+  box-shadow: 0 0 0 1px black;
+}
+
 .noteContainer {
   width: 100%;
   display: flex;
@@ -89,6 +93,10 @@
   outline: none;
   background-color: var(--color-grey);
   resize: none;
+}
+
+.noteInput:focus-within {
+  box-shadow: 0 0 0 1px black;
 }
 
 .button {

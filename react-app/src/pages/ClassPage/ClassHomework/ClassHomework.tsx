@@ -172,11 +172,7 @@ const ClassHomework = (props: {
             : 'No homework currently exists'
         }
         setSelectedName={setHomeworkName}
-        selectedNote={
-          selectedHomeworkNote !== ''
-            ? selectedHomeworkNote
-            : 'No assignment selected'
-        }
+        selectedNote={selectedHomeworkNote}
         setSelectedNote={setHomeworkNote}
         open={openAddNoteModal}
         onClose={() => {

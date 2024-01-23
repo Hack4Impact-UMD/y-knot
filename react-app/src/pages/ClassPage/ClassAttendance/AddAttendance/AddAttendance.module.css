@@ -36,7 +36,7 @@
 .error {
   height: 20px;
   margin: 0;
-  padding: 10px 10px 15px 10px;
+  padding: 5px;
   font-size: 0.8rem;
   color: red;
 }
@@ -60,6 +60,10 @@
   background-color: var(--color-grey);
   align-self: center;
   resize: none;
+}
+
+.noteInput:focus-within {
+  box-shadow: 0 0 0 1px black;
 }
 
 .button {
