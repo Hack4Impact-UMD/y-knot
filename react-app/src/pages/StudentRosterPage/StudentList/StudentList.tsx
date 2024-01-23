@@ -26,7 +26,7 @@ const StudentList = (props: {
   const [reloadList, setReloadList] = useState<boolean>(false);
   const [numToShow, setNumToShow] = useState<number>(50);
   const navigate = useNavigate();
-  const auth = useAuth();
+  const authContext = useAuth();
 
   useEffect(() => {
     setReloadList(false);
@@ -44,14 +44,18 @@ const StudentList = (props: {
         );
 
         /* Get students from active courses */
-        const filteredStudents = props.students.filter((student) => {
-          const hasActiveCourse = student.courseInformation?.some((course) =>
-            allCurrentCourses.some(
-              (activeCourse) => activeCourse.id === course.id,
-            ),
-          );
-          return hasActiveCourse;
-        });
+        const filteredStudents =
+          authContext?.token?.claims?.role !== 'ADMIN'
+            ? props.students.filter((student) => {
+                const hasActiveCourse = student.courseInformation?.some(
+                  (course) =>
+                    allCurrentCourses.some(
+                      (activeCourse) => activeCourse.id === course.id,
+                    ),
+                );
+                return hasActiveCourse;
+              })
+            : props.students;
 
         setStudentList(
           filteredStudents.map((student, i) => {
@@ -71,7 +75,7 @@ const StudentList = (props: {
               >
                 <p className={styles.name}>{fullName}</p>
                 {/* allow only admins to view profile and trash icons */}
-                {auth.token?.claims?.role === 'ADMIN' && (
+                {authContext?.token?.claims?.role === 'ADMIN' && (
                   <div className={styles.icons}>
                     <ToolTip title="View Profile" placement="top">
                       <button
@@ -107,7 +111,13 @@ const StudentList = (props: {
       }
     };
     fetchActiveCoursesStudents();
-  }, [props.search, reloadList, props.students, props.teacher, auth.token]);
+  }, [
+    props.search,
+    reloadList,
+    props.students,
+    props.teacher,
+    authContext.token,
+  ]);
 
   const handleClick = () => {
     setShowPopup(true);
