@@ -1,59 +1,87 @@
 import { useState, useEffect } from 'react';
-import { getAllTeachers } from '../../../backend/FirestoreCalls';
 import { useAuth } from '../../../auth/AuthProvider';
-import { TeacherID, YKNOTUser } from '../../../types/UserType';
-import styles from '../ClassTeachers/ClassTeachers.module.css';
-import Loading from '../../../components/LoadingScreen/Loading';
-import AddTeacher from './AddTeacher/AddTeacher';
+import { TeacherID } from '../../../types/UserType';
+import { Snackbar, Alert } from '@mui/material';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import { Link } from 'react-router-dom';
+import styles from '../ClassTeachers/ClassTeachers.module.css';
+import AddTeacherClass from './AddTeacherClass/AddTeacherClass';
+import DeleteTeacherClassConfirmation from './DeleteTeacherClassConfirmation/DeleteTeacherClassConfirmation';
 import EyeIcon from '../../../assets/view.svg';
 import TrashIcon from '../../../assets/trash.svg';
-import DeleteTeacherClassConfirmation from './DeleteTeacherClassConfirmation/DeleteTeacherClassConfirmation';
-import { Snackbar, Alert } from '@mui/material';
 
-const ClassTeachers = (props: { teachers: Array<TeacherID> }): JSX.Element => {
-  const [teachers, setTeachers] = useState<Array<Partial<TeacherID>>>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+const ClassTeachers = (props: {
+  teachers: Array<TeacherID>;
+  setTeachers: Function;
+  courseID: string;
+  courseName: string;
+}): JSX.Element => {
+  const [teachers, setTeachers] = useState<any[]>(props.teachers);
+  const [teacherList, setTeacherList] = useState<any[]>([]);
   const [error, setError] = useState<boolean>(false);
-  const [openRemoveTeacherModal, setOpenRemoveTeacherModal] =
+  const [openAddTeacherModal, setOpenAddTeacherModal] =
     useState<boolean>(false);
   const [showPopup, setShowPopup] = useState(false);
-  const [popupName, setPopupName] = useState<String>();
-  const [popupEmail, setPopupEmail] = useState<String>();
-  const [removeTeacherId, setRemoveTeacherId] = useState<String>();
+  const [popupName, setPopupName] = useState<string>();
+  const [popupEmail, setPopupEmail] = useState<string>();
+  const [removeTeacherId, setRemoveTeacherId] = useState<string>();
   const [reloadList, setReloadList] = useState<Boolean>(false);
-  const [openSuccess, setOpenSuccess] = useState<boolean>(false);
-  const [openFailure, setOpenFailure] = useState<boolean>(false);
+  const [removeSuccess, setRemoveSuccess] = useState<boolean>(false);
+  const [addSuccess, setAddSuccess] = useState<boolean>(false);
 
   const authContext = useAuth();
 
   const handleRemoveTeacherModal = () => {
-    setOpenRemoveTeacherModal(!openRemoveTeacherModal);
+    setOpenAddTeacherModal(!openAddTeacherModal);
   };
 
   useEffect(() => {
-    getAllTeachers()
-      .then((allTeachers) => {
-        const partialTeachers: Array<Partial<YKNOTUser>> = allTeachers.map(
-          (currTeacher) => ({
-            name: currTeacher.name,
-            auth_id: currTeacher.auth_id,
-          }),
-        );
-        setTeachers(partialTeachers);
-      })
-      .catch((err) => {
-        setError(true);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  });
+    setReloadList(false);
 
-  const handleToClose = (event: any, reason: any) => {
-    setOpenSuccess(false);
-    setOpenFailure(false);
+    const list = teachers.reduce((result: any[], teacher, i) => {
+      const roundTop = i === 0 ? styles.roundTop : '';
+      const roundBottom = i === teachers.length - 1 ? styles.roundBottom : '';
+      result.push(
+        <div key={i} className={`${styles.box} ${roundTop} ${roundBottom}`}>
+          <p className={styles.name}>{teacher.name}</p>
+          <div className={styles.icons}>
+            {authContext?.token?.claims.role === 'ADMIN' && (
+              <Link to={`/teachers/${teacher.id}`}>
+                <ToolTip title="View Profile" placement="top">
+                  <button className={styles.button}>
+                    <img src={EyeIcon} className={styles.profileIcon} />
+                  </button>
+                </ToolTip>
+              </Link>
+            )}
+            <ToolTip title="Remove" placement="top">
+              <button className={styles.button}>
+                <img
+                  src={TrashIcon}
+                  className={styles.trashIcon}
+                  onClick={() => {
+                    setPopupEmail(teacher.email);
+                    setPopupName(teacher.name);
+                    setRemoveTeacherId(teacher.id);
+                    handleClick();
+                  }}
+                />
+              </button>
+            </ToolTip>
+          </div>
+        </div>,
+      );
+      return result;
+    }, []);
+    setTeacherList(list);
+  }, [reloadList]);
+
+  const removePopupClose = (event: any, reason: any) => {
+    setRemoveSuccess(false);
+  };
+
+  const addPopupClose = (event: any, reason: any) => {
+    setAddSuccess(false);
   };
 
   const handleClick = () => {
@@ -69,62 +97,24 @@ const ClassTeachers = (props: { teachers: Array<TeacherID> }): JSX.Element => {
           Error retrieving teachers. Please try again later.
         </h4>
       ) : (
-        <>
-          <div className={styles.teachersContainer}>
-            {props.teachers.map((teacher, i) => {
-              const roundTop = i === 0 ? styles.roundTop : '';
-              const roundBottom =
-                i === props.teachers.length - 1 ? styles.roundBottom : '';
-              return (
-                <div
-                  key={i}
-                  className={`${styles.box} ${roundTop} ${roundBottom}`}
-                >
-                  <p className={styles.name}>{teacher.name}</p>
-                  <div className={styles.icons}>
-                    {authContext?.token?.claims.role === 'ADMIN' && (
-                      <Link to={`/teachers/${teacher.id}`}>
-                        <ToolTip title="View Profile" placement="top">
-                          <button className={styles.button}>
-                            <img src={EyeIcon} className={styles.profileIcon} />
-                          </button>
-                        </ToolTip>
-                      </Link>
-                    )}
-                    <ToolTip title="Remove" placement="top">
-                      <button className={styles.button}>
-                        <img
-                          src={TrashIcon}
-                          className={styles.trashIcon}
-                          onClick={() => {
-                            setPopupEmail(teacher.email);
-                            setPopupName(teacher.name);
-                            setRemoveTeacherId(teacher.id);
-                            handleClick();
-                          }}
-                        />
-                      </button>
-                    </ToolTip>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className={styles.bottomLevel}>
-            <button
-              className={styles.addButton}
-              onClick={handleRemoveTeacherModal}
-            >
-              Add Teacher
-            </button>
-          </div>
-        </>
+        <div className={styles.teachersContainer}>{teacherList}</div>
       )}
-      <AddTeacher
-        open={openRemoveTeacherModal}
+      <div className={styles.bottomLevel}>
+        <button className={styles.addButton} onClick={handleRemoveTeacherModal}>
+          Add Teacher
+        </button>
+      </div>
+      <AddTeacherClass
+        courseId={props.courseID}
+        open={openAddTeacherModal}
         onClose={() => {
-          setOpenRemoveTeacherModal(!openRemoveTeacherModal);
+          setOpenAddTeacherModal(!openAddTeacherModal);
         }}
+        setReloadList={setReloadList}
+        displayTeachers={teachers}
+        setDisplayTeachers={setTeachers}
+        setClassTeachers={props.setTeachers}
+        setAddSuccess={setAddSuccess}
       />
       {showPopup && (
         <DeleteTeacherClassConfirmation
@@ -135,12 +125,13 @@ const ClassTeachers = (props: { teachers: Array<TeacherID> }): JSX.Element => {
           popupName={popupName ? popupName : 'undefined'}
           popupEmail={popupEmail ? popupEmail : 'undefined'}
           removeTeacherId={removeTeacherId ? removeTeacherId : 'undefined'}
+          courseId={props.courseID}
+          courseName={props.courseName}
           setReloadList={setReloadList}
-          reloadList={reloadList}
-          teachers={props.teachers}
-          // setTeachers={setTeachers}
-          setOpenSuccess={setOpenSuccess}
-          setOpenFailure={setOpenFailure}
+          teachers={teachers}
+          setTeachers={setTeachers}
+          setClassTeachers={props.setTeachers}
+          setRemoveSuccess={setRemoveSuccess}
         />
       )}
       <Snackbar
@@ -148,12 +139,25 @@ const ClassTeachers = (props: { teachers: Array<TeacherID> }): JSX.Element => {
           horizontal: 'right',
           vertical: 'bottom',
         }}
-        open={openSuccess}
+        open={removeSuccess}
         autoHideDuration={3000}
-        onClose={handleToClose}
+        onClose={removePopupClose}
       >
         <Alert severity="success" sx={{ width: '100%' }}>
           Teacher was Successfully Removed
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{
+          horizontal: 'right',
+          vertical: 'bottom',
+        }}
+        open={addSuccess}
+        autoHideDuration={3000}
+        onClose={addPopupClose}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Teacher was Successfully Added
         </Alert>
       </Snackbar>
     </div>

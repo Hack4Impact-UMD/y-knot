@@ -66,7 +66,7 @@ const AddHomework = (props: {
   return (
     <Modal
       open={props.open}
-      height={430}
+      height={425}
       onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
         handleOnClose();
       }}

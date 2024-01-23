@@ -27,9 +27,8 @@
 }
 
 .error {
-  text-align: center;
-  height: 25px;
-  margin: 10px 0 0 0;
+  height: 15px;
+  margin: 3px 0px;
   padding: 0;
   font-size: 0.8rem;
   color: red;
@@ -85,7 +84,7 @@
   border-style: solid;
   border-width: 3px;
   border-radius: 25px;
-  background: var(--color-white);
+  background: white;
 }
 
 .actionsContainer button:hover {

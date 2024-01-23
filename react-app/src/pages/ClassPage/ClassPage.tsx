@@ -8,6 +8,7 @@ import ClassAttendance from './ClassAttendance/ClassAttendance';
 import ClassHomework from './ClassHomework/ClassHomework';
 import ClassTeachers from './ClassTeachers/ClassTeachers';
 import ClassStudents from './ClassStudents/ClassStudents';
+import ClassSettings from './ClassSettings/ClassSettings';
 import { useParams } from 'react-router-dom';
 import type { Course, CourseID } from '../../types/CourseType';
 import type { StudentID } from '../../types/StudentType';
@@ -34,13 +35,12 @@ const blankCourse: CourseID = {
   name: '',
   startDate: '',
   endDate: '',
-  meetingTime: '',
   students: [],
   teachers: [],
   leadershipApp: false,
   courseType: 'ACADEMY',
   formId: '',
-  introEmail: { content: '' },
+  introEmail: { content: '', files: [] },
   attendance: [],
   homeworks: [],
   id: '',
@@ -81,6 +81,10 @@ const ClassPage = (): JSX.Element => {
     }
   }, []);
 
+  function titleCase(str: string) {
+    return str && str[0].toUpperCase() + str.slice(1).toLowerCase();
+  }
+
   return (
     <div>
       <NavigationBar />
@@ -99,7 +103,9 @@ const ClassPage = (): JSX.Element => {
                 dateFormat,
               )} - ${DateTime.fromISO(course.endDate).toFormat(dateFormat)}`}
             </h2>
-            <h2 className={styles.time}>{course.meetingTime}</h2>
+            <h2 className={styles.time}>
+              {titleCase(course.courseType.toString())}
+            </h2>
           </div>
 
           <div className={styles.content}>
@@ -175,7 +181,14 @@ const ClassPage = (): JSX.Element => {
 
           {/* For rendering the corresponding component whenever tab value changes */}
           {currentTab === Tab.Main && <ClassMain />}
-          {currentTab === Tab.Students && <ClassStudents students={students} />}
+          {currentTab === Tab.Students && (
+            <ClassStudents
+              students={students}
+              setStudents={setStudents}
+              courseID={courseID!}
+              courseName={course.name}
+            />
+          )}
           {currentTab === Tab.Attendance && (
             <ClassAttendance
               attendance={course.attendance}
@@ -188,6 +201,7 @@ const ClassPage = (): JSX.Element => {
           )}
           {currentTab === Tab.Homework && (
             <ClassHomework
+              homeworks={course.homeworks}
               students={students}
               setStudents={setStudents}
               course={course}
@@ -195,7 +209,17 @@ const ClassPage = (): JSX.Element => {
               setCourse={setCourse}
             />
           )}
-          {currentTab === Tab.Teachers && <ClassTeachers teachers={teachers} />}
+          {currentTab === Tab.Teachers && (
+            <ClassTeachers
+              teachers={teachers}
+              setTeachers={setTeachers}
+              courseID={courseID!}
+              courseName={course.name}
+            />
+          )}
+          {currentTab === Tab.Settings && (
+            <ClassSettings course={course} courseID={courseID!} />
+          )}
         </div>
       )}
     </div>

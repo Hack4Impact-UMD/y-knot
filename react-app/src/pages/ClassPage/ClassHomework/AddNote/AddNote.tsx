@@ -16,6 +16,7 @@ const AddNote = (props: {
   open: boolean;
   onClose: any;
   selectedName: string;
+  setSelectComponentValue: React.Dispatch<React.SetStateAction<any>>;
   setSelectedName: React.Dispatch<React.SetStateAction<string>>;
   selectedNote: string;
   setSelectedNote: React.Dispatch<React.SetStateAction<string>>;
@@ -60,6 +61,10 @@ const AddNote = (props: {
               props.setSelectedNote(note);
               props.setStudents(newStudentList);
               props.setCourse(newCourse);
+              props.setSelectComponentValue({
+                value: inputName ?? '',
+                label: inputName ?? '',
+              });
             })
             .catch((e: Error) => {
               setNote(props.selectedNote);

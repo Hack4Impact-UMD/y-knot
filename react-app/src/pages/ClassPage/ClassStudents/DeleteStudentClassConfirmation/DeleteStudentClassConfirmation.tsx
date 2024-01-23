@@ -1,35 +1,35 @@
 import { useState } from 'react';
-import styles from './DeleteTeacherClassConfirmation.module.css';
+import styles from './DeleteStudentClassConfirmation.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
 import x from '../../../../assets/x.svg';
 import { TeacherID } from '../../../../types/UserType';
-import { removeTeacherCourse } from '../../../../backend/FirestoreCalls';
+import { removeStudentCourse } from '../../../../backend/FirestoreCalls';
 
 interface popupModalType {
   onClose: () => void;
   open: any;
   popupName: String;
   popupEmail: String;
-  removeTeacherId: String;
+  removeStudentId: String;
   courseId: String;
   courseName: String;
   setReloadList: Function;
-  teachers: Array<Partial<TeacherID>>;
-  setTeachers: Function;
-  setClassTeachers: Function;
+  students: Array<Partial<TeacherID>>;
+  setStudents: Function;
+  setClassStudents: Function;
   setRemoveSuccess: Function;
 }
 
-const DeleteTeacherClassConfirmation = ({
+const DeleteStudentClassConfirmation = ({
   onClose,
   open,
   popupName,
   popupEmail,
-  removeTeacherId,
+  removeStudentId,
   setReloadList,
-  setTeachers,
-  teachers,
-  setClassTeachers,
+  setStudents,
+  students,
+  setClassStudents,
   courseId,
   courseName,
   setRemoveSuccess,
@@ -38,17 +38,17 @@ const DeleteTeacherClassConfirmation = ({
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   function handleConfirm() {
-    if (removeTeacherId != 'undefined') {
-      removeTeacherCourse(removeTeacherId.valueOf(), courseId.valueOf())
+    if (removeStudentId != 'undefined') {
+      removeStudentCourse(removeStudentId.valueOf(), courseId.valueOf())
         .then(() => {
-          setTeachers(
-            teachers.filter((teacher) => {
-              return teacher.id !== removeTeacherId.valueOf();
+          setStudents(
+            students.filter((student) => {
+              return student.id !== removeStudentId.valueOf();
             }),
           );
-          setClassTeachers(
-            teachers.filter((teacher) => {
-              return teacher.id !== removeTeacherId.valueOf();
+          setClassStudents(
+            students.filter((student) => {
+              return student.id !== removeStudentId.valueOf();
             }),
           );
           onClose();
@@ -56,7 +56,7 @@ const DeleteTeacherClassConfirmation = ({
           setRemoveSuccess(true);
         })
         .catch((err) => {
-          setErrorMessage('*Teacher could not be removed');
+          setErrorMessage('*Student could not be removed');
         });
     }
   }
@@ -135,4 +135,4 @@ const DeleteTeacherClassConfirmation = ({
   );
 };
 
-export default DeleteTeacherClassConfirmation;
+export default DeleteStudentClassConfirmation;
