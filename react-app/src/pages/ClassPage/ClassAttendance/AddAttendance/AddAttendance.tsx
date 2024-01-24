@@ -9,8 +9,9 @@ import dayjs, { Dayjs } from 'dayjs';
 import { Course } from '../../../../types/CourseType';
 import { StudentID } from '../../../../types/StudentType';
 import {
-  addAttendanceToStudents,
-  addCourseAttendance,
+  addAttendance,
+  getStudentsFromList,
+  getCourse,
 } from '../../../../backend/FirestoreCalls';
 
 const AddAttendance = (props: {
@@ -28,28 +29,27 @@ const AddAttendance = (props: {
 
   const handleAddAttendance = async () => {
     let date = selectedDate?.format('YYYY-MM-DD');
-    addCourseAttendance(props.course, props.courseID, {
-      date: date ? date : '',
-      notes: note,
-    })
-      .then((newCourse) => {
-        props.setCourse(newCourse);
-        addAttendanceToStudents(
-          props.courseID,
-          date ? date : '',
-          props.students,
-        )
-          .then((newStudentList) => {
-            props.setStudents(newStudentList);
-            handleOnClose();
-          })
-          .catch((e: Error) => {
-            setErrorMessage(e.message + '**');
-          });
+    if (date !== undefined)
+      addAttendance(props.courseID, props.students, {
+        date: date,
+        notes: note,
       })
-      .catch((e: Error) => {
-        setErrorMessage(e.message + '**');
-      });
+        .then(() => {
+          getCourse(props.courseID)
+            .then(async (courseData) => {
+              props.setCourse(courseData);
+              getStudentsFromList(courseData.students).then((data) => {
+                props.setStudents(data);
+              });
+              handleOnClose();
+            })
+            .catch(() => {
+              console.log('Failed to get Course Information in Class Page');
+            });
+        })
+        .catch((e: Error) => {
+          setErrorMessage(e.message + '**');
+        });
   };
 
   const handleOnClose = (): void => {

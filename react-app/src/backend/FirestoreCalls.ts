@@ -9,6 +9,8 @@ import {
   query,
   where,
   runTransaction,
+  DocumentSnapshot,
+  DocumentData,
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import {
@@ -580,6 +582,109 @@ const compareDayJSDates = (
   return dayjs(obj1.date).isBefore(dayjs(obj2.date)) ? -1 : 1;
 };
 
+export function addAttendance(
+  courseID: string,
+  students: Array<StudentID>,
+  newAttendance: Attendance,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    runTransaction(db, async (transaction) => {
+      const courseRef = (
+        await transaction.get(doc(db, 'Courses', courseID))
+      ).data() as Course;
+
+      const studentsRefs: StudentID[] = [];
+      await Promise.all(
+        students.map(async (student) => {
+          return (
+            await transaction.get(doc(db, 'Students', student.id))
+          ).data() as StudentID;
+        }),
+      ).then((result) => {
+        result.forEach((student) => {
+          studentsRefs.push(student);
+        });
+      });
+
+      if (courseRef === undefined || studentsRefs === undefined) {
+        throw 'Document does not exist!';
+      }
+
+      let containsDuplicate = courseRef.attendance.reduce(
+        (acc, prevAttendance) =>
+          acc || prevAttendance.date === newAttendance.date,
+        false,
+      );
+
+      if (containsDuplicate) {
+        reject(new Error('Attendance already exists for date'));
+        return;
+      }
+
+      courseRef.attendance.push(newAttendance);
+      courseRef.attendance.sort(compareDayJSDates);
+      await transaction.update(doc(db, 'Courses', courseID), {
+        attendance: courseRef.attendance,
+      });
+
+      //Cant break out of foreach loop, so instead use these as flags
+      //for when check fails to reject transaction
+      let courseNotPresent = false;
+      containsDuplicate = false;
+
+      studentsRefs.forEach(async (studentRef) => {
+        let coursePresent = false;
+        let newCourseInformation: StudentCourse[] =
+          studentRef.courseInformation.map((course) => {
+            if (course.id === courseID) {
+              coursePresent = true;
+              containsDuplicate =
+                containsDuplicate ||
+                course.attendance.reduce(
+                  (acc, prevAttendance) =>
+                    acc || prevAttendance.date === newAttendance.date,
+                  false,
+                );
+
+              if (!containsDuplicate) {
+                course.attendance.push({
+                  date: newAttendance.date,
+                  attended: false,
+                });
+                course.attendance.sort(compareDayJSDates);
+              }
+            }
+            return course;
+          });
+
+        if (coursePresent && !containsDuplicate) {
+          transaction.update(doc(db, 'Students', studentRef.id), {
+            courseInformation: newCourseInformation,
+          });
+        } else if (!coursePresent) {
+          courseNotPresent = true;
+        }
+      });
+
+      if (courseNotPresent) {
+        reject(new Error('Not all students are enrolled in course'));
+      }
+
+      if (containsDuplicate) {
+        reject(new Error('Attendance already exists for student'));
+      }
+    })
+      .then(() => {
+        resolve();
+      })
+      .catch(() => {
+        reject();
+      });
+  });
+}
+
+//Old Add Attendance function -> to be deleted
+//Replaced by "AddAttendance"
 export function addCourseAttendance(
   course: Course,
   courseID: string,
@@ -597,7 +702,6 @@ export function addCourseAttendance(
       reject(new Error('Attendance already exists for date'));
       return;
     }
-
     course.attendance.push(newAttendance);
     course.attendance.sort(compareDayJSDates);
     updateCourse(course, courseID)
@@ -748,6 +852,8 @@ export function updateCourseHomework(
   });
 }
 
+//Old Add Attendance function -> to be deleted
+//Replaced by "AddAttendance"
 export function addAttendanceToStudents(
   courseID: string,
   date: string,

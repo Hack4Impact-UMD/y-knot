@@ -11,7 +11,6 @@ import type { StudentID } from '../../../types/StudentType';
 import type { Course, Attendance } from '../../../types/CourseType';
 
 const ClassAttendance = (props: {
-  attendance: Array<Attendance>;
   students: Array<StudentID>;
   setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
   course: Course;
@@ -19,17 +18,17 @@ const ClassAttendance = (props: {
   setCourse: React.Dispatch<React.SetStateAction<Course>>;
 }): JSX.Element => {
   const [selectComponentValue, setSelectComponentValue] = useState<any>({
-    value: props.attendance.slice(-1)[0].date.toString() ?? '',
-    label: props.attendance.slice(-1)[0].date.toString() ?? 'Date',
+    value: props.course.attendance.slice(-1)[0].date.toString() ?? '',
+    label: props.course.attendance.slice(-1)[0].date.toString() ?? 'Date',
   });
   const [selectedAttDate, setSelectedDate] = useState<string>(
-    props.attendance !== undefined && props.attendance.length > 0
-      ? props.attendance.slice(-1)[0].date.toString()
+    props.course.attendance !== undefined && props.course.attendance.length > 0
+      ? props.course.attendance.slice(-1)[0].date.toString()
       : '',
   );
   const [selectedAttNote, setSelectedNote] = useState<string>(
-    props.attendance !== undefined && props.attendance.length > 0
-      ? props.attendance.slice(-1)[0].notes.toString()
+    props.course.attendance !== undefined && props.course.attendance.length > 0
+      ? props.course.attendance.slice(-1)[0].notes.toString()
       : '',
   );
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
@@ -93,7 +92,7 @@ const ClassAttendance = (props: {
               },
             }),
           }}
-          options={props.attendance.map((attendance) => {
+          options={props.course.attendance.map((attendance) => {
             return { value: attendance.date, label: attendance.date };
           })}
           theme={(theme) => ({
