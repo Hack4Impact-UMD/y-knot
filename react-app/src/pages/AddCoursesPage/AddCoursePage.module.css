@@ -41,7 +41,7 @@
 
 .name {
   width: 40%;
-  margin-left: 50px;
+  margin-left: calc(10px + 2.5vw);
 }
 
 .headerContainer {
@@ -77,8 +77,12 @@
   font-size: 17px;
   border: none;
   color: white;
-  margin-left: 35%;
   cursor: pointer;
+}
+
+.bottomButtons {
+  display: flex;
+  justify-content: center;
 }
 
 .createCourseButton:hover {
@@ -134,4 +138,38 @@
   width: 100%;
   display: flex;
   gap: 5px;
+}
+
+.dateSelection{
+  width: 40%;
+}
+
+@media screen and (min-width: 601px) and (max-width: 1150px) {
+  .rightPane {
+    width: calc(100% - 120px);
+  }
+
+  .inputBox {
+    min-width: 0;
+  }
+
+  .name {
+    margin-left: 1.5vw;
+  }
+
+}
+
+@media screen and (max-width: 600px) {
+  .rightPane {
+    width: 100%;
+    position: absolute;
+    top: 80px;
+  }
+
+  .inputBox {
+    min-width: 0;
+  }
+  .name {
+    margin-left: 1vw;
+  }
 }
