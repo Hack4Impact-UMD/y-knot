@@ -1,0 +1,84 @@
+.rightPane {
+    float: right;
+    width: calc(100% - 250px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.backButton {
+    width: 100px;
+    margin-left: 30px;
+    margin-top: 20px;
+    color: #757575;
+    border-style: none;
+    background-color: transparent;
+    font-size:large;
+    display: flex;
+    align-items: "center";
+  }
+
+  .top {
+    width: 100%;
+  }
+
+.title {
+    width: 100%;
+    text-align: center;
+}
+
+.buttons {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.tab {
+    margin-right: 10px;
+    background-color: white;
+    font-size: 18px;
+    border-style: solid;
+    border-color: white;
+    border-radius: 15px;
+    border-width: 1px;
+    text-decoration: none;
+    color: black;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+  
+  .selectedTab {
+    margin-right: 10px;
+    background-color: white;
+    font-size: 18px;
+    border-style: solid;
+    border-color: black;
+    border-radius: 15px;
+    border-width: 1px;
+    text-decoration: none;
+    color: black;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .mergeContainer {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-column-gap: 20px;
+    grid-row-gap: 0px;
+    border-style: solid;
+    border-color: black;
+    border-radius: 30px;
+    border-width: 1px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    width: 80%;
+    align-self: center;
+    margin-top: 30px;
+
+    }
