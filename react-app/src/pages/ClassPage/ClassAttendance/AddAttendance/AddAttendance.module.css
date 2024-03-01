@@ -36,20 +36,13 @@
 .error {
   height: 20px;
   margin: 0;
-  padding: 0;
+  padding: 5px;
   font-size: 0.8rem;
   color: red;
 }
 
-.nameInput {
-  width: 75%;
-  min-width: 180px;
-  padding: 11px 15px;
-  margin-bottom: 16px;
-  border: none;
-  border-radius: 10px;
-  outline: none;
-  background-color: var(--color-grey);
+.datepicker {
+  padding-bottom: 15px;
 }
 
 .noteInput {
@@ -67,6 +60,10 @@
   background-color: var(--color-grey);
   align-self: center;
   resize: none;
+}
+
+.noteInput:focus-within {
+  box-shadow: 0 0 0 1px black;
 }
 
 .button {

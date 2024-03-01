@@ -91,7 +91,7 @@ function App(): JSX.Element {
                 path="/students"
                 element={
                   <RequireAuth>
-                    <StudentMergePage />
+                    <StudentRosterPage />
                   </RequireAuth>
                 }
               />

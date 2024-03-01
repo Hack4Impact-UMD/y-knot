@@ -1,12 +1,15 @@
-.container {
+.loadingContainer {
   height: 100vh;
   margin-left: 200px;
   width: calc(100% - 250px);
-  position: relative;
   z-index: -1;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }
 
-.settings {
+.rightPane {
   margin-top: 75px;
   float: right;
   height: 100%;
@@ -15,6 +18,7 @@
 
 .title {
   text-align: center;
+  font-size: calc(1vw + 1rem);
   width: 100%;
 }
 
@@ -30,19 +34,23 @@
   margin-right: auto;
 }
 
-.box {
+.box, .bottomBox {
   border-bottom: 1px solid black;
-  padding: 20px;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-decoration: none;
 }
 
 .bottomBox {
-  padding: 20px;
+  border-bottom: none;
 }
 
 .boxTitle {
   font-style: normal;
-  font-weight: 400;
-  font-size: 1.25rem;
+  font-weight: 500;
+  font-size: calc(0.25vw + 1rem);
   width: 200px;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
@@ -51,14 +59,16 @@
 }
 
 .boxData {
-  float: center;
+  font-weight: 600;
+  font-size: calc(0.25vw + 1rem);
+  width: 70%;
+  display: flex;
   font-style: italic;
-  font-weight: 500;
-  font-size: 1.25rem;
 }
 
 .coursesTitle {
   margin: 30px auto 30px 10%;
+  font-size: calc(0.5vw + 1.5rem);
   font-weight: normal;
   text-decoration: underline;
   text-decoration-thickness: 1px;
@@ -73,13 +83,31 @@
 
 .card {
   text-decoration: none;
+  margin-bottom: 40px;
+  margin-right: 50px;
+}
+
+@media screen and (min-width: 601px) and (max-width: 1150px) {
+  .rightPane {
+    width: calc(100% - 120px);
+  }
 }
 
 @media screen and (max-width: 600px) {
-  .settings,
-  .container {
+  .rightPane,
+  .loadingContainer {
     width: 100%;
     position: absolute;
-    top: 80px;
+    margin-top: 150px;
+  }
+
+  .courseList {
+    display: inline-grid;
+    margin-left: 20px;
+  }
+
+  .card {
+    margin-bottom: 20px;
+    margin-right: 0;
   }
 }

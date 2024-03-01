@@ -2,37 +2,66 @@ import React, { useState } from 'react';
 import styles from './AddAttendance.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
 import x from '../../../../assets/x.svg';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import { Course } from '../../../../types/CourseType';
+import { StudentID } from '../../../../types/StudentType';
+import {
+  addAttendanceToStudents,
+  addCourseAttendance,
+} from '../../../../backend/FirestoreCalls';
 
-interface modalType {
+const AddAttendance = (props: {
   open: boolean;
   onClose: any;
-}
-
-const AddAttendance = ({ open, onClose }: modalType): React.ReactElement => {
-  const [name, setName] = useState<string>('');
+  students: Array<StudentID>;
+  setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
+  course: Course;
+  courseID: string;
+  setCourse: React.Dispatch<React.SetStateAction<Course>>;
+}): React.ReactElement => {
+  const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(dayjs());
   const [note, setNote] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const handleAddAttendance = () => {
-    if (name == '') {
-      setErrorMessage('*Name is required');
-    } else {
-      // TODO: Save name and note
-      handleOnClose();
-    }
+  const handleAddAttendance = async () => {
+    let date = selectedDate?.format('YYYY-MM-DD');
+    addCourseAttendance(props.course, props.courseID, {
+      date: date ? date : '',
+      notes: note,
+    })
+      .then((newCourse) => {
+        props.setCourse(newCourse);
+        addAttendanceToStudents(
+          props.courseID,
+          date ? date : '',
+          props.students,
+        )
+          .then((newStudentList) => {
+            props.setStudents(newStudentList);
+            handleOnClose();
+          })
+          .catch((e: Error) => {
+            setErrorMessage(e.message + '**');
+          });
+      })
+      .catch((e: Error) => {
+        setErrorMessage(e.message + '**');
+      });
   };
 
   const handleOnClose = (): void => {
-    onClose();
-    setName('');
+    props.onClose();
     setNote('');
     setErrorMessage('');
   };
 
   return (
     <Modal
-      open={open}
-      height={410}
+      open={props.open}
+      height={425}
       onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
         handleOnClose();
       }}
@@ -52,14 +81,27 @@ const AddAttendance = ({ open, onClose }: modalType): React.ReactElement => {
         <div className={styles.content}>
           <h1 className={styles.heading}>Add Attendance</h1>
           <p className={styles.error}>{errorMessage}</p>
-          <input
-            type="text"
-            placeholder="Name:"
-            className={styles.nameInput}
-            onChange={(event) => {
-              setName(event.target.value);
-            }}
-          />
+          <div className={styles.datepicker}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label=""
+                value={selectedDate}
+                onChange={(newDate) => setSelectedDate(newDate)}
+                slotProps={{ textField: { size: 'small' } }}
+                sx={{
+                  backgroundColor: '#d9d9d9',
+                  borderRadius: '10px',
+                  width: '330px',
+                  '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline': {
+                    border: '0px',
+                  }, // at page load
+                  '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                    { border: '1px solid black', borderRadius: '10px' }, // at focused state
+                }}
+              />
+            </LocalizationProvider>
+          </div>
+
           <textarea
             placeholder="Create note here:"
             className={styles.noteInput}

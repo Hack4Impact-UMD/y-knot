@@ -1,25 +1,38 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import Select from 'react-select';
 import styles from './ClassAttendance.module.css';
 import noteIcon from '../../../assets/note.svg';
 import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
-import AddNote from '../AddNote/AddNote';
+import AddNote from './AddNote/AddNote';
 import RemoveAttendance from './RemoveAttendance/RemoveAttendance';
 import AddAttendance from './AddAttendance/AddAttendance';
-import type { Student } from '../../../types/StudentType';
-
-interface attendanceObj {
-  date: String;
-  notes: String;
-}
+import type { StudentID } from '../../../types/StudentType';
+import type { Course, Attendance } from '../../../types/CourseType';
 
 const ClassAttendance = (props: {
-  attendance: Array<attendanceObj>;
-  students: Array<Student>;
+  attendance: Array<Attendance>;
+  students: Array<StudentID>;
+  setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
+  course: Course;
+  courseID: string | undefined;
+  setCourse: React.Dispatch<React.SetStateAction<Course>>;
 }): JSX.Element => {
+  const [selectComponentValue, setSelectComponentValue] = useState<any>({
+    value: props.attendance.slice(-1)[0].date.toString() ?? '',
+    label: props.attendance.slice(-1)[0].date.toString() ?? 'Date',
+  });
+  const [selectedAttDate, setSelectedDate] = useState<string>(
+    props.attendance !== undefined && props.attendance.length > 0
+      ? props.attendance.slice(-1)[0].date.toString()
+      : '',
+  );
+  const [selectedAttNote, setSelectedNote] = useState<string>(
+    props.attendance !== undefined && props.attendance.length > 0
+      ? props.attendance.slice(-1)[0].notes.toString()
+      : '',
+  );
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
-  const [selectedDate, setDate] = useState<string>('');
   const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
   const [openRemoveHwModal, setOpenRemoveHwModal] = useState<boolean>(false);
   const [openAddNoteModal, setOpenAddNoteModal] = useState<boolean>(false);
@@ -39,6 +52,18 @@ const ClassAttendance = (props: {
   const handleAddNoteModal = () => {
     setOpenAddNoteModal(!openAddNoteModal);
   };
+
+  const parseAttendance = (date: string): void => {
+    if (date.length > 0) {
+      props.course.attendance.forEach((att) => {
+        if (att.date === date) {
+          setSelectedDate(date);
+          setSelectedNote(att.notes);
+        }
+      });
+    }
+  };
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.topLevel}>
@@ -48,16 +73,37 @@ const ClassAttendance = (props: {
           </button>
         </ToolTip>
         <Select
-          placeholder="Date"
+          value={selectComponentValue}
           className={styles.dateSelection}
+          onChange={(option) => {
+            setSelectComponentValue(option);
+            parseAttendance(option?.label.toString() ?? '');
+          }}
           styles={{
             control: (baseStyles) => ({
               ...baseStyles,
+              height: 'fit-content',
               borderColor: 'black',
+              boxShadow: 'none',
+              '&:focus-within': {
+                border: '1.5px solid black',
+              },
+              '&:hover': {
+                border: '1px solid black',
+              },
             }),
           }}
           options={props.attendance.map((attendance) => {
             return { value: attendance.date, label: attendance.date };
+          })}
+          theme={(theme) => ({
+            ...theme,
+            colors: {
+              ...theme.colors,
+              primary25: 'var(--color-pastel-orange)',
+              primary50: 'var(--color-bright-orange)',
+              primary: 'var(--color-orange)',
+            },
           })}
         />
       </div>
@@ -113,15 +159,31 @@ const ClassAttendance = (props: {
         onClose={() => {
           setOpenAddHwModal(!openAddHwModal);
         }}
+        students={props.students}
+        setStudents={props.setStudents}
+        course={props.course}
+        setCourse={props.setCourse}
+        courseID={props.courseID !== undefined ? props.courseID : ''}
       />
       <AddNote
-        title="Attendance"
-        currNote="existing note here"
-        selected={selectedDate || ''}
+        setSelectComponentValue={setSelectComponentValue}
+        selectedDate={
+          selectedAttDate !== ''
+            ? selectedAttDate
+            : 'No attendance currently exists'
+        }
+        setSelectedDate={setSelectedDate}
+        selectedNote={selectedAttNote}
+        setSelectedNote={setSelectedNote}
         open={openAddNoteModal}
         onClose={() => {
           setOpenAddNoteModal(!openAddNoteModal);
         }}
+        students={props.students}
+        setStudents={props.setStudents}
+        course={props.course}
+        courseID={props.courseID ?? ''}
+        setCourse={props.setCourse}
       />
     </div>
   );

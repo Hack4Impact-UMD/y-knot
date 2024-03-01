@@ -9,6 +9,13 @@
   align-items: center;
 }
 
+.rightPane {
+  margin-top: 150px;
+  float: right;
+  height: 100%;
+  width: calc(100% - 250px);
+}
+
 .errorMessage {
   font: 26;
   color: red;
@@ -22,13 +29,6 @@
   gap: 5px;
 }
 
-.rightPane {
-  margin-top: 100px;
-  float: right;
-  height: 100%;
-  width: calc(100% - 250px);
-}
-
 .header {
   position: relative;
   width: 80%;
@@ -39,12 +39,14 @@
 }
 
 .title {
+  font-size: calc(1vw + 1rem);
   position: absolute;
   text-align: center;
   width: 100%;
 }
 
 .secondTitle {
+  font-size: calc(0.7vw + 0.5rem);
   text-align: center;
 }
 
@@ -56,8 +58,10 @@
 }
 
 .button {
-  width: 4rem;
-  height: 50px;
+  width: calc(1.5vw + 3rem);
+  max-height: 50px;
+  min-height: 25px;
+  height: calc(1vw + 2rem);
   margin-bottom: 15px;
   border-radius: 15px;
   border: none;
@@ -66,15 +70,11 @@
 }
 
 .button:hover {
-  width: 4rem;
-  height: 50px;
-  border-radius: 15px;
-  border: none;
   background-color: var(--color-yellow-orange);
 }
 
 .icon {
-  width: 2rem;
+  width: calc(0.5vw + 1.5rem);
 }
 
 .inputs {
@@ -106,19 +106,21 @@
 
 .boxTitle {
   font-style: normal;
-  font-weight: 400;
-  width: 30%;
-  text-align: center;
+  font-weight: 500;
+  font-size: calc(0.25vw + 1rem);
+  width: 200px;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
   padding-left: 20px;
+  display: inline-block;
 }
 
 .boxData {
+  font-weight: 600;
+  font-size: calc(0.25vw + 1rem);
   width: 70%;
   display: flex;
   font-style: italic;
-  font-weight: 500;
 }
 
 .nameInputs {
@@ -140,6 +142,7 @@
 
 .coursesTitle {
   margin: 30px auto 30px 10%;
+  font-size: calc(0.5vw + 1.5rem);
   font-weight: normal;
   text-decoration: underline;
   text-decoration-thickness: 1px;
@@ -152,14 +155,51 @@
   flex-wrap: wrap;
 }
 
+.card {
+  text-decoration: none;
+  margin-bottom: 40px;
+  margin-right: 50px;
+}
+
+@media screen and (min-width: 601px) and (max-width: 1150px) {
+  .rightPane {
+    width: calc(100% - 120px);
+  }
+
+  .title{
+    text-align: left;
+  }
+
+  .secondTitle {
+    margin: 30px auto 10px 10%;
+    text-align:left;
+  }
+}
+
 @media screen and (max-width: 600px) {
   .rightPane,
   .loadingContainer {
     width: 100%;
     position: absolute;
-    top: 80px;
+    top: 40px;
   }
-}
-.card {
-  text-decoration: none;
+
+  .title {
+    text-align: left;
+  }
+
+  .secondTitle {
+    margin: 30px auto 10px 10%;
+    text-align:left;
+  }
+
+  .courseList {
+    display: inline-grid;
+    margin-left: 20px;
+  }
+
+  .card {
+    margin-bottom: 20px;
+    margin-right: 0;
+  }
 }
