@@ -38,10 +38,6 @@
   text-align: center;
 }
 
-html {
-  overflow-y: overlay;
-}
-
 .teacherHeader {
   display: flex;
   width: 100%;
@@ -49,16 +45,18 @@ html {
 }
 
 .heading {
+  font-size: calc(0.5vw + 1.5rem);
   width: 100%;
   text-align: center;
+  margin-left: 2vw;
 }
 
 .addTeacher {
   border-radius: 30px;
   border: none;
   background-color: var(--color-orange);
-  font-size: 1.05rem;
-  width: 150px;
+  font-size: calc(0.2vw + 0.9rem);
+  width: calc(1.5vw + 7rem);
   height: 40px;
   color: white;
   margin-left: -200px;
@@ -70,10 +68,36 @@ html {
   background-color: var(--color-yellow-orange);
 }
 
+@media screen and (min-width: 601px) and (max-width: 1150px) {
+  .rightPane {
+    width: calc(100% - 120px);
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .heading{
+    margin: 25px auto 25px 10%;
+    text-align: left;
+  }
+}
+
 @media screen and (max-width: 600px) {
   .rightPane {
     width: 100%;
     position: absolute;
     top: 80px;
+  }
+
+  .heading{
+    margin: 25px auto 25px 10%;
+    text-align: left;
+  }
+
+  .searchContainer {
+    margin: 30px 17% 0 10%;
+  }
+  
+  .searchBar {
+    width: 100%;
   }
 }
