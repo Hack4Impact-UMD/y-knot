@@ -164,9 +164,7 @@ export function removeStudentCourse(
         throw 'Document does not exist!';
       }
       const student: Student = studentRef.data() as Student;
-      if (
-        student.courseInformation.find((student) => student.id === courseId)
-      ) {
+      if (student.courseInformation.find((course) => course.id === courseId)) {
         student.courseInformation = student.courseInformation.filter(
           ({ id }) => !id.includes(courseId),
         );
@@ -673,6 +671,149 @@ export function addAttendance(
       if (containsDuplicate) {
         reject(new Error('Attendance already exists for student'));
       }
+    })
+      .then(() => {
+        resolve();
+      })
+      .catch(() => {
+        reject();
+      });
+  });
+}
+
+// Sophie's Test
+export function addAttendance2(
+  courseID: string,
+  students: Array<StudentID>,
+  newAttendance: Attendance,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    runTransaction(db, async (transaction) => {
+      const courseRef = await transaction.get(doc(db, 'Courses', courseID));
+      if (!courseRef.exists()) {
+        throw 'Course does not exist!';
+      }
+
+      const course: Course = courseRef.data() as Course;
+      const studentPromises = [];
+
+      for (const student of students) {
+        studentPromises.push(transaction.get(doc(db, 'Students', student.id)));
+      }
+
+      var studentRefList: any[] = [];
+      await Promise.all(studentPromises)
+        .then((studentRef) => {
+          studentRefList = studentRef;
+        })
+        .catch(() => {
+          reject(new Error('A student does not exist!'));
+        });
+
+      var updatePromises = [];
+
+      // Add attendance to course if an attendance with the same date does not already exist
+      if (
+        !course.attendance.find(
+          (attendance) => attendance.date === newAttendance.date,
+        )
+      ) {
+        course.attendance.push(newAttendance);
+        course.attendance.sort(compareDayJSDates);
+        updatePromises.push(
+          transaction.update(doc(db, 'Courses', courseID), {
+            attendance: course.attendance,
+          }),
+        );
+      }
+
+      for (let i = 0; i < studentRefList.length; i++) {
+        var studentRef = studentRefList[i];
+        const student: Student = studentRef.data() as Student;
+
+        // Check if student does not have the attendance date for the course
+        if (
+          student.courseInformation.find(
+            (course) =>
+              course.id === courseID &&
+              !course.attendance.find(
+                (attendance) => attendance.date === newAttendance.date,
+              ),
+          )
+        ) {
+          teacher.courses.push(courseId);
+          course.teachers.push(teacherIdList[i]);
+          updatePromises.push(
+            transaction.update(doc(db, 'Users', teacherIdList[i]), {
+              courses: teacher.courses,
+            }),
+          );
+        }
+      }
+
+      // let containsDuplicate = courseRef.attendance.reduce(
+      //   (acc, prevAttendance) =>
+      //     acc || prevAttendance.date === newAttendance.date,
+      //   false,
+      // );
+
+      // if (containsDuplicate) {
+      //   reject(new Error('Attendance already exists for date'));
+      //   return;
+      // }
+
+      // courseRef.attendance.push(newAttendance);
+      // courseRef.attendance.sort(compareDayJSDates);
+      // await transaction.update(doc(db, 'Courses', courseID), {
+      //   attendance: courseRef.attendance,
+      // });
+
+      // //Cant break out of foreach loop, so instead use these as flags
+      // //for when check fails to reject transaction
+      // let courseNotPresent = false;
+      // containsDuplicate = false;
+
+      // studentsRefs.forEach(async (studentRef) => {
+      //   let coursePresent = false;
+      //   let newCourseInformation: StudentCourse[] =
+      //     studentRef.courseInformation.map((course) => {
+      //       if (course.id === courseID) {
+      //         coursePresent = true;
+      //         containsDuplicate =
+      //           containsDuplicate ||
+      //           course.attendance.reduce(
+      //             (acc, prevAttendance) =>
+      //               acc || prevAttendance.date === newAttendance.date,
+      //             false,
+      //           );
+
+      //         if (!containsDuplicate) {
+      //           course.attendance.push({
+      //             date: newAttendance.date,
+      //             attended: false,
+      //           });
+      //           course.attendance.sort(compareDayJSDates);
+      //         }
+      //       }
+      //       return course;
+      //     });
+
+      //   if (coursePresent && !containsDuplicate) {
+      //     transaction.update(doc(db, 'Students', studentRef.id), {
+      //       courseInformation: newCourseInformation,
+      //     });
+      //   } else if (!coursePresent) {
+      //     courseNotPresent = true;
+      //   }
+      // });
+
+      // if (courseNotPresent) {
+      //   reject(new Error('Not all students are enrolled in course'));
+      // }
+
+      // if (containsDuplicate) {
+      //   reject(new Error('Attendance already exists for student'));
+      // }
     })
       .then(() => {
         resolve();
