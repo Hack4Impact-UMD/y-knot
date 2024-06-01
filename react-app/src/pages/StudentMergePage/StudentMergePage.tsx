@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import styles from './StudentMergePage.module.css';
 import WestRounded from '@mui/icons-material/WestRounded';
@@ -11,8 +12,9 @@ enum Tab {
 }
 
 const StudentMergePage = (): JSX.Element => {
+  const navigate = useNavigate();
   const [currentTab, setCurrentTab] = useState<Tab>(Tab.Suggested);
- 
+
   const handleTabChange = (tab: Tab): void => {
     setCurrentTab(tab);
   };
@@ -25,7 +27,7 @@ const StudentMergePage = (): JSX.Element => {
           <button
             className={styles.backButton}
             onClick={() => {
-              /* Handle back button click */
+              navigate('/students');
             }}
           >
             <WestRounded style={{ color: '#757575', marginRight: '10px' }} />
@@ -33,33 +35,31 @@ const StudentMergePage = (): JSX.Element => {
           </button>
         </div>
         <div className={styles.top}>
-        <h1 className={styles.title}>Merge Students</h1>
-        <div className={styles.buttons}>
-          <button
-            className={
-              currentTab === Tab.Suggested ? styles.selectedTab : styles.tab
-            }
-            onClick={() => {
-              handleTabChange(Tab.Suggested);
-            }}
-          >
-            Suggested
-          </button>
-          <button
-            className={
-              currentTab === Tab.Manual ? styles.selectedTab : styles.tab
-            }
-            onClick={() => {
-              handleTabChange(Tab.Manual);
-            }}
-          >
-            Manual
-          </button>
+          <h1 className={styles.title}>Merge Students</h1>
+          <div className={styles.buttons}>
+            <button
+              className={
+                currentTab === Tab.Suggested ? styles.selectedTab : styles.tab
+              }
+              onClick={() => {
+                handleTabChange(Tab.Suggested);
+              }}
+            >
+              Suggested
+            </button>
+            <button
+              className={
+                currentTab === Tab.Manual ? styles.selectedTab : styles.tab
+              }
+              onClick={() => {
+                handleTabChange(Tab.Manual);
+              }}
+            >
+              Manual
+            </button>
+          </div>
         </div>
-        </div>
-        {currentTab === Tab.Suggested && (
-          <SuggestedStudentMerge />
-        )}
+        {currentTab === Tab.Suggested && <SuggestedStudentMerge />}
         {currentTab === Tab.Manual && <ManualStudentMerge />}
       </div>
     </>

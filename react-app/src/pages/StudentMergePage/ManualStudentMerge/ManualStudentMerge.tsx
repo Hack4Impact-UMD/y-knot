@@ -1,14 +1,15 @@
-import styled from '@emotion/styled';
-import { Checkbox, Snackbar, Alert } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Checkbox, Snackbar, Alert } from '@mui/material';
 import Select, { type OptionProps } from 'react-select';
-import { getStudent, getAllStudents } from '../../../backend/FirestoreCalls';
+import { getAllStudents } from '../../../backend/FirestoreCalls';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import { StudentID } from '../../../types/StudentType';
 import styles from './ManualStudentMerge.module.css';
+import styled from '@emotion/styled';
 import eyeIcon from '../../../assets/view.svg';
 
+/* Styling for dropdown options */
 const InputOption: React.FC<OptionProps<any, true, any>> = ({
   isSelected,
   innerProps,
@@ -60,7 +61,8 @@ const InputOption: React.FC<OptionProps<any, true, any>> = ({
   );
 };
 
-const BpIcon = styled('span')(({ theme }) => ({
+/* Styling for roster checkboxes */
+const BpIcon = styled('span')(() => ({
   borderRadius: 3,
   height: '30px',
   width: '30px',
@@ -99,7 +101,8 @@ const ManualStudentMerge = (): JSX.Element => {
   const [selectedStudentAId, setSelectedStudentAId] = useState<any>();
   const [selectedStudentB, setSelectedStudentB] = useState<string | null>(null);
   const [selectedStudentBId, setSelectedStudentBId] = useState<any>();
-  const [open, setOpen] = useState<boolean>(false);
+  const [multipleAlertOpen, setMultipleAlertOpen] = useState<boolean>(false);
+  const [duplicateAlertOpen, setDuplicateAlertOpen] = useState<boolean>(false);
   const [selectedStudentADropdown, setSelectedStudentADropdown] = useState<{
     value: string;
     label: string;
@@ -114,70 +117,6 @@ const ManualStudentMerge = (): JSX.Element => {
   const [studentBEmail, setStudentBEmail] = useState<string>('');
   const navigate = useNavigate();
 
-  /* Styling for the checkboxes in dropdown-select. This only applies to the dropdown under Student A */
-  const selectBoxStyleDependentA = {
-    control: (provided: any, state: any) => ({
-      ...provided,
-      height: '60px',
-      overflow: 'hidden',
-      marginBottom: 'auto',
-      marginTop: '0',
-      boxShadow: 'none',
-      borderColor: state.isFocused ? 'black' : 'black',
-      '&:hover': {},
-      borderWidth: '1px',
-      width: '90%',
-      fontSize: '1.2rem',
-      fontWeight: selectedStudentA ? 'bolder' : '',
-      borderRadius: '15px',
-      backgroundColor: selectedStudentA ? 'var(--color-grey)' : '',
-    }),
-    menu: (provided: any) => ({
-      ...provided,
-      marginTop: 0,
-    }),
-    dropdownIndicator: (provided: any) => ({
-      ...provided,
-      backgroundColor: 'var(--color-white)',
-    }),
-    clearIndicator: (provided: any) => ({
-      ...provided,
-      color: 'black',
-    }),
-  };
-
-  /* Styling for the checkboxes in dropdown-select. This only applies to the dropdown under Student B */
-  const selectBoxStyleDependentB = {
-    control: (provided: any, state: any) => ({
-      ...provided,
-      height: '60px',
-      overflow: 'hidden',
-      marginBottom: 'auto',
-      marginTop: '0',
-      boxShadow: 'none',
-      borderColor: state.isFocused ? 'black' : 'black',
-      '&:hover': {},
-      borderWidth: '1px',
-      width: '90%',
-      fontSize: '1.2rem',
-      fontWeight: selectedStudentB ? 'bolder' : '',
-      borderRadius: '15px',
-      backgroundColor: selectedStudentB ? 'var(--color-grey)' : '',
-    }),
-    menu: (provided: any) => ({
-      ...provided,
-      marginTop: 0,
-    }),
-    dropdownIndicator: (provided: any) => ({
-      ...provided,
-      backgroundColor: 'var(--color-white)',
-    }),
-    clearIndicator: (provided: any) => ({
-      ...provided,
-      color: 'black',
-    }),
-  };
-
   /* Styling for dropdown-select main input container */
   const selectBoxStyle = {
     control: (provided: any, state: any) => ({
@@ -189,7 +128,7 @@ const ManualStudentMerge = (): JSX.Element => {
       borderColor: state.isFocused ? 'black' : 'black',
       '&:hover': {},
       borderWidth: '1px',
-      width: '90%',
+      width: '100%',
       fontSize: '1.2rem',
       borderRadius: '15px',
       backgroundColor: 'var(--color-white)',
@@ -208,87 +147,36 @@ const ManualStudentMerge = (): JSX.Element => {
     }),
   };
 
-  /* List of students to display in the dropdown-select */
-  const selectOptions = students.map((student) => ({
-    value: student.id,
-    label: `${student.firstName} ${student.lastName}`,
-  }));
-
-  /* Handle selecting a student A, If the student exists, then get the student and update Student A's name and info.
-  Call handleCheck and pass in Student A's id to add it to the set of selected students. */
-  const handleStudentADropdownChange = async (selectedOption: any) => {
-    if (selectedOption) {
-      const studentId = selectedOption.value;
-      const student = await getStudent(studentId);
-      const studentName = `${student.firstName} ${student.lastName}`;
-
-      if (!student.addrFirstLine) {
-        setStudentAAddress('Missing Address');
-      } else {
-        setStudentAAddress(student.addrFirstLine);
-      }
-
-      if (!student.email) {
-        setStudentAEmail('Missing Email');
-      } else {
-        setStudentAEmail(student.email);
-      }
-
-      setSelectedStudentADropdown({
-        value: studentId,
-        label: studentName,
-      });
-      handleCheck(studentId);
-    } else {
-      setSelectedStudentADropdown(null);
-
-      // Remove the deselected student from selectedStudents
-      if (selectedStudentAId) {
-        handleCheck(selectedStudentAId);
-      }
-    }
-  };
-
-  /* Same as handleStudentADropdownChange but only applicable for student B. */
-  const handleStudentBDropdownChange = async (selectedOption: any) => {
-    if (selectedOption) {
-      const studentId = selectedOption.value;
-      const student = await getStudent(studentId);
-      const studentName = `${student.firstName} ${student.lastName}`;
-
-      setSelectedStudentBDropdown({
-        value: studentId,
-        label: studentName,
-      });
-
-      if (!student.addrFirstLine) {
-        setStudentBAddress('N/A');
-      } else {
-        setStudentBAddress(student.addrFirstLine);
-      }
-
-      if (!student.email) {
-        setStudentBEmail('N/A');
-      } else {
-        setStudentBEmail(student.email);
-      }
-
-      handleCheck(studentId);
-    } else {
-      setSelectedStudentBDropdown(null);
-
-      // Remove the deselected student from selectedStudents
-      if (selectedStudentBId) {
-        handleCheck(selectedStudentBId);
-      }
-    }
-  };
-
-  let timer: NodeJS.Timeout | null = null;
-
-  /* Allows the snackbar that notifies the user only 2 students can be selected to close */
-  const snackbarClose = () => {
-    setOpen(false);
+  /* Styling for the checkboxes in dropdown-select when student is selected. */
+  const selectBoxStyleDark = {
+    control: (provided: any, state: any) => ({
+      ...provided,
+      height: '60px',
+      overflow: 'hidden',
+      marginBottom: 'auto',
+      marginTop: '0',
+      boxShadow: 'none',
+      borderColor: state.isFocused ? 'black' : 'black',
+      '&:hover': {},
+      borderWidth: '1px',
+      width: '100%',
+      fontSize: '1.2rem',
+      fontWeight: 'bolder',
+      borderRadius: '15px',
+      backgroundColor: 'var(--color-grey)',
+    }),
+    menu: (provided: any) => ({
+      ...provided,
+      marginTop: 0,
+    }),
+    dropdownIndicator: (provided: any) => ({
+      ...provided,
+      backgroundColor: 'var(--color-white)',
+    }),
+    clearIndicator: (provided: any) => ({
+      ...provided,
+      color: 'black',
+    }),
   };
 
   /* Get list of students */
@@ -305,6 +193,7 @@ const ManualStudentMerge = (): JSX.Element => {
             middleName: currStudent.middleName,
             lastName: currStudent.lastName,
             email: currStudent.email,
+            addrFirstLine: currStudent.addrFirstLine,
           };
           partialStudents.push(newStudent);
         });
@@ -357,7 +246,7 @@ const ManualStudentMerge = (): JSX.Element => {
                 checked={selectedStudents.includes(id || '')}
                 checkedIcon={<BpCheckedIcon />}
                 icon={<BpIcon />}
-                onClick={() => handleCheck(id)}
+                onClick={() => handleCheck(student)}
               />
             </div>
           </div>,
@@ -368,131 +257,198 @@ const ManualStudentMerge = (): JSX.Element => {
     setStudentList(list);
   }, [search, students, selectedStudents]);
 
+  const resetStudentA = () => {
+    setSelectedStudentADropdown(null);
+    setSelectedStudentA(null);
+    setSelectedStudentAId(undefined);
+    setStudentAAddress('');
+    setStudentAEmail('');
+  };
+
+  const resetStudentB = () => {
+    setSelectedStudentBDropdown(null);
+    setSelectedStudentB(null);
+    setSelectedStudentBId(undefined);
+    setStudentBAddress('');
+    setStudentBEmail('');
+  };
+
+  /* List of students to display in the dropdown-select */
+  const selectOptions = students.map((student) => ({
+    value: JSON.stringify(student),
+    label: `${student.firstName} ${student.lastName}`,
+  }));
+
+  /* Handle selecting a student A.
+  If the student exists, then update Student A's name and info and add id to the set of selected students.
+  If the student is already selected, throw a Snackbar alert. */
+  const handleStudentADropdownChange = async (selectedOption: any) => {
+    let newSelectedStudents = [...selectedStudents];
+    if (selectedOption) {
+      const student = JSON.parse(selectedOption.value);
+      const studentId = student.id;
+      const studentName = selectedOption.label;
+
+      if (newSelectedStudents.includes(studentId)) {
+        setDuplicateAlertOpen(true);
+      } else {
+        // Remove pre-existing student A
+        if (selectedStudentADropdown) {
+          newSelectedStudents = newSelectedStudents.filter(
+            (id) => id !== selectedStudentAId,
+          );
+        }
+
+        // Set new student A
+        setSelectedStudentADropdown({
+          value: selectedOption.value,
+          label: studentName,
+        });
+
+        setSelectedStudentA(studentName);
+        setSelectedStudentAId(studentId);
+        student.addrFirstLine
+          ? setStudentAAddress(student.addrFirstLine)
+          : setStudentAAddress('N/A');
+        student.email
+          ? setStudentAEmail(student.email)
+          : setStudentAEmail('N/A');
+
+        newSelectedStudents.push(studentId);
+      }
+    } else {
+      newSelectedStudents = newSelectedStudents.filter(
+        (id) => id !== selectedStudentAId,
+      );
+      resetStudentA();
+    }
+    setSelectedStudents(newSelectedStudents);
+  };
+
+  /* Handle selecting a student B.
+  If the student exists, then update Student B's name and info and add id to the set of selected students.
+  If the student is already selected, throw a Snackbar alert. */
+  const handleStudentBDropdownChange = async (selectedOption: any) => {
+    let newSelectedStudents = [...selectedStudents];
+    if (selectedOption) {
+      const student = JSON.parse(selectedOption.value);
+      const studentId = student.id;
+      const studentName = selectedOption.label;
+
+      if (newSelectedStudents.includes(studentId)) {
+        setDuplicateAlertOpen(true);
+      } else {
+        // Remove pre-existing student B
+        if (selectedStudentBDropdown) {
+          newSelectedStudents = newSelectedStudents.filter(
+            (id) => id !== selectedStudentBId,
+          );
+        }
+
+        // Set new student B
+        setSelectedStudentBDropdown({
+          value: selectedOption.value,
+          label: studentName,
+        });
+
+        setSelectedStudentB(studentName);
+        setSelectedStudentBId(studentId);
+        student.addrFirstLine
+          ? setStudentBAddress(student.addrFirstLine)
+          : setStudentBAddress('N/A');
+        student.email
+          ? setStudentBEmail(student.email)
+          : setStudentBEmail('N/A');
+
+        newSelectedStudents.push(studentId);
+      }
+    } else {
+      newSelectedStudents = newSelectedStudents.filter(
+        (id) => id !== selectedStudentBId,
+      );
+      resetStudentB();
+    }
+    setSelectedStudents(newSelectedStudents);
+  };
+
   /* If there are at least 2 students selected (via checking the selectedStudents set), then open the SnackBar to notify the user that
   no more than 2 students can be selected. */
   useEffect(() => {
     if (selectedStudents.length > 2) {
-      setOpen(true);
+      setMultipleAlertOpen(true);
     }
   }, [selectedStudents]);
 
-  /* A ridiculously long handle function to hanle the following: If the student selected is the first student selected, then it is student A. Otherwise, it is student B. 
-  If we select a student from StudentB, then that student becomes as such and vice versa for Student A. If we select a student that already exists, we are 
+  /* If the student selected is the first student selected, then it is student A. Otherwise, it is student B, unless student B is already filled. 
+     If we select a student that already exists, we are 
   essentially deselecting it (based on being A or B). */
-  const handleCheck = async (studentId: any) => {
+  const handleCheck = async (student: any) => {
     let newSelectedStudents = [...selectedStudents];
-    let student = await getStudent(studentId);
-    let studentName =
-      (await getStudent(studentId)).firstName +
-      ' ' +
-      (await getStudent(studentId)).lastName;
+    let studentId = student.id;
+    let studentName = student.firstName + ' ' + student.lastName;
 
     if (newSelectedStudents.includes(studentId)) {
       newSelectedStudents = newSelectedStudents.filter(
         (id) => id !== studentId,
       );
       if (selectedStudentAId === studentId) {
-        setSelectedStudentA(null);
-        setSelectedStudentAId(undefined);
-        setSelectedStudentADropdown(null);
+        resetStudentA();
       } else if (selectedStudentBId === studentId) {
-        setSelectedStudentB(null);
-        setSelectedStudentBId(undefined);
-        setSelectedStudentBDropdown(null);
+        resetStudentB();
       }
-    } else {
-      if (
-        newSelectedStudents.length < 2 &&
-        !selectedStudents.includes(studentId)
-      ) {
-        if (
-          newSelectedStudents.length ==0 &&
-          !selectedStudentBDropdown == null
-        ) {
-          setSelectedStudentB(studentName);
-          setSelectedStudentBId(studentId);
-          setSelectedStudentBDropdown({
-            value: studentId,
-            label: studentName,
-          });
-          if (!student.addrFirstLine) {
-            setStudentBAddress('N/A');
-          } else {
-            setStudentBAddress(student.addrFirstLine);
-          }
-
-          if (!student.email) {
-            setStudentBEmail('N/A');
-          } else {
-            setStudentBEmail(student.email);
-          }
-        } else {
-          if (newSelectedStudents.length === 0) {
-            setSelectedStudentA(studentName);
-            setSelectedStudentAId(studentId);
-            setSelectedStudentADropdown({
-              value: studentId,
-              label: studentName,
-            });
-            if (!student.addrFirstLine) {
-              setStudentAAddress('N/A');
-            } else {
-              setStudentAAddress(student.addrFirstLine);
-            }
-
-            if (!student.email) {
-              setStudentAEmail('N/A');
-            } else {
-              setStudentAEmail(student.email);
-            }
-          } else if (newSelectedStudents.length === 1) {
-            setSelectedStudentB(studentName);
-            setSelectedStudentBId(studentId);
-            setSelectedStudentBDropdown({
-              value: studentId,
-              label: studentName,
-            });
-            if (!student.addrFirstLine) {
-              setStudentBAddress('N/A');
-            } else {
-              setStudentBAddress(student.addrFirstLine);
-            }
-
-            if (!student.email) {
-              setStudentBEmail('N/A');
-            } else {
-              setStudentBEmail(student.email);
-            }
-          }
-          newSelectedStudents.push(studentId);
-        }
-      } else {
-        /* Open snackbar if there are =2 students selected and the user tried to select 1 more student */
-        setOpen(true);
+    } else if (
+      newSelectedStudents.length < 2 &&
+      !selectedStudents.includes(studentId)
+    ) {
+      if (!selectedStudentADropdown) {
+        setSelectedStudentA(studentName);
+        setSelectedStudentAId(studentId);
+        setSelectedStudentADropdown({
+          value: studentId,
+          label: studentName,
+        });
+        student.addrFirstLine
+          ? setStudentAAddress(student.addrFirstLine)
+          : setStudentAAddress('N/A');
+        student.email
+          ? setStudentAEmail(student.email)
+          : setStudentAEmail('N/A');
+      } else if (!selectedStudentBDropdown) {
+        setSelectedStudentB(studentName);
+        setSelectedStudentBId(studentId);
+        setSelectedStudentBDropdown({
+          value: JSON.stringify(student),
+          label: studentName,
+        });
+        student.addrFirstLine
+          ? setStudentBAddress(student.addrFirstLine)
+          : setStudentBAddress('N/A');
+        student.email
+          ? setStudentBEmail(student.email)
+          : setStudentBEmail('N/A');
       }
+      newSelectedStudents.push(studentId);
+    } else if (newSelectedStudents.length >= 2) {
+      /* Open snackbar if there are =2 students selected and the user tried to select 1 more student */
+      setMultipleAlertOpen(true);
     }
+
     setSelectedStudents(newSelectedStudents);
   };
 
   /* Unchecks/deselects all students selected in roster and dropdown-select. Triggered when "Clear All" button is clicked */
   const handleUncheck = () => {
     setSelectedStudents([]);
-    setSelectedStudentADropdown(null);
-    setSelectedStudentBDropdown(null);
-    setSelectedStudentA(null);
-    setSelectedStudentB(null);
+    resetStudentA();
+    resetStudentB();
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.mainMerge}>
         <div className={styles.mergeContainer}>
-          <div className={styles.studentAContainer}>
-            <h1>Student A</h1>
-          </div>
-          <div className={styles.studentBContainer}>
-            <h1>Student B</h1>
-          </div>
+          <h2 className={styles.studentAContainer}>Student A</h2>
+          <h2 className={styles.studentBContainer}>Student B</h2>
           <div className={styles.actionInputA}>
             <Select
               value={selectedStudentADropdown}
@@ -505,9 +461,7 @@ const ManualStudentMerge = (): JSX.Element => {
                 IndicatorSeparator: () => null,
               }}
               placeholder="Begin typing..."
-              styles={
-                selectedStudentA ? selectBoxStyleDependentA : selectBoxStyle
-              }
+              styles={selectedStudentA ? selectBoxStyleDark : selectBoxStyle}
             />
           </div>
           <div className={styles.actionInputB}>
@@ -522,9 +476,7 @@ const ManualStudentMerge = (): JSX.Element => {
                 IndicatorSeparator: () => null,
               }}
               placeholder="Begin typing..."
-              styles={
-                selectedStudentB ? selectBoxStyleDependentB : selectBoxStyle
-              }
+              styles={selectedStudentB ? selectBoxStyleDark : selectBoxStyle}
             />
           </div>
           <div className={styles.mergeBtnContainer}>
@@ -535,23 +487,23 @@ const ManualStudentMerge = (): JSX.Element => {
           {selectedStudents.includes(selectedStudentAId || '') && (
             <div className={styles.extendBackground1}>
               <p className={styles.studentInfoHeader}>Student Information</p>
-              <p>{studentAaddress}</p>
               <p>{studentAEmail}</p>
+              <p>{studentAaddress}</p>
             </div>
           )}
 
           {selectedStudents.includes(selectedStudentBId || '') && (
             <div className={styles.extendBackground2}>
               <p className={styles.studentInfoHeader}>Student Information</p>
-              <p>{studentBaddress}</p>
               <p>{studentBEmail}</p>
+              <p>{studentBaddress}</p>
             </div>
           )}
         </div>
       </div>
 
       {/* Display student roster checkbox */}
-      <h1 className={styles.title}>Student Roster</h1>
+      <h2 className={styles.title}>Student Roster</h2>
       <div className={styles.listContainer}>
         <div className={styles.listBox}>{studentList}</div>
       </div>
@@ -565,12 +517,25 @@ const ManualStudentMerge = (): JSX.Element => {
           horizontal: 'right',
           vertical: 'bottom',
         }}
-        open={open}
+        open={multipleAlertOpen}
         autoHideDuration={3000}
-        onClose={snackbarClose}
+        onClose={() => setMultipleAlertOpen(false)}
       >
         <Alert severity="error" sx={{ width: '100%' }}>
           Only 2 students can be selected at a time
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{
+          horizontal: 'right',
+          vertical: 'bottom',
+        }}
+        open={duplicateAlertOpen}
+        autoHideDuration={3000}
+        onClose={() => setDuplicateAlertOpen(false)}
+      >
+        <Alert severity="error" sx={{ width: '100%' }}>
+          Student is already selected
         </Alert>
       </Snackbar>
     </div>
