@@ -8,6 +8,7 @@ import { StudentID } from '../../../types/StudentType';
 import styles from './ManualStudentMerge.module.css';
 import styled from '@emotion/styled';
 import eyeIcon from '../../../assets/view.svg';
+import Loading from '../../../components/LoadingScreen/Loading';
 
 /* Styling for dropdown options */
 const InputOption: React.FC<OptionProps<any, true, any>> = ({
@@ -101,8 +102,8 @@ const ManualStudentMerge = (): JSX.Element => {
   const [selectedStudentAId, setSelectedStudentAId] = useState<any>();
   const [selectedStudentB, setSelectedStudentB] = useState<string | null>(null);
   const [selectedStudentBId, setSelectedStudentBId] = useState<any>();
-  const [multipleAlertOpen, setMultipleAlertOpen] = useState<boolean>(false);
-  const [duplicateAlertOpen, setDuplicateAlertOpen] = useState<boolean>(false);
+  const [alertOpen, setAlertOpen] = useState<boolean>(false);
+  const [alertMsg, setAlertMsg] = useState<string>('');
   const [selectedStudentADropdown, setSelectedStudentADropdown] = useState<{
     value: string;
     label: string;
@@ -290,7 +291,8 @@ const ManualStudentMerge = (): JSX.Element => {
       const studentName = selectedOption.label;
 
       if (newSelectedStudents.includes(studentId)) {
-        setDuplicateAlertOpen(true);
+        setAlertMsg('Student is already selected');
+        setAlertOpen(true);
       } else {
         // Remove pre-existing student A
         if (selectedStudentADropdown) {
@@ -336,7 +338,8 @@ const ManualStudentMerge = (): JSX.Element => {
       const studentName = selectedOption.label;
 
       if (newSelectedStudents.includes(studentId)) {
-        setDuplicateAlertOpen(true);
+        setAlertMsg('Student is already selected');
+        setAlertOpen(true);
       } else {
         // Remove pre-existing student B
         if (selectedStudentBDropdown) {
@@ -375,13 +378,13 @@ const ManualStudentMerge = (): JSX.Element => {
   no more than 2 students can be selected. */
   useEffect(() => {
     if (selectedStudents.length > 2) {
-      setMultipleAlertOpen(true);
+      setAlertMsg('Only 2 students can be selected at a time');
+      setAlertOpen(true);
     }
   }, [selectedStudents]);
 
   /* If the student selected is the first student selected, then it is student A. Otherwise, it is student B, unless student B is already filled. 
-     If we select a student that already exists, we are 
-  essentially deselecting it (based on being A or B). */
+     If we select a student that already exists, we are essentially deselecting it (based on being A or B). */
   const handleCheck = async (student: any) => {
     let newSelectedStudents = [...selectedStudents];
     let studentId = student.id;
@@ -430,7 +433,8 @@ const ManualStudentMerge = (): JSX.Element => {
       newSelectedStudents.push(studentId);
     } else if (newSelectedStudents.length >= 2) {
       /* Open snackbar if there are =2 students selected and the user tried to select 1 more student */
-      setMultipleAlertOpen(true);
+      setAlertMsg('Only 2 students can be selected at a time');
+      setAlertOpen(true);
     }
 
     setSelectedStudents(newSelectedStudents);
@@ -443,101 +447,117 @@ const ManualStudentMerge = (): JSX.Element => {
     resetStudentB();
   };
 
+  const handleMerge = () => {
+    if (selectedStudents.length !== 2) {
+      setAlertMsg('Please select 2 students to merge');
+      setAlertOpen(true);
+    } else {
+      // Navigate to final merge page
+      // navigate(`/students/merge/...`);
+    }
+  };
+
   return (
     <div className={styles.container}>
-      <div className={styles.mainMerge}>
-        <div className={styles.mergeContainer}>
-          <h2 className={styles.studentAContainer}>Student A</h2>
-          <h2 className={styles.studentBContainer}>Student B</h2>
-          <div className={styles.actionInputA}>
-            <Select
-              value={selectedStudentADropdown}
-              isClearable
-              onChange={handleStudentADropdownChange}
-              options={selectOptions}
-              components={{
-                Option: InputOption,
-                DropdownIndicator: () => null,
-                IndicatorSeparator: () => null,
-              }}
-              placeholder="Begin typing..."
-              styles={selectedStudentA ? selectBoxStyleDark : selectBoxStyle}
-            />
-          </div>
-          <div className={styles.actionInputB}>
-            <Select
-              value={selectedStudentBDropdown}
-              isClearable
-              onChange={handleStudentBDropdownChange}
-              options={selectOptions}
-              components={{
-                Option: InputOption,
-                DropdownIndicator: () => null,
-                IndicatorSeparator: () => null,
-              }}
-              placeholder="Begin typing..."
-              styles={selectedStudentB ? selectBoxStyleDark : selectBoxStyle}
-            />
-          </div>
-          <div className={styles.mergeBtnContainer}>
-            <button className={styles.mergeBtn}>Merge</button>
-          </div>
+      {loading ? (
+        // Used to center the loading spinner
+        <div className={styles.loading}>
+          <Loading />
         </div>
-        <div className={styles.studentInfoContainers}>
-          {selectedStudents.includes(selectedStudentAId || '') && (
-            <div className={styles.extendBackground1}>
-              <p className={styles.studentInfoHeader}>Student Information</p>
-              <p>{studentAEmail}</p>
-              <p>{studentAaddress}</p>
+      ) : (
+        <>
+          <div className={styles.mainMerge}>
+            <div className={styles.mergeContainer}>
+              <h2 className={styles.studentAContainer}>Student A</h2>
+              <h2 className={styles.studentBContainer}>Student B</h2>
+              <div className={styles.actionInputA}>
+                <Select
+                  value={selectedStudentADropdown}
+                  isClearable
+                  onChange={handleStudentADropdownChange}
+                  options={selectOptions}
+                  components={{
+                    Option: InputOption,
+                    DropdownIndicator: () => null,
+                    IndicatorSeparator: () => null,
+                  }}
+                  placeholder="Begin typing..."
+                  styles={
+                    selectedStudentA ? selectBoxStyleDark : selectBoxStyle
+                  }
+                />
+              </div>
+              <div className={styles.actionInputB}>
+                <Select
+                  value={selectedStudentBDropdown}
+                  isClearable
+                  onChange={handleStudentBDropdownChange}
+                  options={selectOptions}
+                  components={{
+                    Option: InputOption,
+                    DropdownIndicator: () => null,
+                    IndicatorSeparator: () => null,
+                  }}
+                  placeholder="Begin typing..."
+                  styles={
+                    selectedStudentB ? selectBoxStyleDark : selectBoxStyle
+                  }
+                />
+              </div>
+              <div className={styles.mergeBtnContainer}>
+                <button className={styles.mergeBtn} onClick={handleMerge}>
+                  Merge
+                </button>
+              </div>
             </div>
-          )}
+            <div className={styles.studentInfoContainers}>
+              {selectedStudents.includes(selectedStudentAId || '') && (
+                <div className={styles.extendBackground1}>
+                  <p className={styles.studentInfoHeader}>
+                    Student Information
+                  </p>
+                  <p>{studentAEmail}</p>
+                  <p>{studentAaddress}</p>
+                </div>
+              )}
 
-          {selectedStudents.includes(selectedStudentBId || '') && (
-            <div className={styles.extendBackground2}>
-              <p className={styles.studentInfoHeader}>Student Information</p>
-              <p>{studentBEmail}</p>
-              <p>{studentBaddress}</p>
+              {selectedStudents.includes(selectedStudentBId || '') && (
+                <div className={styles.extendBackground2}>
+                  <p className={styles.studentInfoHeader}>
+                    Student Information
+                  </p>
+                  <p>{studentBEmail}</p>
+                  <p>{studentBaddress}</p>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      </div>
+          </div>
 
-      {/* Display student roster checkbox */}
-      <h2 className={styles.title}>Student Roster</h2>
-      <div className={styles.listContainer}>
-        <div className={styles.listBox}>{studentList}</div>
-      </div>
-      <div className={styles.bottomButtonContainer}>
-        <button onClick={handleUncheck} className={styles.bottomButton}>
-          Uncheck All
-        </button>
-      </div>
-      <Snackbar
-        anchorOrigin={{
-          horizontal: 'right',
-          vertical: 'bottom',
-        }}
-        open={multipleAlertOpen}
-        autoHideDuration={3000}
-        onClose={() => setMultipleAlertOpen(false)}
-      >
-        <Alert severity="error" sx={{ width: '100%' }}>
-          Only 2 students can be selected at a time
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        anchorOrigin={{
-          horizontal: 'right',
-          vertical: 'bottom',
-        }}
-        open={duplicateAlertOpen}
-        autoHideDuration={3000}
-        onClose={() => setDuplicateAlertOpen(false)}
-      >
-        <Alert severity="error" sx={{ width: '100%' }}>
-          Student is already selected
-        </Alert>
-      </Snackbar>
+          {/* Display student roster checkbox */}
+          <h2 className={styles.title}>Student Roster</h2>
+          <div className={styles.listContainer}>
+            <div className={styles.listBox}>{studentList}</div>
+          </div>
+          <div className={styles.bottomButtonContainer}>
+            <button onClick={handleUncheck} className={styles.bottomButton}>
+              Uncheck All
+            </button>
+          </div>
+          <Snackbar
+            anchorOrigin={{
+              horizontal: 'right',
+              vertical: 'bottom',
+            }}
+            open={alertOpen}
+            autoHideDuration={3000}
+            onClose={() => setAlertOpen(false)}
+          >
+            <Alert severity="error" sx={{ width: '100%' }}>
+              {alertMsg}
+            </Alert>
+          </Snackbar>
+        </>
+      )}
     </div>
   );
 };

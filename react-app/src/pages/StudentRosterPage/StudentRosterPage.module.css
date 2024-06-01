@@ -16,7 +16,11 @@
 
 .searchContainer {
   margin-left: 100px;
+  margin-right: 100px;
   margin-top: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .searchBar {
@@ -28,6 +32,21 @@
   border-radius: 10px;
   outline: none;
   background-color: var(--color-grey);
+}
+
+.mergeButton {
+  border-radius: 10px;
+  border: none;
+  background-color: var(--color-orange);
+  font-size: 1.2rem;
+  width: 180px;
+  height: 45px;
+  color: white;
+  cursor: pointer;
+}
+
+.mergeButton:hover {
+  background-color: var(--color-yellow-orange);
 }
 
 .heading {

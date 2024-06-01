@@ -5,6 +5,14 @@
   justify-content: center;
 }
 
+.loading {
+  width: 100%;
+  margin-top: 120px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
 .title {
   width: 100%;
   text-align: center;
@@ -41,7 +49,6 @@
 .studentBContainer {
   grid-area: 1 / 4 / 1 / 6;
   margin: 1.5rem 0 0;
-  /* margin: 1.5rem 0 10% 0; */
 }
 
 .actionInputA {
@@ -137,17 +144,17 @@
 
 .listContainer::-webkit-scrollbar {
   border-radius: 20px;
-  width: 50px;
+  width: 30px;
 }
 
 .listContainer::-webkit-scrollbar-thumb {
   background-color: white;
   border-radius: 999px;
-  border: 10px solid var(--color-grey);
+  border: 5px solid var(--color-grey);
 }
 
 .listContainer::-webkit-scrollbar-track {
-  width: 50px;
+  width: 30px;
   background-color: var(--color-grey);
   border-radius: 20px;
 }
