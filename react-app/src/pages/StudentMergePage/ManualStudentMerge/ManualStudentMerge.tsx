@@ -452,7 +452,7 @@ const ManualStudentMerge = (): JSX.Element => {
       setAlertMsg('Please select 2 students to merge');
       setAlertOpen(true);
     } else {
-      // Navigate to final merge page
+      // TODO: Navigate to final merge page
       // navigate(`/students/merge/...`);
     }
   };

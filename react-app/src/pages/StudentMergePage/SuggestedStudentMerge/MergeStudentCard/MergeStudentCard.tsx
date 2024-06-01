@@ -8,6 +8,14 @@ interface StudentPair {
 }
 
 const MergeStudentCard = ({ studentA, studentB }: StudentPair): JSX.Element => {
+  const handleMerge = () => {
+    // TODO: handle merge
+  };
+
+  const deleteSuggestion = () => {
+    // TODO: handle delete suggestion
+  };
+
   /* Return a card that displays both the student names and info + merge button */
   return (
     <div className={styles.container}>
@@ -18,7 +26,9 @@ const MergeStudentCard = ({ studentA, studentB }: StudentPair): JSX.Element => {
         <h2>Student B</h2>
       </div>
       <div className={styles.mergeBtnContainer}>
-        <button className={styles.mergeBtn}>Merge</button>
+        <button className={styles.mergeBtn} onClick={handleMerge}>
+          Merge
+        </button>
       </div>
       <div className={styles.studentAContainer}>
         <div className={styles.studentAName}>
@@ -45,7 +55,10 @@ const MergeStudentCard = ({ studentA, studentB }: StudentPair): JSX.Element => {
         </div>
       </div>
       <div className={styles.deleteSuggestionContainer}>
-        <button className={styles.deleteSuggestionBtn}>
+        <button
+          className={styles.deleteSuggestionBtn}
+          onClick={deleteSuggestion}
+        >
           <img src={trashIcon} className={styles.trashIcon} />
           Delete Suggestion
         </button>
