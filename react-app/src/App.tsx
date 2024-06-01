@@ -155,9 +155,9 @@ function App(): JSX.Element {
               <Route
                 path="/students/merge"
                 element={
-                  <RequireAuth>
+                  <RequireAdminAuth>
                     <StudentMergePage />
-                  </RequireAuth>
+                  </RequireAdminAuth>
                 }
               />
               <Route

@@ -157,3 +157,35 @@
 .studentInformationHeader {
   font-weight: bold;
 }
+
+@media screen and (max-width: 800px) {
+  .container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 0.1fr 0.25fr 0.2fr 0.1fr 0.25fr auto;
+    gap: 5px 0;
+    grid-template-areas:
+      'studentA'
+      'studentAContainer'
+      'mergeBtnContainer'
+      'studentB'
+      'studentBContainer'
+      'deleteSuggestionContainer';
+  }
+
+  .studentAContainer {
+    grid-template-rows: 0.5fr 1fr;
+  }
+
+  .studentBContainer {
+    grid-template-rows: 0.5fr 1fr;
+  }
+
+  .mergeBtnContainer {
+    margin-top: 1rem;
+  }
+
+  .deleteSuggestionContainer {
+    margin: 1rem 0;
+  }
+}

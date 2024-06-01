@@ -92,14 +92,18 @@ const StudentRosterPage = (): JSX.Element => {
                 }}
                 className={styles.searchBar}
               />
-              <button
-                className={styles.mergeButton}
-                onClick={() => {
-                  navigate(`/students/merge`);
-                }}
-              >
-                Merge Students
-              </button>
+              {auth?.token?.claims.role === 'ADMIN' ? (
+                <button
+                  className={styles.mergeButton}
+                  onClick={() => {
+                    navigate(`/students/merge`);
+                  }}
+                >
+                  Merge Students
+                </button>
+              ) : (
+                <></>
+              )}
             </div>
 
             <h1 className={styles.heading}>Student Roster</h1>
