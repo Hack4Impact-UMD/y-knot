@@ -15,7 +15,8 @@
 }
 
 .searchContainer {
-  margin-left: 100px;
+  margin-left: 10%;
+  margin-right: 10%;
   margin-top: 30px;
 }
 
@@ -75,7 +76,7 @@
 }
 
 @media screen and (max-width: 750px) {
-  .heading{
+  .heading {
     margin: 25px auto 25px 10%;
     text-align: left;
   }
@@ -88,7 +89,7 @@
     top: 80px;
   }
 
-  .heading{
+  .heading {
     margin: 25px auto 25px 10%;
     text-align: left;
   }
@@ -96,7 +97,7 @@
   .searchContainer {
     margin: 30px 17% 0 10%;
   }
-  
+
   .searchBar {
     width: 100%;
   }

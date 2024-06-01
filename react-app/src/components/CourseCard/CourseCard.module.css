@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   border-radius: 15px;
-  overflow:hidden;
+  overflow: hidden;
   box-shadow: 0px 0px 10px 0px #00000040;
 }
 
@@ -37,7 +37,7 @@
 
 @media screen and (max-width: 600px) {
   .container {
-    width: 90vw;
+    width: 80vw;
     height: 12rem;
     margin-left: 0;
     margin-right: 0;

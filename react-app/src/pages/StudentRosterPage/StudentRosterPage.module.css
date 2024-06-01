@@ -15,12 +15,13 @@
 }
 
 .searchContainer {
-  margin-left: 100px;
-  margin-right: 100px;
+  margin-left: 10%;
+  margin-right: 10%;
   margin-top: 30px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 5%;
 }
 
 .searchBar {
