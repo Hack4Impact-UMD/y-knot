@@ -1,31 +1,12 @@
 .container {
-  width: 95%;
+  width: 90%;
   margin-left: auto;
   margin-right: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   align-self: center;
-  overflow-y: scroll;
-  height: 75vh;
   margin-top: 30px;
-}
-
-.container::-webkit-scrollbar {
-  border-radius: 20px;
-  width: 50px;
-}
-
-.container::-webkit-scrollbar-thumb {
-  background-color: white;
-  border-radius: 999px;
-  border: 10px solid var(--color-grey);
-}
-
-.container::-webkit-scrollbar-track {
-  width: 50px;
-  background-color: var(--color-grey);
-  border-radius: 20px;
 }
 
 .cardContainer {

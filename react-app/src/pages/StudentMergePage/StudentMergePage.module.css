@@ -68,20 +68,3 @@
   padding-left: 15px;
   padding-right: 15px;
 }
-
-.mergeContainer {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  grid-column-gap: 20px;
-  grid-row-gap: 0px;
-  border-style: solid;
-  border-color: black;
-  border-radius: 30px;
-  border-width: 1px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  width: 80%;
-  align-self: center;
-  margin-top: 30px;
-}

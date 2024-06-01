@@ -1,7 +1,7 @@
 .container {
   display: grid;
-  grid-template-columns: 1.2fr 0.5fr 1.2fr; 
-  grid-template-rows: .1fr .2fr .45fr .2fr;
+  grid-template-columns: 0.5fr 0.25fr 0.5fr;
+  grid-template-rows: 0.1fr 0.25fr 0.45fr auto;
   gap: 0px 5px;
   grid-auto-flow: row;
   grid-template-areas:
@@ -12,11 +12,7 @@
   border-style: solid;
   border-color: black;
   border-width: 1px;
-  width: 100%;
-  height: 100%;
   border-radius: 30px;
-  margin-left: auto;
-  margin-right: auto;
   padding-left: 30px;
   padding-right: 30px;
 }
@@ -29,32 +25,26 @@
   grid-area: studentB;
 }
 
-.deleteSuggestionContainer {
-  grid-area: deleteSuggestionContainer;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  height: 100%;
-  margin-top: 20px;
-}
-
 .mergeBtnContainer {
   grid-area: mergeBtnContainer;
   display: flex;
   justify-content: center;
-  align-items:start;
+  align-items: start;
 }
 
 .mergeBtn {
-    background-color: var(--color-orange);
-    color: white;
-    font-size: 1.2rem;
-    border: none;
-    border-radius: 15px;
-    padding: 12px 15px 12px 15px;
-    width: fit-content;
-    cursor: pointer;
-    font-weight: bold;
+  background-color: var(--color-orange);
+  color: white;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 15px;
+  padding: 12px 15px 12px 15px;
+  width: fit-content;
+  cursor: pointer;
+}
+
+.mergeBtn:hover {
+  background-color: var(--color-yellow-orange);
 }
 
 .studentAContainer {
@@ -85,14 +75,15 @@
   background-color: var(--color-grey);
 }
 
-.studentAName p{
-    margin-left: 20px;
-    font-weight: bold;
+.studentAName p {
+  margin-left: 20px;
+  font-weight: bold;
 }
 
 .studentAInfo {
   grid-area: studentAInfo;
   padding-left: 20px;
+  padding-right: 20px;
 }
 
 .studentBContainer {
@@ -123,31 +114,46 @@
 }
 
 .studentBName p {
-    font-weight: bold;
-    margin-left: 20px;
+  font-weight: bold;
+  margin-left: 20px;
 }
 
 .studentBInfo {
   grid-area: studentBInfo;
   padding-left: 20px;
+  padding-right: 20px;
+}
+
+.deleteSuggestionContainer {
+  grid-area: deleteSuggestionContainer;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+.deleteSuggestionBtn:hover {
+  color: var(--color-red);
+  filter: invert(13%) sepia(96%) saturate(4978%) hue-rotate(350deg)
+    brightness(79%) contrast(110%);
 }
 
 .deleteSuggestionBtn {
-    background-color: transparent;
-    border-style: none;
-    color: #7f7f7f;
-    font-weight: bold;
-    font-size: 1.2rem;
-    cursor: pointer;
+  background-color: transparent;
+  border-style: none;
+  color: #7f7f7f;
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer;
 }
 
 .trashIcon {
-    filter: brightness(0) saturate(100%) invert(49%) sepia(72%) saturate(16%) hue-rotate(326deg) brightness(88%) contrast(87%);
-    margin-right: 5px;
-    width: 1.2rem;
-    height: 1.2rem;
+  filter: brightness(0) saturate(100%) invert(49%) sepia(72%) saturate(16%)
+    hue-rotate(326deg) brightness(88%) contrast(87%);
+  margin-right: 5px;
+  width: 1.2rem;
+  height: 1.2rem;
 }
 
 .studentInformationHeader {
-    font-weight: bold;
+  font-weight: bold;
 }
