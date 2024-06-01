@@ -50,6 +50,7 @@
 }
 
 .heading {
+  font-size: calc(0.5vw + 1.5rem);
   width: 100%;
   text-align: center;
 }
@@ -62,8 +63,10 @@
   text-align: center;
 }
 
-html {
-  overflow-y: overlay;
+@media screen and (min-width: 601px) and (max-width: 1150px) {
+  .rightPane {
+    width: calc(100% - 120px);
+  }
 }
 
 @media screen and (max-width: 600px) {
@@ -71,5 +74,13 @@ html {
     width: 100%;
     position: absolute;
     top: 80px;
+  }
+
+  .searchContainer {
+    margin: 30px 17% 0 10%;
+  }
+  
+  .searchBar {
+    width: 100%;
   }
 }
