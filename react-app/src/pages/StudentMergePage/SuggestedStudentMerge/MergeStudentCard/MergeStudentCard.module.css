@@ -1,0 +1,191 @@
+.container {
+  display: grid;
+  grid-template-columns: 0.5fr 0.25fr 0.5fr;
+  grid-template-rows: 0.1fr 0.25fr 0.45fr auto;
+  gap: 0px 5px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    'studentA . studentB'
+    'studentAContainer . studentBContainer'
+    'studentAContainer mergeBtnContainer studentBContainer'
+    'deleteSuggestionContainer deleteSuggestionContainer deleteSuggestionContainer';
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
+  border-radius: 30px;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+.studentA {
+  grid-area: studentA;
+}
+
+.studentB {
+  grid-area: studentB;
+}
+
+.mergeBtnContainer {
+  grid-area: mergeBtnContainer;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+}
+
+.mergeBtn {
+  background-color: var(--color-orange);
+  color: white;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 15px;
+  padding: 12px 15px 12px 15px;
+  width: fit-content;
+  cursor: pointer;
+}
+
+.mergeBtn:hover {
+  background-color: var(--color-yellow-orange);
+}
+
+.studentAContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    'studentAName'
+    'studentAInfo';
+  grid-area: studentAContainer;
+  background-color: #f9f9f9;
+  border-radius: 15px;
+  width: 100%;
+  height: 100%;
+}
+
+.studentAName {
+  grid-area: studentAName;
+  width: 100%;
+  height: fit-content;
+  font-size: 1.2rem;
+  border: none;
+  border-width: 1px;
+  border-radius: 15px;
+  outline: none;
+  background-color: var(--color-grey);
+}
+
+.studentAName p {
+  margin-left: 20px;
+  font-weight: bold;
+}
+
+.studentAInfo {
+  grid-area: studentAInfo;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.studentBContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    'studentBName'
+    'studentBInfo';
+  grid-area: studentBContainer;
+  background-color: #f9f9f9;
+  border-radius: 15px;
+  height: 100%;
+}
+
+.studentBName {
+  grid-area: studentBName;
+  width: 100%;
+  height: fit-content;
+  font-size: 1.2rem;
+  border: none;
+  border-width: 1px;
+  border-radius: 15px;
+  outline: none;
+  background-color: var(--color-grey);
+}
+
+.studentBName p {
+  font-weight: bold;
+  margin-left: 20px;
+}
+
+.studentBInfo {
+  grid-area: studentBInfo;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.deleteSuggestionContainer {
+  grid-area: deleteSuggestionContainer;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+.deleteSuggestionBtn:hover {
+  color: var(--color-red);
+  filter: invert(13%) sepia(96%) saturate(4978%) hue-rotate(350deg)
+    brightness(79%) contrast(110%);
+}
+
+.deleteSuggestionBtn {
+  background-color: transparent;
+  border-style: none;
+  color: #7f7f7f;
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.trashIcon {
+  filter: brightness(0) saturate(100%) invert(49%) sepia(72%) saturate(16%)
+    hue-rotate(326deg) brightness(88%) contrast(87%);
+  margin-right: 5px;
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.studentInformationHeader {
+  font-weight: bold;
+}
+
+@media screen and (max-width: 800px) {
+  .container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 0.1fr 0.25fr 0.2fr 0.1fr 0.25fr auto;
+    gap: 5px 0;
+    grid-template-areas:
+      'studentA'
+      'studentAContainer'
+      'mergeBtnContainer'
+      'studentB'
+      'studentBContainer'
+      'deleteSuggestionContainer';
+  }
+
+  .studentAContainer {
+    grid-template-rows: 0.5fr 1fr;
+  }
+
+  .studentBContainer {
+    grid-template-rows: 0.5fr 1fr;
+  }
+
+  .mergeBtnContainer {
+    margin-top: 1rem;
+  }
+
+  .deleteSuggestionContainer {
+    margin: 1rem 0;
+  }
+}

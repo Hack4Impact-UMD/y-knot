@@ -1,13 +1,14 @@
-import { type StudentID } from '../../types/StudentType';
 import { useState, useEffect } from 'react';
 import { getAllStudents } from '../../backend/FirestoreCalls';
+import { useNavigate } from 'react-router';
 import { useAuth } from '../../auth/AuthProvider';
 import { Alert, Snackbar } from '@mui/material';
+import { StudentID } from '../../types/StudentType';
+import { TeacherID } from '../../types/UserType';
 import styles from './StudentRosterPage.module.css';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
 import StudentList from './StudentList/StudentList';
-import { TeacherID } from '../../types/UserType';
 
 const StudentRosterPage = (): JSX.Element => {
   const [students, setStudents] = useState<Array<Partial<StudentID>>>([]);
@@ -16,6 +17,7 @@ const StudentRosterPage = (): JSX.Element => {
   const [search, setSearch] = useState<string>('');
   const [teacher, setTeacher] = useState<TeacherID | undefined>(undefined);
   const auth = useAuth();
+  const navigate = useNavigate();
 
   // Used to handle Deletion alert
   const [openSuccess, setOpenSuccess] = useState<boolean>(false);
@@ -90,6 +92,18 @@ const StudentRosterPage = (): JSX.Element => {
                 }}
                 className={styles.searchBar}
               />
+              {auth?.token?.claims.role === 'ADMIN' ? (
+                <button
+                  className={styles.mergeButton}
+                  onClick={() => {
+                    navigate(`/students/merge`);
+                  }}
+                >
+                  Merge Students
+                </button>
+              ) : (
+                <></>
+              )}
             </div>
 
             <h1 className={styles.heading}>Student Roster</h1>
