@@ -1,5 +1,7 @@
 import { StudentID } from '../../../../types/StudentType';
+import { useNavigate } from 'react-router-dom';
 import styles from './MergeStudentCard.module.css';
+import MergeStudentPage from '../../../MergeStudentPage/MergeStudentPage';
 import trashIcon from '../../../../assets/trash.svg';
 
 interface StudentPair {
@@ -8,8 +10,15 @@ interface StudentPair {
 }
 
 const MergeStudentCard = ({ studentA, studentB }: StudentPair): JSX.Element => {
+  const navigate = useNavigate();
   const handleMerge = () => {
-    // TODO: handle merge
+    navigate('/students/mergestudent', {
+      state: {
+        studentA: studentA,
+        studentB: studentB,
+      },
+    });
+    // TODO: handle merge (will there be automation?)
   };
 
   const deleteSuggestion = () => {

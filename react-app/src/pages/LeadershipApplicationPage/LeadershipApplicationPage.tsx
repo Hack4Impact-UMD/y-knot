@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useLayoutEffect } from 'react';
 import { useAuth } from '../../auth/AuthProvider';
 import { LeadershipApplicant, LeadershipFile } from '../../types/StudentType';
 import {
@@ -66,10 +66,11 @@ function LeadershipApplicationPage() {
   };
   const totalApplicants = 10;
   const authContext = useAuth();
-
   const noteContentRef = useRef<HTMLDivElement>(null);
   const [text, setText] = useState<string>('Nice applicant...');
   const [editText, setEditText] = useState<boolean>(false);
+  const windowWidth = useWindowSize();
+  const [expanded, setExpanded] = useState<string | false>(false);
 
   const handleEdit = (): void => {
     if (editText && noteContentRef.current != null) {
@@ -81,8 +82,6 @@ function LeadershipApplicationPage() {
     }
     setEditText(!editText);
   };
-
-  const [expanded, setExpanded] = useState<string | false>(false);
 
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
@@ -120,6 +119,19 @@ function LeadershipApplicationPage() {
   const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
     padding: theme.spacing(2),
   }));
+
+  function useWindowSize() {
+    const [size, setSize] = useState(window.innerWidth);
+    useLayoutEffect(() => {
+      function updateSize() {
+        setSize(window.innerWidth);
+      }
+      window.addEventListener('resize', updateSize);
+      updateSize();
+      return () => window.removeEventListener('resize', updateSize);
+    }, []);
+    return size;
+  }
 
   return (
     <div>
@@ -437,13 +449,13 @@ function LeadershipApplicationPage() {
             {/* Bottom Part */}
             <div className={styles.bottomLevel}>
               <button className={`${styles.bottomButton} ${styles.prevButton}`}>
-                <ChevronLeftIcon /> {window.innerWidth > 450 ? 'Previous' : ''}
+                <ChevronLeftIcon /> {windowWidth > 450 ? 'Previous' : ''}
               </button>
               <p className={styles.appIndex}>
                 Applicant {applicant.idx} of {totalApplicants}
               </p>
               <button className={`${styles.bottomButton} ${styles.nextButton}`}>
-                {window.innerWidth > 450 ? 'Next' : ''}
+                {windowWidth > 450 ? 'Next' : ''}
                 <ChevronRightIcon />
               </button>
             </div>

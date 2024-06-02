@@ -8,7 +8,7 @@ import {
   addStudentInCourse,
 } from './backendTesting/test';
 import RequireAuth from './auth/RequireAuth/RequireAuth';
-import StudentMergePage from './pages/StudentMergePage/StudentMergePage';
+import MergeSelectionPage from './pages/MergeSelectionPage/MergeSelectionPage';
 import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
 import LoginPage from './pages/LoginPage/LoginPage';
 import SettingsPage from './pages/SettingsPage/SettingsPage';
@@ -22,6 +22,7 @@ import CertificatePage from './pages/CertificatePage/CertificatePage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import TeacherRosterPage from './pages/TeacherRosterPage/TeacherRosterPage';
+import MergeStudentPage from './pages/MergeStudentPage/MergeStudentPage';
 import { createUser } from './backend/CloudFunctionsCalls';
 import { addCourse, addTeacherCourse } from './backend/FirestoreCalls';
 import AddCoursePage from './pages/AddCoursesPage/AddCoursePage';
@@ -157,7 +158,15 @@ function App(): JSX.Element {
                 path="/students/merge"
                 element={
                   <RequireAdminAuth>
-                    <StudentMergePage />
+                    <MergeSelectionPage />
+                  </RequireAdminAuth>
+                }
+              />
+              <Route
+                path="/students/mergestudent"
+                element={
+                  <RequireAdminAuth>
+                    <MergeStudentPage />
                   </RequireAdminAuth>
                 }
               />
