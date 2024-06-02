@@ -57,21 +57,20 @@ const StudentList = (props: {
               })
             : props.students;
 
-        setStudentList(
-          filteredStudents.map((student, i) => {
-            const firstName = student.firstName ? student.firstName + ' ' : '';
-            const middleName = student.middleName
-              ? student.middleName + ' '
-              : '';
-            const lastName = student.lastName ? student.lastName + ' ' : '';
-            const fullName = firstName + middleName + lastName;
-            const email = student.email;
-            const id = student.id;
-
-            return (
+        const list = filteredStudents.reduce((result: any[], student, i) => {
+          const firstName = student.firstName ? student.firstName + ' ' : '';
+          const middleName = student.middleName ? student.middleName + ' ' : '';
+          const lastName = student.lastName ? student.lastName + ' ' : '';
+          const fullName = firstName + middleName + lastName;
+          const email = student.email;
+          const id = student.id;
+          if (fullName!.toLowerCase().includes(props.search.toLowerCase())) {
+            result.push(
               <div
                 key={i}
-                className={i === 0 ? styles.studentBoxTop : styles.studentBox}
+                className={
+                  result.length === 0 ? styles.studentBoxTop : styles.studentBox
+                }
               >
                 <p className={styles.name}>{fullName}</p>
                 {/* allow only admins to view profile and trash icons */}
@@ -102,9 +101,61 @@ const StudentList = (props: {
                     </ToolTip>
                   </div>
                 )}
-              </div>
+              </div>,
             );
-          }),
+          }
+          return result;
+        }, []);
+
+        setStudentList(
+          list,
+          // filteredStudents.map((student, i) => {
+          //   const firstName = student.firstName ? student.firstName + ' ' : '';
+          //   const middleName = student.middleName
+          //     ? student.middleName + ' '
+          //     : '';
+          //   const lastName = student.lastName ? student.lastName + ' ' : '';
+          //   const fullName = firstName + middleName + lastName;
+          //   const email = student.email;
+          //   const id = student.id;
+
+          //   return (
+          //     <div
+          //       key={i}
+          //       className={i === 0 ? styles.studentBoxTop : styles.studentBox}
+          //     >
+          //       <p className={styles.name}>{fullName}</p>
+          //       {/* allow only admins to view profile and trash icons */}
+          //       {authContext?.token?.claims?.role === 'ADMIN' && (
+          //         <div className={styles.icons}>
+          //           <ToolTip title="View Profile" placement="top">
+          //             <button
+          //               className={`${styles.button} ${styles.profileIcon}`}
+          //               onClick={() => {
+          //                 navigate(`/students/${id}`);
+          //               }}
+          //             >
+          //               <img src={eyeIcon} alt="View Profile" />
+          //             </button>
+          //           </ToolTip>
+          //           <ToolTip title="Remove" placement="top">
+          //             <button
+          //               className={`${styles.button} ${styles.trashIcon}`}
+          //               onClick={() => {
+          //                 setPopupEmail(email);
+          //                 setPopupName(fullName);
+          //                 setRemoveStudentId(id);
+          //                 handleClick();
+          //               }}
+          //             >
+          //               <img src={trashIcon} alt="Delete Student" />
+          //             </button>
+          //           </ToolTip>
+          //         </div>
+          //       )}
+          //     </div>
+          //   );
+          // }),
         );
       } catch (error) {
         console.error('Error fetching courses or students:', error);
