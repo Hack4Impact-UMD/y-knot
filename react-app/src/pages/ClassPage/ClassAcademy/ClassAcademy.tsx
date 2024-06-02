@@ -1,24 +1,98 @@
+import { useNavigate } from 'react-router';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { TbCaretUpDownFilled } from 'react-icons/tb';
 import { TbCaretUpFilled } from 'react-icons/tb';
 import { TbCaretDownFilled } from 'react-icons/tb';
+import {
+  LeadershipApplicant,
+  LeadershipFile,
+} from '../../../types/StudentType';
+import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import styles from './ClassAcademy.module.css';
 import accept from '../../../assets/accept.png';
 import pending from '../../../assets/pending.png';
 import reject from '../../../assets/reject.png';
 import noStatus from '../../../assets/noStatus.png';
 
-interface TestType {
-  id: number;
-  lastName: string;
-  firstName: string;
-  age: number;
-}
+const leadershipFile: LeadershipFile = {
+  name: 'abc.pdf',
+  path: 'path',
+  downloadURL: 'https://www.clickdimensions.com/links/TestPDFfile.pdf',
+};
+
+const sampleApplicants: LeadershipApplicant[] = [
+  {
+    idx: 1,
+    dateApplied: '01/01/2001',
+    gpa: '3.0',
+    gender: 'M',
+    textAnswer1: 'ta1',
+    textAnswer2: 'ta2',
+    transcript: leadershipFile,
+    recLetter: leadershipFile,
+    status: 'ACCEPTED',
+    statusNote: 'great applicant! Accepted!',
+    firstName: 'Bob',
+    middleName: 'Michael',
+    lastName: 'Smith',
+    addrFirstLine: '1234 Commons 9',
+    city: 'College Park',
+    state: 'MD',
+    zipCode: '12345',
+    email: 'abc@gmail.com',
+    phone: 0,
+    guardianFirstName: 'Jack',
+    guardianLastName: 'Smith',
+    guardianEmail: 'cool@gmail.com',
+    guardianPhone: 0,
+    birthDate: '2024-02-04',
+    gradeLevel: '7',
+    schoolName: 'Best School High',
+    courseInformation: [],
+  },
+  {
+    idx: 2,
+    dateApplied: '01/01/2001',
+    gpa: '3.0',
+    gender: 'M',
+    textAnswer1: 'ta1',
+    textAnswer2: 'ta2',
+    transcript: leadershipFile,
+    recLetter: leadershipFile,
+    status: 'NA',
+    statusNote: 'statusNote',
+    firstName: 'Joseph',
+    middleName: 'Michael',
+    lastName: 'Smith',
+    addrFirstLine: '1234 Commons 9',
+    city: 'College Park',
+    state: 'MD',
+    zipCode: '12345',
+    email: 'abc@gmail.com',
+    phone: 0,
+    guardianFirstName: 'Jack',
+    guardianLastName: 'Smith',
+    guardianEmail: 'cool@gmail.com',
+    guardianPhone: 0,
+    birthDate: '2024-02-04',
+    gradeLevel: '7',
+    schoolName: 'Best School High',
+    courseInformation: [],
+  },
+];
 
 const ClassAcademy = (): JSX.Element => {
+  const navigate = useNavigate();
   const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'name', headerName: 'Name', width: 200 },
+    { field: 'idx', headerName: 'ID', width: 70 },
+    {
+      field: 'fullName',
+      headerName: 'Name',
+      width: 200,
+      valueGetter: (value, row) => {
+        return `${row.firstName || ''} ${row.lastName || ''}`;
+      },
+    },
     {
       field: 'email',
       headerName: 'Email',
@@ -35,110 +109,36 @@ const ClassAcademy = (): JSX.Element => {
       width: 130,
       renderCell: (params) => {
         return (
-          <div className={styles.statusContainer}>
-            {/* {params.row.status} */}
-            {params.row.status === 'NA' && (
-              <>
-                <div>No Status</div>{' '}
-                <img src={noStatus} alt="no status" height={20} />
-              </>
-            )}
-            {params.row.status === 'ACCEPTED' && (
-              <>
-                <div>Accepted</div>
-                <img src={accept} alt="accepted" height={20} />
-              </>
-            )}
-            {params.row.status === 'PENDING' && (
-              <>
-                <div>Pending</div>
-                <img src={pending} alt="pending" height={20} />
-              </>
-            )}
-            {params.row.status === 'REJECTED' && (
-              <>
-                <div>Rejected</div>
-                <img src={reject} alt="rejected" height={20} />
-              </>
-            )}
-          </div>
+          <ToolTip title={params.row.statusNote} placement="top">
+            <div className={styles.statusContainer}>
+              {params.row.status === 'NA' && (
+                <>
+                  <div>No Status</div>{' '}
+                  <img src={noStatus} alt="no status" height={20} />
+                </>
+              )}
+              {params.row.status === 'ACCEPTED' && (
+                <>
+                  <div>Accepted</div>
+                  <img src={accept} alt="accepted" height={20} />
+                </>
+              )}
+              {params.row.status === 'PENDING' && (
+                <>
+                  <div>Pending</div>
+                  <img src={pending} alt="pending" height={20} />
+                </>
+              )}
+              {params.row.status === 'REJECTED' && (
+                <>
+                  <div>Rejected</div>
+                  <img src={reject} alt="rejected" height={20} />
+                </>
+              )}
+            </div>
+          </ToolTip>
         );
       },
-    },
-    // {
-    //   field: 'fullName',
-    //   headerName: 'Full name',
-    //   description: 'This column has a value getter and is not sortable.',
-    //   sortable: false,
-    //   width: 160,
-    //   valueGetter: (value, row: TestType) =>
-    //     `${row.firstName || ''} ${row.lastName || ''}`,
-    // },
-  ];
-
-  const rows = [
-    {
-      id: 1,
-      name: 'Snow Jon',
-      email: 'abc@gmail.com',
-      dateApplied: '05/01/2024',
-      status: 'NA',
-    },
-    {
-      id: 2,
-      name: 'Lannister Cersei',
-      email: 'abcasd@gmail.com',
-      dateApplied: '05/01/2024',
-      status: 'PENDING',
-    },
-    {
-      id: 3,
-      name: 'Lannister Jaime',
-      email: 'abc@gmail.com',
-      dateApplied: '05/01/2024',
-      status: 'ACCEPTED',
-    },
-    {
-      id: 4,
-      name: 'Stark Arya',
-      email: 'abc@gmail.com',
-      dateApplied: '05/01/2024',
-      status: 'NA',
-    },
-    {
-      id: 5,
-      name: 'Targaryen Daenerys',
-      email: 'abcsdf@gmail.com',
-      dateApplied: '05/01/2024',
-      status: 'REJECTED',
-    },
-    {
-      id: 6,
-      name: 'Melisandre',
-      email: 'abc@gmail.com',
-      dateApplied: '05/01/2024',
-      status: 'NA',
-    },
-    {
-      id: 7,
-      name: 'Clifford Ferrara',
-      email: 'abcsdfds@gmail.com',
-      dateApplied: '05/01/2024',
-      status: 'NA',
-    },
-    {
-      id: 8,
-      name: 'Frances Rossini',
-      email: 'rtyrty@gmail.com',
-      dateApplied: '05/01/2024',
-      status: 'NA',
-    },
-    {
-      id: 9,
-      name: 'Roxie Harvey',
-      email: 'abc@gmail.com',
-      dateApplied: '05/01/2024',
-      status: 'NA',
     },
   ];
 
@@ -146,7 +146,8 @@ const ClassAcademy = (): JSX.Element => {
     <div className={styles.container}>
       <div className={styles.table}>
         <DataGrid
-          rows={rows}
+          getRowId={(row) => row.idx}
+          rows={sampleApplicants}
           columns={columns}
           initialState={{
             pagination: {
@@ -155,6 +156,7 @@ const ClassAcademy = (): JSX.Element => {
             sorting: { sortModel: [{ field: 'id', sort: 'asc' }] },
           }}
           slots={{
+            // custom sort icons
             columnSortedDescendingIcon: () => <TbCaretDownFilled />,
             columnSortedAscendingIcon: () => <TbCaretUpFilled />,
             columnUnsortedIcon: () => <TbCaretUpDownFilled />,
@@ -185,6 +187,8 @@ const ClassAcademy = (): JSX.Element => {
             },
             '& .MuiDataGrid-row:hover': {
               backgroundColor: 'var(--color-yellow-orange)',
+              textDecoration: 'underline',
+              cursor: 'pointer',
             },
             '& .MuiDataGrid-row.Mui-selected': {
               backgroundColor: 'var(--color-orange)',
@@ -200,8 +204,7 @@ const ClassAcademy = (): JSX.Element => {
           disableColumnResize={true}
           hideFooterSelectedRowCount={true}
           disableColumnMenu={true}
-          // onRowClick={() => navigate(...))}
-          //   pageSizeOptions={[5, 10]}
+          onRowClick={() => navigate(`/courses/applicant`)}
         />
       </div>
     </div>
