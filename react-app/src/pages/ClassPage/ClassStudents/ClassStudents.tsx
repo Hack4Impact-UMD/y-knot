@@ -70,7 +70,7 @@ const ClassStudents = (props: {
           )}
           <div className={styles.icons}>
             <ToolTip title="Send Certificate" placement="top">
-              <button className={styles.button}>
+              <button className={styles.button} onClick={sendCertificate}>
                 <img src={CertificateIcon} className={styles.certificateIcon} />
               </button>
             </ToolTip>
@@ -111,6 +111,10 @@ const ClassStudents = (props: {
 
   const handleClick = () => {
     setShowPopup(true);
+  };
+
+  const sendCertificate = () => {
+    // TODO: Populate and send certificate with student and course name
   };
 
   return (
