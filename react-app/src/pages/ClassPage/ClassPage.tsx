@@ -4,6 +4,7 @@ import styles from '../../pages/ClassPage/ClassPage.module.css';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
 import ClassMain from './ClassMain/ClassMain';
+import ClassAcademy from './ClassAcademy/ClassAcademy';
 import ClassAttendance from './ClassAttendance/ClassAttendance';
 import ClassHomework from './ClassHomework/ClassHomework';
 import ClassTeachers from './ClassTeachers/ClassTeachers';
@@ -22,6 +23,7 @@ import { DateTime } from 'luxon';
 
 enum Tab {
   Main = 'Main',
+  Academy = 'Academy',
   Students = 'Students',
   Attendance = 'Attendance',
   Homework = 'Homework',
@@ -48,9 +50,9 @@ const blankCourse: CourseID = {
 const ClassPage = (): JSX.Element => {
   const [currentTab, setCurrentTab] = useState<Tab>(Tab.Main);
   const [course, setCourse] = useState<Course>(blankCourse);
-  const [isLoading, setLoading] = useState<Boolean>(true);
-  const [students, setStudents] = useState<Array<StudentID>>([]);
-  const [teachers, setTeachers] = useState<Array<TeacherID>>([]);
+  const [isLoading, setLoading] = useState<boolean>(true);
+  const [students, setStudents] = useState<StudentID[]>([]);
+  const [teachers, setTeachers] = useState<TeacherID[]>([]);
 
   const authContext = useAuth();
   const courseID = useParams().id;
@@ -120,6 +122,16 @@ const ClassPage = (): JSX.Element => {
             </button>
             <button
               className={
+                currentTab === Tab.Academy ? styles.selectedTab : styles.tab
+              }
+              onClick={() => {
+                handleTabChange(Tab.Academy);
+              }}
+            >
+              Academy
+            </button>
+            <button
+              className={
                 currentTab === Tab.Students ? styles.selectedTab : styles.tab
               }
               onClick={() => {
@@ -180,6 +192,7 @@ const ClassPage = (): JSX.Element => {
 
           {/* For rendering the corresponding component whenever tab value changes */}
           {currentTab === Tab.Main && <ClassMain />}
+          {currentTab === Tab.Academy && <ClassAcademy />}
           {currentTab === Tab.Students && (
             <ClassStudents
               students={students}
