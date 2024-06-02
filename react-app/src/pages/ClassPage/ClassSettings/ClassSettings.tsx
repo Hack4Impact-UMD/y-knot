@@ -171,7 +171,8 @@ const ClassPage = (props: {
                 styles={{
                   control: (baseStyles) => ({
                     ...baseStyles,
-                    minWidth: '300px',
+                    minWidth: '30px',
+                    width: 'calc(12vw + 100px)',
                     height: '40px',
                     borderColor: 'black',
                     boxShadow: 'none',
@@ -190,8 +191,8 @@ const ClassPage = (props: {
                   ...theme,
                   colors: {
                     ...theme.colors,
-                    primary25: 'transparent',
-                    primary50: 'transparent',
+                    primary25: 'var(--color-pastel-orange)',
+                    primary50: 'var(--color-bright-orange)',
                     primary: 'var(--color-orange)',
                   },
                 })}

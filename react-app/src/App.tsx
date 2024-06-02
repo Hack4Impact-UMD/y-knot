@@ -8,6 +8,7 @@ import {
   addStudentInCourse,
 } from './backendTesting/test';
 import RequireAuth from './auth/RequireAuth/RequireAuth';
+import StudentMergePage from './pages/StudentMergePage/StudentMergePage';
 import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
 import LoginPage from './pages/LoginPage/LoginPage';
 import SettingsPage from './pages/SettingsPage/SettingsPage';
@@ -28,6 +29,7 @@ import AddCoursePage from './pages/AddCoursesPage/AddCoursePage';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { useState } from 'react';
+import LeadershipApplicationPage from './pages/LeadershipApplicationPage/LeadershipApplicationPage';
 
 function App(): JSX.Element {
   const customTheme = theme;
@@ -90,9 +92,9 @@ function App(): JSX.Element {
               <Route
                 path="/students"
                 element={
-                  <RequireAdminAuth>
+                  <RequireAuth>
                     <StudentRosterPage />
-                  </RequireAdminAuth>
+                  </RequireAuth>
                 }
               />
               <Route
@@ -153,6 +155,14 @@ function App(): JSX.Element {
                 }
               />
               <Route
+                path="/students/merge"
+                element={
+                  <RequireAdminAuth>
+                    <StudentMergePage />
+                  </RequireAdminAuth>
+                }
+              />
+              <Route
                 path="/students/:id"
                 element={
                   <RequireAuth>
@@ -182,6 +192,14 @@ function App(): JSX.Element {
                   <RequireAuth>
                     <CertificatePage name="Fiona Love" course="Math" />
                   </RequireAuth>
+                }
+              />
+              <Route
+                path="/courses/applicant"
+                element={
+                  <RequireAdminAuth>
+                    <LeadershipApplicationPage />
+                  </RequireAdminAuth>
                 }
               />
               <Route

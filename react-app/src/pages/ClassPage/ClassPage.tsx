@@ -13,7 +13,6 @@ import { useParams } from 'react-router-dom';
 import type { Course, CourseID } from '../../types/CourseType';
 import type { StudentID } from '../../types/StudentType';
 import type { TeacherID } from '../../types/UserType';
-
 import {
   getCourse,
   getStudentsFromList,
@@ -193,10 +192,21 @@ const ClassPage = (): JSX.Element => {
             <ClassAttendance
               attendance={course.attendance}
               students={students}
+              setStudents={setStudents}
+              course={course}
+              courseID={courseID}
+              setCourse={setCourse}
             />
           )}
           {currentTab === Tab.Homework && (
-            <ClassHomework homework={course.homeworks} students={students} />
+            <ClassHomework
+              homeworks={course.homeworks}
+              students={students}
+              setStudents={setStudents}
+              course={course}
+              courseID={courseID}
+              setCourse={setCourse}
+            />
           )}
           {currentTab === Tab.Teachers && (
             <ClassTeachers
