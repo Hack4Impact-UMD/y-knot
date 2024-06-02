@@ -61,7 +61,7 @@
   border-radius: 5px;
   border-width: 1px;
   width: calc(12vw + 100px);
-  min-width: 276px;
+  min-width: 100px;
   height: 40px;
   border-color: black;
   border-style: solid;
@@ -156,7 +156,6 @@
   .name {
     margin-left: 1.5vw;
   }
-
 }
 
 @media screen and (max-width: 600px) {

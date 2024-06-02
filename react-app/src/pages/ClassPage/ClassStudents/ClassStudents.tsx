@@ -36,12 +36,25 @@ const ClassStudents = (props: {
       const roundBottom = i === students.length - 1 ? styles.roundBottom : '';
       result.push(
         <div key={i} className={`${styles.box} ${roundTop} ${roundBottom}`}>
-          <div className={styles.studentName}>
-            <p>{`${student.firstName} ${student.lastName}`}</p>
-          </div>
-          <div className={styles.studentEmail}>
-            <p>{student.email}</p>
-          </div>
+          {window.innerWidth < 600 ? (
+            <span className={styles.nameEmail}>
+              <div className={styles.studentName}>
+                <p>{`${student.firstName} ${student.lastName}`}</p>
+              </div>
+              <div className={styles.studentEmail}>
+                <p>{student.email}</p>
+              </div>
+            </span>
+          ) : (
+            <>
+              <div className={styles.studentName}>
+                <p>{`${student.firstName} ${student.lastName}`}</p>
+              </div>
+              <div className={styles.studentEmail}>
+                <p>{student.email}</p>
+              </div>{' '}
+            </>
+          )}
           <div className={styles.icons}>
             <ToolTip title="Send Certificate" placement="top">
               <button className={styles.button}>
