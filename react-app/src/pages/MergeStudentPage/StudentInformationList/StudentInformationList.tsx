@@ -80,7 +80,7 @@ const StudentInformationList = (props: {
       </div>
       <div className={styles.box}>
         <p className={styles.boxTitle}>Email</p>
-        <p className={styles.boxContent}>{props.student.email}</p>
+        <p className={styles.boxContent}>{props.student.email ?? 'N/A'}</p>
         <Checkbox
           sx={{
             '&:hover': { bgcolor: 'transparent' },

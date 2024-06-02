@@ -1,7 +1,13 @@
-import { useState, useLayoutEffect, createContext, useContext } from 'react';
+import {
+  useState,
+  useLayoutEffect,
+  useEffect,
+  createContext,
+  useContext,
+} from 'react';
 import { StudentID } from '../../types/StudentType';
 import { useAuth } from '../../auth/AuthProvider';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './MergeStudentPage.module.css';
 import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
@@ -36,13 +42,13 @@ export const EmptyMergedPropType = {
 const MergedStudentContext = createContext<MergedStudentType>(null!);
 
 //TODO: Add merge student functionality
-const MergeStudentPage = (props: {
-  studentA: StudentID;
-  studentB: StudentID;
-}): JSX.Element => {
+const MergeStudentPage = (): JSX.Element => {
   const authContext = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const windowWidth = useWindowSize();
+  const [studentA, setStudentA] = useState<StudentID>();
+  const [studentB, setStudentB] = useState<StudentID>();
   const [mergedStudentName, setMergedStudentName] =
     useState(EmptyMergedPropType);
   const [mergedStudentEmail, setMergedStudentEmail] =
@@ -51,6 +57,16 @@ const MergeStudentPage = (props: {
     useState(EmptyMergedPropType);
   const [mergedStudentSchool, setMergedStudentSchool] =
     useState(EmptyMergedPropType);
+
+  useEffect(() => {
+    // Get data from navigation state
+    if (location.state?.studentA && location.state.studentB) {
+      setStudentA(location.state.studentA);
+      setStudentB(location.state.studentB);
+    } else {
+      navigate('/students/merge');
+    }
+  }, []);
 
   function useWindowSize() {
     const [size, setSize] = useState(window.innerWidth);
@@ -98,10 +114,6 @@ const MergeStudentPage = (props: {
             </div>
 
             <div className={styles.content}>
-              {/* <div className={styles.studentNameContainer}> */}
-
-              {/* </div> */}
-
               <MergedStudentContext.Provider
                 value={{
                   mergedStudentName,
@@ -121,7 +133,7 @@ const MergeStudentPage = (props: {
                     >
                       <h3>Student A</h3>
                       <div className={styles.studentNameDisplay}>
-                        {`${props.studentA.firstName} ${props.studentA.lastName}`}
+                        {`${studentA?.firstName} ${studentA?.lastName}`}
                       </div>
                     </div>
                     <div
@@ -129,22 +141,26 @@ const MergeStudentPage = (props: {
                     >
                       <h3>Student B</h3>
                       <div className={styles.studentNameDisplay}>
-                        {`${props.studentB.firstName} ${props.studentB.lastName}`}
+                        {`${studentB?.firstName} ${studentB?.lastName}`}
                       </div>
                     </div>
 
                     <div className={styles.studentInformationContainer}>
                       <div className={styles.studentAContainer}>
-                        <StudentInformationList
-                          student={props.studentA}
-                          whichStudent="Student A"
-                        />
+                        {studentA && (
+                          <StudentInformationList
+                            student={studentA}
+                            whichStudent="Student A"
+                          />
+                        )}
                       </div>
                       <div className={styles.studentBContainer}>
-                        <StudentInformationList
-                          student={props.studentB}
-                          whichStudent="Student B"
-                        />
+                        {studentB && (
+                          <StudentInformationList
+                            student={studentB}
+                            whichStudent="Student B"
+                          />
+                        )}
                       </div>
                     </div>
                   </>
@@ -155,14 +171,16 @@ const MergeStudentPage = (props: {
                     >
                       <h3>Student A</h3>
                       <div className={styles.studentNameDisplay}>
-                        {`${props.studentA.firstName} ${props.studentA.lastName}`}
+                        {`${studentA?.firstName} ${studentA?.lastName}`}
                       </div>
                     </div>
                     <div className={styles.studentAContainer}>
-                      <StudentInformationList
-                        student={props.studentA}
-                        whichStudent="Student A"
-                      />
+                      {studentA && (
+                        <StudentInformationList
+                          student={studentA}
+                          whichStudent="Student A"
+                        />
+                      )}
                     </div>
 
                     <div
@@ -170,15 +188,17 @@ const MergeStudentPage = (props: {
                     >
                       <h3>Student B</h3>
                       <div className={styles.studentNameDisplay}>
-                        {`${props.studentB.firstName} ${props.studentB.lastName}`}
+                        {`${studentB?.firstName} ${studentB?.lastName}`}
                       </div>
                     </div>
 
                     <div className={styles.studentBContainer}>
-                      <StudentInformationList
-                        student={props.studentB}
-                        whichStudent="Student B"
-                      />
+                      {studentB && (
+                        <StudentInformationList
+                          student={studentB}
+                          whichStudent="Student B"
+                        />
+                      )}
                     </div>
                   </>
                 )}

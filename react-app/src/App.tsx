@@ -166,44 +166,7 @@ function App(): JSX.Element {
                 path="/students/mergestudent"
                 element={
                   <RequireAdminAuth>
-                    <MergeStudentPage
-                      studentA={{
-                        id: 'pEpBrMGdq8f3Dabli1Ij',
-                        firstName: 'Chris',
-                        lastName: 'Wilson',
-                        gradeLevel: '5',
-                        addrFirstLine: '1234 Street',
-                        city: 'College Park',
-                        state: 'Maryland',
-                        zipCode: '20740',
-                        email: 'chris@gmail.com',
-                        phone: 1234567890,
-                        guardianFirstName: '',
-                        guardianLastName: '',
-                        guardianEmail: '',
-                        guardianPhone: 1234567890,
-                        birthDate: '2000-01-01',
-                        courseInformation: [],
-                      }}
-                      studentB={{
-                        id: 'TKrYch0cIqbsPBN7HCm8',
-                        firstName: 'Michael',
-                        lastName: 'Smith',
-                        gradeLevel: '6',
-                        addrFirstLine: '123 Street Way',
-                        city: 'BC',
-                        state: 'Maryland',
-                        zipCode: '12345',
-                        email: '123@abc.com',
-                        phone: 1231231234,
-                        guardianFirstName: '',
-                        guardianLastName: '',
-                        guardianEmail: '',
-                        guardianPhone: 1231231123,
-                        birthDate: '1999-01-02',
-                        courseInformation: [],
-                      }}
-                    />
+                    <MergeStudentPage />
                   </RequireAdminAuth>
                 }
               />
