@@ -19,7 +19,7 @@
 }
 
 .searchContainer {
-  margin: 30px auto 40px 100px;
+  margin: 30px 10% 40px;
 }
 
 .searchBar {
@@ -49,7 +49,7 @@
 
 .addCourse {
   border-radius: 30px;
-  display:block;
+  display: block;
   border: none;
   padding: 10px;
   background-color: var(--color-orange);
@@ -59,9 +59,9 @@
   color: white;
   cursor: pointer;
   margin-right: 19vh;
-  float:right;
+  float: right;
   min-width: 150px;
-  max-width: 150px; 
+  max-width: 150px;
 }
 
 .addCourse:hover {
@@ -88,30 +88,47 @@
 }
 
 @media screen and (max-width: 600px) {
-    .rightPane {
-        width: 100%;
-        position: absolute;
-        top: 80px;
-    }
+  .rightPane {
+    width: 100%;
+    position: absolute;
+    top: 80px;
+  }
 
-    .cardLayout {
-      display: inline-grid;
-      margin-left: 20px;
-    }
-    .searchContainer {
-      margin: 25px 25px 5px;
-    }
+  .courseHeader {
+    display: flex;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5%;
+  }
 
-    .card {
-      margin-bottom: 20px;
-      margin-right: 0;
-    }
+  .courseStatus {
+    margin: 1rem 0;
+  }
 
-    .courseStatus {
-      margin-left: 20px;
-    }
+  .addCourse {
+    margin-right: 0;
+  }
 
-    .addCourse {
-      margin-right: 20px;
-    }
+  .searchContainer {
+    margin: 30px 17% 10px 10%;
+  }
+
+  .searchBar {
+    width: 100%;
+  }
+
+  .cardLayout {
+    display: inline-grid;
+    margin-left: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .card {
+    margin-bottom: 20px;
+    margin-right: 0;
+  }
 }

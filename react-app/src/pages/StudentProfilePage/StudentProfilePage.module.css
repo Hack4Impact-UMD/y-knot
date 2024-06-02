@@ -166,13 +166,13 @@
     width: calc(100% - 120px);
   }
 
-  .title{
+  .title {
     text-align: left;
   }
 
   .secondTitle {
     margin: 30px auto 10px 10%;
-    text-align:left;
+    text-align: left;
   }
 }
 
@@ -190,12 +190,14 @@
 
   .secondTitle {
     margin: 30px auto 10px 10%;
-    text-align:left;
+    text-align: left;
   }
 
   .courseList {
     display: inline-grid;
-    margin-left: 20px;
+    margin-left: 0;
+    display: flex;
+    justify-content: center;
   }
 
   .card {

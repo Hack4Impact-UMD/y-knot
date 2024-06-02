@@ -91,3 +91,18 @@
   cursor: pointer;
   background: var(--color-yellow-orange);
 }
+
+@media screen and (max-width: 1150px) {
+  .bottomLevel {
+    flex-wrap: wrap;
+    margin-left: 10%;
+    margin-right: 10%;
+    gap: 0.75rem 5%;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .box {
+    padding-right: 110px;
+  }
+}

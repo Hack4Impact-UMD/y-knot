@@ -29,6 +29,7 @@
 .title {
   margin-bottom: 0;
   font-weight: normal;
+  text-align: center;
 }
 
 .date {
@@ -36,12 +37,14 @@
   margin-bottom: 0;
   font-weight: normal;
   font-size: 1rem;
+  text-align: center;
 }
 
 .time {
   margin-top: 5px;
   font-weight: normal;
   font-size: 1rem;
+  text-align: center;
 }
 
 .content {
@@ -81,11 +84,38 @@
   padding-right: 15px;
 }
 
+@media screen and (min-width: 601px) and (max-width: 1150px) {
+  .rightPane {
+    width: calc(100% - 120px);
+  }
+
+  .content {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+}
+
 @media screen and (max-width: 600px) {
   .rightPane,
   .loadingContainer {
     width: 100%;
     position: absolute;
     top: 80px;
+  }
+
+  .content {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+
+  .tab,
+  .selectedTab {
+    font-size: 14px;
   }
 }

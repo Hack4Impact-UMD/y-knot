@@ -171,7 +171,8 @@ const ClassPage = (props: {
                 styles={{
                   control: (baseStyles) => ({
                     ...baseStyles,
-                    minWidth: '300px',
+                    minWidth: '30px',
+                    width: 'calc(12vw + 100px)',
                     height: '40px',
                     borderColor: 'black',
                     boxShadow: 'none',

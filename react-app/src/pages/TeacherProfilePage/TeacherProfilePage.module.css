@@ -34,7 +34,8 @@
   margin-right: auto;
 }
 
-.box, .bottomBox {
+.box,
+.bottomBox {
   border-bottom: 1px solid black;
   padding: 15px;
   display: flex;
@@ -103,7 +104,9 @@
 
   .courseList {
     display: inline-grid;
-    margin-left: 20px;
+    margin-left: 0;
+    display: flex;
+    justify-content: center;
   }
 
   .card {
