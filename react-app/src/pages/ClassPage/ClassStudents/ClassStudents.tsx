@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useLayoutEffect } from 'react';
 import { useAuth } from '../../../auth/AuthProvider';
 import { Link } from 'react-router-dom';
 import { Snackbar, Alert } from '@mui/material';
@@ -18,7 +18,6 @@ const ClassStudents = (props: {
   courseName: string;
 }): JSX.Element => {
   const authContext = useAuth();
-
   const [students, setStudents] = useState<any[]>(props.students);
   const [studentList, setStudentList] = useState<any[]>([]);
   const [showPopup, setShowPopup] = useState(false);
@@ -27,6 +26,20 @@ const ClassStudents = (props: {
   const [removeStudentId, setRemoveStudentId] = useState<string>();
   const [reloadList, setReloadList] = useState<Boolean>(false);
   const [removeSuccess, setRemoveSuccess] = useState<boolean>(false);
+  const windowWidth = useWindowSize();
+
+  function useWindowSize() {
+    const [size, setSize] = useState(window.innerWidth);
+    useLayoutEffect(() => {
+      function updateSize() {
+        setSize(window.innerWidth);
+      }
+      window.addEventListener('resize', updateSize);
+      updateSize();
+      return () => window.removeEventListener('resize', updateSize);
+    }, []);
+    return size;
+  }
 
   useEffect(() => {
     setReloadList(false);
@@ -36,7 +49,7 @@ const ClassStudents = (props: {
       const roundBottom = i === students.length - 1 ? styles.roundBottom : '';
       result.push(
         <div key={i} className={`${styles.box} ${roundTop} ${roundBottom}`}>
-          {window.innerWidth < 600 ? (
+          {windowWidth < 600 ? (
             <span className={styles.nameEmail}>
               <div className={styles.studentName}>
                 <p>{`${student.firstName} ${student.lastName}`}</p>
@@ -90,7 +103,7 @@ const ClassStudents = (props: {
       return result;
     }, []);
     setStudentList(list);
-  }, [reloadList]);
+  }, [reloadList, windowWidth]);
 
   const removePopupClose = (event: any, reason: any) => {
     setRemoveSuccess(false);

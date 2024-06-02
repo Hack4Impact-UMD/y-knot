@@ -247,7 +247,7 @@ const ManualStudentMerge = (): JSX.Element => {
                 checked={selectedStudents.includes(id || '')}
                 checkedIcon={<BpCheckedIcon />}
                 icon={<BpIcon />}
-                onClick={() => handleCheck(student)}
+                onChange={() => handleCheck(student)}
               />
             </div>
           </div>,
@@ -452,8 +452,19 @@ const ManualStudentMerge = (): JSX.Element => {
       setAlertMsg('Please select 2 students to merge');
       setAlertOpen(true);
     } else {
-      // TODO: Navigate to final merge page
-      // navigate(`/students/merge/...`);
+      // Navigate to final merge page
+      const studentA = selectedStudentADropdown
+        ? JSON.parse(selectedStudentADropdown.value)
+        : undefined;
+      const studentB = selectedStudentBDropdown
+        ? JSON.parse(selectedStudentBDropdown.value)
+        : undefined;
+      navigate('/students/mergestudent', {
+        state: {
+          studentA: studentA,
+          studentB: studentB,
+        },
+      });
     }
   };
 
