@@ -8,6 +8,7 @@ import {
   addStudentInCourse,
 } from './backendTesting/test';
 import RequireAuth from './auth/RequireAuth/RequireAuth';
+import StudentMergePage from './pages/StudentMergePage/StudentMergePage';
 import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
 import LoginPage from './pages/LoginPage/LoginPage';
 import SettingsPage from './pages/SettingsPage/SettingsPage';
@@ -90,9 +91,9 @@ function App(): JSX.Element {
               <Route
                 path="/students"
                 element={
-                  <RequireAdminAuth>
+                  <RequireAuth>
                     <StudentRosterPage />
-                  </RequireAdminAuth>
+                  </RequireAuth>
                 }
               />
               <Route
@@ -150,6 +151,14 @@ function App(): JSX.Element {
                       }
                     ></button>
                   </RequireAuth>
+                }
+              />
+              <Route
+                path="/students/merge"
+                element={
+                  <RequireAdminAuth>
+                    <StudentMergePage />
+                  </RequireAdminAuth>
                 }
               />
               <Route

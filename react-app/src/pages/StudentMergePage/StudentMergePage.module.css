@@ -1,54 +1,39 @@
-.loadingContainer {
-  height: 100vh;
-  margin-left: 200px;
-  width: calc(100% - 250px);
-  position: relative;
-  z-index: -1;
-}
-
 .rightPane {
-  width: calc(100% - 250px);
-  height: 100%;
   float: right;
+  width: calc(100% - 250px);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
-.classInfo {
-  background-color: var(--color-pastel-green);
-  width: 100%;
+.backButton {
+  width: 100px;
+  margin-left: 30px;
+  margin-top: 20px;
+  color: #757575;
+  border-style: none;
+  background-color: transparent;
+  font-size: large;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  padding-top: 2%;
-  padding-bottom: 2%;
-  margin-bottom: 15px;
-  box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.25);
+}
+
+.backButton:hover {
+  color: var(--color-orange);
+}
+
+.top {
+  width: 100%;
 }
 
 .title {
-  margin-bottom: 0;
-  font-weight: normal;
+  width: 100%;
   text-align: center;
 }
 
-.date {
-  margin-top: 5px;
-  margin-bottom: 0;
-  font-weight: normal;
-  font-size: 1rem;
-  text-align: center;
-}
-
-.time {
-  margin-top: 5px;
-  font-weight: normal;
-  font-size: 1rem;
-  text-align: center;
-}
-
-.content {
+.buttons {
   display: flex;
+  width: 100%;
   justify-content: center;
 }
 
@@ -88,34 +73,12 @@
   .rightPane {
     width: calc(100% - 120px);
   }
-
-  .content {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-left: 5%;
-    margin-right: 5%;
-  }
 }
 
 @media screen and (max-width: 600px) {
-  .rightPane,
-  .loadingContainer {
+  .rightPane {
     width: 100%;
     position: absolute;
     top: 80px;
-  }
-
-  .content {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-left: 5%;
-    margin-right: 5%;
-  }
-
-  .tab,
-  .selectedTab {
-    font-size: 14px;
   }
 }

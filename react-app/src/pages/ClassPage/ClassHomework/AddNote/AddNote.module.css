@@ -10,19 +10,20 @@
 
 .close {
   height: 0.5rem;
-  margin: 1.25rem 1.5rem 0 0;
+  margin: 1.25rem 1rem 0 0;
   align-self: end;
   background: none;
   border: none;
   cursor: pointer;
+  z-index: 100;
 }
 
 .content {
-  width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  padding: 0% 5%;
+  margin-bottom: 20px;
 }
 
 .heading {
@@ -41,24 +42,46 @@
   color: red;
 }
 
-.nameInput {
-  width: 75%;
-  min-width: 180px;
-  padding: 11px 15px;
+.editButton {
+  height: 25px;
+}
+
+.nameContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
   margin-bottom: 16px;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.nameInput {
+  width: 73%;
+  height: 25px;
+  padding: 7px 11px;
+  font-size: 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
   border: none;
   border-radius: 10px;
   outline: none;
   background-color: var(--color-grey);
+  resize: none;
 }
 
 .nameInput:focus-within {
   box-shadow: 0 0 0 1px black;
 }
 
+.noteContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 .noteInput {
-  width: 75%;
-  min-width: 180px;
+  width: 100%;
   height: 150px;
   padding: 15px 15px;
   margin: 0px 0px 16px 0px;
@@ -69,7 +92,6 @@
   border-radius: 10px;
   outline: none;
   background-color: var(--color-grey);
-  align-self: center;
   resize: none;
 }
 
@@ -79,18 +101,14 @@
 
 .button {
   background-color: var(--color-orange);
-  padding: 11px 0 11px 0;
-  font-size: 0.8rem;
-  width: 16.67vh;
-  min-width: 180px;
+  width: 65px;
+  height: 40px;
   border: none;
-  border-radius: 30px;
-  color: white;
+  border-radius: 15px;
   outline: none;
-  text-align: center;
+  cursor: pointer;
 }
 
 .button:hover {
-  cursor: pointer;
   background: var(--color-yellow-orange);
 }

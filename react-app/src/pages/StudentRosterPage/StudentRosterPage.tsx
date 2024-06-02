@@ -1,8 +1,10 @@
-import { type StudentID } from '../../types/StudentType';
 import { useState, useEffect } from 'react';
 import { getAllStudents } from '../../backend/FirestoreCalls';
+import { useNavigate } from 'react-router';
 import { useAuth } from '../../auth/AuthProvider';
 import { Alert, Snackbar } from '@mui/material';
+import { StudentID } from '../../types/StudentType';
+import { TeacherID } from '../../types/UserType';
 import styles from './StudentRosterPage.module.css';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
@@ -13,6 +15,9 @@ const StudentRosterPage = (): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
+  const [teacher, setTeacher] = useState<TeacherID | undefined>(undefined);
+  const auth = useAuth();
+  const navigate = useNavigate();
 
   // Used to handle Deletion alert
   const [openSuccess, setOpenSuccess] = useState<boolean>(false);
@@ -20,26 +25,8 @@ const StudentRosterPage = (): JSX.Element => {
     setOpenSuccess(false);
   };
 
-  const auth = useAuth();
-
   // Used to detect time in between keystrokes when using the search bar
   let timer: NodeJS.Timeout | null = null;
-
-  function createStudentList() {
-    const studentList: Array<Partial<StudentID>> = [];
-    for (let i = 1; i <= 51; i++) {
-      const student: Partial<StudentID> = {};
-      student.id = i.toString();
-      student.firstName = 'John';
-      student.middleName = 'Doe';
-      student.lastName = 'Smith';
-      student.email = `student${i}@example.com`;
-      studentList.push(student);
-    }
-    return studentList;
-  }
-
-  const fakeStudentList = createStudentList();
 
   useEffect(() => {
     setLoading(true);
@@ -54,6 +41,7 @@ const StudentRosterPage = (): JSX.Element => {
           newStudent.middleName = currStudent.middleName;
           newStudent.lastName = currStudent.lastName;
           newStudent.email = currStudent.email;
+          newStudent.courseInformation = currStudent.courseInformation || [];
           partialStudents.push(newStudent);
         });
         setStudents(partialStudents);
@@ -104,6 +92,18 @@ const StudentRosterPage = (): JSX.Element => {
                 }}
                 className={styles.searchBar}
               />
+              {auth?.token?.claims.role === 'ADMIN' ? (
+                <button
+                  className={styles.mergeButton}
+                  onClick={() => {
+                    navigate(`/students/merge`);
+                  }}
+                >
+                  Merge Students
+                </button>
+              ) : (
+                <></>
+              )}
             </div>
 
             <h1 className={styles.heading}>Student Roster</h1>
@@ -122,6 +122,7 @@ const StudentRosterPage = (): JSX.Element => {
                 students={students}
                 setStudents={setStudents}
                 setOpenSuccess={setOpenSuccess}
+                teacher={teacher}
               />
             )}
           </div>
