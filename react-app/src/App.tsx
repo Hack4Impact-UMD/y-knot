@@ -28,7 +28,7 @@ import AddCoursePage from './pages/AddCoursesPage/AddCoursePage';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { useState } from 'react';
-import AcademyApplicationPage from './pages/AcademyApplicationPage/AcademyApplicationPage';
+import LeadershipApplicationPage from './pages/LeadershipApplicationPage/LeadershipApplicationPage';
 
 function App(): JSX.Element {
   const customTheme = theme;
@@ -194,10 +194,10 @@ function App(): JSX.Element {
                 }
               />
               <Route
-                path="/leadership-applications"
+                path="/courses/applicant"
                 element={
                   <RequireAdminAuth>
-                    <AcademyApplicationPage />
+                    <LeadershipApplicationPage />
                   </RequireAdminAuth>
                 }
               />
