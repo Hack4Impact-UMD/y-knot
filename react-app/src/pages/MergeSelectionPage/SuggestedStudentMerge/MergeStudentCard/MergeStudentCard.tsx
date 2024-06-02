@@ -1,4 +1,5 @@
 import { StudentID } from '../../../../types/StudentType';
+import { useNavigate } from 'react-router-dom';
 import styles from './MergeStudentCard.module.css';
 import trashIcon from '../../../../assets/trash.svg';
 
@@ -8,7 +9,9 @@ interface StudentPair {
 }
 
 const MergeStudentCard = ({ studentA, studentB }: StudentPair): JSX.Element => {
+  const navigate = useNavigate();
   const handleMerge = () => {
+    navigate('/students/mergestudent');
     // TODO: handle merge
   };
 

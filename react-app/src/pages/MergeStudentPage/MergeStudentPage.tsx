@@ -1,11 +1,12 @@
-import { useState, createContext, useContext } from 'react';
+import { useState, useLayoutEffect, createContext, useContext } from 'react';
 import { StudentID } from '../../types/StudentType';
 import { useAuth } from '../../auth/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 import styles from './MergeStudentPage.module.css';
 import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
+import WestRounded from '@mui/icons-material/WestRounded';
 import StudentInformationList from './StudentInformationList/StudentInformationList';
-import { HiArrowLongLeft } from 'react-icons/hi2';
 import MergedStudentInfoList from './MergedStudentInfoList/MergedStudentInfoList';
 
 interface MergedPropType {
@@ -40,6 +41,8 @@ const MergeStudentPage = (props: {
   studentB: StudentID;
 }): JSX.Element => {
   const authContext = useAuth();
+  const navigate = useNavigate();
+  const windowWidth = useWindowSize();
   const [mergedStudentName, setMergedStudentName] =
     useState(EmptyMergedPropType);
   const [mergedStudentEmail, setMergedStudentEmail] =
@@ -48,6 +51,19 @@ const MergeStudentPage = (props: {
     useState(EmptyMergedPropType);
   const [mergedStudentSchool, setMergedStudentSchool] =
     useState(EmptyMergedPropType);
+
+  function useWindowSize() {
+    const [size, setSize] = useState(window.innerWidth);
+    useLayoutEffect(() => {
+      function updateSize() {
+        setSize(window.innerWidth);
+      }
+      window.addEventListener('resize', updateSize);
+      updateSize();
+      return () => window.removeEventListener('resize', updateSize);
+    }, []);
+    return size;
+  }
 
   return (
     <>
@@ -63,9 +79,18 @@ const MergeStudentPage = (props: {
         <>
           <NavigationBar />
           <div className={styles.rightPane}>
-            <div className={styles.backButtonContainer}>
-              <HiArrowLongLeft size={25} className={styles.leftArrowIcon} />
-              <div className={styles.backText}>Back</div>
+            <div>
+              <button
+                className={styles.backButton}
+                onClick={() => {
+                  navigate('/students/merge');
+                }}
+              >
+                <WestRounded
+                  style={{ color: '#757575', marginRight: '10px' }}
+                />
+                Back
+              </button>
             </div>
 
             <div className={styles.header}>
@@ -73,20 +98,9 @@ const MergeStudentPage = (props: {
             </div>
 
             <div className={styles.content}>
-              <div className={styles.studentNameContainer}>
-                <div className={styles.individualStudentContainer}>
-                  <h3>Student A</h3>
-                  <div className={styles.studentNameDisplay}>
-                    {`${props.studentA.firstName} ${props.studentA.lastName}`}
-                  </div>
-                </div>
-                <div className={styles.individualStudentContainer}>
-                  <h3>Student B</h3>
-                  <div className={styles.studentNameDisplay}>
-                    {`${props.studentB.firstName} ${props.studentB.lastName}`}
-                  </div>
-                </div>
-              </div>
+              {/* <div className={styles.studentNameContainer}> */}
+
+              {/* </div> */}
 
               <MergedStudentContext.Provider
                 value={{
@@ -100,28 +114,86 @@ const MergeStudentPage = (props: {
                   setMergedStudentSchool,
                 }}
               >
-                <div className={styles.studentInformationContainer}>
-                  <div className={styles.individualInformationContainer}>
-                    <StudentInformationList
-                      student={props.studentA}
-                      whichStudent="Student A"
-                    />
-                  </div>
-                  <div className={styles.individualInformationContainer}>
-                    <StudentInformationList
-                      student={props.studentB}
-                      whichStudent="Student B"
-                    />
-                  </div>
-                </div>
+                {windowWidth > 1000 ? (
+                  <>
+                    <div
+                      className={`${styles.individualStudentContainer} ${styles.studentA}`}
+                    >
+                      <h3>Student A</h3>
+                      <div className={styles.studentNameDisplay}>
+                        {`${props.studentA.firstName} ${props.studentA.lastName}`}
+                      </div>
+                    </div>
+                    <div
+                      className={`${styles.individualStudentContainer} ${styles.studentB}`}
+                    >
+                      <h3>Student B</h3>
+                      <div className={styles.studentNameDisplay}>
+                        {`${props.studentB.firstName} ${props.studentB.lastName}`}
+                      </div>
+                    </div>
+
+                    <div className={styles.studentInformationContainer}>
+                      <div className={styles.studentAContainer}>
+                        <StudentInformationList
+                          student={props.studentA}
+                          whichStudent="Student A"
+                        />
+                      </div>
+                      <div className={styles.studentBContainer}>
+                        <StudentInformationList
+                          student={props.studentB}
+                          whichStudent="Student B"
+                        />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div
+                      className={`${styles.individualStudentContainer} ${styles.studentA}`}
+                    >
+                      <h3>Student A</h3>
+                      <div className={styles.studentNameDisplay}>
+                        {`${props.studentA.firstName} ${props.studentA.lastName}`}
+                      </div>
+                    </div>
+                    <div className={styles.studentAContainer}>
+                      <StudentInformationList
+                        student={props.studentA}
+                        whichStudent="Student A"
+                      />
+                    </div>
+
+                    <div
+                      className={`${styles.individualStudentContainer} ${styles.studentB}`}
+                    >
+                      <h3>Student B</h3>
+                      <div className={styles.studentNameDisplay}>
+                        {`${props.studentB.firstName} ${props.studentB.lastName}`}
+                      </div>
+                    </div>
+
+                    <div className={styles.studentBContainer}>
+                      <StudentInformationList
+                        student={props.studentB}
+                        whichStudent="Student B"
+                      />
+                    </div>
+                  </>
+                )}
 
                 <div className={styles.mergedStudentContainer}>
-                  <h3>Merged Student Profile</h3>
-                  <MergedStudentInfoList />
+                  <h2 className={styles.mergeTitle}>Merged Student Profile</h2>
+                  <div className={styles.mergeContainer}>
+                    <MergedStudentInfoList />
+                  </div>
                 </div>
               </MergedStudentContext.Provider>
 
-              <button className={styles.confirmButton}>Confirm Merge</button>
+              <div className={styles.confirmButtonContainer}>
+                <button className={styles.confirmButton}>Confirm Merge</button>
+              </div>
             </div>
           </div>
         </>

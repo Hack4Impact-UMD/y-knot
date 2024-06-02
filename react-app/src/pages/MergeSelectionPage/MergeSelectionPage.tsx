@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
-import styles from './StudentMergePage.module.css';
+import styles from './MergeSelectionPage.module.css';
 import WestRounded from '@mui/icons-material/WestRounded';
 import ManualStudentMerge from './ManualStudentMerge/ManualStudentMerge';
 import SuggestedStudentMerge from './SuggestedStudentMerge/SuggestedStudentMerge';
@@ -11,7 +11,7 @@ enum Tab {
   Manual = 'Manual',
 }
 
-const StudentMergePage = (): JSX.Element => {
+const MergeSelectionPage = (): JSX.Element => {
   const navigate = useNavigate();
   const [currentTab, setCurrentTab] = useState<Tab>(Tab.Suggested);
 
@@ -66,4 +66,4 @@ const StudentMergePage = (): JSX.Element => {
   );
 };
 
-export default StudentMergePage;
+export default MergeSelectionPage;
