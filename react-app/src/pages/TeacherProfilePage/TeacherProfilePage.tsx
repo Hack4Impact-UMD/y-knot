@@ -97,11 +97,7 @@ const TeacherProfilePage = (): JSX.Element => {
         color = 'gray';
       }
       return (
-        <Link
-          to={`/courses/class/${course.id}`}
-          key={i}
-          className={styles.card}
-        >
+        <Link to={`/courses/${course.id}`} key={i} className={styles.card}>
           <CourseCard
             teacher={course.teachers}
             course={course.name}
@@ -126,11 +122,11 @@ const TeacherProfilePage = (): JSX.Element => {
           <Loading />
         </div>
       ) : loading ? (
-        <div className={styles.container}>
+        <div className={styles.loadingContainer}>
           <Loading />
         </div>
       ) : (
-        <div className={styles.settings}>
+        <div className={styles.rightPane}>
           <h1 className={styles.title}>Teacher Profile</h1>
 
           <div className={styles.inputs}>

@@ -83,11 +83,7 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
         color = 'gray';
       }
       return (
-        <Link
-          to={`/courses/class/${course.id}`}
-          key={i}
-          className={styles.card}
-        >
+        <Link to={`/courses/${course.id}`} key={i} className={styles.card}>
           <CourseCard
             teacher={course.teachers}
             course={course.name}
@@ -177,7 +173,6 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
                     }}
                     onKeyDown={(event) => {
                       if (event.key === 'Enter') {
-                        // TODO: Connect backend
                         event.preventDefault();
                         handleSearch(event);
                       }
@@ -215,7 +210,9 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
 
                 {authContext?.token?.claims.role != 'TEACHER' ? (
                   <>
-                    <h1 className={styles.courseStatus}>Past Courses</h1>
+                    <div className={styles.courseHeader}>
+                      <h1 className={styles.courseStatus}>Past Courses</h1>
+                    </div>
                     <div className={styles.cardLayout}>
                       {allPastCourses.length === 0 ? (
                         <h4 className={styles.noStudent}>No Past Courses</h4>
@@ -232,7 +229,9 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
                   <></>
                 )}
 
-                <h1 className={styles.courseStatus}>Upcoming Courses</h1>
+                <div className={styles.courseHeader}>
+                  <h1 className={styles.courseStatus}>Upcoming Courses</h1>
+                </div>
                 <div className={styles.cardLayout}>
                   {allUpcomingCourses.length === 0 ? (
                     <h4 className={styles.noStudent}>No Upcoming Courses</h4>

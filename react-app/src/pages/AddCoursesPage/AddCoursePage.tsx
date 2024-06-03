@@ -255,7 +255,8 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                     styles={{
                       control: (baseStyles) => ({
                         ...baseStyles,
-                        minWidth: '300px',
+                        width: 'calc(12vw + 100px)',
+                        minWidth: '30px',
                         height: '40px',
                         borderColor: 'black',
                         boxShadow: 'none',
@@ -274,8 +275,8 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                       ...theme,
                       colors: {
                         ...theme.colors,
-                        primary25: 'transparent',
-                        primary50: 'transparent',
+                        primary25: 'var(--color-pastel-orange)',
+                        primary50: 'var(--color-bright-orange)',
                         primary: 'var(--color-orange)',
                       },
                     })}
@@ -315,7 +316,15 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                       ClearIndicator: () => null,
                     }}
                     placeholder="Select Teacher(s)"
-                    styles={selectBoxStyle}
+                    styles={{
+                      control: (baseStyles) => ({
+                        ...baseStyles,
+                        borderColor: 'black',
+                        '&:hover': {
+                          border: '1px solid black',
+                        },
+                      }),
+                    }} 
                     className={styles.dateSelection}
                   />
                 </div>

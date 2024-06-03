@@ -8,6 +8,7 @@ import {
   addStudentInCourse,
 } from './backendTesting/test';
 import RequireAuth from './auth/RequireAuth/RequireAuth';
+import MergeSelectionPage from './pages/MergeSelectionPage/MergeSelectionPage';
 import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
 import LoginPage from './pages/LoginPage/LoginPage';
 import SettingsPage from './pages/SettingsPage/SettingsPage';
@@ -21,12 +22,14 @@ import CertificatePage from './pages/CertificatePage/CertificatePage';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import NavigationBar from './components/NavigationBar/NavigationBar';
 import TeacherRosterPage from './pages/TeacherRosterPage/TeacherRosterPage';
+import MergeStudentPage from './pages/MergeStudentPage/MergeStudentPage';
 import { createUser } from './backend/CloudFunctionsCalls';
 import { addCourse, addTeacherCourse } from './backend/FirestoreCalls';
 import AddCoursePage from './pages/AddCoursesPage/AddCoursePage';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { useState } from 'react';
+import LeadershipApplicationPage from './pages/LeadershipApplicationPage/LeadershipApplicationPage';
 
 function App(): JSX.Element {
   const customTheme = theme;
@@ -79,7 +82,7 @@ function App(): JSX.Element {
                 }
               />
               <Route
-                path="/courses/class/:id"
+                path="/courses/:id"
                 element={
                   <RequireAuth>
                     <ClassPage />
@@ -87,10 +90,42 @@ function App(): JSX.Element {
                 }
               />
               <Route
-                path="/students"
+                path="/courses/:courseId/applicant/:appId"
                 element={
                   <RequireAdminAuth>
+                    <LeadershipApplicationPage />
+                  </RequireAdminAuth>
+                }
+              />
+              <Route
+                path="/students"
+                element={
+                  <RequireAuth>
                     <StudentRosterPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/students/:id"
+                element={
+                  <RequireAuth>
+                    <StudentProfilePage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/students/merge"
+                element={
+                  <RequireAdminAuth>
+                    <MergeSelectionPage />
+                  </RequireAdminAuth>
+                }
+              />
+              <Route
+                path="/students/mergestudent"
+                element={
+                  <RequireAdminAuth>
+                    <MergeStudentPage />
                   </RequireAdminAuth>
                 }
               />
@@ -99,6 +134,14 @@ function App(): JSX.Element {
                 element={
                   <RequireAdminAuth>
                     <TeacherRosterPage />
+                  </RequireAdminAuth>
+                }
+              />
+              <Route
+                path="/teachers/:id"
+                element={
+                  <RequireAdminAuth>
+                    <TeacherProfilePage />
                   </RequireAdminAuth>
                 }
               />
@@ -115,6 +158,22 @@ function App(): JSX.Element {
                 element={
                   <RequireAuth>
                     <NavigationBar />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/transcript/:id"
+                element={
+                  <RequireAuth>
+                    <TranscriptPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/certificate/:id"
+                element={
+                  <RequireAuth>
+                    <CertificatePage name="Fiona Love" course="Math" />
                   </RequireAuth>
                 }
               />
@@ -148,38 +207,6 @@ function App(): JSX.Element {
                         // }
                       }
                     ></button>
-                  </RequireAuth>
-                }
-              />
-              <Route
-                path="/students/:id"
-                element={
-                  <RequireAuth>
-                    <StudentProfilePage />
-                  </RequireAuth>
-                }
-              />
-              <Route
-                path="/teachers/:id"
-                element={
-                  <RequireAdminAuth>
-                    <TeacherProfilePage />
-                  </RequireAdminAuth>
-                }
-              />
-              <Route
-                path="/transcript/:id"
-                element={
-                  <RequireAuth>
-                    <TranscriptPage />
-                  </RequireAuth>
-                }
-              />
-              <Route
-                path="/certificate/:id"
-                element={
-                  <RequireAuth>
-                    <CertificatePage name="Fiona Love" course="Math" />
                   </RequireAuth>
                 }
               />

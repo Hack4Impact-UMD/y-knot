@@ -1,0 +1,178 @@
+.loading {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.invalidAccess {
+  font-size: 2rem;
+  justify-content: center;
+}
+
+.rightPane {
+  float: right;
+  width: calc(100% - 250px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.backButton {
+  width: 100px;
+  margin-left: 30px;
+  margin-top: 20px;
+  color: #757575;
+  border-style: none;
+  background-color: transparent;
+  font-size: large;
+  display: flex;
+  align-items: center;
+}
+
+.backButton:hover {
+  color: var(--color-orange);
+}
+
+.leftArrowIcon {
+  padding-right: 4px;
+}
+
+.backText {
+  font-size: 1.1rem;
+}
+
+.header {
+  width: 100%;
+  text-align: center;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 0.5fr 0.5fr;
+  grid-template-rows: 0.1fr 0.25fr 0.45fr auto;
+  gap: 0px 5px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    'studentA studentB'
+    'studentInformationContainer studentInformationContainer'
+    'mergedStudentContainer mergedStudentContainer'
+    'confirmButtonContainer confirmButtonContainer';
+  width: 80%;
+  margin: 0 10% 30px;
+}
+
+.studentA {
+  grid-area: studentA;
+}
+
+.studentB {
+  grid-area: studentB;
+}
+
+.studentNameContainer {
+  display: inline-flex;
+  justify-content: center;
+}
+
+.individualStudentContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.studentNameDisplay {
+  font-size: 0.85rem;
+  font-weight: 650;
+  padding: 15px;
+  width: 185px;
+  background-color: var(--color-grey);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.studentInformationContainer {
+  grid-area: studentInformationContainer;
+  display: grid;
+  grid-template-columns: 0.5fr 0.5fr;
+  gap: 0px 5px;
+  grid-auto-flow: row;
+  grid-template-areas: 'studentAContainer studentBContainer';
+  margin-top: 30px;
+  border: 1px solid;
+  border-radius: 20px;
+  padding: 1.5rem 0;
+}
+
+.studentAContainer {
+  grid-area: studentAContainer;
+}
+
+.studentBContainer {
+  grid-area: studentBContainer;
+}
+
+.mergedStudentContainer {
+  grid-area: mergedStudentContainer;
+  margin-top: 2%;
+}
+
+.mergeTitle {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+
+.confirmButtonContainer {
+  grid-area: confirmButtonContainer;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  margin-top: 20px;
+}
+
+.confirmButton {
+  grid-area: confirmButton;
+  border-radius: 30px;
+  border: none;
+  background-color: var(--color-orange);
+  font-size: 1.05rem;
+  width: 150px;
+  height: 40px;
+  color: white;
+  cursor: pointer;
+}
+
+.confirmButton:hover {
+  background-color: var(--color-yellow-orange);
+}
+
+@media screen and (min-width: 601px) and (max-width: 1150px) {
+  .rightPane {
+    width: calc(100% - 120px);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .rightPane,
+  .loadingContainer {
+    width: 100%;
+    position: absolute;
+    top: 80px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .content {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: 0 10% 30px;
+  }
+
+  .studentAContainer,
+  .studentBContainer {
+    margin: 20px 0;
+  }
+}

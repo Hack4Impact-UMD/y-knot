@@ -1,6 +1,0 @@
-@import '../../index.css';
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100&display=swap');
-.thing {
-  color: var(--color-red);
-  font-family: Poppins;
-}
