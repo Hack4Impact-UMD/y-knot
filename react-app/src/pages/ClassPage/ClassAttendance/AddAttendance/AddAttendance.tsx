@@ -9,7 +9,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { Course } from '../../../../types/CourseType';
 import { StudentID } from '../../../../types/StudentType';
 import {
-  addAttendance,
+  addCourseAttendance,
   getStudentsFromList,
   getCourse,
 } from '../../../../backend/FirestoreCalls';
@@ -17,6 +17,7 @@ import {
 const AddAttendance = (props: {
   open: boolean;
   onClose: any;
+  setOpenAlert: React.Dispatch<React.SetStateAction<boolean>>;
   students: Array<StudentID>;
   setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
   course: Course;
@@ -29,8 +30,9 @@ const AddAttendance = (props: {
 
   const handleAddAttendance = async () => {
     let date = selectedDate?.format('YYYY-MM-DD');
+    let studentIdList = props.students.map((student) => student.id);
     if (date !== undefined)
-      addAttendance(props.courseID, props.students, {
+      addCourseAttendance(props.courseID, studentIdList, {
         date: date,
         notes: note,
       })
@@ -41,7 +43,11 @@ const AddAttendance = (props: {
               getStudentsFromList(courseData.students).then((data) => {
                 props.setStudents(data);
               });
+              props.setOpenAlert(true);
               handleOnClose();
+              setTimeout(function () {
+                document.location.reload();
+              }, 1000);
             })
             .catch(() => {
               console.log('Failed to get Course Information in Class Page');

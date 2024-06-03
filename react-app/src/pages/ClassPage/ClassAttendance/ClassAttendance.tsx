@@ -8,7 +8,8 @@ import AddNote from './AddNote/AddNote';
 import RemoveAttendance from './RemoveAttendance/RemoveAttendance';
 import AddAttendance from './AddAttendance/AddAttendance';
 import type { StudentID } from '../../../types/StudentType';
-import type { Course, Attendance } from '../../../types/CourseType';
+import type { Course } from '../../../types/CourseType';
+import { Snackbar, Alert } from '@mui/material';
 
 const ClassAttendance = (props: {
   students: Array<StudentID>;
@@ -32,20 +33,24 @@ const ClassAttendance = (props: {
       : '',
   );
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
-  const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
-  const [openRemoveHwModal, setOpenRemoveHwModal] = useState<boolean>(false);
+  const [openAddModal, setOpenAddModal] = useState<boolean>(false);
+  const [openRemoveModal, setOpenRemoveModal] = useState<boolean>(false);
   const [openAddNoteModal, setOpenAddNoteModal] = useState<boolean>(false);
+  const [openAlert, setOpenAlert] = useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = useState<string>('');
 
   const handleSelectAllChange = () => {
     setSelectAllChecked(true);
   };
 
   const handleAddModal = () => {
-    setOpenAddHwModal(!openAddHwModal);
+    setOpenAddModal(!openAddModal);
+    setAlertMessage('Attendance successfully added');
   };
 
   const handleRemoveModal = () => {
-    setOpenRemoveHwModal(!openRemoveHwModal);
+    setOpenRemoveModal(!openRemoveModal);
+    setAlertMessage('Attendance successfully removed');
   };
 
   const handleAddNoteModal = () => {
@@ -148,9 +153,9 @@ const ClassAttendance = (props: {
         <button className={styles.bottomButton}>Save</button>
       </div>
       <RemoveAttendance
-        open={openRemoveHwModal}
+        open={openRemoveModal}
         onClose={() => {
-          setOpenRemoveHwModal(!openRemoveHwModal);
+          setOpenRemoveModal(!openRemoveModal);
         }}
         students={props.students}
         setStudents={props.setStudents}
@@ -159,10 +164,11 @@ const ClassAttendance = (props: {
         courseID={props.courseID !== undefined ? props.courseID : ''}
       />
       <AddAttendance
-        open={openAddHwModal}
+        open={openAddModal}
         onClose={() => {
-          setOpenAddHwModal(!openAddHwModal);
+          setOpenAddModal(!openAddModal);
         }}
+        setOpenAlert={setOpenAlert}
         students={props.students}
         setStudents={props.setStudents}
         course={props.course}
@@ -189,6 +195,19 @@ const ClassAttendance = (props: {
         courseID={props.courseID ?? ''}
         setCourse={props.setCourse}
       />
+      <Snackbar
+        anchorOrigin={{
+          horizontal: 'right',
+          vertical: 'bottom',
+        }}
+        open={openAlert}
+        autoHideDuration={3000}
+        // onClose={snackbarClose}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
