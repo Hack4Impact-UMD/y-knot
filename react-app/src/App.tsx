@@ -82,11 +82,19 @@ function App(): JSX.Element {
                 }
               />
               <Route
-                path="/courses/class/:id"
+                path="/courses/:id"
                 element={
                   <RequireAuth>
                     <ClassPage />
                   </RequireAuth>
+                }
+              />
+              <Route
+                path="/courses/:courseId/applicant/:appId"
+                element={
+                  <RequireAdminAuth>
+                    <LeadershipApplicationPage />
+                  </RequireAdminAuth>
                 }
               />
               <Route
@@ -98,10 +106,42 @@ function App(): JSX.Element {
                 }
               />
               <Route
+                path="/students/:id"
+                element={
+                  <RequireAuth>
+                    <StudentProfilePage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/students/merge"
+                element={
+                  <RequireAdminAuth>
+                    <MergeSelectionPage />
+                  </RequireAdminAuth>
+                }
+              />
+              <Route
+                path="/students/mergestudent"
+                element={
+                  <RequireAdminAuth>
+                    <MergeStudentPage />
+                  </RequireAdminAuth>
+                }
+              />
+              <Route
                 path="/teachers"
                 element={
                   <RequireAdminAuth>
                     <TeacherRosterPage />
+                  </RequireAdminAuth>
+                }
+              />
+              <Route
+                path="/teachers/:id"
+                element={
+                  <RequireAdminAuth>
+                    <TeacherProfilePage />
                   </RequireAdminAuth>
                 }
               />
@@ -118,6 +158,22 @@ function App(): JSX.Element {
                 element={
                   <RequireAuth>
                     <NavigationBar />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/transcript/:id"
+                element={
+                  <RequireAuth>
+                    <TranscriptPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/certificate/:id"
+                element={
+                  <RequireAuth>
+                    <CertificatePage name="Fiona Love" course="Math" />
                   </RequireAuth>
                 }
               />
@@ -152,62 +208,6 @@ function App(): JSX.Element {
                       }
                     ></button>
                   </RequireAuth>
-                }
-              />
-              <Route
-                path="/students/merge"
-                element={
-                  <RequireAdminAuth>
-                    <MergeSelectionPage />
-                  </RequireAdminAuth>
-                }
-              />
-              <Route
-                path="/students/mergestudent"
-                element={
-                  <RequireAdminAuth>
-                    <MergeStudentPage />
-                  </RequireAdminAuth>
-                }
-              />
-              <Route
-                path="/students/:id"
-                element={
-                  <RequireAuth>
-                    <StudentProfilePage />
-                  </RequireAuth>
-                }
-              />
-              <Route
-                path="/teachers/:id"
-                element={
-                  <RequireAdminAuth>
-                    <TeacherProfilePage />
-                  </RequireAdminAuth>
-                }
-              />
-              <Route
-                path="/transcript/:id"
-                element={
-                  <RequireAuth>
-                    <TranscriptPage />
-                  </RequireAuth>
-                }
-              />
-              <Route
-                path="/certificate/:id"
-                element={
-                  <RequireAuth>
-                    <CertificatePage name="Fiona Love" course="Math" />
-                  </RequireAuth>
-                }
-              />
-              <Route
-                path="/courses/applicant"
-                element={
-                  <RequireAdminAuth>
-                    <LeadershipApplicationPage />
-                  </RequireAdminAuth>
                 }
               />
             </Routes>

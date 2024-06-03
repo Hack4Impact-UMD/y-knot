@@ -35,6 +35,10 @@ const ClassMain = (): JSX.Element => {
     setEditText(!editText);
   };
 
+  const sendAllCertificates = () => {
+    // TODO: Populate and send certificates with student and course names
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.introCard}>
@@ -115,7 +119,7 @@ const ClassMain = (): JSX.Element => {
       </div>
       <div className={styles.buttons}>
         <ToolTip title="Send All Certificates" placement="top">
-          <button className={styles.certificate}>
+          <button className={styles.certificate} onClick={sendAllCertificates}>
             <img
               src={certificateIcon}
               alt="Certificate"

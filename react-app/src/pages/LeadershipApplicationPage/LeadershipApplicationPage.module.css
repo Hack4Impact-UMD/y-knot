@@ -253,13 +253,13 @@
 .bottomLevel {
   margin: 3% 10% 30px;
   font-size: 1.05rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 5%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-areas: 'prevButtonContainer appIndex nextButtonContainer';
 }
 
 .appIndex {
+  grid-area: appIndex;
   text-align: center;
 }
 
@@ -282,9 +282,23 @@
   background-color: var(--color-yellow-orange);
 }
 
+.prevButtonContainer {
+  grid-area: prevButtonContainer;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 .prevButton {
   padding-left: 10px;
   padding-right: 15px;
+}
+
+.nextButtonContainer {
+  grid-area: nextButtonContainer;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .nextButton {
@@ -303,5 +317,14 @@
     width: 100%;
     position: absolute;
     top: 40px;
+  }
+
+  .fileBox {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .fileContainer {
+    margin-left: 20px;
   }
 }
