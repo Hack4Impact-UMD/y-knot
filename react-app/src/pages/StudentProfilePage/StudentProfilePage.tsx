@@ -124,11 +124,7 @@ const StudentProfilePage = (): JSX.Element => {
         color = 'gray';
       }
       return (
-        <Link
-          to={`/courses/class/${course.id}`}
-          key={i}
-          className={styles.card}
-        >
+        <Link to={`/courses/${course.id}`} key={i} className={styles.card}>
           <CourseCard
             teacher={course.teachers}
             course={course.name}
@@ -314,7 +310,8 @@ const StudentProfilePage = (): JSX.Element => {
                     </div>
                   </div>
                 ) : (
-                  `${student?.firstName} ${student?.middleName ? student?.middleName : ''
+                  `${student?.firstName} ${
+                    student?.middleName ? student?.middleName : ''
                   } ${student?.lastName}`
                 )}
               </a>

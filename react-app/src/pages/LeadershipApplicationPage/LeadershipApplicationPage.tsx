@@ -1,19 +1,16 @@
-import { useRef, useState, useLayoutEffect } from 'react';
+import { useRef, useState, useEffect, useLayoutEffect } from 'react';
 import { useAuth } from '../../auth/AuthProvider';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { styled } from '@mui/material/styles';
+import { ToolTip } from '../../components/ToolTip/ToolTip';
+import { AiOutlineFilePdf } from 'react-icons/ai';
 import { LeadershipApplicant, LeadershipFile } from '../../types/StudentType';
-import {
-  AccordionSummary,
-  AccordionDetails,
-  Button,
-  Typography,
-} from '@mui/material';
+import { Typography } from '@mui/material';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import MuiAccordionSummary, {
   AccordionSummaryProps,
 } from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
-import { styled } from '@mui/material/styles';
-import { ToolTip } from '../../components/ToolTip/ToolTip';
 import styles from './LeadershipApplicationPage.module.css';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
@@ -21,26 +18,22 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import WestRounded from '@mui/icons-material/WestRounded';
-import { AiOutlineFilePdf } from 'react-icons/ai';
 import editIcon from '../../assets/gray-pencil.svg';
 import saveIcon from '../../assets/save.svg';
 
-interface ApplicantList {
-  applicants: LeadershipApplicant[];
-}
-// function LeadershipApplicationPage({ applicants }: ApplicantList) {
 function LeadershipApplicationPage() {
   const leadershipFile: LeadershipFile = {
-    name: 'abc.pdf',
+    name: 'abcdefghijklmn.pdf',
     path: 'path',
     downloadURL: 'https://www.clickdimensions.com/links/TestPDFfile.pdf',
   };
-  const applicant: LeadershipApplicant = {
-    idx: 0,
+
+  const sampleApplicant: LeadershipApplicant = {
+    idx: 1,
     dateApplied: '01/01/2001',
-    gpa: '3.0',
-    gender: 'M',
-    textAnswer1: 'ta1',
+    gpa: '0',
+    gender: '',
+    textAnswer1: 'ta2',
     textAnswer2: 'ta2',
     transcript: leadershipFile,
     recLetter: leadershipFile,
@@ -64,13 +57,49 @@ function LeadershipApplicationPage() {
     schoolName: 'Best School High',
     courseInformation: [],
   };
-  const totalApplicants = 10;
+
   const authContext = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const windowWidth = useWindowSize();
   const noteContentRef = useRef<HTMLDivElement>(null);
   const [text, setText] = useState<string>('Nice applicant...');
   const [editText, setEditText] = useState<boolean>(false);
-  const windowWidth = useWindowSize();
   const [expanded, setExpanded] = useState<string | false>(false);
+  const [applicant, setApplicant] =
+    useState<LeadershipApplicant>(sampleApplicant);
+  const [totalApplicants, setTotalApplicants] = useState<number>(0);
+  const courseID = useParams().courseId;
+  const appID = useParams().appId;
+
+  useEffect(() => {
+    // Get data from navigation state
+    if (location.state?.applicant) {
+      setApplicant(location.state.applicant);
+    } else {
+      if (
+        location.state?.applicantList &&
+        location.state?.applicantList.length > 0
+      ) {
+        setApplicant(
+          location.state.applicantList.find(
+            (applicant: LeadershipApplicant) => applicant.idx == Number(appID),
+          ),
+        );
+      } else {
+        //TODO: retrieve applicant from url?
+      }
+    }
+
+    if (
+      location.state?.applicantList &&
+      location.state?.applicantList.length > 0
+    ) {
+      setTotalApplicants(location.state.applicantList.length);
+    } else {
+      //TODO: retrieve total applicants from url?
+    }
+  }, [appID]);
 
   const handleEdit = (): void => {
     if (editText && noteContentRef.current != null) {
@@ -147,7 +176,7 @@ function LeadershipApplicationPage() {
             <button
               className={styles.backButton}
               onClick={() => {
-                // TODO: handle back button
+                navigate(`/courses/${courseID}`);
               }}
             >
               <WestRounded style={{ color: '#757575', marginRight: '10px' }} />
@@ -308,7 +337,10 @@ function LeadershipApplicationPage() {
                       <div className={styles.boxData}>{applicant?.gpa}</div>
                     </div>
 
-                    <div className={styles.bottomBox} id="Transcript">
+                    <div
+                      className={`${styles.bottomBox} ${styles.fileBox}`}
+                      id="Transcript"
+                    >
                       <div className={styles.boxTitle}>Transcript</div>
                       <div className={styles.boxData}>
                         <a
@@ -318,7 +350,15 @@ function LeadershipApplicationPage() {
                           className={styles.fileContainer}
                         >
                           <div className={styles.informationText}>
-                            {applicant.transcript.name}
+                            {applicant.transcript.name
+                              .substring(
+                                0,
+                                applicant.transcript.name.length - 3,
+                              )
+                              .substring(0, 10)}
+                            {applicant.transcript.name.length - 3 > 10
+                              ? '...pdf'
+                              : 'pdf'}
                             <AiOutlineFilePdf />
                           </div>
                         </a>
@@ -385,15 +425,7 @@ function LeadershipApplicationPage() {
                           community.
                         </div>
                         <div className={styles.answer}>
-                          Lorem ipsum dolor sit amet, consectetur adipiscing
-                          elit, sed do eiusmod tempor incididunt ut labore et
-                          dolore magna aliqua. Ut enim ad minim veniam, quis
-                          nostrud exercitation ullamco laboris nisi ut aliquip
-                          ex ea commodo consequat. Duis aute irure dolor in
-                          reprehenderit in voluptate velit esse cillum dolore eu
-                          fugiat nulla pariatur. Excepteur sint occaecat
-                          cupidatat non proident, sunt in culpa qui officia
-                          deserunt mollit anim id est laborum.
+                          {applicant.textAnswer1}
                         </div>
                       </div>
                     </div>
@@ -408,21 +440,16 @@ function LeadershipApplicationPage() {
                           Academy?
                         </div>
                         <div className={styles.answer}>
-                          Lorem ipsum dolor sit amet, consectetur adipiscing
-                          elit, sed do eiusmod tempor incididunt ut labore et
-                          dolore magna aliqua. Ut enim ad minim veniam, quis
-                          nostrud exercitation ullamco laboris nisi ut aliquip
-                          ex ea commodo consequat. Duis aute irure dolor in
-                          reprehenderit in voluptate velit esse cillum dolore eu
-                          fugiat nulla pariatur. Excepteur sint occaecat
-                          cupidatat non proident, sunt in culpa qui officia
-                          deserunt mollit anim id est laborum.
+                          {applicant.textAnswer2}
                         </div>
                       </div>
                     </div>
 
                     <div className={styles.infoBox}>
-                      <div className={styles.bottomBox} id="Letter of Rec">
+                      <div
+                        className={`${styles.bottomBox} ${styles.fileBox}`}
+                        id="Letter of Rec"
+                      >
                         <div className={styles.boxTitle}>
                           Letter of Recommendation
                         </div>
@@ -434,7 +461,15 @@ function LeadershipApplicationPage() {
                             className={styles.fileContainer}
                           >
                             <div className={styles.informationText}>
-                              {applicant.recLetter.name}
+                              {applicant.recLetter.name
+                                .substring(
+                                  0,
+                                  applicant.recLetter.name.length - 3,
+                                )
+                                .substring(0, 10)}
+                              {applicant.recLetter.name.length - 3 > 10
+                                ? '...pdf'
+                                : 'pdf'}
                               <AiOutlineFilePdf />
                             </div>
                           </a>
@@ -448,16 +483,54 @@ function LeadershipApplicationPage() {
 
             {/* Bottom Part */}
             <div className={styles.bottomLevel}>
-              <button className={`${styles.bottomButton} ${styles.prevButton}`}>
-                <ChevronLeftIcon /> {windowWidth > 450 ? 'Previous' : ''}
-              </button>
+              <div className={styles.prevButtonContainer}>
+                {applicant.idx != 1 ? (
+                  <button
+                    className={`${styles.bottomButton} ${styles.prevButton}`}
+                    onClick={() =>
+                      navigate(
+                        `/courses/${courseID}/applicant/${Number(appID) - 1}`,
+                        {
+                          state: {
+                            applicantList: location.state?.applicantList ?? [],
+                          },
+                        },
+                      )
+                    }
+                  >
+                    <ChevronLeftIcon /> {windowWidth > 450 ? 'Previous' : ''}
+                  </button>
+                ) : (
+                  <></>
+                )}
+              </div>
+
               <p className={styles.appIndex}>
                 Applicant {applicant.idx} of {totalApplicants}
               </p>
-              <button className={`${styles.bottomButton} ${styles.nextButton}`}>
-                {windowWidth > 450 ? 'Next' : ''}
-                <ChevronRightIcon />
-              </button>
+
+              <div className={styles.nextButtonContainer}>
+                {applicant.idx != totalApplicants ? (
+                  <button
+                    className={`${styles.bottomButton} ${styles.nextButton}`}
+                    onClick={() =>
+                      navigate(
+                        `/courses/${courseID}/applicant/${Number(appID) + 1}`,
+                        {
+                          state: {
+                            applicantList: location.state?.applicantList ?? [],
+                          },
+                        },
+                      )
+                    }
+                  >
+                    {windowWidth > 450 ? 'Next' : ''}
+                    <ChevronRightIcon />
+                  </button>
+                ) : (
+                  <></>
+                )}
+              </div>
             </div>
           </div>
         </>
