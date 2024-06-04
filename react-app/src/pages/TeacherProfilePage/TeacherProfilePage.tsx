@@ -118,10 +118,6 @@ const TeacherProfilePage = (): JSX.Element => {
     <>
       <NavigationBar />
       {authContext?.loading || loading ? (
-        <div className={styles.container}>
-          <Loading />
-        </div>
-      ) : loading ? (
         <div className={styles.loadingContainer}>
           <Loading />
         </div>

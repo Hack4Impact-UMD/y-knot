@@ -5,7 +5,6 @@
 For inquiries about the project, contact
 
 - Sophie Tsai (sophietsai31@gmail.com)
-- Shreenitha Chikyala (schikyal@terpmail.umd.edu)
 - Sahil Gaba (sgaba9778@gmail.com)
 
 # Project Info

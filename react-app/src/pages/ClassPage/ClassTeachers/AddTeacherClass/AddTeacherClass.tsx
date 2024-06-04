@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import styles from './AddTeacherClass.module.css';
-import Modal from '../../../../components/ModalWrapper/Modal';
-import x from '../../../../assets/x.svg';
 import {
   getAllTeachers,
   addTeacherCourseFromList,
 } from '../../../../backend/FirestoreCalls';
 import { type TeacherID } from '../../../../types/UserType';
 import Select, { type OptionProps } from 'react-select';
+import styles from './AddTeacherClass.module.css';
+import Modal from '../../../../components/ModalWrapper/Modal';
+import x from '../../../../assets/x.svg';
 
 interface modalType {
   courseId: string;

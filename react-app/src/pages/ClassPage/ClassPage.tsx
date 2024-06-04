@@ -1,15 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../auth/AuthProvider';
-import styles from '../../pages/ClassPage/ClassPage.module.css';
-import NavigationBar from '../../components/NavigationBar/NavigationBar';
-import Loading from '../../components/LoadingScreen/Loading';
-import ClassMain from './ClassMain/ClassMain';
-import ClassAcademy from './ClassAcademy/ClassAcademy';
-import ClassAttendance from './ClassAttendance/ClassAttendance';
-import ClassHomework from './ClassHomework/ClassHomework';
-import ClassTeachers from './ClassTeachers/ClassTeachers';
-import ClassStudents from './ClassStudents/ClassStudents';
-import ClassSettings from './ClassSettings/ClassSettings';
 import { useParams } from 'react-router-dom';
 import type { Course, CourseID } from '../../types/CourseType';
 import type { StudentID } from '../../types/StudentType';
@@ -20,6 +10,16 @@ import {
   getTeachersFromList,
 } from '../../backend/FirestoreCalls';
 import { DateTime } from 'luxon';
+import styles from '../../pages/ClassPage/ClassPage.module.css';
+import NavigationBar from '../../components/NavigationBar/NavigationBar';
+import Loading from '../../components/LoadingScreen/Loading';
+import ClassMain from './ClassMain/ClassMain';
+import ClassAcademy from './ClassAcademy/ClassAcademy';
+import ClassAttendance from './ClassAttendance/ClassAttendance';
+import ClassHomework from './ClassHomework/ClassHomework';
+import ClassTeachers from './ClassTeachers/ClassTeachers';
+import ClassStudents from './ClassStudents/ClassStudents';
+import ClassSettings from './ClassSettings/ClassSettings';
 
 enum Tab {
   Main = 'Main',
@@ -94,7 +94,9 @@ const ClassPage = (): JSX.Element => {
           <Loading />
         </div>
       ) : isLoading ? (
-        <Loading />
+        <div className={styles.loadingContainer}>
+          <Loading />
+        </div>
       ) : (
         <div className={styles.rightPane}>
           <div className={styles.classInfo}>
@@ -120,16 +122,20 @@ const ClassPage = (): JSX.Element => {
             >
               Main
             </button>
-            <button
-              className={
-                currentTab === Tab.Academy ? styles.selectedTab : styles.tab
-              }
-              onClick={() => {
-                handleTabChange(Tab.Academy);
-              }}
-            >
-              Academy
-            </button>
+            {course.courseType === 'ACADEMY' ? (
+              <button
+                className={
+                  currentTab === Tab.Academy ? styles.selectedTab : styles.tab
+                }
+                onClick={() => {
+                  handleTabChange(Tab.Academy);
+                }}
+              >
+                Academy
+              </button>
+            ) : (
+              <></>
+            )}
             <button
               className={
                 currentTab === Tab.Students ? styles.selectedTab : styles.tab
@@ -203,11 +209,10 @@ const ClassPage = (): JSX.Element => {
           )}
           {currentTab === Tab.Attendance && (
             <ClassAttendance
-              attendance={course.attendance}
               students={students}
               setStudents={setStudents}
               course={course}
-              courseID={courseID}
+              courseID={courseID!}
               setCourse={setCourse}
             />
           )}
@@ -217,7 +222,7 @@ const ClassPage = (): JSX.Element => {
               students={students}
               setStudents={setStudents}
               course={course}
-              courseID={courseID}
+              courseID={courseID!}
               setCourse={setCourse}
             />
           )}

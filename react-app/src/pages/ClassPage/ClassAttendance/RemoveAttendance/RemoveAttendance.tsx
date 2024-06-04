@@ -1,42 +1,75 @@
 import React, { useState } from 'react';
+import { StudentID } from '../../../../types/StudentType';
+import { Course } from '../../../../types/CourseType';
+import {
+  getStudentsFromList,
+  removeCourseAttendance,
+} from '../../../../backend/FirestoreCalls';
 import styles from './RemoveAttendance.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
+import Select from 'react-select';
 import x from '../../../../assets/x.svg';
 
-interface modalType {
+const RemoveAttendance = (props: {
   open: boolean;
   onClose: any;
-}
-
-const RemoveAttendance = ({ open, onClose }: modalType): React.ReactElement => {
-  const [attendanceList, setAttendanceList] = useState<string[]>([
-    '1/1/2023',
-    '1/8/2023',
-    '1/16/2023',
-  ]);
-
+  setOpenAlert: React.Dispatch<React.SetStateAction<boolean>>;
+  students: Array<StudentID>;
+  setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
+  course: Course;
+  courseID: string;
+  setCourse: React.Dispatch<React.SetStateAction<Course>>;
+}): React.ReactElement => {
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [clicked, setClicked] = useState<boolean>(false);
 
-  const handleRemoveAttendance = () => {
+  const handleRemoveAttendance = async () => {
+    let studentIdList = props.students.map((student) => student.id);
     if (selectedDate == '') {
-      setErrorMessage('*Please select an assignment');
+      setErrorMessage('Please select an assignment**');
     } else {
-      // TODO: Confirmation popup(?) & remove homework
-      handleOnClose();
+      removeCourseAttendance(props.courseID, studentIdList, selectedDate)
+        .then((courseData) => {
+          props.setCourse(courseData);
+          getStudentsFromList(courseData.students).then((data) => {
+            props.setStudents(data);
+          });
+          handleOnClose();
+          props.setOpenAlert(true);
+          setClicked(false);
+        })
+        .catch((e: Error) => {
+          setErrorMessage(e.message + '**');
+        });
+    }
+  };
+
+  const handleRemoveConfirmation = () => {
+    if (selectedDate == '') {
+      setErrorMessage('Please select an assignment**');
+    } else {
+      if (clicked) {
+        //Remove was confirmed
+        handleRemoveAttendance();
+      } else {
+        //Ask user to confirm
+        setClicked(!clicked);
+      }
     }
   };
 
   const handleOnClose = (): void => {
-    onClose();
+    props.onClose();
     setSelectedDate('');
     setErrorMessage('');
+    setClicked(false);
   };
 
   return (
     <Modal
-      open={open}
-      height={235}
+      open={props.open}
+      height={240}
       onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
         handleOnClose();
       }}
@@ -56,27 +89,48 @@ const RemoveAttendance = ({ open, onClose }: modalType): React.ReactElement => {
         <div className={styles.content}>
           <h1 className={styles.heading}>Remove Attendance</h1>
           <p className={styles.error}>{errorMessage}</p>
-          <select
-            className={styles.selection}
-            defaultValue=""
-            onChange={(event) => {
-              setSelectedDate(event.target.value);
+          <Select
+            placeholder="Select Attendance"
+            className={styles.dateSelection}
+            onChange={(option) => {
+              setErrorMessage('');
+              setClicked(false);
+              setSelectedDate(option?.label.toString() ?? '');
             }}
-          >
-            <option value="" disabled hidden>
-              Select Attendance:
-            </option>
-            {attendanceList.map(function (date) {
-              return <option value={date}>{date}</option>;
+            styles={{
+              control: (baseStyles) => ({
+                ...baseStyles,
+                height: 'fit-content',
+                borderColor: 'black',
+                boxShadow: 'none',
+                '&:focus-within': {
+                  border: '1.5px solid black',
+                },
+                '&:hover': {
+                  border: '1px solid black',
+                },
+              }),
+            }}
+            options={props.course.attendance.map((attendance) => {
+              return { value: attendance.date, label: attendance.date };
             })}
-          </select>
+            theme={(theme) => ({
+              ...theme,
+              colors: {
+                ...theme.colors,
+                primary25: 'var(--color-pastel-orange)',
+                primary50: 'var(--color-bright-orange)',
+                primary: 'var(--color-orange)',
+              },
+            })}
+          />
           <button
-            className={styles.button}
-            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-              handleRemoveAttendance();
-            }}
+            className={`${styles['animated-button']} ${
+              clicked ? styles.clicked : ''
+            }`}
+            onClick={handleRemoveConfirmation}
           >
-            Submit
+            {clicked ? 'Confirm Remove' : 'Remove'}
           </button>
         </div>
       </div>

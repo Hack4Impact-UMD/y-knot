@@ -1,9 +1,9 @@
 import { useState } from 'react';
+import { TeacherID } from '../../../../types/UserType';
+import { removeStudentCourse } from '../../../../backend/FirestoreCalls';
 import styles from './DeleteStudentClassConfirmation.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
 import x from '../../../../assets/x.svg';
-import { TeacherID } from '../../../../types/UserType';
-import { removeStudentCourse } from '../../../../backend/FirestoreCalls';
 
 interface popupModalType {
   onClose: () => void;

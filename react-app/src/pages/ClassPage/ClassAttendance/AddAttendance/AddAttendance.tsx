@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-import styles from './AddAttendance.module.css';
-import Modal from '../../../../components/ModalWrapper/Modal';
-import x from '../../../../assets/x.svg';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -9,47 +6,46 @@ import dayjs, { Dayjs } from 'dayjs';
 import { Course } from '../../../../types/CourseType';
 import { StudentID } from '../../../../types/StudentType';
 import {
-  addAttendanceToStudents,
   addCourseAttendance,
+  getStudentsFromList,
 } from '../../../../backend/FirestoreCalls';
+import styles from './AddAttendance.module.css';
+import Modal from '../../../../components/ModalWrapper/Modal';
+import x from '../../../../assets/x.svg';
 
 const AddAttendance = (props: {
   open: boolean;
   onClose: any;
+  setOpenAlert: React.Dispatch<React.SetStateAction<boolean>>;
   students: Array<StudentID>;
   setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
   course: Course;
   courseID: string;
-  setCourse: React.Dispatch<React.SetStateAction<Course>>;
+  setCourse: Function;
 }): React.ReactElement => {
-  const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(dayjs());
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
   const [note, setNote] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleAddAttendance = async () => {
     let date = selectedDate?.format('YYYY-MM-DD');
-    addCourseAttendance(props.course, props.courseID, {
-      date: date ? date : '',
-      notes: note,
-    })
-      .then((newCourse) => {
-        props.setCourse(newCourse);
-        addAttendanceToStudents(
-          props.courseID,
-          date ? date : '',
-          props.students,
-        )
-          .then((newStudentList) => {
-            props.setStudents(newStudentList);
-            handleOnClose();
-          })
-          .catch((e: Error) => {
-            setErrorMessage(e.message + '**');
-          });
+    let studentIdList = props.students.map((student) => student.id);
+    if (date !== undefined)
+      addCourseAttendance(props.courseID, studentIdList, {
+        date: date,
+        notes: note,
       })
-      .catch((e: Error) => {
-        setErrorMessage(e.message + '**');
-      });
+        .then((courseData) => {
+          props.setCourse(courseData);
+          getStudentsFromList(courseData.students).then((data) => {
+            props.setStudents(data);
+          });
+          props.setOpenAlert(true);
+          handleOnClose();
+        })
+        .catch((e: Error) => {
+          setErrorMessage(e.message + '**');
+        });
   };
 
   const handleOnClose = (): void => {

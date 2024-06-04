@@ -1,22 +1,18 @@
 import React, { useState } from 'react';
 import { Course } from '../../../../types/CourseType';
 import { StudentID } from '../../../../types/StudentType';
+import {
+  addCourseHomework,
+  getStudentsFromList,
+} from '../../../../backend/FirestoreCalls';
 import styles from './AddHomework.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
 import x from '../../../../assets/x.svg';
-import {
-  addCourseHomework,
-  addHomeworkToStudents,
-} from '../../../../backend/FirestoreCalls';
-
-interface modalType {
-  open: boolean;
-  onClose: any;
-}
 
 const AddHomework = (props: {
   open: boolean;
   onClose: any;
+  setOpenAlert: React.Dispatch<React.SetStateAction<boolean>>;
   students: Array<StudentID>;
   setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
   course: Course;
@@ -28,27 +24,21 @@ const AddHomework = (props: {
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleAddHomework = () => {
+    let studentIdList = props.students.map((student) => student.id);
     if (name == '') {
       setErrorMessage('*Name is required');
     } else {
-      addCourseHomework(props.course, props.courseID, {
+      addCourseHomework(props.courseID, studentIdList, {
         name: name,
         notes: note,
       })
-        .then((newCourse) => {
-          props.setCourse(newCourse);
-          addHomeworkToStudents(
-            props.courseID,
-            name !== undefined ? name : '',
-            props.students,
-          )
-            .then((newStudentList) => {
-              props.setStudents(newStudentList);
-              handleOnClose();
-            })
-            .catch((e: Error) => {
-              setErrorMessage(e.message + '**');
-            });
+        .then((courseData) => {
+          props.setCourse(courseData);
+          getStudentsFromList(courseData.students).then((data) => {
+            props.setStudents(data);
+          });
+          props.setOpenAlert(true);
+          handleOnClose();
         })
         .catch((e: Error) => {
           setErrorMessage(e.message + '**');
