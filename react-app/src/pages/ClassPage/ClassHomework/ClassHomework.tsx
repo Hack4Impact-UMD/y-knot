@@ -3,6 +3,7 @@ import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import type { StudentID } from '../../../types/StudentType';
 import type { Course, Homework } from '../../../types/CourseType';
 import { Snackbar, Alert } from '@mui/material';
+import { updateStudentHomeworks } from '../../../backend/FirestoreCalls';
 import Select from 'react-select';
 import styles from './ClassHomework.module.css';
 import noteIcon from '../../../assets/note.svg';
@@ -29,16 +30,17 @@ const ClassHomework = (props: {
   const [selectedHomeworkNote, setHomeworkNote] = useState<string>(
     props.homeworks.slice(-1)[0]?.notes.toString() ?? '',
   );
-  const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
   const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
   const [openRemoveHwModal, setOpenRemoveHwModal] = useState<boolean>(false);
   const [openAddNoteModal, setOpenAddNoteModal] = useState<boolean>(false);
   const [openAlert, setOpenAlert] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>('');
   const [dropdownOptions, setDropdownOptions] = useState<any>();
+  const [checkedCheckboxes, setCheckedCheckboxes] = useState<string[]>([]);
 
   const handleSelectAllChange = () => {
-    setSelectAllChecked(true);
+    let studentIdList = props.students.map((student) => student.id);
+    setCheckedCheckboxes(studentIdList);
   };
 
   const handleAddModal = () => {
@@ -66,6 +68,33 @@ const ClassHomework = (props: {
       });
     }
   };
+
+  const handleSave = () => {
+    let studentIdList = props.students.map((student) => student.id);
+    updateStudentHomeworks(
+      props.courseID,
+      studentIdList,
+      checkedCheckboxes,
+      selectedHomeworkName,
+    ).then((students) => {
+      props.setStudents(students);
+      setOpenAlert(true);
+    });
+    setAlertMessage('Homework successfully saved');
+  };
+
+  function handleCheckboxChange(studentID: string) {
+    // Add student to checkedCheckboxes if it's not already; Remove if it is
+    if (checkedCheckboxes.includes(studentID)) {
+      setCheckedCheckboxes(
+        checkedCheckboxes.filter((student) => {
+          return student !== studentID;
+        }),
+      );
+    } else {
+      setCheckedCheckboxes([...checkedCheckboxes, studentID]);
+    }
+  }
 
   useEffect(() => {
     let options = props.homeworks.map((assignment) => {
@@ -137,13 +166,25 @@ const ClassHomework = (props: {
                 <p
                   className={styles.boxTitle}
                 >{`${student.firstName} ${student.lastName}`}</p>
-                <CheckboxWithLabel
-                  key={`${student.firstName} ${student.lastName}`}
-                  checkedText="Complete"
-                  uncheckedText="Incomplete"
-                  isChecked={selectAllChecked}
-                  setIsChecked={setSelectAllChecked}
-                />
+                <div className={styles.icons}>
+                  <label className={styles.checkboxContainer}>
+                    <input
+                      type="checkbox"
+                      checked={checkedCheckboxes.some(
+                        (checkedCheckbox) => checkedCheckbox === student.id,
+                      )}
+                      onChange={() => handleCheckboxChange(student.id)}
+                    ></input>
+                    <span className={styles.checkmark}></span>
+                  </label>
+                  <label className={styles.statusLabel}>
+                    {checkedCheckboxes.some(
+                      (checkedCheckbox) => checkedCheckbox === student.id,
+                    )
+                      ? 'Present'
+                      : 'Absent'}
+                  </label>
+                </div>
               </div>
             );
           })}
@@ -159,7 +200,9 @@ const ClassHomework = (props: {
         <button className={styles.bottomButton} onClick={handleSelectAllChange}>
           Select All
         </button>
-        <button className={styles.bottomButton}>Save</button>
+        <button className={styles.bottomButton} onClick={handleSave}>
+          Save
+        </button>
       </div>
       <RemoveHomework
         open={openRemoveHwModal}

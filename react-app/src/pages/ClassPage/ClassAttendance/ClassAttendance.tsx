@@ -85,6 +85,19 @@ const ClassAttendance = (props: {
     }
   };
 
+  function handleCheckboxChange(studentID: string) {
+    // Add student to checkedCheckboxes if it's not already; Remove if it is
+    if (checkedCheckboxes.includes(studentID)) {
+      setCheckedCheckboxes(
+        checkedCheckboxes.filter((student) => {
+          return student !== studentID;
+        }),
+      );
+    } else {
+      setCheckedCheckboxes([...checkedCheckboxes, studentID]);
+    }
+  }
+
   useEffect(() => {
     let options = props.course.attendance.map((attendance) => {
       return { value: attendance.date, label: attendance.date };
@@ -115,19 +128,6 @@ const ClassAttendance = (props: {
     });
     setCheckedCheckboxes(list);
   }, [selectedDate]);
-
-  function handleCheckboxChange(studentID: string) {
-    // Add student to checkedCheckboxes if it's not already; Remove if it is
-    if (checkedCheckboxes.includes(studentID)) {
-      setCheckedCheckboxes(
-        checkedCheckboxes.filter((student) => {
-          return student !== studentID;
-        }),
-      );
-    } else {
-      setCheckedCheckboxes([...checkedCheckboxes, studentID]);
-    }
-  }
 
   return (
     <div className={styles.mainContainer}>
@@ -182,7 +182,7 @@ const ClassAttendance = (props: {
             return (
               <div
                 className={`${styles.box} ${roundTop} ${roundBottom}`}
-                key={student.firstName}
+                key={student.id}
               >
                 <p
                   className={styles.boxTitle}

@@ -92,6 +92,71 @@
   background: var(--color-yellow-orange);
 }
 
+/* Checkbox & label css*/
+.icons {
+  width: 15%;
+  display: flex;
+  margin-left: 50%;
+}
+
+/* customized checkbox css*/
+.checkboxContainer {
+  display: inline-block;
+  position: relative;
+  padding-left: 25px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+.checkboxContainer input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  border: 3px solid black;
+  border-radius: 2px;
+}
+
+.checkboxContainer:hover input ~ .checkmark {
+  cursor: pointer;
+  background-color: #ccc;
+}
+
+.checkboxContainer input:checked ~ .checkmark {
+  background-color: black;
+}
+
+.checkmark:after {
+  content: '';
+  position: absolute;
+  display: none;
+}
+
+.checkboxContainer input:checked ~ .checkmark:after {
+  display: flex;
+}
+
+.checkboxContainer .checkmark:after {
+  left: 7px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+.statusLabel {
+  padding-left: 20%;
+}
+
 @media screen and (max-width: 1150px) {
   .bottomLevel {
     flex-wrap: wrap;

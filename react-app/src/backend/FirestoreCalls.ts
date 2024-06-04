@@ -9,14 +9,10 @@ import {
   query,
   where,
   runTransaction,
-  DocumentSnapshot,
-  DocumentData,
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import {
   StudentAttendance,
-  StudentHomework,
-  StudentCourse,
   type StudentID,
   type Student,
 } from '../types/StudentType';
@@ -27,10 +23,7 @@ import {
   type CourseID,
 } from '../types/CourseType';
 import { TeacherID, type Teacher, type YKNOTUser } from '../types/UserType';
-import { promises } from 'dns';
-import { rejects } from 'assert';
 import dayjs from 'dayjs';
-import { resolve } from 'path';
 
 export function getAllStudents(): Promise<StudentID[]> {
   const studentsRef = collection(db, 'Students');
@@ -913,7 +906,7 @@ export function updateStudentAttendance(
           ) {
             studentAttendance.attended = false;
           } else {
-            reject(new Error('Attendance dte does not exist in student'));
+            reject(new Error('Attendance date does not exist in student'));
           }
           updatePromises.push(
             transaction.update(doc(db, 'Students', studentIdList[i]), {
@@ -1219,140 +1212,83 @@ export function updateCourseHomeworkDetails(
   });
 }
 
-//Old Add Attendance function -> to be deleted
-//Replaced by "AddAttendance"
-export function removeAttendanceFromStudents(
-  courseID: string,
-  attendanceDate: string,
-  students: Array<StudentID>,
+export function updateStudentHomeworks(
+  courseId: string,
+  studentIdList: Array<string>,
+  completedStudentIds: Array<string>,
+  homeworkName: string,
 ): Promise<Array<StudentID>> {
   return new Promise((resolve, reject) => {
-    const newStudentList = students.map((student) => {
-      const newCourseInfo: StudentCourse[] = [];
-      student.courseInformation.forEach((course) => {
-        if (course.id === courseID) {
-          let newAttendanceList: StudentAttendance[] = [];
-          course.attendance.forEach((att) => {
-            if (att.date !== attendanceDate) {
-              newAttendanceList.push(att);
-            }
-          });
-          course.attendance = newAttendanceList;
-        }
-        newCourseInfo.push(course);
-      });
+    runTransaction(db, async (transaction) => {
+      let students: StudentID[] = [];
 
-      student.courseInformation = newCourseInfo;
-      updateStudent(student, student.id).catch((e) => {
-        reject(e);
-        return;
-      });
-      return student;
+      var studentPromises = [];
+      for (const studentId of studentIdList) {
+        studentPromises.push(transaction.get(doc(db, 'Students', studentId)));
+      }
+
+      var studentRefList: any[] = [];
+      await Promise.all(studentPromises)
+        .then((studentRef) => {
+          studentRefList = studentRef;
+        })
+        .catch(() => {
+          reject(new Error('A student does not exist!'));
+          throw 'A student does not exist!';
+        });
+
+      var updatePromises = [];
+
+      for (let i = 0; i < studentRefList.length; i++) {
+        var studentRef = studentRefList[i];
+        const student: Student = studentRef.data() as Student;
+
+        // Get index of course
+        const studentCourse = student.courseInformation.findIndex(
+          (c) => c.id === courseId,
+        );
+
+        if (studentCourse == -1) {
+          reject(new Error('Course does not exist in student'));
+        } else {
+          const studentHomework = student.courseInformation[
+            studentCourse
+          ].homeworks.find((hw) => hw.name === homeworkName);
+
+          if (
+            studentHomework &&
+            completedStudentIds.includes(studentIdList[i])
+          ) {
+            studentHomework.completed = true;
+          } else if (
+            studentHomework &&
+            !completedStudentIds.includes(studentIdList[i])
+          ) {
+            studentHomework.completed = false;
+          } else {
+            reject(new Error('Homework does not exist in student'));
+          }
+          updatePromises.push(
+            transaction.update(doc(db, 'Students', studentIdList[i]), {
+              courseInformation: student.courseInformation,
+            }),
+          );
+        }
+        students.push({ ...student, id: studentIdList[i] });
+      }
+
+      await Promise.all(updatePromises)
+        .then(() => {
+          resolve(students);
+        })
+        .catch(() => {
+          reject();
+        });
+    }).catch(() => {
+      reject();
     });
-    resolve(newStudentList);
   });
 }
-
-export function updateAttendanceStudents(
-  courseID: string,
-  prevDate: string,
-  updatedDate: string,
-  students: Array<StudentID>,
-): Promise<Array<StudentID>> {
-  return new Promise((resolve, reject) => {
-    const newStudentList = students.map((student) => {
-      const newCourseInfo = student.courseInformation.map((course) => {
-        if (course.id === courseID) {
-          let newCourseAttendanceList: Array<StudentAttendance> = [];
-          let prevAttended = false;
-          course.attendance.forEach((attendance) => {
-            if (attendance.date !== prevDate) {
-              newCourseAttendanceList.push(attendance);
-            } else {
-              prevAttended = attendance.attended;
-            }
-          });
-          newCourseAttendanceList.push({
-            date: updatedDate,
-            attended: prevAttended,
-          });
-          course.attendance = newCourseAttendanceList.sort(compareDayJSDates);
-        }
-        return course;
-      });
-      student.courseInformation = newCourseInfo;
-      updateStudent(student, student.id).catch((e) => {
-        reject(e);
-        return;
-      });
-      return student;
-    });
-    resolve(newStudentList);
-  });
-}
-
-export function addHomeworkToStudents(
-  courseID: string,
-  name: string,
-  students: Array<StudentID>,
-): Promise<Array<StudentID>> {
-  return new Promise((resolve, reject) => {
-    const res = students.map((student) => {
-      const newCourseInfo = student.courseInformation.map((course) => {
-        if (course.id === courseID) {
-          course.homeworks.push({ name: name, completed: false });
-        }
-        return course;
-      });
-      student.courseInformation = newCourseInfo;
-      updateStudent(student, student.id).catch((e) => {
-        reject(e);
-        return;
-      });
-      return student;
-    });
-    resolve(res);
-  });
-}
-
-export function updateHomeworkStudents(
-  courseID: string,
-  prevHwName: string,
-  updatedHwName: string,
-  students: Array<StudentID>,
-): Promise<Array<StudentID>> {
-  return new Promise((resolve, reject) => {
-    const newStudentList = students.map((student) => {
-      const newCourseInfo = student.courseInformation.map((course) => {
-        if (course.id === courseID) {
-          let newCourseHomework: Array<StudentHomework> = [];
-          let prevCompleted = false;
-          course.homeworks.forEach((homework) => {
-            if (homework.name !== prevHwName) {
-              newCourseHomework.push(homework);
-            } else {
-              prevCompleted = homework.completed;
-            }
-          });
-          newCourseHomework.push({
-            name: updatedHwName,
-            completed: prevCompleted,
-          });
-          course.homeworks = newCourseHomework;
-        }
-        return course;
-      });
-      student.courseInformation = newCourseInfo;
-      updateStudent(student, student.id).catch((e) => {
-        reject(e);
-        return;
-      });
-      return student;
-    });
-    resolve(newStudentList);
-  });
-}
-
 export function updateUser(YKNOTUser: YKNOTUser, id: string): Promise<void> {
   return new Promise((resolve, reject) => {
     if (id === '' || !id) {
