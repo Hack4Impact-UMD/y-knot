@@ -6,7 +6,6 @@ import { Snackbar, Alert } from '@mui/material';
 import Select from 'react-select';
 import styles from './ClassAttendance.module.css';
 import noteIcon from '../../../assets/note.svg';
-import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
 import AddNote from './AddNote/AddNote';
 import RemoveAttendance from './RemoveAttendance/RemoveAttendance';
 import AddAttendance from './AddAttendance/AddAttendance';
@@ -39,7 +38,7 @@ const ClassAttendance = (props: {
   const [openAlert, setOpenAlert] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>('');
   const [dropdownOptions, setDropdownOptions] = useState<any>();
-  const [studentList, setStudentList] = useState<any[]>([]);
+  const [checkedCheckboxes, setCheckedCheckboxes] = useState<string[]>([]);
 
   const handleSelectAllChange = () => {
     setSelectAllChecked(true);
@@ -89,38 +88,31 @@ const ClassAttendance = (props: {
   }, [props.course]);
 
   useEffect(() => {
-    let list = props.students.map(function (student, i) {
-      const roundTop = i === 0 ? styles.roundTop : '';
-      const roundBottom =
-        i === props.students.length - 1 ? styles.roundBottom : '';
+    let list: string[] = [];
+    props.students.forEach((student) => {
       const studentAttendance = student.courseInformation
         .find((c) => c.id === props.courseID)
         ?.attendance.find((att) => att.date === selectedDate);
-      console.log(studentAttendance?.attended);
-
-      return (
-        <div
-          className={`${styles.box} ${roundTop} ${roundBottom}`}
-          key={student.firstName}
-        >
-          <p
-            className={styles.boxTitle}
-          >{`${student.firstName} ${student.lastName}`}</p>
-          <CheckboxWithLabel
-            key={student.firstName}
-            checkedText="Present"
-            uncheckedText="Absent"
-            isChecked={
-              selectAllChecked ||
-              (studentAttendance ? studentAttendance!.attended : false)
-            }
-            setIsChecked={setSelectAllChecked}
-          />
-        </div>
-      );
+      // Add student id to list if student attendance for date is true
+      if (studentAttendance && studentAttendance.attended) {
+        list.push(student.id);
+      }
     });
-    setStudentList(list);
+    setCheckedCheckboxes(list);
   }, [selectedDate]);
+
+  function handleCheckboxChange(studentID: string) {
+    // Add student to checkedCheckboxes if it's not already; Remove if it is
+    if (checkedCheckboxes.includes(studentID)) {
+      setCheckedCheckboxes(
+        checkedCheckboxes.filter((student) => {
+          return student !== studentID;
+        }),
+      );
+    } else {
+      setCheckedCheckboxes([...checkedCheckboxes, studentID]);
+    }
+  }
 
   return (
     <div className={styles.mainContainer}>
@@ -167,15 +159,10 @@ const ClassAttendance = (props: {
         <h4 className={styles.noStudent}>No Students Currently in Roster</h4>
       ) : (
         <div className={styles.inputs}>
-          {studentList}
-          {/* {props.students.map(function (student, i) {
+          {props.students.map(function (student, i) {
             const roundTop = i === 0 ? styles.roundTop : '';
             const roundBottom =
               i === props.students.length - 1 ? styles.roundBottom : '';
-            const studentAttendance = 
-            student.courseInformation
-              .find((c) => c.id === props.courseID)
-              ?.attendance.find((att) => att.date === selectedDate);
 
             return (
               <div
@@ -185,19 +172,31 @@ const ClassAttendance = (props: {
                 <p
                   className={styles.boxTitle}
                 >{`${student.firstName} ${student.lastName}`}</p>
-                <CheckboxWithLabel
-                  key={student.firstName}
-                  checkedText="Present"
-                  uncheckedText="Absent"
-                  isChecked={
-                    selectAllChecked ||
-                    (studentAttendance ? studentAttendance!.attended : false)
-                  }
-                  setIsChecked={setSelectAllChecked}
-                />
+                <div className={styles.icons}>
+                  <label className={styles.checkboxContainer}>
+                    <input
+                      type="checkbox"
+                      checked={
+                        selectAllChecked ||
+                        checkedCheckboxes.some(
+                          (checkedCheckbox) => checkedCheckbox === student.id,
+                        )
+                      }
+                      onChange={() => handleCheckboxChange(student.id)}
+                    ></input>
+                    <span className={styles.checkmark}></span>
+                  </label>
+                  <label className={styles.statusLabel}>
+                    {checkedCheckboxes.some(
+                      (checkedCheckbox) => checkedCheckbox === student.id,
+                    )
+                      ? 'Present'
+                      : 'Absent'}
+                  </label>
+                </div>
               </div>
             );
-          })} */}
+          })}
         </div>
       )}
       <div className={styles.bottomLevel}>

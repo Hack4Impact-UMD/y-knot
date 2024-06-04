@@ -17,9 +17,7 @@ const CheckboxWithLabel = ({
   const [localIsChecked, setlocalIsChecked] = useState(isChecked);
 
   useEffect(() => {
-    if (isChecked) {
-      setlocalIsChecked(isChecked);
-    }
+    setlocalIsChecked(isChecked);
   }, [isChecked]);
 
   function handleCheckboxChange() {
