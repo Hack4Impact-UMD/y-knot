@@ -22,7 +22,7 @@ const ClassAttendance = (props: {
     value: props.course.attendance.slice(-1)[0]?.date.toString() ?? '',
     label: props.course.attendance.slice(-1)[0]?.date.toString() ?? 'Date',
   });
-  const [selectedAttDate, setSelectedDate] = useState<string>(
+  const [selectedDate, setSelectedDate] = useState<string>(
     props.course.attendance !== undefined && props.course.attendance.length > 0
       ? props.course.attendance.slice(-1)[0].date.toString()
       : '',
@@ -39,6 +39,7 @@ const ClassAttendance = (props: {
   const [openAlert, setOpenAlert] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>('');
   const [dropdownOptions, setDropdownOptions] = useState<any>();
+  const [studentList, setStudentList] = useState<any[]>([]);
 
   const handleSelectAllChange = () => {
     setSelectAllChecked(true);
@@ -56,6 +57,7 @@ const ClassAttendance = (props: {
 
   const handleAddNoteModal = () => {
     setOpenAddNoteModal(!openAddNoteModal);
+    setAlertMessage('Attendance successfully updated');
   };
 
   const parseAttendance = (date: string): void => {
@@ -85,6 +87,40 @@ const ClassAttendance = (props: {
       props.course.attendance.slice(-1)[0]?.notes.toString() ?? '',
     );
   }, [props.course]);
+
+  useEffect(() => {
+    let list = props.students.map(function (student, i) {
+      const roundTop = i === 0 ? styles.roundTop : '';
+      const roundBottom =
+        i === props.students.length - 1 ? styles.roundBottom : '';
+      const studentAttendance = student.courseInformation
+        .find((c) => c.id === props.courseID)
+        ?.attendance.find((att) => att.date === selectedDate);
+      console.log(studentAttendance?.attended);
+
+      return (
+        <div
+          className={`${styles.box} ${roundTop} ${roundBottom}`}
+          key={student.firstName}
+        >
+          <p
+            className={styles.boxTitle}
+          >{`${student.firstName} ${student.lastName}`}</p>
+          <CheckboxWithLabel
+            key={student.firstName}
+            checkedText="Present"
+            uncheckedText="Absent"
+            isChecked={
+              selectAllChecked ||
+              (studentAttendance ? studentAttendance!.attended : false)
+            }
+            setIsChecked={setSelectAllChecked}
+          />
+        </div>
+      );
+    });
+    setStudentList(list);
+  }, [selectedDate]);
 
   return (
     <div className={styles.mainContainer}>
@@ -131,10 +167,15 @@ const ClassAttendance = (props: {
         <h4 className={styles.noStudent}>No Students Currently in Roster</h4>
       ) : (
         <div className={styles.inputs}>
-          {props.students.map(function (student, i) {
+          {studentList}
+          {/* {props.students.map(function (student, i) {
             const roundTop = i === 0 ? styles.roundTop : '';
             const roundBottom =
               i === props.students.length - 1 ? styles.roundBottom : '';
+            const studentAttendance = 
+            student.courseInformation
+              .find((c) => c.id === props.courseID)
+              ?.attendance.find((att) => att.date === selectedDate);
 
             return (
               <div
@@ -148,12 +189,15 @@ const ClassAttendance = (props: {
                   key={student.firstName}
                   checkedText="Present"
                   uncheckedText="Absent"
-                  isChecked={selectAllChecked}
+                  isChecked={
+                    selectAllChecked ||
+                    (studentAttendance ? studentAttendance!.attended : false)
+                  }
                   setIsChecked={setSelectAllChecked}
                 />
               </div>
             );
-          })}
+          })} */}
         </div>
       )}
       <div className={styles.bottomLevel}>
@@ -193,11 +237,10 @@ const ClassAttendance = (props: {
         courseID={props.courseID !== undefined ? props.courseID : ''}
       />
       <AddNote
+        setOpenAlert={setOpenAlert}
         setSelectComponentValue={setSelectComponentValue}
         selectedDate={
-          selectedAttDate !== ''
-            ? selectedAttDate
-            : 'No attendance currently exists'
+          selectedDate !== '' ? selectedDate : 'No attendance currently exists'
         }
         setSelectedDate={setSelectedDate}
         selectedNote={selectedAttNote}

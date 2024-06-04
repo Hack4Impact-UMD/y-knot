@@ -94,7 +94,9 @@ const ClassPage = (): JSX.Element => {
           <Loading />
         </div>
       ) : isLoading ? (
-        <Loading />
+        <div className={styles.loadingContainer}>
+          <Loading />
+        </div>
       ) : (
         <div className={styles.rightPane}>
           <div className={styles.classInfo}>

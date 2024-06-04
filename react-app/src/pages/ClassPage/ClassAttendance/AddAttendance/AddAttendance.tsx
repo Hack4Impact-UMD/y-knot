@@ -11,7 +11,6 @@ import { StudentID } from '../../../../types/StudentType';
 import {
   addCourseAttendance,
   getStudentsFromList,
-  getCourse,
 } from '../../../../backend/FirestoreCalls';
 
 const AddAttendance = (props: {

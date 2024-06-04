@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import type { Course, CourseID } from '../../../../types/CourseType';
 import { StudentID } from '../../../../types/StudentType';
+import {
+  updateCourseHomeworkDetails,
+  getStudentsFromList,
+} from '../../../../backend/FirestoreCalls';
+import { ToolTip } from '../../../../components/ToolTip/ToolTip';
 import styles from './AddNote.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
 import x from '../../../../assets/x.svg';
 import editImage from '../../../../assets/edit.svg';
 import saveImage from '../../../../assets/save.svg';
-import {
-  updateCourseHomework,
-  updateHomeworkStudents,
-} from '../../../../backend/FirestoreCalls';
-import { ToolTip } from '../../../../components/ToolTip/ToolTip';
 
 const AddNote = (props: {
   open: boolean;
   onClose: any;
+  setOpenAlert: React.Dispatch<React.SetStateAction<boolean>>;
   selectedName: string;
   setSelectComponentValue: React.Dispatch<React.SetStateAction<any>>;
   setSelectedName: React.Dispatch<React.SetStateAction<string>>;
@@ -34,42 +35,35 @@ const AddNote = (props: {
   const handleEditNote = async () => {
     setErrorMessage('');
     setCanWrite(false);
+    let studentIdList = props.students.map((student) => student.id);
     if (inputName == '') {
       setErrorMessage('*Name is required');
     } else if (
       note !== props.selectedNote ||
       inputName !== props.selectedName
     ) {
-      updateCourseHomework(
-        props.course,
+      updateCourseHomeworkDetails(
         props.courseID,
+        studentIdList,
         { name: props.selectedName, notes: props.selectedNote },
         {
           name: inputName,
           notes: note,
         },
       )
-        .then((newCourse) => {
-          updateHomeworkStudents(
-            props.courseID,
-            props.selectedName,
-            inputName,
-            props.students,
-          )
-            .then((newStudentList) => {
-              props.setSelectedName(inputName);
-              props.setSelectedNote(note);
-              props.setStudents(newStudentList);
-              props.setCourse(newCourse);
-              props.setSelectComponentValue({
-                value: inputName ?? '',
-                label: inputName ?? '',
-              });
-            })
-            .catch((e: Error) => {
-              setNote(props.selectedNote);
-              setErrorMessage(e.message + '**');
-            });
+        .then((courseData) => {
+          props.setCourse(courseData);
+          props.setSelectedName(inputName);
+          props.setSelectedNote(note);
+          props.setSelectComponentValue({
+            value: inputName ?? '',
+            label: inputName ?? '',
+          });
+          getStudentsFromList(courseData.students).then((data) => {
+            props.setStudents(data);
+          });
+          props.setOpenAlert(true);
+          handleOnClose();
         })
         .catch((e: Error) => {
           setErrorMessage(e.message + '**');

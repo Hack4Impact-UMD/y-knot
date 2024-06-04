@@ -53,6 +53,7 @@ const ClassHomework = (props: {
 
   const handleAddNoteModal = () => {
     setOpenAddNoteModal(!openAddNoteModal);
+    setAlertMessage('Homework successfully updated');
   };
 
   const parseHomework = (name: string): void => {
@@ -186,6 +187,7 @@ const ClassHomework = (props: {
       />
       <AddNote
         setSelectComponentValue={setSelectComponentValue}
+        setOpenAlert={setOpenAlert}
         selectedName={
           selectedHomeworkName !== ''
             ? selectedHomeworkName
