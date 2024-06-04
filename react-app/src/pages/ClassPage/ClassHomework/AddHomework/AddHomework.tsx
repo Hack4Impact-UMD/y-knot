@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Course } from '../../../../types/CourseType';
 import { StudentID } from '../../../../types/StudentType';
-import styles from './AddHomework.module.css';
-import Modal from '../../../../components/ModalWrapper/Modal';
-import x from '../../../../assets/x.svg';
 import {
   addCourseHomework,
   getStudentsFromList,
-  getCourse,
 } from '../../../../backend/FirestoreCalls';
+import styles from './AddHomework.module.css';
+import Modal from '../../../../components/ModalWrapper/Modal';
+import x from '../../../../assets/x.svg';
 
 const AddHomework = (props: {
   open: boolean;

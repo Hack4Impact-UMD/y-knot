@@ -7,7 +7,6 @@ import { updateStudentHomeworks } from '../../../backend/FirestoreCalls';
 import Select from 'react-select';
 import styles from './ClassHomework.module.css';
 import noteIcon from '../../../assets/note.svg';
-import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
 import AddHomework from './AddHomework/AddHomework';
 import RemoveHomework from './RemoveHomework/RemoveHomework';
 import AddNote from './AddNote/AddNote';

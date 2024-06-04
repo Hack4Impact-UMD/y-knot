@@ -1,7 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import styles from './AddAttendance.module.css';
-import Modal from '../../../../components/ModalWrapper/Modal';
-import x from '../../../../assets/x.svg';
+import React, { useState } from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -12,6 +9,9 @@ import {
   addCourseAttendance,
   getStudentsFromList,
 } from '../../../../backend/FirestoreCalls';
+import styles from './AddAttendance.module.css';
+import Modal from '../../../../components/ModalWrapper/Modal';
+import x from '../../../../assets/x.svg';
 
 const AddAttendance = (props: {
   open: boolean;

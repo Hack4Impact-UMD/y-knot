@@ -10,11 +10,6 @@ import Modal from '../../../../components/ModalWrapper/Modal';
 import Select from 'react-select';
 import x from '../../../../assets/x.svg';
 
-interface modalType {
-  open: boolean;
-  onClose: any;
-}
-
 const RemoveHomework = (props: {
   open: boolean;
   onClose: any;

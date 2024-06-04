@@ -1,15 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../auth/AuthProvider';
-import styles from '../../pages/ClassPage/ClassPage.module.css';
-import NavigationBar from '../../components/NavigationBar/NavigationBar';
-import Loading from '../../components/LoadingScreen/Loading';
-import ClassMain from './ClassMain/ClassMain';
-import ClassAcademy from './ClassAcademy/ClassAcademy';
-import ClassAttendance from './ClassAttendance/ClassAttendance';
-import ClassHomework from './ClassHomework/ClassHomework';
-import ClassTeachers from './ClassTeachers/ClassTeachers';
-import ClassStudents from './ClassStudents/ClassStudents';
-import ClassSettings from './ClassSettings/ClassSettings';
 import { useParams } from 'react-router-dom';
 import type { Course, CourseID } from '../../types/CourseType';
 import type { StudentID } from '../../types/StudentType';
@@ -20,6 +10,16 @@ import {
   getTeachersFromList,
 } from '../../backend/FirestoreCalls';
 import { DateTime } from 'luxon';
+import styles from '../../pages/ClassPage/ClassPage.module.css';
+import NavigationBar from '../../components/NavigationBar/NavigationBar';
+import Loading from '../../components/LoadingScreen/Loading';
+import ClassMain from './ClassMain/ClassMain';
+import ClassAcademy from './ClassAcademy/ClassAcademy';
+import ClassAttendance from './ClassAttendance/ClassAttendance';
+import ClassHomework from './ClassHomework/ClassHomework';
+import ClassTeachers from './ClassTeachers/ClassTeachers';
+import ClassStudents from './ClassStudents/ClassStudents';
+import ClassSettings from './ClassSettings/ClassSettings';
 
 enum Tab {
   Main = 'Main',

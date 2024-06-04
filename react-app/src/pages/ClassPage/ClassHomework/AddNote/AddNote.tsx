@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import type { Course, CourseID } from '../../../../types/CourseType';
+import type { Course } from '../../../../types/CourseType';
 import { StudentID } from '../../../../types/StudentType';
 import {
   updateCourseHomeworkDetails,
