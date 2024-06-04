@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import type { StudentID } from '../../../types/StudentType';
 import type { Course, Homework } from '../../../types/CourseType';
+import { Snackbar, Alert } from '@mui/material';
 import Select from 'react-select';
 import styles from './ClassHomework.module.css';
 import noteIcon from '../../../assets/note.svg';
@@ -19,23 +20,22 @@ const ClassHomework = (props: {
   setCourse: React.Dispatch<React.SetStateAction<Course>>;
 }): JSX.Element => {
   const [selectComponentValue, setSelectComponentValue] = useState<any>({
-    value: props.homeworks.slice(-1)[0].name.toString() ?? '',
-    label: props.homeworks.slice(-1)[0].name.toString() ?? 'Assignment',
+    value: props.homeworks.slice(-1)[0]?.name.toString() ?? '',
+    label: props.homeworks.slice(-1)[0]?.name.toString() ?? 'Assignment',
   });
   const [selectedHomeworkName, setHomeworkName] = useState<string>(
-    props.homeworks !== undefined && props.homeworks.length > 0
-      ? props.homeworks.slice(-1)[0].name.toString()
-      : '',
+    props.homeworks.slice(-1)[0]?.name.toString() ?? '',
   );
   const [selectedHomeworkNote, setHomeworkNote] = useState<string>(
-    props.homeworks !== undefined && props.homeworks.length > 0
-      ? props.homeworks.slice(-1)[0].notes.toString()
-      : '',
+    props.homeworks.slice(-1)[0]?.notes.toString() ?? '',
   );
   const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
   const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
   const [openRemoveHwModal, setOpenRemoveHwModal] = useState<boolean>(false);
   const [openAddNoteModal, setOpenAddNoteModal] = useState<boolean>(false);
+  const [openAlert, setOpenAlert] = useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = useState<string>('');
+  const [dropdownOptions, setDropdownOptions] = useState<any>();
 
   const handleSelectAllChange = () => {
     setSelectAllChecked(true);
@@ -43,10 +43,12 @@ const ClassHomework = (props: {
 
   const handleAddModal = () => {
     setOpenAddHwModal(!openAddHwModal);
+    setAlertMessage('Homework successfully added');
   };
 
   const handleRemoveModal = () => {
     setOpenRemoveHwModal(!openRemoveHwModal);
+    setAlertMessage('Homework successfully removed');
   };
 
   const handleAddNoteModal = () => {
@@ -63,6 +65,19 @@ const ClassHomework = (props: {
       });
     }
   };
+
+  useEffect(() => {
+    let options = props.homeworks.map((assignment) => {
+      return { value: assignment.name, label: assignment.name };
+    });
+    setDropdownOptions(options);
+    setSelectComponentValue({
+      value: props.homeworks.slice(-1)[0]?.name.toString() ?? '',
+      label: props.homeworks.slice(-1)[0]?.name.toString() ?? 'Assignment',
+    });
+    setHomeworkName(props.homeworks.slice(-1)[0]?.name.toString() ?? '');
+    setHomeworkNote(props.homeworks.slice(-1)[0]?.notes.toString() ?? '');
+  }, [props.homeworks]);
 
   return (
     <div className={styles.mainContainer}>
@@ -93,9 +108,7 @@ const ClassHomework = (props: {
               },
             }),
           }}
-          options={props.homeworks.map((assignment) => {
-            return { value: assignment.name, label: assignment.name };
-          })}
+          options={dropdownOptions}
           theme={(theme) => ({
             ...theme,
             colors: {
@@ -158,6 +171,7 @@ const ClassHomework = (props: {
         onClose={() => {
           setOpenAddHwModal(!openAddHwModal);
         }}
+        setOpenAlert={setOpenAlert}
         students={props.students}
         setStudents={props.setStudents}
         course={props.course}
@@ -184,6 +198,19 @@ const ClassHomework = (props: {
         courseID={props.courseID ?? ''}
         setCourse={props.setCourse}
       />
+      <Snackbar
+        anchorOrigin={{
+          horizontal: 'right',
+          vertical: 'bottom',
+        }}
+        open={openAlert}
+        autoHideDuration={3000}
+        onClose={() => setOpenAlert(false)}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

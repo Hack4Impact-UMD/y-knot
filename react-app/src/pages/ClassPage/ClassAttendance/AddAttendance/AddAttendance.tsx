@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './AddAttendance.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
 import x from '../../../../assets/x.svg';
@@ -22,9 +22,9 @@ const AddAttendance = (props: {
   setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
   course: Course;
   courseID: string;
-  setCourse: React.Dispatch<React.SetStateAction<Course>>;
+  setCourse: Function;
 }): React.ReactElement => {
-  const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(dayjs());
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
   const [note, setNote] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
@@ -36,22 +36,13 @@ const AddAttendance = (props: {
         date: date,
         notes: note,
       })
-        .then(() => {
-          getCourse(props.courseID)
-            .then(async (courseData) => {
-              props.setCourse(courseData);
-              getStudentsFromList(courseData.students).then((data) => {
-                props.setStudents(data);
-              });
-              props.setOpenAlert(true);
-              handleOnClose();
-              setTimeout(function () {
-                document.location.reload();
-              }, 1000);
-            })
-            .catch(() => {
-              console.log('Failed to get Course Information in Class Page');
-            });
+        .then((courseData) => {
+          props.setCourse(courseData);
+          getStudentsFromList(courseData.students).then((data) => {
+            props.setStudents(data);
+          });
+          props.setOpenAlert(true);
+          handleOnClose();
         })
         .catch((e: Error) => {
           setErrorMessage(e.message + '**');

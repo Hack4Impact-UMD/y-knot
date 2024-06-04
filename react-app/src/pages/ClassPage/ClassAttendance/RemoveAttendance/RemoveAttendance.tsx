@@ -6,13 +6,14 @@ import x from '../../../../assets/x.svg';
 import { StudentID } from '../../../../types/StudentType';
 import { Course } from '../../../../types/CourseType';
 import {
-  removeAttendanceFromStudents,
+  getStudentsFromList,
   removeCourseAttendance,
 } from '../../../../backend/FirestoreCalls';
 
 const RemoveAttendance = (props: {
   open: boolean;
   onClose: any;
+  setOpenAlert: React.Dispatch<React.SetStateAction<boolean>>;
   students: Array<StudentID>;
   setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
   course: Course;
@@ -23,25 +24,19 @@ const RemoveAttendance = (props: {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [clicked, setClicked] = useState<boolean>(false);
   const handleRemoveAttendance = async () => {
+    let studentIdList = props.students.map((student) => student.id);
     if (selectedDate == '') {
       setErrorMessage('Please select an assignment**');
     } else {
-      removeCourseAttendance(props.course, props.courseID, selectedDate)
-        .then((newCourse) => {
-          removeAttendanceFromStudents(
-            props.courseID,
-            selectedDate,
-            props.students,
-          )
-            .then((newStudentList) => {
-              props.setCourse(newCourse);
-              props.setStudents(newStudentList);
-              handleOnClose();
-              setClicked(false);
-            })
-            .catch((e: Error) => {
-              setErrorMessage(e.message + '**');
-            });
+      removeCourseAttendance(props.courseID, studentIdList, selectedDate)
+        .then((courseData) => {
+          props.setCourse(courseData);
+          getStudentsFromList(courseData.students).then((data) => {
+            props.setStudents(data);
+          });
+          handleOnClose();
+          props.setOpenAlert(true);
+          setClicked(false);
         })
         .catch((e: Error) => {
           setErrorMessage(e.message + '**');

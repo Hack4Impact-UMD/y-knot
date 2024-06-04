@@ -1,5 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
+import type { StudentID } from '../../../types/StudentType';
+import type { Course } from '../../../types/CourseType';
+import { Snackbar, Alert } from '@mui/material';
 import Select from 'react-select';
 import styles from './ClassAttendance.module.css';
 import noteIcon from '../../../assets/note.svg';
@@ -7,9 +10,6 @@ import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
 import AddNote from './AddNote/AddNote';
 import RemoveAttendance from './RemoveAttendance/RemoveAttendance';
 import AddAttendance from './AddAttendance/AddAttendance';
-import type { StudentID } from '../../../types/StudentType';
-import type { Course } from '../../../types/CourseType';
-import { Snackbar, Alert } from '@mui/material';
 
 const ClassAttendance = (props: {
   students: Array<StudentID>;
@@ -19,8 +19,8 @@ const ClassAttendance = (props: {
   setCourse: React.Dispatch<React.SetStateAction<Course>>;
 }): JSX.Element => {
   const [selectComponentValue, setSelectComponentValue] = useState<any>({
-    value: props.course.attendance.slice(-1)[0].date.toString() ?? '',
-    label: props.course.attendance.slice(-1)[0].date.toString() ?? 'Date',
+    value: props.course.attendance.slice(-1)[0]?.date.toString() ?? '',
+    label: props.course.attendance.slice(-1)[0]?.date.toString() ?? 'Date',
   });
   const [selectedAttDate, setSelectedDate] = useState<string>(
     props.course.attendance !== undefined && props.course.attendance.length > 0
@@ -38,6 +38,7 @@ const ClassAttendance = (props: {
   const [openAddNoteModal, setOpenAddNoteModal] = useState<boolean>(false);
   const [openAlert, setOpenAlert] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>('');
+  const [dropdownOptions, setDropdownOptions] = useState<any>();
 
   const handleSelectAllChange = () => {
     setSelectAllChecked(true);
@@ -68,6 +69,23 @@ const ClassAttendance = (props: {
     }
   };
 
+  useEffect(() => {
+    let options = props.course.attendance.map((attendance) => {
+      return { value: attendance.date, label: attendance.date };
+    });
+    setDropdownOptions(options);
+    setSelectComponentValue({
+      value: props.course.attendance.slice(-1)[0]?.date.toString() ?? '',
+      label: props.course.attendance.slice(-1)[0]?.date.toString() ?? 'Date',
+    });
+    setSelectedDate(
+      props.course.attendance.slice(-1)[0]?.date.toString() ?? '',
+    );
+    setSelectedNote(
+      props.course.attendance.slice(-1)[0]?.notes.toString() ?? '',
+    );
+  }, [props.course]);
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.topLevel}>
@@ -97,9 +115,7 @@ const ClassAttendance = (props: {
               },
             }),
           }}
-          options={props.course.attendance.map((attendance) => {
-            return { value: attendance.date, label: attendance.date };
-          })}
+          options={dropdownOptions}
           theme={(theme) => ({
             ...theme,
             colors: {
@@ -157,6 +173,7 @@ const ClassAttendance = (props: {
         onClose={() => {
           setOpenRemoveModal(!openRemoveModal);
         }}
+        setOpenAlert={setOpenAlert}
         students={props.students}
         setStudents={props.setStudents}
         course={props.course}
@@ -202,7 +219,7 @@ const ClassAttendance = (props: {
         }}
         open={openAlert}
         autoHideDuration={3000}
-        // onClose={snackbarClose}
+        onClose={() => setOpenAlert(false)}
       >
         <Alert severity="success" sx={{ width: '100%' }}>
           {alertMessage}

@@ -120,16 +120,20 @@ const ClassPage = (): JSX.Element => {
             >
               Main
             </button>
-            <button
-              className={
-                currentTab === Tab.Academy ? styles.selectedTab : styles.tab
-              }
-              onClick={() => {
-                handleTabChange(Tab.Academy);
-              }}
-            >
-              Academy
-            </button>
+            {course.courseType === 'ACADEMY' ? (
+              <button
+                className={
+                  currentTab === Tab.Academy ? styles.selectedTab : styles.tab
+                }
+                onClick={() => {
+                  handleTabChange(Tab.Academy);
+                }}
+              >
+                Academy
+              </button>
+            ) : (
+              <></>
+            )}
             <button
               className={
                 currentTab === Tab.Students ? styles.selectedTab : styles.tab
