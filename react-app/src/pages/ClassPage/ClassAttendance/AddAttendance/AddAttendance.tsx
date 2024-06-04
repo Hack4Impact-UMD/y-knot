@@ -58,7 +58,7 @@ const AddAttendance = (props: {
     <Modal
       open={props.open}
       height={425}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+      onClose={() => {
         handleOnClose();
       }}
     >
@@ -107,7 +107,7 @@ const AddAttendance = (props: {
           />
           <button
             className={styles.button}
-            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+            onClick={() => {
               handleAddAttendance();
             }}
           >

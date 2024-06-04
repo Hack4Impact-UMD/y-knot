@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { authenticateUser } from '../../../backend/FirebaseCalls';
 import { updateUserPassword } from '../../../backend/AuthCalls';
 import styles from './ResetPassword.module.css';
 import Modal from '../../../components/ModalWrapper/Modal';
@@ -63,7 +62,7 @@ const ResetPassword = ({ open, onClose }: modalType): React.ReactElement => {
     <Modal
       height={325}
       open={open}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+      onClose={() => {
         handleOnClose();
       }}
     >
@@ -141,7 +140,7 @@ const ResetPassword = ({ open, onClose }: modalType): React.ReactElement => {
           <div className={styles.container}>
             <button
               className={styles.resetButton}
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+              onClick={() => {
                 handlePasswordReset();
               }}
               disabled={loading}

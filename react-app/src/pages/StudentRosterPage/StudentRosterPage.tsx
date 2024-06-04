@@ -21,7 +21,7 @@ const StudentRosterPage = (): JSX.Element => {
 
   // Used to handle Deletion alert
   const [openSuccess, setOpenSuccess] = useState<boolean>(false);
-  const handleToClose = (event: any, reason: any) => {
+  const handleToClose = () => {
     setOpenSuccess(false);
   };
 
@@ -46,7 +46,7 @@ const StudentRosterPage = (): JSX.Element => {
         });
         setStudents(partialStudents);
       })
-      .catch((err) => {
+      .catch(() => {
         setError(true);
       })
       .finally(() => {

@@ -47,7 +47,7 @@ const ClassPage = (props: {
     return str && str[0].toUpperCase() + str.slice(1).toLowerCase();
   }
 
-  const snackbarClose = (event: any, reason: any) => {
+  const snackbarClose = () => {
     setCourseUpdated(false);
   };
 

@@ -1,9 +1,9 @@
 import { useState } from 'react';
+import { deleteStudent } from '../../../../backend/FirestoreCalls';
+import { type StudentID } from '../../../../types/StudentType';
 import styles from './DeleteStudentConfirmation.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
 import x from '../../../../assets/x.svg';
-import { deleteStudent } from '../../../../backend/FirestoreCalls';
-import { type StudentID } from '../../../../types/StudentType';
 
 interface popupModalType {
   onClose: () => void;
@@ -59,7 +59,7 @@ const DeleteStudentConfirmation = ({
     <Modal
       height={270}
       open={open}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+      onClose={() => {
         handleOnClose();
       }}
     >
@@ -95,14 +95,14 @@ const DeleteStudentConfirmation = ({
         <div className={styles.actionsContainer}>
           <>
             <button
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+              onClick={() => {
                 handleConfirm();
               }}
             >
               Yes
             </button>
             <button
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+              onClick={() => {
                 handleOnClose();
               }}
             >

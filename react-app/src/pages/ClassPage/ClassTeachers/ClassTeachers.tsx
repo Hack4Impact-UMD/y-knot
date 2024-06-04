@@ -18,14 +18,13 @@ const ClassTeachers = (props: {
 }): JSX.Element => {
   const [teachers, setTeachers] = useState<any[]>(props.teachers);
   const [teacherList, setTeacherList] = useState<any[]>([]);
-  const [error, setError] = useState<boolean>(false);
   const [openAddTeacherModal, setOpenAddTeacherModal] =
     useState<boolean>(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupName, setPopupName] = useState<string>();
   const [popupEmail, setPopupEmail] = useState<string>();
   const [removeTeacherId, setRemoveTeacherId] = useState<string>();
-  const [reloadList, setReloadList] = useState<Boolean>(false);
+  const [reloadList, setReloadList] = useState<boolean>(false);
   const [removeSuccess, setRemoveSuccess] = useState<boolean>(false);
   const [addSuccess, setAddSuccess] = useState<boolean>(false);
 
@@ -76,11 +75,11 @@ const ClassTeachers = (props: {
     setTeacherList(list);
   }, [reloadList]);
 
-  const removePopupClose = (event: any, reason: any) => {
+  const removePopupClose = () => {
     setRemoveSuccess(false);
   };
 
-  const addPopupClose = (event: any, reason: any) => {
+  const addPopupClose = () => {
     setAddSuccess(false);
   };
 
@@ -92,10 +91,6 @@ const ClassTeachers = (props: {
     <div>
       {props.teachers.length === 0 ? (
         <h4 className={styles.message}>No Teachers Currently in Roster</h4>
-      ) : error ? (
-        <h4 className={styles.message}>
-          Error retrieving teachers. Please try again later.
-        </h4>
       ) : (
         <div className={styles.teachersContainer}>{teacherList}</div>
       )}

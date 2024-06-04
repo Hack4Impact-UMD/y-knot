@@ -19,7 +19,6 @@ const RequireAdminAuth: React.FC<Props> = ({ children }) => {
   } else if (!authContext.user) {
     return <Navigate to="/login" state={{ redir: window.location.pathname }} />;
   } else if (authContext.token?.claims?.role != 'ADMIN') {
-    console.log(authContext.token);
     return (
       <div className={styles.loadingContainer}>
         <p className={styles.errorMessage}>

@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { useAuth } from '../../../auth/AuthProvider';
 import { type StudentID } from '../../../types/StudentType';
+import { TeacherID } from '../../../types/UserType';
+import { getAllCourses } from '../../../backend/FirestoreCalls';
+import { DateTime } from 'luxon';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import styles from './StudentList.module.css';
 import eyeIcon from '../../../assets/view.svg';
 import trashIcon from '../../../assets/trash.svg';
 import DeleteStudentConfirmation from './DeleteStudentConfirmation/DeleteStudentConfirmation';
-import { useAuth } from '../../../auth/AuthProvider';
-import { TeacherID } from '../../../types/UserType';
-import { getAllCourses } from '../../../backend/FirestoreCalls';
-import { DateTime } from 'luxon';
 
 const StudentList = (props: {
   search: string;

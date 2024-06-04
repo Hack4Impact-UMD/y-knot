@@ -17,7 +17,6 @@ const SettingsPage = (): JSX.Element => {
   const [teacher, setTeacher] = useState<TeacherID>();
   const [name, setName] = useState<string>('');
   const [updatedName, setUpdatedName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
   const [openEmailModal, setOpenEmailModal] = useState<boolean>(false);
   const [openPasswordModal, setOpenPasswordModal] = useState<boolean>(false);
 

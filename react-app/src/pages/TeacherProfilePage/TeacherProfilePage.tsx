@@ -1,12 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
-import { getTeacher } from '../../backend/FirestoreCalls';
-import { type Teacher } from '../../types/UserType';
-import { getCourse } from '../../backend/FirestoreCalls';
+import { getTeacher, getCourse } from '../../backend/FirestoreCalls';
 import type { CourseID } from '../../types/CourseType';
 import { DateTime } from 'luxon';
-import { Link } from 'react-router-dom';
 import styles from './TeacherProfilePage.module.css';
 import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
@@ -28,9 +25,7 @@ const compareLuxonDates = (course1: CourseID, course2: CourseID): number => {
 };
 
 const TeacherProfilePage = (): JSX.Element => {
-  const [teacher, setTeacher] = useState<Teacher>();
   const [courses, setCourses] = useState<CourseID[]>([]);
-  const [editName, setEditName] = useState<boolean>(false);
   const [pageError, setPageError] = useState<boolean>(false);
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -42,7 +37,6 @@ const TeacherProfilePage = (): JSX.Element => {
     if (teacherID) {
       getTeacher(teacherID)
         .then(async (data) => {
-          setTeacher(data);
           setLoading(false);
           setName(data.name!);
           setEmail(data.email!);

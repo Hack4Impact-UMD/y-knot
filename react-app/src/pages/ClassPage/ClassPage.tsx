@@ -53,7 +53,6 @@ const ClassPage = (): JSX.Element => {
   const [isLoading, setLoading] = useState<boolean>(true);
   const [students, setStudents] = useState<StudentID[]>([]);
   const [teachers, setTeachers] = useState<TeacherID[]>([]);
-
   const authContext = useAuth();
   const courseID = useParams().id;
 

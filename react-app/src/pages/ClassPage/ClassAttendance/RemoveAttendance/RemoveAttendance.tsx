@@ -70,7 +70,7 @@ const RemoveAttendance = (props: {
     <Modal
       open={props.open}
       height={240}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+      onClose={() => {
         handleOnClose();
       }}
     >
