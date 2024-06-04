@@ -859,14 +859,82 @@ export function updateCourseAttendanceDetails(
   });
 }
 
-/* Update student attendance */
 export function updateStudentAttendance(
   courseId: string,
   studentIdList: Array<string>,
-  oldAttendance: Attendance,
-  newAttendance: Attendance,
-): Promise<Course> {
-  return new Promise((resolve, reject) => {});
+  presentStudentIds: Array<string>,
+  attendanceDate: string,
+): Promise<Array<StudentID>> {
+  return new Promise((resolve, reject) => {
+    runTransaction(db, async (transaction) => {
+      let students: StudentID[] = [];
+
+      var studentPromises = [];
+      for (const studentId of studentIdList) {
+        studentPromises.push(transaction.get(doc(db, 'Students', studentId)));
+      }
+
+      var studentRefList: any[] = [];
+      await Promise.all(studentPromises)
+        .then((studentRef) => {
+          studentRefList = studentRef;
+        })
+        .catch(() => {
+          reject(new Error('A student does not exist!'));
+          throw 'A student does not exist!';
+        });
+
+      var updatePromises = [];
+
+      for (let i = 0; i < studentRefList.length; i++) {
+        var studentRef = studentRefList[i];
+        const student: Student = studentRef.data() as Student;
+
+        // Get index of course
+        const studentCourse = student.courseInformation.findIndex(
+          (c) => c.id === courseId,
+        );
+
+        if (studentCourse == -1) {
+          reject(new Error('Course does not exist in student'));
+        } else {
+          const studentAttendance = student.courseInformation[
+            studentCourse
+          ].attendance.find((att) => att.date === attendanceDate);
+
+          if (
+            studentAttendance &&
+            presentStudentIds.includes(studentIdList[i])
+          ) {
+            studentAttendance.attended = true;
+          } else if (
+            studentAttendance &&
+            !presentStudentIds.includes(studentIdList[i])
+          ) {
+            studentAttendance.attended = false;
+          } else {
+            reject(new Error('Attendance dte does not exist in student'));
+          }
+          updatePromises.push(
+            transaction.update(doc(db, 'Students', studentIdList[i]), {
+              courseInformation: student.courseInformation,
+            }),
+          );
+        }
+        students.push({ ...student, id: studentIdList[i] });
+      }
+
+      await Promise.all(updatePromises)
+        .then(() => {
+          resolve(students);
+        })
+        .catch(() => {
+          reject();
+        });
+    }).catch(() => {
+      reject();
+    });
+  });
 }
 
 // Add new homework to course and students

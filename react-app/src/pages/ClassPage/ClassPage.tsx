@@ -212,7 +212,7 @@ const ClassPage = (): JSX.Element => {
               students={students}
               setStudents={setStudents}
               course={course}
-              courseID={courseID}
+              courseID={courseID!}
               setCourse={setCourse}
             />
           )}
@@ -222,7 +222,7 @@ const ClassPage = (): JSX.Element => {
               students={students}
               setStudents={setStudents}
               course={course}
-              courseID={courseID}
+              courseID={courseID!}
               setCourse={setCourse}
             />
           )}

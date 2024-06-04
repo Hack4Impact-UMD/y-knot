@@ -3,6 +3,7 @@ import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import type { StudentID } from '../../../types/StudentType';
 import type { Course } from '../../../types/CourseType';
 import { Snackbar, Alert } from '@mui/material';
+import { updateStudentAttendance } from '../../../backend/FirestoreCalls';
 import Select from 'react-select';
 import styles from './ClassAttendance.module.css';
 import noteIcon from '../../../assets/note.svg';
@@ -14,7 +15,7 @@ const ClassAttendance = (props: {
   students: Array<StudentID>;
   setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
   course: Course;
-  courseID: string | undefined;
+  courseID: string;
   setCourse: React.Dispatch<React.SetStateAction<Course>>;
 }): JSX.Element => {
   const [selectComponentValue, setSelectComponentValue] = useState<any>({
@@ -31,7 +32,6 @@ const ClassAttendance = (props: {
       ? props.course.attendance.slice(-1)[0].notes.toString()
       : '',
   );
-  const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
   const [openAddModal, setOpenAddModal] = useState<boolean>(false);
   const [openRemoveModal, setOpenRemoveModal] = useState<boolean>(false);
   const [openAddNoteModal, setOpenAddNoteModal] = useState<boolean>(false);
@@ -41,7 +41,8 @@ const ClassAttendance = (props: {
   const [checkedCheckboxes, setCheckedCheckboxes] = useState<string[]>([]);
 
   const handleSelectAllChange = () => {
-    setSelectAllChecked(true);
+    let studentIdList = props.students.map((student) => student.id);
+    setCheckedCheckboxes(studentIdList);
   };
 
   const handleAddModal = () => {
@@ -57,6 +58,20 @@ const ClassAttendance = (props: {
   const handleAddNoteModal = () => {
     setOpenAddNoteModal(!openAddNoteModal);
     setAlertMessage('Attendance successfully updated');
+  };
+
+  const handleSave = () => {
+    let studentIdList = props.students.map((student) => student.id);
+    updateStudentAttendance(
+      props.courseID,
+      studentIdList,
+      checkedCheckboxes,
+      selectedDate,
+    ).then((students) => {
+      props.setStudents(students);
+      setOpenAlert(true);
+    });
+    setAlertMessage('Attendance successfully saved');
   };
 
   const parseAttendance = (date: string): void => {
@@ -176,12 +191,9 @@ const ClassAttendance = (props: {
                   <label className={styles.checkboxContainer}>
                     <input
                       type="checkbox"
-                      checked={
-                        selectAllChecked ||
-                        checkedCheckboxes.some(
-                          (checkedCheckbox) => checkedCheckbox === student.id,
-                        )
-                      }
+                      checked={checkedCheckboxes.some(
+                        (checkedCheckbox) => checkedCheckbox === student.id,
+                      )}
                       onChange={() => handleCheckboxChange(student.id)}
                     ></input>
                     <span className={styles.checkmark}></span>
@@ -209,7 +221,9 @@ const ClassAttendance = (props: {
         <button className={styles.bottomButton} onClick={handleSelectAllChange}>
           Select All
         </button>
-        <button className={styles.bottomButton}>Save</button>
+        <button className={styles.bottomButton} onClick={handleSave}>
+          Save
+        </button>
       </div>
       <RemoveAttendance
         open={openRemoveModal}

@@ -16,7 +16,7 @@ const ClassHomework = (props: {
   students: Array<StudentID>;
   setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
   course: Course;
-  courseID: string | undefined;
+  courseID: string;
   setCourse: React.Dispatch<React.SetStateAction<Course>>;
 }): JSX.Element => {
   const [selectComponentValue, setSelectComponentValue] = useState<any>({
