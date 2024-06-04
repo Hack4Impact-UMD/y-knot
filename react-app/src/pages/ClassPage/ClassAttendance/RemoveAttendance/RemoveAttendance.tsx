@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import styles from './RemoveAttendance.module.css';
-import Modal from '../../../../components/ModalWrapper/Modal';
-import Select from 'react-select';
-import x from '../../../../assets/x.svg';
 import { StudentID } from '../../../../types/StudentType';
 import { Course } from '../../../../types/CourseType';
 import {
   getStudentsFromList,
   removeCourseAttendance,
 } from '../../../../backend/FirestoreCalls';
+import styles from './RemoveAttendance.module.css';
+import Modal from '../../../../components/ModalWrapper/Modal';
+import Select from 'react-select';
+import x from '../../../../assets/x.svg';
 
 const RemoveAttendance = (props: {
   open: boolean;
@@ -23,6 +23,7 @@ const RemoveAttendance = (props: {
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [clicked, setClicked] = useState<boolean>(false);
+
   const handleRemoveAttendance = async () => {
     let studentIdList = props.students.map((student) => student.id);
     if (selectedDate == '') {

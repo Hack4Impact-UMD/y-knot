@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
+import { StudentID } from '../../../../types/StudentType';
+import { Course } from '../../../../types/CourseType';
+import {
+  getStudentsFromList,
+  removeCourseHomework,
+} from '../../../../backend/FirestoreCalls';
 import styles from './RemoveHomework.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
+import Select from 'react-select';
 import x from '../../../../assets/x.svg';
 
 interface modalType {
@@ -8,35 +15,66 @@ interface modalType {
   onClose: any;
 }
 
-const RemoveHomework = ({ open, onClose }: modalType): React.ReactElement => {
-  const [homeworkList, setHomeworkList] = useState<string[]>([
-    'Introduction',
-    'Exam 1',
-    'Exam 2',
-    'Homework 1',
-  ]);
+const RemoveHomework = (props: {
+  open: boolean;
+  onClose: any;
+  setOpenAlert: React.Dispatch<React.SetStateAction<boolean>>;
+  students: Array<StudentID>;
+  setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
+  course: Course;
+  courseID: string;
+  setCourse: React.Dispatch<React.SetStateAction<Course>>;
+}): React.ReactElement => {
   const [selectedHwk, setSelectedHwk] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [clicked, setClicked] = useState<boolean>(false);
 
   const handleRemoveHomework = () => {
+    let studentIdList = props.students.map((student) => student.id);
     if (selectedHwk == '') {
-      setErrorMessage('*Please select an assignment');
+      setErrorMessage('*Please select a homework');
     } else {
-      // TODO: Confirmation popup(?) & remove homework
-      handleOnClose();
+      removeCourseHomework(props.courseID, studentIdList, selectedHwk)
+        .then((courseData) => {
+          props.setCourse(courseData);
+          getStudentsFromList(courseData.students).then((data) => {
+            props.setStudents(data);
+          });
+          handleOnClose();
+          props.setOpenAlert(true);
+          setClicked(false);
+        })
+        .catch((e: Error) => {
+          setErrorMessage(e.message + '**');
+        });
+    }
+  };
+
+  const handleRemoveConfirmation = () => {
+    if (selectedHwk == '') {
+      setErrorMessage('Please select an assignment**');
+    } else {
+      if (clicked) {
+        //Remove was confirmed
+        handleRemoveHomework();
+      } else {
+        //Ask user to confirm
+        setClicked(!clicked);
+      }
     }
   };
 
   const handleOnClose = (): void => {
-    onClose();
+    props.onClose();
     setSelectedHwk('');
     setErrorMessage('');
+    setClicked(false);
   };
 
   return (
     <Modal
-      open={open}
-      height={235}
+      open={props.open}
+      height={240}
       onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
         handleOnClose();
       }}
@@ -56,27 +94,48 @@ const RemoveHomework = ({ open, onClose }: modalType): React.ReactElement => {
         <div className={styles.content}>
           <h1 className={styles.heading}>Remove Homework</h1>
           <p className={styles.error}>{errorMessage}</p>
-          <select
-            className={styles.selection}
-            defaultValue=""
-            onChange={(event) => {
-              setSelectedHwk(event.target.value);
+          <Select
+            placeholder="Select Homework"
+            className={styles.hwSelection}
+            onChange={(option) => {
+              setErrorMessage('');
+              setClicked(false);
+              setSelectedHwk(option?.label.toString() ?? '');
             }}
-          >
-            <option value="" disabled hidden>
-              Select Homework:
-            </option>
-            {homeworkList.map(function (homework) {
-              return <option value={homework}>{homework}</option>;
+            styles={{
+              control: (baseStyles) => ({
+                ...baseStyles,
+                height: 'fit-content',
+                borderColor: 'black',
+                boxShadow: 'none',
+                '&:focus-within': {
+                  border: '1.5px solid black',
+                },
+                '&:hover': {
+                  border: '1px solid black',
+                },
+              }),
+            }}
+            options={props.course.homeworks.map((hw) => {
+              return { value: hw.name, label: hw.name };
             })}
-          </select>
+            theme={(theme) => ({
+              ...theme,
+              colors: {
+                ...theme.colors,
+                primary25: 'var(--color-pastel-orange)',
+                primary50: 'var(--color-bright-orange)',
+                primary: 'var(--color-orange)',
+              },
+            })}
+          />
           <button
-            className={styles.button}
-            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-              handleRemoveHomework();
-            }}
+            className={`${styles['animated-button']} ${
+              clicked ? styles.clicked : ''
+            }`}
+            onClick={handleRemoveConfirmation}
           >
-            Submit
+            {clicked ? 'Confirm Remove' : 'Remove'}
           </button>
         </div>
       </div>

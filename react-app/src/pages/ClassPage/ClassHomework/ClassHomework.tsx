@@ -165,6 +165,12 @@ const ClassHomework = (props: {
         onClose={() => {
           setOpenRemoveHwModal(!openRemoveHwModal);
         }}
+        setOpenAlert={setOpenAlert}
+        students={props.students}
+        setStudents={props.setStudents}
+        course={props.course}
+        setCourse={props.setCourse}
+        courseID={props.courseID !== undefined ? props.courseID : ''}
       />
       <AddHomework
         open={openAddHwModal}

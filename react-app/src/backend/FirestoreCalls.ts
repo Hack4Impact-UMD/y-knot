@@ -663,32 +663,6 @@ export function addCourseAttendance(
   });
 }
 
-export function removeOLDAttendance(
-  course: Course,
-  courseID: string,
-  attendanceDate: string,
-): Promise<Course> {
-  return new Promise((resolve, reject) => {
-    let newCourseAttendanceList: Attendance[] = [];
-    course.attendance.forEach((att) => {
-      if (att.date !== attendanceDate) {
-        newCourseAttendanceList.push(att);
-      }
-    });
-
-    course.attendance = newCourseAttendanceList;
-    updateCourse(course, courseID)
-      .then(() => {
-        resolve(course);
-      })
-      .catch((e) => {
-        reject(e);
-      });
-  });
-
-  // TODO: Update students to remove corresponding attendance from list
-}
-
 // Remove attendance from course and students
 export function removeCourseAttendance(
   courseId: string,
@@ -895,6 +869,98 @@ export function addCourseHomework(
 
       // Add homework to course
       course.homeworks.push(newHomework);
+      await transaction.update(doc(db, 'Courses', courseId), {
+        homeworks: course.homeworks,
+      });
+
+      await Promise.all(updatePromises)
+        .then(() => {
+          resolve(course);
+        })
+        .catch(() => {
+          reject();
+        });
+    }).catch(() => {
+      reject();
+    });
+  });
+}
+
+// Remove homework from course and students
+export function removeCourseHomework(
+  courseId: string,
+  studentIdList: Array<string>,
+  homeworkName: string,
+): Promise<Course> {
+  return new Promise((resolve, reject) => {
+    runTransaction(db, async (transaction) => {
+      const courseRef = await transaction.get(doc(db, 'Courses', courseId));
+      if (!courseRef.exists()) {
+        reject(new Error('Course does not exist!'));
+        throw 'Course does not exist!';
+      }
+
+      const course: Course = courseRef.data() as Course;
+      // Reject if homework name doesn't exist for course
+      if (!course.homeworks.find((hw) => hw.name == homeworkName)) {
+        reject(new Error('Homework does not exist'));
+        throw 'Homework does not exist';
+      }
+
+      var studentPromises = [];
+      for (const studentId of studentIdList) {
+        studentPromises.push(transaction.get(doc(db, 'Students', studentId)));
+      }
+
+      var studentRefList: any[] = [];
+      await Promise.all(studentPromises)
+        .then((studentRef) => {
+          studentRefList = studentRef;
+        })
+        .catch(() => {
+          reject(new Error('A student does not exist!'));
+          throw 'A student does not exist!';
+        });
+
+      var updatePromises = [];
+
+      for (let i = 0; i < studentRefList.length; i++) {
+        var studentRef = studentRefList[i];
+        const student: Student = studentRef.data() as Student;
+
+        // Get index of course
+        const studentCourse = student.courseInformation.findIndex(
+          (c) => c.id === courseId,
+        );
+
+        if (studentCourse == -1) {
+          reject(new Error('Course does not exist in student'));
+        } else {
+          // Remove homework from student if it exists
+          if (
+            student.courseInformation[studentCourse].homeworks.find(
+              (hw) => hw.name == homeworkName,
+            )
+          ) {
+            student.courseInformation[studentCourse].homeworks =
+              student.courseInformation[studentCourse].homeworks.filter(
+                (hw) => {
+                  return hw.name != homeworkName;
+                },
+              );
+            updatePromises.push(
+              transaction.update(doc(db, 'Students', studentIdList[i]), {
+                courseInformation: student.courseInformation,
+              }),
+            );
+          }
+        }
+      }
+
+      // Remove homework from course
+      course.homeworks = course.homeworks.filter((hw) => {
+        return hw.name != homeworkName;
+      });
       await transaction.update(doc(db, 'Courses', courseId), {
         homeworks: course.homeworks,
       });
