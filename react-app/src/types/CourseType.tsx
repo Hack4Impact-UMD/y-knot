@@ -24,7 +24,6 @@ export interface IntroEmail {
 
 export interface IntroEmailFile {
   name: string;
-  path: string;
   downloadURL: string;
 }
 

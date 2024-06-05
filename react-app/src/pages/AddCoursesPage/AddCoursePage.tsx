@@ -58,7 +58,7 @@ const InputOption: React.FC<OptionProps<any, true, any>> = ({
   );
 };
 
-function AddCoursePage({ setFormSubmitted, history }: any) {
+function AddCoursePage({ setFormSubmitted }: any) {
   const dropdownOptions = ['Program', 'Academy', 'Club'];
   const navigate = useNavigate();
   const authContext = useAuth();

@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
-import { IntroEmailFile } from '../../../types/CourseType';
+import { Course } from '../../../types/CourseType';
+import { updateCourse } from '../../../backend/FirestoreCalls';
 import styles from './ClassMain.module.css';
 import editIcon from '../../../assets/gray-pencil.svg';
 import saveIcon from '../../../assets/save.svg';
@@ -10,26 +11,36 @@ import emailIcon from '../../../assets/email.svg';
 import x from '../../../assets/x.svg';
 import DescriptionIcon from '@mui/icons-material/Description';
 
-const ClassMain = (): JSX.Element => {
+const ClassMain = (props: {
+  course: Course;
+  courseID: string;
+  setCourse: React.Dispatch<React.SetStateAction<Course>>;
+}): JSX.Element => {
   const emailContentRef = useRef<HTMLDivElement>(null);
-  const [text, setText] = useState<string>(
-    'Hello everyone and welcome to math! In this course we will be teaching...',
-  );
   const [editText, setEditText] = useState<boolean>(false);
-  const [files, setFiles] = useState<{
-    uploaded: File[];
-    deleted: IntroEmailFile[];
-  }>({
-    uploaded: [],
-    deleted: [],
-  });
 
   const handleEdit = (): void => {
     if (editText && emailContentRef.current != null) {
       const newText = emailContentRef.current.innerHTML; // Stores the HTML to preserve formatting
 
       if (newText !== null && newText !== undefined) {
-        setText(newText);
+        props.setCourse({
+          ...props.course,
+          introEmail: {
+            content: newText,
+            files: props.course.introEmail.files,
+          },
+        });
+        updateCourse(
+          {
+            ...props.course,
+            introEmail: {
+              content: newText,
+              files: props.course.introEmail.files,
+            },
+          },
+          props.courseID,
+        );
       }
     }
     setEditText(!editText);
@@ -52,9 +63,21 @@ const ClassMain = (): JSX.Element => {
                     type="file"
                     id="upload"
                     onChange={(e: any) =>
-                      setFiles({
-                        ...files,
-                        uploaded: [...files.uploaded, e!.target!.files[0]],
+                      // TODO: Get the proper downloaded file
+                      props.setCourse({
+                        ...props.course,
+                        introEmail: {
+                          ...props.course.introEmail,
+                          files: [
+                            ...props.course.introEmail.files,
+                            {
+                              name: e!.target!.files[0].name,
+                              downloadURL: URL.createObjectURL(
+                                e!.target!.files[0],
+                              ),
+                            },
+                          ],
+                        },
                       })
                     }
                     hidden
@@ -85,26 +108,38 @@ const ClassMain = (): JSX.Element => {
             className={`${styles.introText} ${editText && styles.editing}`}
             contentEditable={editText}
             ref={emailContentRef}
-            dangerouslySetInnerHTML={{ __html: text }}
+            dangerouslySetInnerHTML={{
+              __html: props.course.introEmail.content,
+            }}
           ></div>
         </div>
         <div className={styles.fileContainer}>
-          {files.uploaded?.map((file) => {
+          {props.course.introEmail.files.map((file) => {
             return (
               <div className={styles.containerLines}>
-                <div className={styles.informationText}>
+                <a
+                  href={file.downloadURL}
+                  className={styles.informationText}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <DescriptionIcon />
                   {file.name.length > 30
                     ? file.name.substring(0, 28) +
                       '. . . ' +
                       file.name.substring(file.name.indexOf('.') - 3)
                     : file.name}
-                </div>
+                </a>
                 <button
                   onClick={() => {
-                    setFiles({
-                      ...files,
-                      uploaded: files.uploaded.filter((ele) => ele != file),
+                    props.setCourse({
+                      ...props.course,
+                      introEmail: {
+                        ...props.course.introEmail,
+                        files: props.course.introEmail.files.filter(
+                          (ele) => ele != file,
+                        ),
+                      },
                     });
                   }}
                   className={styles.deleteButton}
