@@ -105,7 +105,7 @@ const ClassStudents = (props: {
     setStudentList(list);
   }, [reloadList, windowWidth]);
 
-  const removePopupClose = (event: any, reason: any) => {
+  const removePopupClose = () => {
     setRemoveSuccess(false);
   };
 

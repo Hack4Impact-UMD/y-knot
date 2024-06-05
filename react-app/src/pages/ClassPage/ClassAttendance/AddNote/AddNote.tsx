@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { Course } from '../../../../types/CourseType';
 import { StudentID } from '../../../../types/StudentType';
+import { DateTime } from 'luxon';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -90,7 +91,7 @@ const AddNote = (props: {
     <Modal
       open={props.open}
       height={375}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+      onClose={() => {
         handleOnClose();
       }}
     >
@@ -114,7 +115,7 @@ const AddNote = (props: {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label=""
-                  format="YYYY-MM-DD"
+                  format="MMM DD, YYYY"
                   slotProps={{ textField: { size: 'small' } }}
                   value={
                     props.selectedDate === ''
@@ -136,7 +137,9 @@ const AddNote = (props: {
                 />
               </LocalizationProvider>
             ) : (
-              <div className={styles.nameInput}>{props.selectedDate}</div>
+              <div className={styles.nameInput}>
+                {DateTime.fromISO(props.selectedDate).toFormat('LLL dd, yyyy')}
+              </div>
             )}
             <ToolTip title={canWrite ? 'Save' : 'Edit'} placement="top">
               <button

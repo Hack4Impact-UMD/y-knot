@@ -1,9 +1,9 @@
 import { useState } from 'react';
+import { TeacherID } from '../../../../types/UserType';
+import { deleteUser } from '../../../../backend/CloudFunctionsCalls';
 import styles from './DeleteTeacherConfirmation.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
 import x from '../../../../assets/x.svg';
-import { TeacherID } from '../../../../types/UserType';
-import { deleteUser } from '../../../../backend/CloudFunctionsCalls';
 
 interface popupModalType {
   onClose: () => void;
@@ -14,9 +14,7 @@ interface popupModalType {
   setReloadList: Function;
   teachers: Array<Partial<TeacherID>>;
   setTeachers: Function;
-  reloadList: boolean;
   setOpenSuccess: Function;
-  setOpenFailure: Function;
 }
 
 const DeleteTeacherConfirmation = ({
@@ -28,9 +26,7 @@ const DeleteTeacherConfirmation = ({
   setReloadList,
   setTeachers,
   teachers,
-  reloadList,
   setOpenSuccess,
-  setOpenFailure,
 }: popupModalType): React.ReactElement => {
   const [submittedError, setSubmittedError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -63,7 +59,7 @@ const DeleteTeacherConfirmation = ({
     <Modal
       height={270}
       open={open}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+      onClose={() => {
         handleOnClose();
       }}
     >
@@ -105,14 +101,14 @@ const DeleteTeacherConfirmation = ({
             ) : (
               <>
                 <button
-                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  onClick={() => {
                     handleConfirm();
                   }}
                 >
                   Yes
                 </button>
                 <button
-                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  onClick={() => {
                     handleOnClose();
                   }}
                 >

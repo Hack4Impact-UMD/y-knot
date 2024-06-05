@@ -53,7 +53,6 @@ const ClassPage = (): JSX.Element => {
   const [isLoading, setLoading] = useState<boolean>(true);
   const [students, setStudents] = useState<StudentID[]>([]);
   const [teachers, setTeachers] = useState<TeacherID[]>([]);
-
   const authContext = useAuth();
   const courseID = useParams().id;
 
@@ -197,7 +196,13 @@ const ClassPage = (): JSX.Element => {
           </div>
 
           {/* For rendering the corresponding component whenever tab value changes */}
-          {currentTab === Tab.Main && <ClassMain />}
+          {currentTab === Tab.Main && (
+            <ClassMain
+              course={course}
+              courseID={courseID!}
+              setCourse={setCourse}
+            />
+          )}
           {currentTab === Tab.Academy && <ClassAcademy courseID={courseID!} />}
           {currentTab === Tab.Students && (
             <ClassStudents

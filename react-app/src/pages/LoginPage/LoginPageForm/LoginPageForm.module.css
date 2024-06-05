@@ -88,15 +88,34 @@
   cursor: pointer;
   background: var(--color-yellow-orange);
 }
+
 .errorContainer {
   height: 18px;
   visibility: hidden;
 }
+
 .showFailureMessage {
   color: var(--color-red);
   padding-top: 1%;
   font-size: 14px;
   width: 50%;
   text-align: center;
+}
 
+@media screen and (max-width: 500px) {
+  .inputField {
+    width: 300px;
+  }
+
+  .passwordContainer input {
+    width: 265px;
+  }
+
+  .showPasswordButton {
+    margin-left: 300px;
+  }
+
+  .signInButton {
+    width: 150px;
+  }
 }

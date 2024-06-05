@@ -58,7 +58,7 @@ const AddAttendance = (props: {
     <Modal
       open={props.open}
       height={425}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+      onClose={() => {
         handleOnClose();
       }}
     >
@@ -84,6 +84,7 @@ const AddAttendance = (props: {
                 value={selectedDate}
                 onChange={(newDate) => setSelectedDate(newDate)}
                 slotProps={{ textField: { size: 'small' } }}
+                format="MMM DD, YYYY"
                 sx={{
                   backgroundColor: '#d9d9d9',
                   borderRadius: '10px',
@@ -107,7 +108,7 @@ const AddAttendance = (props: {
           />
           <button
             className={styles.button}
-            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+            onClick={() => {
               handleAddAttendance();
             }}
           >

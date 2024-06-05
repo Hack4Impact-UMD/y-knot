@@ -1,22 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { useAuth } from '../../../auth/AuthProvider';
 import { type StudentID } from '../../../types/StudentType';
+import { getAllCourses } from '../../../backend/FirestoreCalls';
+import { DateTime } from 'luxon';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import styles from './StudentList.module.css';
 import eyeIcon from '../../../assets/view.svg';
 import trashIcon from '../../../assets/trash.svg';
 import DeleteStudentConfirmation from './DeleteStudentConfirmation/DeleteStudentConfirmation';
-import { useAuth } from '../../../auth/AuthProvider';
-import { TeacherID } from '../../../types/UserType';
-import { getAllCourses } from '../../../backend/FirestoreCalls';
-import { DateTime } from 'luxon';
 
 const StudentList = (props: {
   search: string;
   students: Array<Partial<StudentID>>;
   setStudents: Function;
   setOpenSuccess: Function;
-  teacher: TeacherID | undefined;
 }) => {
   const [studentList, setStudentList] = useState<any[]>([]);
   const [showPopup, setShowPopup] = useState(false);
@@ -40,7 +38,7 @@ const StudentList = (props: {
         const allCurrentCourses = courses.filter(
           (course) =>
             DateTime.fromISO(course.startDate) <= now &&
-            DateTime.fromISO(course.endDate) >= now,
+            DateTime.fromISO(course.endDate) >= now.minus({ days: 1 }),
         );
 
         /* Get students from active courses */
@@ -113,13 +111,7 @@ const StudentList = (props: {
       }
     };
     fetchActiveCoursesStudents();
-  }, [
-    props.search,
-    reloadList,
-    props.students,
-    props.teacher,
-    authContext.token,
-  ]);
+  }, [props.search, reloadList, props.students, authContext.token]);
 
   const handleClick = () => {
     setShowPopup(true);
@@ -158,7 +150,6 @@ const StudentList = (props: {
                 removeStudentId != null ? removeStudentId : 'undefined'
               }
               setReloadList={setReloadList}
-              reloadList={reloadList}
               students={props.students}
               setStudents={props.setStudents}
               setOpenSuccess={props.setOpenSuccess}

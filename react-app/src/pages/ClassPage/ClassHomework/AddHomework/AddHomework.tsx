@@ -57,7 +57,7 @@ const AddHomework = (props: {
     <Modal
       open={props.open}
       height={425}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+      onClose={() => {
         handleOnClose();
       }}
     >
@@ -93,7 +93,7 @@ const AddHomework = (props: {
           />
           <button
             className={styles.button}
-            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+            onClick={() => {
               handleAddHomework();
             }}
           >

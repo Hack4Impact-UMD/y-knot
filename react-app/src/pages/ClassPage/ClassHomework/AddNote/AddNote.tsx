@@ -88,7 +88,7 @@ const AddNote = (props: {
     <Modal
       open={props.open}
       height={375}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+      onClose={() => {
         handleOnClose();
       }}
     >

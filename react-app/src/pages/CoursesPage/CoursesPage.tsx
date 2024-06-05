@@ -1,17 +1,18 @@
-import { useAuth } from '../../../src/auth/AuthProvider';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../src/auth/AuthProvider';
 import { type CourseID } from '../../types/CourseType';
 import { getAllCourses } from '../../../src/backend/FirestoreCalls';
+import { Alert, Snackbar } from '@mui/material';
 import { DateTime } from 'luxon';
 import styles from './CoursesPage.module.css';
 import CourseCard from '../../components/CourseCard/CourseCard';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
-import { Alert, Snackbar } from '@mui/material';
 
 const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
   const authContext = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [filteredCurrentCourses, setFilteredCurrentCourses] = useState<
@@ -27,7 +28,6 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
   const [allCurrentCourses, setAllCurrentCourses] = useState<CourseID[]>([]);
   const [allPastCourses, setAllPastCourses] = useState<CourseID[]>([]);
   const [allUpcomingCourses, setAllUpcomingCourses] = useState<CourseID[]>([]);
-  const navigate = useNavigate();
 
   const colors = [
     'var(--color-green)',
@@ -39,7 +39,6 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
   // Used to detect time in between keystrokes when using the search bar
   let timer: NodeJS.Timeout | null = null;
   useEffect(() => {
-    console.log('formSubmitted: ', formSubmitted);
     getAllCourses()
       .then((courses) => {
         const now = DateTime.now();
@@ -49,10 +48,10 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
         const tempAllCurrentCourses = courses.filter(
           (course) =>
             DateTime.fromISO(course.startDate) <= now &&
-            DateTime.fromISO(course.endDate) >= now,
+            DateTime.fromISO(course.endDate) >= now.minus({ days: 1 }),
         );
         const tempAllPastCourses = courses.filter(
-          (course) => DateTime.fromISO(course.endDate) < now,
+          (course) => DateTime.fromISO(course.endDate) < now.minus({ days: 1 }),
         );
 
         setAllPastCourses(tempAllPastCourses);
@@ -63,9 +62,8 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
         setFilteredUpcomingCourses(tempAllUpcomingCourses);
         setFilteredCurrentCourses(tempAllCurrentCourses);
       })
-      .catch((error) => {
+      .catch(() => {
         setError(true);
-        console.log(error);
       })
       .finally(() => {
         setLoading(false);
@@ -78,7 +76,7 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
       const now = DateTime.now();
       if (
         DateTime.fromISO(course.startDate) > now ||
-        DateTime.fromISO(course.endDate) < now
+        DateTime.fromISO(course.endDate) < now.minus({ days: 1 })
       ) {
         color = 'gray';
       }
@@ -138,8 +136,7 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
     navigate('/courses/add');
   };
 
-  const handleToClose = (event: any, reason: any) => {
-    console.log('closing');
+  const handleToClose = () => {
     setFormSubmitted(false);
   };
 
@@ -208,7 +205,7 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
                   )}
                 </div>
 
-                {authContext?.token?.claims.role != 'TEACHER' ? (
+                {authContext?.token?.claims.role === 'ADMIN' ? (
                   <>
                     <div className={styles.courseHeader}>
                       <h1 className={styles.courseStatus}>Past Courses</h1>

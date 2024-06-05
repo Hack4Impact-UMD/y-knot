@@ -31,7 +31,7 @@ interface MergedStudentType {
   setMergedStudentSchool: React.Dispatch<React.SetStateAction<MergedPropType>>;
 }
 
-//Used to reset merged student state values
+// Used to reset merged student state values
 export const EmptyMergedPropType = {
   student: '',
   value: '-',
@@ -41,7 +41,7 @@ export const EmptyMergedPropType = {
 // Bypasses the need to pass state and setter to each of the components individually.
 const MergedStudentContext = createContext<MergedStudentType>(null!);
 
-//TODO: Add merge student functionality
+// TODO: Add merge student functionality
 const MergeStudentPage = (): JSX.Element => {
   const authContext = useAuth();
   const navigate = useNavigate();
@@ -87,7 +87,7 @@ const MergeStudentPage = (): JSX.Element => {
         <div className={styles.loading}>
           <Loading />
         </div>
-      ) : authContext?.token?.claims.role === 'TEACHER' ? (
+      ) : authContext?.token?.claims.role !== 'ADMIN' ? (
         <div className={styles.invalidAccess}>
           Only admins have access to this page
         </div>

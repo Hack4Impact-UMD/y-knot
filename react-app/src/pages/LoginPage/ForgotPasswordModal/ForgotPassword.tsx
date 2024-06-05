@@ -59,7 +59,7 @@ const ForgotPassword = ({
     <Modal
       height={200}
       open={open}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+      onClose={() => {
         handleOnClose();
       }}
     >
@@ -111,7 +111,7 @@ const ForgotPassword = ({
             <button
               type="button"
               className={styles.resetButton}
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+              onClick={() => {
                 handlePasswordReset();
               }}
               disabled={loading}

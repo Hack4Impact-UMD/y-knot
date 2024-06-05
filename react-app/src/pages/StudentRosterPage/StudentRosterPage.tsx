@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router';
 import { useAuth } from '../../auth/AuthProvider';
 import { Alert, Snackbar } from '@mui/material';
 import { StudentID } from '../../types/StudentType';
-import { TeacherID } from '../../types/UserType';
 import styles from './StudentRosterPage.module.css';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
@@ -15,13 +14,12 @@ const StudentRosterPage = (): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
-  const [teacher, setTeacher] = useState<TeacherID | undefined>(undefined);
   const auth = useAuth();
   const navigate = useNavigate();
 
   // Used to handle Deletion alert
   const [openSuccess, setOpenSuccess] = useState<boolean>(false);
-  const handleToClose = (event: any, reason: any) => {
+  const handleToClose = () => {
     setOpenSuccess(false);
   };
 
@@ -46,7 +44,7 @@ const StudentRosterPage = (): JSX.Element => {
         });
         setStudents(partialStudents);
       })
-      .catch((err) => {
+      .catch(() => {
         setError(true);
       })
       .finally(() => {
@@ -122,7 +120,6 @@ const StudentRosterPage = (): JSX.Element => {
                 students={students}
                 setStudents={setStudents}
                 setOpenSuccess={setOpenSuccess}
-                teacher={teacher}
               />
             )}
           </div>

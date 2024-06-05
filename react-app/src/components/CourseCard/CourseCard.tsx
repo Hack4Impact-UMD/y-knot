@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../../src/auth/AuthProvider';
-import styles from './CourseCard.module.css';
 import { DateTime } from 'luxon';
 import { getTeacher } from '../../backend/FirestoreCalls';
 import type { Teacher } from '../../types/UserType';
+import styles from './CourseCard.module.css';
 
 const dateFormat = 'LLL dd, yyyy';
 

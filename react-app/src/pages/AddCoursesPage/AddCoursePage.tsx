@@ -58,7 +58,7 @@ const InputOption: React.FC<OptionProps<any, true, any>> = ({
   );
 };
 
-function AddCoursePage({ setFormSubmitted, history }: any) {
+function AddCoursePage({ setFormSubmitted }: any) {
   const dropdownOptions = ['Program', 'Academy', 'Club'];
   const navigate = useNavigate();
   const authContext = useAuth();
@@ -75,26 +75,6 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
     leadershipApp: Yup.boolean().required('*Required'),
     formId: Yup.string().required('*Required'),
   });
-
-  const selectBoxStyle = {
-    control: (baseStyles: any) => ({
-      ...baseStyles,
-      width: '300px',
-      height: 'fit-content',
-      borderColor: 'black',
-      boxShadow: 'none',
-      '&:focus-within': {
-        border: '2px solid black',
-      },
-      '&:hover': {
-        border: '1px solid black',
-      },
-    }),
-    multiValueRemove: (provided: any) => ({
-      ...provided,
-      color: 'var(--color-orange)',
-    }),
-  };
 
   const blankCourse: Course = {
     name: '',
@@ -324,7 +304,7 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                           border: '1px solid black',
                         },
                       }),
-                    }} 
+                    }}
                     className={styles.dateSelection}
                   />
                 </div>
@@ -394,13 +374,12 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                   courseSchema
                     .validate(course, { abortEarly: false })
                     .then(() => {
-                      console.log(course);
                       addCourse(course)
                         .then(() => {
                           setFormSubmitted(true);
                           handleClose();
                         })
-                        .catch((error) => {})
+                        .catch(() => {})
                         .finally(() => {
                           setFieldErrors({});
                         });
@@ -412,7 +391,6 @@ function AddCoursePage({ setFormSubmitted, history }: any) {
                         const path = error.inner[i].path;
 
                         if (path !== undefined) {
-                          console.log('date error: ' + error.inner[i].message);
                           newErrors[path] = error.inner[i].message.includes(
                             'must be a `date` type',
                           )

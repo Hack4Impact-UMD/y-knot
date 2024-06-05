@@ -47,7 +47,7 @@ const ClassPage = (props: {
     return str && str[0].toUpperCase() + str.slice(1).toLowerCase();
   }
 
-  const snackbarClose = (event: any, reason: any) => {
+  const snackbarClose = () => {
     setCourseUpdated(false);
   };
 
@@ -260,30 +260,7 @@ const ClassPage = (props: {
         <div className={styles.studentBox}>
           <p className={styles.boxTitle}>JotForm ID</p>
           <div className={styles.inputContainer}>
-            {editing ? (
-              <>
-                <input
-                  className={styles.inputBox}
-                  placeholder="Enter ID"
-                  value={course.formId}
-                  onChange={(event) => {
-                    setCourse({
-                      ...course,
-                      formId: event.target.value,
-                    });
-                  }}
-                ></input>
-                {'formId' in fieldErrors ? (
-                  <div className={styles.errorMessage}>
-                    {fieldErrors.formId}
-                  </div>
-                ) : (
-                  <></>
-                )}
-              </>
-            ) : (
-              <p className={styles.boxText}>{course.formId}</p>
-            )}
+            <p className={styles.boxText}>{course.formId}</p>
           </div>
         </div>
       </div>
@@ -301,7 +278,7 @@ const ClassPage = (props: {
                       .then(() => {
                         setCourseUpdated(true);
                       })
-                      .catch((error) => {})
+                      .catch(() => {})
                       .finally(() => {
                         setFieldErrors({});
                         setEditing(!editing);

@@ -76,7 +76,7 @@ const ResetEmail = ({ open, onClose }: modalType): React.ReactElement => {
     <Modal
       height={325}
       open={open}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+      onClose={() => {
         handleOnClose();
       }}
     >
@@ -159,7 +159,7 @@ const ResetEmail = ({ open, onClose }: modalType): React.ReactElement => {
           <div className={styles.container}>
             <button
               className={styles.resetButton}
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+              onClick={() => {
                 handleEmailChange();
               }}
               disabled={loading}

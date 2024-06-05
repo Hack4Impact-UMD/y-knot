@@ -70,7 +70,7 @@ const DeleteTeacherClassConfirmation = ({
     <Modal
       height={280}
       open={open}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+      onClose={() => {
         handleOnClose();
       }}
     >
@@ -113,14 +113,14 @@ const DeleteTeacherClassConfirmation = ({
             ) : (
               <>
                 <button
-                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  onClick={() => {
                     handleConfirm();
                   }}
                 >
                   Yes
                 </button>
                 <button
-                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  onClick={() => {
                     handleOnClose();
                   }}
                 >

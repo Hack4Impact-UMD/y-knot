@@ -3,6 +3,7 @@ import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import type { StudentID } from '../../../types/StudentType';
 import type { Course } from '../../../types/CourseType';
 import { Snackbar, Alert } from '@mui/material';
+import { DateTime } from 'luxon';
 import { updateStudentAttendance } from '../../../backend/FirestoreCalls';
 import Select from 'react-select';
 import styles from './ClassAttendance.module.css';
@@ -10,6 +11,8 @@ import noteIcon from '../../../assets/note.svg';
 import AddNote from './AddNote/AddNote';
 import RemoveAttendance from './RemoveAttendance/RemoveAttendance';
 import AddAttendance from './AddAttendance/AddAttendance';
+
+const dateFormat = 'LLL dd, yyyy';
 
 const ClassAttendance = (props: {
   students: Array<StudentID>;
@@ -20,7 +23,10 @@ const ClassAttendance = (props: {
 }): JSX.Element => {
   const [selectComponentValue, setSelectComponentValue] = useState<any>({
     value: props.course.attendance.slice(-1)[0]?.date.toString() ?? '',
-    label: props.course.attendance.slice(-1)[0]?.date.toString() ?? 'Date',
+    label:
+      DateTime.fromISO(props.course.attendance.slice(-1)[0]?.date).toFormat(
+        dateFormat,
+      ) ?? 'Date',
   });
   const [selectedDate, setSelectedDate] = useState<string>(
     props.course.attendance !== undefined && props.course.attendance.length > 0
@@ -100,12 +106,18 @@ const ClassAttendance = (props: {
 
   useEffect(() => {
     let options = props.course.attendance.map((attendance) => {
-      return { value: attendance.date, label: attendance.date };
+      return {
+        value: attendance.date,
+        label: DateTime.fromISO(attendance.date).toFormat(dateFormat),
+      };
     });
     setDropdownOptions(options);
     setSelectComponentValue({
       value: props.course.attendance.slice(-1)[0]?.date.toString() ?? '',
-      label: props.course.attendance.slice(-1)[0]?.date.toString() ?? 'Date',
+      label:
+        DateTime.fromISO(props.course.attendance.slice(-1)[0]?.date).toFormat(
+          dateFormat,
+        ) ?? 'Date',
     });
     setSelectedDate(
       props.course.attendance.slice(-1)[0]?.date.toString() ?? '',
@@ -142,7 +154,7 @@ const ClassAttendance = (props: {
           className={styles.dateSelection}
           onChange={(option) => {
             setSelectComponentValue(option);
-            parseAttendance(option?.label.toString() ?? '');
+            parseAttendance(option?.value.toString() ?? '');
           }}
           styles={{
             control: (baseStyles) => ({

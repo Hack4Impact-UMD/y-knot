@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useAuth } from '../../auth/AuthProvider';
 import {
@@ -8,6 +8,7 @@ import {
   getCourse,
 } from '../../backend/FirestoreCalls';
 import { type Student } from '../../types/StudentType';
+import { CourseID } from '../../types/CourseType';
 import { ToolTip } from '../../components/ToolTip/ToolTip';
 import { DateTime } from 'luxon';
 import styles from './StudentProfilePage.module.css';
@@ -18,14 +19,8 @@ import saveImage from '../../assets/save.svg';
 import transcriptIcon from '../../assets/transcript.svg';
 import CourseCard from '../../components/CourseCard/CourseCard';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
-import { CourseID } from '../../types/CourseType';
 
 const StudentProfilePage = (): JSX.Element => {
-  const [editing, setEditing] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
-  const [pageError, setPageError] = useState<boolean>(false);
-
   const blankStudent: Student = {
     firstName: '',
     middleName: '',
@@ -45,12 +40,17 @@ const StudentProfilePage = (): JSX.Element => {
     schoolName: '',
     courseInformation: [],
   };
+
+  const [editing, setEditing] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<boolean>(false);
+  const [pageError, setPageError] = useState<boolean>(false);
   const [student, setStudent] = useState<Student>(blankStudent);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [courses, setCourses] = useState<CourseID[]>([]);
   const authContext = useAuth();
   const studentID = useParams().id;
-  const navigate = useNavigate();
-  const [courses, setCourses] = useState<CourseID[]>([]);
+
   const colors = [
     'var(--color-green)',
     'var(--color-orange)',
@@ -101,7 +101,7 @@ const StudentProfilePage = (): JSX.Element => {
       let isInSession = true;
       if (
         DateTime.fromISO(course.startDate) > now ||
-        DateTime.fromISO(course.endDate) < now
+        DateTime.fromISO(course.endDate) < now.minus({ days: 1 })
       ) {
         isInSession = false;
       }
@@ -119,7 +119,7 @@ const StudentProfilePage = (): JSX.Element => {
       const now = DateTime.now();
       if (
         DateTime.fromISO(course.startDate) > now ||
-        DateTime.fromISO(course.endDate) < now
+        DateTime.fromISO(course.endDate) < now.minus({ days: 1 })
       ) {
         color = 'gray';
       }

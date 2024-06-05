@@ -1,18 +1,12 @@
-import { Student, type StudentID } from '../../types/StudentType';
 import { useState, useEffect } from 'react';
-import {
-  getAllStudents,
-  getAllTeachers,
-  getStudent,
-} from '../../backend/FirestoreCalls';
-import { authenticateUser } from '../../backend/FirebaseCalls';
 import { useAuth } from '../../auth/AuthProvider';
+import { getAllTeachers } from '../../backend/FirestoreCalls';
+import { type TeacherID } from '../../types/UserType';
+import { Alert, Snackbar } from '@mui/material';
 import styles from './TeacherRosterPage.module.css';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
 import TeacherList from './TeacherList/TeacherList';
-import { Alert, Snackbar } from '@mui/material';
-import { type TeacherID } from '../../types/UserType';
 import AddTeacher from './AddTeacher/AddTeacher';
 
 const TeacherRosterPage = (): JSX.Element => {
@@ -21,16 +15,12 @@ const TeacherRosterPage = (): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
-
-  // Used to handle Deletion alert
-  const [openSuccess, setOpenSuccess] = useState<boolean>(false);
-  const [openFailure, setOpenFailure] = useState<boolean>(false);
-  const handleToClose = (event: any, reason: any) => {
-    setOpenSuccess(false);
-    setOpenFailure(false);
-  };
-
+  const [openSuccess, setOpenSuccess] = useState<boolean>(false); // Used to handle Deletion alert
   const auth = useAuth();
+
+  const handleToClose = () => {
+    setOpenSuccess(false);
+  };
 
   // Used to detect time in between keystrokes when using the search bar
   let timer: NodeJS.Timeout | null = null;
@@ -132,7 +122,6 @@ const TeacherRosterPage = (): JSX.Element => {
                 teachers={teachers}
                 setTeachers={setTeachers}
                 setOpenSuccess={setOpenSuccess}
-                setOpenFailure={setOpenFailure}
               />
             )}
           </div>

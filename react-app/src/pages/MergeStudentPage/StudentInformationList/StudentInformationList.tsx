@@ -65,14 +65,14 @@ const StudentInformationList = (props: {
               MergedStudentContext.mergedStudentName.student !==
               props.whichStudent
             ) {
-              //Other checkbox is selected
-              //"Unselect" previous by changing value to current student
+              // Other checkbox is selected
+              // "Unselect" previous by changing value to current student
               MergedStudentContext.setMergedStudentName({
                 student: props.whichStudent,
                 value: `${props.student.firstName} ${props.student.lastName}`,
               });
             } else {
-              //"Unselect" the current student by setting to empty prop type
+              // "Unselect" the current student by setting to empty prop type
               MergedStudentContext.setMergedStudentName(EmptyMergedPropType);
             }
           }}

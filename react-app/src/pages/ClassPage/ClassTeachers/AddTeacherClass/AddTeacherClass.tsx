@@ -171,7 +171,7 @@ const AddTeacherClass = ({
     <Modal
       open={open}
       height={250}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+      onClose={() => {
         handleOnClose();
       }}
     >
@@ -213,7 +213,7 @@ const AddTeacherClass = ({
           />
           <button
             className={styles.button}
-            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+            onClick={() => {
               handleAddTeacher();
             }}
           >

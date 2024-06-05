@@ -12,7 +12,6 @@ const TeacherList = (props: {
   teachers: Array<Partial<TeacherID>>;
   setTeachers: Function;
   setOpenSuccess: Function;
-  setOpenFailure: Function;
 }) => {
   const [teacherList, setTeacherList] = useState<any[]>([]);
   const [showPopup, setShowPopup] = useState(false);
@@ -110,11 +109,9 @@ const TeacherList = (props: {
                 removeTeacherId != null ? removeTeacherId : 'undefined'
               }
               setReloadList={setReloadList}
-              reloadList={reloadList}
               teachers={props.teachers}
               setTeachers={props.setTeachers}
               setOpenSuccess={props.setOpenSuccess}
-              setOpenFailure={props.setOpenFailure}
             />
           )}
           {numToShow < props.teachers.length && (

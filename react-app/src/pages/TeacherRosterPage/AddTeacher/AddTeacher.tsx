@@ -1,10 +1,5 @@
 import { useState } from 'react';
-import { authenticateUser } from '../../../backend/FirebaseCalls';
-import { useAuth } from '../../../auth/AuthProvider';
-import {
-  createUser,
-  updateUserEmail,
-} from '../../../backend/CloudFunctionsCalls';
+import { createUser } from '../../../backend/CloudFunctionsCalls';
 import { useNavigate } from 'react-router-dom';
 import styles from './AddTeacher.module.css';
 import Modal from '../../../components/ModalWrapper/Modal';
@@ -23,7 +18,6 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const auth = useAuth();
   const navigate = useNavigate();
 
   const handleEmailChange = async () => {
@@ -71,7 +65,7 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
     <Modal
       height={325}
       open={open}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+      onClose={() => {
         handleOnClose();
       }}
     >
@@ -154,7 +148,7 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
           <div className={styles.container}>
             <button
               className={styles.resetButton}
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+              onClick={() => {
                 handleEmailChange();
               }}
               disabled={loading}
