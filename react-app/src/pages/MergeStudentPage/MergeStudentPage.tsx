@@ -87,7 +87,7 @@ const MergeStudentPage = (): JSX.Element => {
         <div className={styles.loading}>
           <Loading />
         </div>
-      ) : authContext?.token?.claims.role === 'TEACHER' ? (
+      ) : authContext?.token?.claims.role !== 'ADMIN' ? (
         <div className={styles.invalidAccess}>
           Only admins have access to this page
         </div>

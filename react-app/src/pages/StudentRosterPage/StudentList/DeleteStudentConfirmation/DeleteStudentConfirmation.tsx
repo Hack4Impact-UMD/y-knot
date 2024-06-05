@@ -14,7 +14,6 @@ interface popupModalType {
   setReloadList: Function;
   students: Array<Partial<StudentID>>;
   setStudents: Function;
-  reloadList: boolean;
   setOpenSuccess: Function;
 }
 
@@ -27,7 +26,6 @@ const DeleteStudentConfirmation = ({
   setReloadList,
   setStudents,
   students,
-  reloadList,
   setOpenSuccess,
 }: popupModalType): React.ReactElement => {
   const [errorMessage, setErrorMessage] = useState<string>('');

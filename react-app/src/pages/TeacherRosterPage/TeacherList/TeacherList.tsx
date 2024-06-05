@@ -109,7 +109,6 @@ const TeacherList = (props: {
                 removeTeacherId != null ? removeTeacherId : 'undefined'
               }
               setReloadList={setReloadList}
-              reloadList={reloadList}
               teachers={props.teachers}
               setTeachers={props.setTeachers}
               setOpenSuccess={props.setOpenSuccess}

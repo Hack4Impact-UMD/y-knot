@@ -205,7 +205,7 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
                   )}
                 </div>
 
-                {authContext?.token?.claims.role != 'TEACHER' ? (
+                {authContext?.token?.claims.role === 'ADMIN' ? (
                   <>
                     <div className={styles.courseHeader}>
                       <h1 className={styles.courseStatus}>Past Courses</h1>
