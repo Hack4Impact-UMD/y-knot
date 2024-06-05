@@ -122,7 +122,7 @@ const AddTeacherClass = ({
         );
         setTeachers(partialTeachers);
       })
-      .catch((err) => {})
+      .catch(() => {})
       .finally(() => {});
   });
 
