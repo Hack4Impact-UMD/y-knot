@@ -18,6 +18,7 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [canClose, setCanClose] = useState<boolean>(true);
   const navigate = useNavigate();
 
   const handleEmailChange = async () => {
@@ -38,11 +39,14 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
     ) {
       setErrorMessage('*Invalid email address.');
     } else {
+      setCanClose(false);
       await createUser(newEmail, password, 'TEACHER')
         .then(() => {
           window.location.reload();
         })
-        .catch(() => {});
+        .finally(() => {
+          setCanClose(true);
+        });
     }
     setTimeout(() => {
       setLoading(false);
@@ -50,15 +54,17 @@ const AddTeacher = ({ open, onClose }: modalType): React.ReactElement => {
   };
 
   const handleOnClose = (): void => {
-    if (submitted) {
-      navigate('../login');
+    if (canClose) {
+      if (submitted) {
+        navigate('../login');
+      }
+      onClose();
+      setSubmitted(false);
+      setNewEmail('');
+      setConfirmNewEmail('');
+      setErrorMessage('');
+      setLoading(false);
     }
-    onClose();
-    setSubmitted(false);
-    setNewEmail('');
-    setConfirmNewEmail('');
-    setErrorMessage('');
-    setLoading(false);
   };
 
   return (
