@@ -38,7 +38,7 @@ const StudentList = (props: {
         const allCurrentCourses = courses.filter(
           (course) =>
             DateTime.fromISO(course.startDate) <= now &&
-            DateTime.fromISO(course.endDate) >= now,
+            DateTime.fromISO(course.endDate) >= now.minus({ days: 1 }),
         );
 
         /* Get students from active courses */

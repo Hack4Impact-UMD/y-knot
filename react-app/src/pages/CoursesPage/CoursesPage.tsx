@@ -48,10 +48,10 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
         const tempAllCurrentCourses = courses.filter(
           (course) =>
             DateTime.fromISO(course.startDate) <= now &&
-            DateTime.fromISO(course.endDate) >= now,
+            DateTime.fromISO(course.endDate) >= now.minus({ days: 1 }),
         );
         const tempAllPastCourses = courses.filter(
-          (course) => DateTime.fromISO(course.endDate) < now,
+          (course) => DateTime.fromISO(course.endDate) < now.minus({ days: 1 }),
         );
 
         setAllPastCourses(tempAllPastCourses);
@@ -76,7 +76,7 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
       const now = DateTime.now();
       if (
         DateTime.fromISO(course.startDate) > now ||
-        DateTime.fromISO(course.endDate) < now
+        DateTime.fromISO(course.endDate) < now.minus({ days: 1 })
       ) {
         color = 'gray';
       }

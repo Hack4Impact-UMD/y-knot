@@ -68,7 +68,7 @@ const TeacherProfilePage = (): JSX.Element => {
       let isInSession = true;
       if (
         DateTime.fromISO(course.startDate) > now ||
-        DateTime.fromISO(course.endDate) < now
+        DateTime.fromISO(course.endDate) < now.minus({ days: 1 })
       ) {
         isInSession = false;
       }
@@ -86,7 +86,7 @@ const TeacherProfilePage = (): JSX.Element => {
       const now = DateTime.now();
       if (
         DateTime.fromISO(course.startDate) > now ||
-        DateTime.fromISO(course.endDate) < now
+        DateTime.fromISO(course.endDate) < now.minus({ days: 1 })
       ) {
         color = 'gray';
       }
