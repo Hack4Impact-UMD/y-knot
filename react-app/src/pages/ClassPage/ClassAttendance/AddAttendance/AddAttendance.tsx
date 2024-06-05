@@ -84,6 +84,7 @@ const AddAttendance = (props: {
                 value={selectedDate}
                 onChange={(newDate) => setSelectedDate(newDate)}
                 slotProps={{ textField: { size: 'small' } }}
+                format="MMM DD, YYYY"
                 sx={{
                   backgroundColor: '#d9d9d9',
                   borderRadius: '10px',

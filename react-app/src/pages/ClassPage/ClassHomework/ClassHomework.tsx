@@ -180,8 +180,8 @@ const ClassHomework = (props: {
                     {checkedCheckboxes.some(
                       (checkedCheckbox) => checkedCheckbox === student.id,
                     )
-                      ? 'Present'
-                      : 'Absent'}
+                      ? 'Complete'
+                      : 'Incomplete'}
                   </label>
                 </div>
               </div>

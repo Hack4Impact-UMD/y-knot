@@ -5,6 +5,7 @@ import {
   getStudentsFromList,
   removeCourseAttendance,
 } from '../../../../backend/FirestoreCalls';
+import { DateTime } from 'luxon';
 import styles from './RemoveAttendance.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
 import Select from 'react-select';
@@ -95,7 +96,7 @@ const RemoveAttendance = (props: {
             onChange={(option) => {
               setErrorMessage('');
               setClicked(false);
-              setSelectedDate(option?.label.toString() ?? '');
+              setSelectedDate(option?.value.toString() ?? '');
             }}
             styles={{
               control: (baseStyles) => ({
@@ -112,7 +113,12 @@ const RemoveAttendance = (props: {
               }),
             }}
             options={props.course.attendance.map((attendance) => {
-              return { value: attendance.date, label: attendance.date };
+              return {
+                value: attendance.date,
+                label: DateTime.fromISO(attendance.date).toFormat(
+                  'LLL dd, yyyy',
+                ),
+              };
             })}
             theme={(theme) => ({
               ...theme,
