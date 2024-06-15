@@ -123,42 +123,40 @@ const ClassPage = (props: {
         <div className={styles.studentBox}>
           <p className={styles.boxTitle}>End Date</p>
           <div className={styles.inputContainer}>
-            <div className={styles.inputContainer}>
-              {editing ? (
-                <>
-                  <DatePicker
-                    label=""
-                    defaultValue={DateTime.fromISO(course.endDate)}
-                    onChange={(newValue: DateTime | null) =>
-                      setCourse({
-                        ...course,
-                        endDate: newValue ? formatDateToYYYYMMDD(newValue) : '',
-                      })
-                    }
-                    slotProps={{ textField: { size: 'small' } }}
-                    sx={{
-                      '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline':
-                        {
-                          border: '1px solid black',
-                        }, // at page load
-                      '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
-                        { border: '2px solid black' }, // at focused state
-                    }}
-                  />
-                  {'endDate' in fieldErrors ? (
-                    <div className={styles.errorMessage}>
-                      {fieldErrors.endDate}
-                    </div>
-                  ) : (
-                    <></>
-                  )}
-                </>
-              ) : (
-                <p className={styles.boxText}>
-                  {DateTime.fromISO(course.endDate).toFormat('LLLL dd, yyyy')}
-                </p>
-              )}
-            </div>
+            {editing ? (
+              <>
+                <DatePicker
+                  label=""
+                  defaultValue={DateTime.fromISO(course.endDate)}
+                  onChange={(newValue: DateTime | null) =>
+                    setCourse({
+                      ...course,
+                      endDate: newValue ? formatDateToYYYYMMDD(newValue) : '',
+                    })
+                  }
+                  slotProps={{ textField: { size: 'small' } }}
+                  sx={{
+                    '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline':
+                      {
+                        border: '1px solid black',
+                      }, // at page load
+                    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                      { border: '2px solid black' }, // at focused state
+                  }}
+                />
+                {'endDate' in fieldErrors ? (
+                  <div className={styles.errorMessage}>
+                    {fieldErrors.endDate}
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </>
+            ) : (
+              <p className={styles.boxText}>
+                {DateTime.fromISO(course.endDate).toFormat('LLLL dd, yyyy')}
+              </p>
+            )}
           </div>
         </div>
         <div className={styles.studentBox}>
