@@ -1,6 +1,5 @@
 import { Student } from '../../../types/StudentType';
 import { useMergedStudentContext } from '../MergeStudentPage';
-import { EmptyMergedPropType } from '../MergeStudentPage';
 import { Checkbox } from '@mui/material';
 import styles from './StudentInformationList.module.css';
 import styled from '@emotion/styled';
@@ -46,7 +45,242 @@ const StudentInformationList = (props: {
       <div className={`${styles.box} ${styles.roundTop}`}>
         <p className={styles.boxTitle}>Name</p>
         <p className={styles.boxContent}>
-          {`${props.student.firstName} ${props.student.lastName}`}
+          {`${props.student.firstName} ${
+            props.student.middleName ? props.student.middleName + ' ' : ''
+          }${props.student.lastName}`}
+        </p>
+        <Checkbox
+          sx={{
+            '&:hover': { bgcolor: 'transparent' },
+          }}
+          disableRipple
+          color="default"
+          checked={
+            props.whichStudent === MergedStudentContext.mergedStudent.name
+          }
+          checkedIcon={<BpCheckedIcon />}
+          icon={<BpIcon />}
+          onChange={() => {
+            if (
+              MergedStudentContext.mergedStudent.name !== props.whichStudent
+            ) {
+              // Other checkbox is selected
+              // "Unselect" previous by changing value to current student
+              MergedStudentContext.setMergedStudent({
+                ...MergedStudentContext.mergedStudent,
+                name: props.whichStudent,
+              });
+            } else {
+              // "Unselect" the current student by setting to empty prop type
+              MergedStudentContext.setMergedStudent({
+                ...MergedStudentContext.mergedStudent,
+                name: '',
+              });
+            }
+          }}
+        />
+      </div>
+      <div className={styles.box}>
+        <p className={styles.boxTitle}>Email</p>
+        <p className={styles.boxContent}>{props.student.email ?? ''}</p>
+        <Checkbox
+          sx={{
+            '&:hover': { bgcolor: 'transparent' },
+          }}
+          disableRipple
+          color="default"
+          checked={
+            props.whichStudent === MergedStudentContext.mergedStudent.email
+          }
+          checkedIcon={<BpCheckedIcon />}
+          icon={<BpIcon />}
+          onChange={() => {
+            if (
+              MergedStudentContext.mergedStudent.email !== props.whichStudent
+            ) {
+              MergedStudentContext.setMergedStudent({
+                ...MergedStudentContext.mergedStudent,
+                email: props.whichStudent,
+              });
+            } else {
+              MergedStudentContext.setMergedStudent({
+                ...MergedStudentContext.mergedStudent,
+                email: '',
+              });
+            }
+          }}
+        />
+      </div>
+      <div className={styles.box}>
+        <p className={styles.boxTitle}>Phone</p>
+        <p className={styles.boxContent}>{props.student.phone ?? ''}</p>
+        <Checkbox
+          sx={{
+            '&:hover': { bgcolor: 'transparent' },
+          }}
+          disableRipple
+          color="default"
+          checked={
+            props.whichStudent === MergedStudentContext.mergedStudent.phone
+          }
+          checkedIcon={<BpCheckedIcon />}
+          icon={<BpIcon />}
+          onChange={() => {
+            if (
+              MergedStudentContext.mergedStudent.phone !== props.whichStudent
+            ) {
+              MergedStudentContext.setMergedStudent({
+                ...MergedStudentContext.mergedStudent,
+                phone: props.whichStudent,
+              });
+            } else {
+              MergedStudentContext.setMergedStudent({
+                ...MergedStudentContext.mergedStudent,
+                phone: '',
+              });
+            }
+          }}
+        />
+      </div>
+      <div className={styles.box}>
+        <p className={styles.boxTitle}>Birthdate</p>
+        <p className={styles.boxContent}>{props.student.birthDate ?? ''}</p>
+        <Checkbox
+          sx={{
+            '&:hover': { bgcolor: 'transparent' },
+          }}
+          disableRipple
+          color="default"
+          checked={
+            props.whichStudent === MergedStudentContext.mergedStudent.birthDate
+          }
+          checkedIcon={<BpCheckedIcon />}
+          icon={<BpIcon />}
+          onChange={() => {
+            if (
+              MergedStudentContext.mergedStudent.birthDate !==
+              props.whichStudent
+            ) {
+              MergedStudentContext.setMergedStudent({
+                ...MergedStudentContext.mergedStudent,
+                birthDate: props.whichStudent,
+              });
+            } else {
+              MergedStudentContext.setMergedStudent({
+                ...MergedStudentContext.mergedStudent,
+                birthDate: '',
+              });
+            }
+          }}
+        />
+      </div>
+      <div className={styles.box}>
+        <p className={styles.boxTitle}>Grade</p>
+        <p className={styles.boxContent}>{props.student.gradeLevel ?? ''}</p>
+        <Checkbox
+          sx={{
+            '&:hover': { bgcolor: 'transparent' },
+          }}
+          disableRipple
+          color="default"
+          checked={
+            props.whichStudent === MergedStudentContext.mergedStudent.gradeLevel
+          }
+          checkedIcon={<BpCheckedIcon />}
+          icon={<BpIcon />}
+          onChange={() => {
+            if (
+              MergedStudentContext.mergedStudent.gradeLevel !==
+              props.whichStudent
+            ) {
+              MergedStudentContext.setMergedStudent({
+                ...MergedStudentContext.mergedStudent,
+                gradeLevel: props.whichStudent,
+              });
+            } else {
+              MergedStudentContext.setMergedStudent({
+                ...MergedStudentContext.mergedStudent,
+                gradeLevel: '',
+              });
+            }
+          }}
+        />
+      </div>
+      <div className={styles.box}>
+        <p className={styles.boxTitle}>School</p>
+        <p className={styles.boxContent}>{props.student.schoolName ?? ''}</p>
+        <Checkbox
+          sx={{
+            '&:hover': { bgcolor: 'transparent' },
+          }}
+          disableRipple
+          color="default"
+          checked={
+            props.whichStudent === MergedStudentContext.mergedStudent.schoolName
+          }
+          checkedIcon={<BpCheckedIcon />}
+          icon={<BpIcon />}
+          onChange={() => {
+            if (
+              MergedStudentContext.mergedStudent.schoolName !==
+              props.whichStudent
+            ) {
+              MergedStudentContext.setMergedStudent({
+                ...MergedStudentContext.mergedStudent,
+                schoolName: props.whichStudent,
+              });
+            } else {
+              MergedStudentContext.setMergedStudent({
+                ...MergedStudentContext.mergedStudent,
+                schoolName: '',
+              });
+            }
+          }}
+        />
+      </div>
+      <div className={styles.box}>
+        <p className={styles.boxTitle}>Address</p>
+        <p className={styles.boxContent}>
+          {`${props.student.addrFirstLine} ${
+            props.student.addrSecondLine
+              ? props.student.addrSecondLine + ' '
+              : ''
+          }${props.student.city} ${props.student.state} ${
+            props.student.zipCode
+          }`}
+        </p>
+        <Checkbox
+          sx={{
+            '&:hover': { bgcolor: 'transparent' },
+          }}
+          disableRipple
+          color="default"
+          checked={
+            props.whichStudent === MergedStudentContext.mergedStudent.addr
+          }
+          checkedIcon={<BpCheckedIcon />}
+          icon={<BpIcon />}
+          onChange={() => {
+            if (
+              MergedStudentContext.mergedStudent.addr !== props.whichStudent
+            ) {
+              MergedStudentContext.setMergedStudent({
+                ...MergedStudentContext.mergedStudent,
+                addr: props.whichStudent,
+              });
+            } else {
+              MergedStudentContext.setMergedStudent({
+                ...MergedStudentContext.mergedStudent,
+                addr: '',
+              });
+            }
+          }}
+        />
+      </div>
+      <div className={styles.box}>
+        <p className={styles.boxTitle}>Guardian Name</p>
+        <p className={styles.boxContent}>
+          {`${props.student.guardianFirstName} ${props.student.guardianLastName}`}
         </p>
         <Checkbox
           sx={{
@@ -56,31 +290,31 @@ const StudentInformationList = (props: {
           color="default"
           checked={
             props.whichStudent ===
-            MergedStudentContext.mergedStudentName.student
+            MergedStudentContext.mergedStudent.guardianName
           }
           checkedIcon={<BpCheckedIcon />}
           icon={<BpIcon />}
           onChange={() => {
             if (
-              MergedStudentContext.mergedStudentName.student !==
+              MergedStudentContext.mergedStudent.guardianName !==
               props.whichStudent
             ) {
-              // Other checkbox is selected
-              // "Unselect" previous by changing value to current student
-              MergedStudentContext.setMergedStudentName({
-                student: props.whichStudent,
-                value: `${props.student.firstName} ${props.student.lastName}`,
+              MergedStudentContext.setMergedStudent({
+                ...MergedStudentContext.mergedStudent,
+                guardianName: props.whichStudent,
               });
             } else {
-              // "Unselect" the current student by setting to empty prop type
-              MergedStudentContext.setMergedStudentName(EmptyMergedPropType);
+              MergedStudentContext.setMergedStudent({
+                ...MergedStudentContext.mergedStudent,
+                guardianName: '',
+              });
             }
           }}
         />
       </div>
       <div className={styles.box}>
-        <p className={styles.boxTitle}>Email</p>
-        <p className={styles.boxContent}>{props.student.email ?? 'N/A'}</p>
+        <p className={styles.boxTitle}>Guardian Email</p>
+        <p className={styles.boxContent}>{props.student.guardianEmail ?? ''}</p>
         <Checkbox
           sx={{
             '&:hover': { bgcolor: 'transparent' },
@@ -89,58 +323,31 @@ const StudentInformationList = (props: {
           color="default"
           checked={
             props.whichStudent ===
-            MergedStudentContext.mergedStudentEmail.student
+            MergedStudentContext.mergedStudent.guardianEmail
           }
           checkedIcon={<BpCheckedIcon />}
           icon={<BpIcon />}
           onChange={() => {
             if (
-              MergedStudentContext.mergedStudentEmail.student !==
+              MergedStudentContext.mergedStudent.guardianEmail !==
               props.whichStudent
             ) {
-              MergedStudentContext.setMergedStudentEmail({
-                student: props.whichStudent,
-                value: props.student.email,
+              MergedStudentContext.setMergedStudent({
+                ...MergedStudentContext.mergedStudent,
+                guardianEmail: props.whichStudent,
               });
             } else {
-              MergedStudentContext.setMergedStudentEmail(EmptyMergedPropType);
-            }
-          }}
-        />
-      </div>
-      <div className={styles.box}>
-        <p className={styles.boxTitle}>Grade</p>
-        <p className={styles.boxContent}>{props.student.gradeLevel ?? 'N/A'}</p>
-        <Checkbox
-          sx={{
-            '&:hover': { bgcolor: 'transparent' },
-          }}
-          disableRipple
-          color="default"
-          checked={
-            props.whichStudent ===
-            MergedStudentContext.mergedStudentGrade.student
-          }
-          checkedIcon={<BpCheckedIcon />}
-          icon={<BpIcon />}
-          onChange={() => {
-            if (
-              MergedStudentContext.mergedStudentGrade.student !==
-              props.whichStudent
-            ) {
-              MergedStudentContext.setMergedStudentGrade({
-                student: props.whichStudent,
-                value: props.student.gradeLevel ?? 'N/A',
+              MergedStudentContext.setMergedStudent({
+                ...MergedStudentContext.mergedStudent,
+                guardianEmail: '',
               });
-            } else {
-              MergedStudentContext.setMergedStudentGrade(EmptyMergedPropType);
             }
           }}
         />
       </div>
       <div className={`${styles.box} ${styles.roundBottom}`}>
-        <p className={styles.boxTitle}>School</p>
-        <p className={styles.boxContent}>{props.student.schoolName ?? 'N/A'}</p>
+        <p className={styles.boxTitle}>Guardian Phone</p>
+        <p className={styles.boxContent}>{props.student.guardianPhone ?? ''}</p>
         <Checkbox
           sx={{
             '&:hover': { bgcolor: 'transparent' },
@@ -149,21 +356,24 @@ const StudentInformationList = (props: {
           color="default"
           checked={
             props.whichStudent ===
-            MergedStudentContext.mergedStudentSchool.student
+            MergedStudentContext.mergedStudent.guardianPhone
           }
           checkedIcon={<BpCheckedIcon />}
           icon={<BpIcon />}
           onChange={() => {
             if (
-              MergedStudentContext.mergedStudentSchool.student !==
+              MergedStudentContext.mergedStudent.guardianPhone !==
               props.whichStudent
             ) {
-              MergedStudentContext.setMergedStudentSchool({
-                student: props.whichStudent,
-                value: props.student.schoolName ?? 'N/A',
+              MergedStudentContext.setMergedStudent({
+                ...MergedStudentContext.mergedStudent,
+                guardianPhone: props.whichStudent,
               });
             } else {
-              MergedStudentContext.setMergedStudentSchool(EmptyMergedPropType);
+              MergedStudentContext.setMergedStudent({
+                ...MergedStudentContext.mergedStudent,
+                guardianPhone: '',
+              });
             }
           }}
         />
