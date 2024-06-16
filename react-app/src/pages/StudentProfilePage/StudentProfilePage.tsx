@@ -165,20 +165,17 @@ const StudentProfilePage = (): JSX.Element => {
       .min(1000000000, '*Enter a valid phone number')
       .max(10000000000, '*Enter a valid phone number')
       .required('*Required'),
-    guardianFirstName: Yup.string().required('*Required'),
-    guardianLastName: Yup.string().required('*Required'),
-    guardianEmail: Yup.string()
-      .email('*Enter a valid email')
-      .required('*Required'),
+    guardianFirstName: Yup.string(),
+    guardianLastName: Yup.string(),
+    guardianEmail: Yup.string().email('*Enter a valid email'),
     guardianPhone: Yup.number()
       .transform((value) => (isNaN(value) ? undefined : value))
       .nullable()
       .min(1000000000, '*Enter a valid phone number')
-      .max(10000000000, '*Enter a valid phone number')
-      .required('*Required'),
+      .max(10000000000, '*Enter a valid phone number'),
     birthDate: Yup.date().required('*Required'),
-    gradeLevel: Yup.string().required('*Required'),
-    schoolName: Yup.string().required('*Required'),
+    gradeLevel: Yup.string(),
+    schoolName: Yup.string(),
   });
 
   if (pageError) {
@@ -621,7 +618,7 @@ const StudentProfilePage = (): JSX.Element => {
                           });
                         }}
                         placeholder="First"
-                        value={student.guardianFirstName}
+                        value={student.guardianFirstName ?? ''}
                       ></input>
                       {'guardianFirstName' in fieldErrors ? (
                         <div className={styles.errorMessage}>
@@ -641,7 +638,7 @@ const StudentProfilePage = (): JSX.Element => {
                           });
                         }}
                         placeholder="Last"
-                        value={student.guardianLastName}
+                        value={student.guardianLastName ?? ''}
                       ></input>
                       {'guardianLastName' in fieldErrors ? (
                         <div className={styles.errorMessage}>
@@ -653,7 +650,9 @@ const StudentProfilePage = (): JSX.Element => {
                     </div>
                   </div>
                 ) : (
-                  `${student?.guardianFirstName} ${student?.guardianLastName}`
+                  `${student?.guardianFirstName ?? ''} ${
+                    student?.guardianLastName ?? ''
+                  }`
                 )}
               </a>
             </div>
@@ -671,7 +670,7 @@ const StudentProfilePage = (): JSX.Element => {
                           guardianEmail: event.target.value,
                         });
                       }}
-                      value={student.guardianEmail}
+                      value={student.guardianEmail ?? ''}
                     ></input>
                     {'guardianEmail' in fieldErrors ? (
                       <div className={styles.errorMessage}>
@@ -682,7 +681,7 @@ const StudentProfilePage = (): JSX.Element => {
                     )}
                   </div>
                 ) : (
-                  student?.guardianEmail
+                  student?.guardianEmail ?? ''
                 )}
               </a>
             </div>
@@ -700,11 +699,7 @@ const StudentProfilePage = (): JSX.Element => {
                           guardianPhone: parseInt(event.target.value),
                         });
                       }}
-                      value={
-                        isNaN(student.guardianPhone)
-                          ? ''
-                          : student.guardianPhone
-                      }
+                      value={student.guardianPhone ?? ''}
                     ></input>
                     {'guardianPhone' in fieldErrors ? (
                       <div className={styles.errorMessage}>
@@ -715,7 +710,7 @@ const StudentProfilePage = (): JSX.Element => {
                     )}
                   </div>
                 ) : (
-                  student?.guardianPhone
+                  student?.guardianPhone ?? ''
                 )}
               </a>
             </div>

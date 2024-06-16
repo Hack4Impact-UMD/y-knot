@@ -14,10 +14,10 @@ export interface Student {
   zipCode: string;
   email: string;
   phone: number;
-  guardianFirstName: string;
-  guardianLastName: string;
-  guardianEmail: string;
-  guardianPhone: number;
+  guardianFirstName?: string;
+  guardianLastName?: string;
+  guardianEmail?: string;
+  guardianPhone?: number;
   birthDate: string; // "YYYY-MM-DD"
   gradeLevel?: string;
   schoolName?: string;

@@ -280,7 +280,9 @@ const StudentInformationList = (props: {
       <div className={styles.box}>
         <p className={styles.boxTitle}>Guardian Name</p>
         <p className={styles.boxContent}>
-          {`${props.student.guardianFirstName} ${props.student.guardianLastName}`}
+          {`${props.student.guardianFirstName ?? ''} ${
+            props.student.guardianLastName ?? ''
+          }`}
         </p>
         <Checkbox
           sx={{
