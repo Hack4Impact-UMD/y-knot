@@ -7,8 +7,10 @@ import { updateCourse } from '../../../backend/FirestoreCalls';
 import { Snackbar, Alert } from '@mui/material';
 import styles from './ClassSettings.module.css';
 import Select from 'react-select';
+import DeleteClass from './DeleteClass/DeleteClass';
 import editImage from '../../../assets/edit.svg';
 import saveImage from '../../../assets/save.svg';
+import trashIcon from '../../../assets/trash.svg';
 import * as Yup from 'yup';
 
 const ClassPage = (props: {
@@ -19,6 +21,7 @@ const ClassPage = (props: {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [editing, setEditing] = useState<boolean>(false);
   const [courseUpdated, setCourseUpdated] = useState<boolean>(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const dropdownOptions = ['Program', 'Academy', 'Club'];
 
   const courseSchema = Yup.object().shape({
@@ -262,8 +265,17 @@ const ClassPage = (props: {
           </div>
         </div>
       </div>
-      <div className={styles.bottomButtons}></div>
       <div className={styles.bottomButton}>
+        <ToolTip title={'Delete Course'} placement="top">
+          <button
+            className={styles.button}
+            onClick={() => {
+              setOpenDeleteModal(true);
+            }}
+          >
+            <img className={styles.icon} src={trashIcon} />
+          </button>
+        </ToolTip>
         <ToolTip title={editing ? 'Save' : 'Edit'} placement="top">
           <button
             className={styles.button}
@@ -314,6 +326,14 @@ const ClassPage = (props: {
           </button>
         </ToolTip>
       </div>
+      <DeleteClass
+        open={openDeleteModal}
+        onClose={() => {
+          setOpenDeleteModal(!openDeleteModal);
+        }}
+        courseId={props.courseID}
+        courseName={course.name}
+      />
       <Snackbar
         anchorOrigin={{
           horizontal: 'right',

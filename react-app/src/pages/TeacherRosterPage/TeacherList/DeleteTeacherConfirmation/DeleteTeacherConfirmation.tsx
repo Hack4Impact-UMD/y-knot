@@ -28,7 +28,6 @@ const DeleteTeacherConfirmation = ({
   teachers,
   setOpenSuccess,
 }: popupModalType): React.ReactElement => {
-  const [submittedError, setSubmittedError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   function handleConfirm() {
@@ -50,17 +49,12 @@ const DeleteTeacherConfirmation = ({
     }
   }
 
-  const handleOnClose = (): void => {
-    setSubmittedError(false);
-    onClose();
-  };
-
   return (
     <Modal
       height={270}
       open={open}
       onClose={() => {
-        handleOnClose();
+        onClose();
       }}
     >
       <div>
@@ -69,7 +63,7 @@ const DeleteTeacherConfirmation = ({
             type="button"
             className={styles.close}
             onClick={() => {
-              handleOnClose();
+              onClose();
             }}
           >
             <img src={x} alt="Close popup" />
@@ -79,43 +73,33 @@ const DeleteTeacherConfirmation = ({
           <h2 className={styles.title}>Remove Teacher Confirmation</h2>
           <p className={styles.error}>{errorMessage}</p>
           <p className={styles.contentBody}>
-            {submittedError ? (
-              'Log out failed. Try again later.'
-            ) : (
-              <div className={styles.bodyText}>
-                Are you sure you would like to remove?
-                <div className={styles.name}>
-                  {popupName === 'undefined' ? '' : popupName}
-                </div>
-                <div className={styles.email}>
-                  {popupEmail === 'undefined' ? '' : <>({popupEmail})</>}
-                </div>
+            <div className={styles.bodyText}>
+              Are you sure you would like to remove?
+              <div className={styles.name}>
+                {popupName === 'undefined' ? '' : popupName}
               </div>
-            )}
+              <div className={styles.email}>
+                {popupEmail === 'undefined' ? '' : <>({popupEmail})</>}
+              </div>
+            </div>
           </p>
         </div>
         <div className={styles.actions}>
           <div className={styles.actionsContainer}>
-            {submittedError ? (
-              <></>
-            ) : (
-              <>
-                <button
-                  onClick={() => {
-                    handleConfirm();
-                  }}
-                >
-                  Yes
-                </button>
-                <button
-                  onClick={() => {
-                    handleOnClose();
-                  }}
-                >
-                  No
-                </button>
-              </>
-            )}
+            <button
+              onClick={() => {
+                handleConfirm();
+              }}
+            >
+              Yes
+            </button>
+            <button
+              onClick={() => {
+                onClose();
+              }}
+            >
+              No
+            </button>
           </div>
         </div>
       </div>
