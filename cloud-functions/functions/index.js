@@ -1,12 +1,14 @@
 const cors = require("cors")({ origin: true });
 const crypto = require("crypto");
 const functions = require("firebase-functions");
-const { onCall } = require("firebase-functions/v2/https");
+const { onCall, onRequest } = require("firebase-functions/v2/https");
 const admin = require("firebase-admin");
 const Busboy = require("busboy");
 const { google } = require("googleapis");
 const dotenv = require("dotenv");
 const nodemailer = require("nodemailer");
+const stringSimilarity = require("string-similarity");
+const { WriteBatch } = require("firebase-admin/firestore");
 const OAuth2 = google.auth.OAuth2;
 admin.initializeApp();
 const db = admin.firestore();
@@ -27,7 +29,7 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     type: "OAuth2",
-    user: "info@yknotinc.org",
+    user: "yknotincmentors@gmail.com",
     clientId: process.env.OAUTH_CLIENT_ID,
     clientSecret: process.env.OAUTH_CLIENT_SECRET,
     refreshToken: process.env.OAUTH_REFRESH,
@@ -178,70 +180,272 @@ exports.createUser = onCall(
   }
 );
 
-exports.newSubmission = functions.https.onRequest((req, res) => {
-  if (req.method != "POST") {
-    return res.status(405).end();
-  }
+// Sends an email if the jotform submission handler catches an error
+const sendNewSubmissionErrorEmail = async (formId, submissionId) => {
+  const msg = {
+    from: '"Y-KNOT" <info@yknotinc.org>', // sender address
+    to: "sgaba@terpmail.umd.edu", // list of receivers
+    subject: "YKnot Course Management Portal Submission Error", // Subject line
 
-  const busboy = Busboy({ headers: req.headers });
-
-  const fields = [];
-  try {
-    busboy.on("field", (field, val) => {
-      fields[field] = val;
-    });
-  } catch (error) {
+    html: `
+      <div>
+          <div style="max-width: 600px; margin: auto">
+              <br><br><br>
+              <p style="font-size: 16px">
+              Hello,<br>
+              <br>
+              A student who submitted the following form could not be added to a class
+              in the course management portal. There are many possible causes for this error such
+              as a class not existing, the student signing up after the class' start date, and more.
+              <br>
+              The form and submission ids of the submission are included below.
+              
+              
+              Form Id: ${formId}<br>
+              <br>
+              Submission Id: ${submissionId}<br>
+              <br>
+              Please try to add the student to the class manually.
+              <br>
+              <br>
+              
+          <div>
+      </div>
+          
+      `, // html body
+  };
+  await transporter.sendMail(msg).catch((error) => {
+    console.log(
+      "Error occured with new submission. Email also could not be sent."
+    );
     console.log(error);
-  }
-  functions.logger.log("going into finish");
-  busboy.on("finish", () => {
-    functions.logger.log("starting finsih");
-    const data = JSON.parse(fields["rawRequest"]);
-    functions.logger.log(data);
-    const submissionId = fields["submissionID"];
-    functions.logger.log(submissionId);
-    const formId = fields["formID"];
-    functions.logger.log(formId);
-    // const firstName = data["q3_nameOf3"]["first"];
-    // const lastName = data["q3_nameOf3"]["last"];
-    // const email = data["q7_email"];
-    // const phoneNumber = data["q6_phoneNumber"]["full"];
-    // const agePreference = data["q9_name9"];
-    // const interestsAndHobbies = data["q40_name40"];
-    // const bestDescribes = data["q41_name41"];
-    // const canHaveManyMentees = data["q39_canYou"];
-
-    // const user = {
-    //   submission_id: submissionId,
-    //   first_name: firstName,
-    //   last_name: lastName,
-    //   email: email,
-    //   phone_number: phoneNumber,
-    //   stage: "NEW",
-    //   age_preference: agePreference,
-    //   interests_hobbies: interestsAndHobbies,
-    //   best_describes: bestDescribes,
-    //   can_have_multiple_mentees: canHaveManyMentees,
-    //   createdAt: new Date().getTime(),
-    // };
-
-    // const db = admin.firestore();
-
-    // db.collection("applicants")
-    //   .doc(submissionId)
-    //   .set(user)
-    //   .then(() => {
-    //     console.log("Success");
-    //     return res.status(200).end();
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     return res.status(400).end();
-    //   });
   });
+};
 
-  busboy.end(req.rawBody);
-});
+exports.newSubmission = onRequest(
+  { region: "us-east4", cors: true },
+  async (req, res) => {
+    let submissionId = undefined;
+    let formId = undefined;
+    try {
+      if (req.method != "POST") {
+        throw new Error();
+      }
+      const busboy = Busboy({ headers: req.headers });
+      const fields = [];
+      busboy.on("field", (field, val) => {
+        fields[field] = val;
+      });
+
+      busboy.on("finish", async () => {
+        // Once all the fields have been read, we can start processing
+        const data = JSON.parse(fields["rawRequest"]);
+        submissionId = fields["submissionID"];
+        formId = fields["formID"];
+
+        // First find the class with the corresponding form id
+        const selectedClass = await db
+          .collection("Courses")
+          .where("formId", "==", formId)
+          .get()
+          .then(async (querySnapshot) => {
+            if (querySnapshot.docs.length == 0) {
+              await sendNewSubmissionErrorEmail(formId, submissionId).finally(
+                () => {
+                  throw new Error();
+                }
+              );
+            } else {
+              // We make sure that the class is an upcoming one
+              const matchingClass = querySnapshot.docs.find((doc) => {
+                const sampleClass = doc.data();
+
+                // This finds the current date in the EST timezone
+                const currentAmericanDate = new Date().toLocaleDateString(
+                  "en-US",
+                  {
+                    timeZone: "America/New_York",
+                  }
+                );
+                const currentFormattedDate = new Date(
+                  currentAmericanDate
+                ).toLocaleDateString("fr-CA");
+                if (
+                  sampleClass.startDate.toString() >=
+                  currentFormattedDate.toString()
+                ) {
+                  return sampleClass;
+                }
+              });
+              if (matchingClass) {
+                return matchingClass;
+              }
+              // No class found, throw an error
+              await sendNewSubmissionErrorEmail(formId, submissionId).finally(
+                () => {
+                  throw new Error();
+                }
+              );
+            }
+          });
+
+        const studentBirth =
+          data["q15_dateOf"]["year"] +
+          "-" +
+          data["q15_dateOf"]["month"] +
+          "-" +
+          data["q15_dateOf"]["day"];
+
+        let possibleStudentMatches = [];
+
+        // Next we check if the student exists in the database
+        const matchingStudent = await db
+          .collection("Students")
+          .where("birthDate", "==", studentBirth)
+          .get()
+          .then(async (querySnapshot) => {
+            if (querySnapshot.docs.length == 0) {
+              return undefined;
+            } else {
+              const student = querySnapshot.docs.find((doc) => {
+                const studentData = doc.data();
+                const formName =
+                  data["q3_name"]["first"].toLowerCase() +
+                  data["q3_name"]["middle"].toLowerCase() +
+                  data["q3_name"]["last"].toLowerCase();
+                const databaseName =
+                  studentData.firstName.toLowerCase() +
+                  (studentData.middleName || "").toLowerCase() +
+                  studentData.lastName.toLowerCase();
+
+                // We check for similarity in order to suggest whether two students might be the same
+                const similarity = stringSimilarity.compareTwoStrings(
+                  formName,
+                  databaseName
+                );
+                if (similarity == 1) {
+                  return doc;
+                } else if (similarity > 0.35) {
+                  possibleStudentMatches.push(doc.id);
+                }
+              });
+              if (student) {
+                /* If the student already exists, we don't need to indicate possible matches
+                   as that was already done when the student was first created
+                */
+                possibleStudentMatches = [];
+              }
+              return student;
+            }
+          });
+        const student = {
+          firstName: data["q3_name"]["first"],
+          middleName: data["q3_name"]["middle"],
+          lastName: data["q3_name"]["last"],
+          addrFirstLine: data["q12_address"]["addr_line1"],
+          addrSecondLine: data["q12_address"]["addr_line2"],
+          city: data["q12_address"]["city"],
+          state: data["q12_address"]["state"],
+          zipCode: data["q12_address"]["postal"],
+          email: data["q4_email"],
+          phone: parseInt(
+            data["q5_phoneNumber"]["full"].replace(/[\(\)-\s]/g, "")
+          ),
+          guardianFirstName:
+            data["q14_areYou"] != "Minor"
+              ? ""
+              : data["q9_guardianName"]["first"],
+          guardianLastName:
+            data["q14_areYou"] != "Minor"
+              ? ""
+              : data["q9_guardianName"]["last"],
+          guardianEmail:
+            data["q14_areYou"] != "Minor" ? "" : data["q10_guardianEmail"],
+          guardianPhone:
+            data["q14_areYou"] != "Minor"
+              ? ""
+              : parseInt(
+                  data["q11_guardianPhone"]["full"].replace(/[\(\)-\s]/g, "")
+                ),
+          birthDate:
+            data["q15_dateOf"]["year"] +
+            "-" +
+            data["q15_dateOf"]["month"] +
+            "-" +
+            data["q15_dateOf"]["day"], // "YYYY-MM-DD"
+          gradeLevel: data["q14_areYou"] != "Minor" ? "" : data["q8_grade"],
+          schoolName: data["q14_areYou"] != "Minor" ? "" : data["q6_nameOf"],
+          courseInformation: [
+            {
+              id: selectedClass.id,
+              attendance: [],
+              homeworks: [],
+              progress: "NA",
+            },
+          ],
+        };
+
+        // Update the current student's course information if there is a match
+        if (matchingStudent) {
+          student.courseInformation = matchingStudent.data().courseInformation;
+          const studentClass = matchingStudent
+            .data()
+            .courseInformation.find((course) => {
+              course.id == selectedClass.id;
+            });
+          if (!studentClass) {
+            student.courseInformation.push({
+              id: selectedClass.id,
+              attendance: [],
+              homeworks: [],
+              progress: "NA",
+            });
+          }
+        }
+
+        const batch = new WriteBatch(db);
+        // Creates a new auto-generated id
+        const studentRef = matchingStudent
+          ? matchingStudent.ref
+          : db.collection("Students").doc();
+        batch.set(studentRef, student);
+
+        const studentId = matchingStudent
+          ? matchingStudent.id
+          : studentRef._path.segments[1];
+
+        // Update the class's students
+        const classStudents = selectedClass.data().students || [];
+        if (!classStudents.includes(studentId)) {
+          classStudents.push(studentId);
+        }
+
+        batch.update(selectedClass.ref, { students: classStudents });
+
+        if (possibleStudentMatches.length > 0) {
+          const docRef = db.collection("StudentMatches").doc();
+          batch.set(docRef, {
+            studentOne: studentId,
+            matches: possibleStudentMatches,
+          });
+        }
+
+        await batch.commit().catch(async () => {
+          await sendNewSubmissionErrorEmail(formId, submissionId).finally(
+            () => {
+              throw new Error();
+            }
+          );
+        });
+
+        res.end();
+      });
+      busboy.end(req.rawBody);
+    } catch (error) {
+      res.end();
+    }
+  }
+);
 /**
  * Deletes the user
  * Argument: firebase_id - the user's firebase_id
