@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { TeacherID } from '../../../../types/UserType';
 import { deleteUser } from '../../../../backend/CloudFunctionsCalls';
+import { removeAllTeacherCourses } from '../../../../backend/FirestoreCalls';
 import styles from './DeleteTeacherConfirmation.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
+import Loading from '../../../../components/LoadingScreen/Loading';
 import x from '../../../../assets/x.svg';
 
 interface popupModalType {
@@ -10,6 +12,7 @@ interface popupModalType {
   open: any;
   popupName: string;
   popupEmail: string;
+  removeTeacherAuthId: string;
   removeTeacherId: string;
   setReloadList: Function;
   teachers: Array<Partial<TeacherID>>;
@@ -22,6 +25,7 @@ const DeleteTeacherConfirmation = ({
   open,
   popupName,
   popupEmail,
+  removeTeacherAuthId,
   removeTeacherId,
   setReloadList,
   setTeachers,
@@ -29,23 +33,47 @@ const DeleteTeacherConfirmation = ({
   setOpenSuccess,
 }: popupModalType): React.ReactElement => {
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [canClose, setCanClose] = useState<boolean>(true);
 
   function handleConfirm() {
     if (removeTeacherId != 'undefined') {
-      deleteUser(removeTeacherId.valueOf())
-        .then(() => {
-          setTeachers(
-            teachers.filter((teacher) => {
-              return teacher.auth_id !== removeTeacherId.valueOf();
+      setLoading(true);
+      setCanClose(false);
+      removeAllTeacherCourses(removeTeacherId)
+        .then(() =>
+          deleteUser(removeTeacherAuthId.valueOf())
+            .then(() => {
+              setTeachers(
+                teachers.filter((teacher) => {
+                  return teacher.auth_id !== removeTeacherAuthId.valueOf();
+                }),
+              );
+              handleOnClose();
+              setReloadList(true);
+              setOpenSuccess(true);
+            })
+            .catch(() => {
+              setErrorMessage('*Teacher could not be removed');
+            })
+            .finally(() => {
+              setCanClose(true);
             }),
-          );
-          onClose();
-          setReloadList(true);
-          setOpenSuccess(true);
-        })
-        .catch((err) => {
+        )
+        .catch(() => {
           setErrorMessage('*Teacher could not be removed');
-        });
+        })
+        .finally(() => setCanClose(true));
+    }
+    setTimeout(() => {
+      setLoading(false);
+    }, 100);
+  }
+
+  function handleOnClose() {
+    if (canClose) {
+      onClose();
+      setLoading(false);
     }
   }
 
@@ -54,7 +82,7 @@ const DeleteTeacherConfirmation = ({
       height={270}
       open={open}
       onClose={() => {
-        onClose();
+        handleOnClose();
       }}
     >
       <div>
@@ -63,7 +91,7 @@ const DeleteTeacherConfirmation = ({
             type="button"
             className={styles.close}
             onClick={() => {
-              onClose();
+              handleOnClose();
             }}
           >
             <img src={x} alt="Close popup" />
@@ -90,12 +118,13 @@ const DeleteTeacherConfirmation = ({
               onClick={() => {
                 handleConfirm();
               }}
+              disabled={loading}
             >
-              Yes
+              {loading ? <Loading /> : 'Yes'}
             </button>
             <button
               onClick={() => {
-                onClose();
+                handleOnClose();
               }}
             >
               No

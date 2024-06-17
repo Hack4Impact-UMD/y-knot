@@ -237,6 +237,86 @@ export function removeTeacherCourse(
   });
 }
 
+/* Removes a teacher from all of their courses and vice versa */
+export function removeAllTeacherCourses(teacherId: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    runTransaction(db, async (transaction) => {
+      const teacherRef = await transaction.get(doc(db, 'Users', teacherId));
+
+      if (!teacherRef.exists()) {
+        throw 'Teacher does not exist!';
+      }
+      const teacher: Teacher = teacherRef.data() as Teacher;
+      const teacherCourseList = teacher.courses;
+
+      var coursePromises = [];
+
+      for (const courseId of teacherCourseList) {
+        coursePromises.push(transaction.get(doc(db, 'Courses', courseId)));
+      }
+
+      var courseRefList: any[] = [];
+      await Promise.all(coursePromises)
+        .then((courseRef) => {
+          courseRefList = courseRef;
+        })
+        .catch(() => {
+          reject(new Error('A course does not exist!'));
+        });
+
+      var updatePromises: any[] = [];
+
+      for (let i = 0; i < courseRefList.length; i++) {
+        if (!courseRefList[i].exists()) {
+          reject(new Error('A course does not exist!'));
+          throw new Error('A course does not exist!');
+        }
+
+        const courseId = teacherCourseList[i];
+        const course: Course = courseRefList[i].data() as Course;
+
+        if (teacher.courses.includes(courseId)) {
+          teacher.courses = teacher.courses.filter((c) => c !== courseId);
+          updatePromises.push(
+            transaction.update(doc(db, 'Users', teacherId), {
+              courses: teacher.courses,
+            }),
+          );
+        } else {
+          reject(new Error('Course does not exist in teacher'));
+          throw new Error('Course does not exist in teacher');
+        }
+
+        if (course.teachers.includes(teacherId)) {
+          course.teachers = course.teachers.filter((t) => t !== teacherId);
+          updatePromises.push(
+            transaction.update(doc(db, 'Courses', courseId), {
+              teachers: course.teachers,
+            }),
+          );
+        } else {
+          reject(new Error('Teacher does not exist in course'));
+          throw new Error('Teacher does not exist in course');
+        }
+      }
+
+      await Promise.all(updatePromises)
+        .then(() => {
+          resolve();
+        })
+        .catch(() => {
+          reject();
+        });
+    })
+      .then(() => {
+        resolve();
+      })
+      .catch(() => {
+        reject();
+      });
+  });
+}
+
 export function addTeacherCourseFromList(
   teacherIdList: Array<string>,
   courseId: string,
