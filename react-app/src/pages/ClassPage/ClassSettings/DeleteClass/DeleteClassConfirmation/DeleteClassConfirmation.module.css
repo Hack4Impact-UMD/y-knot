@@ -31,7 +31,7 @@
   color: black;
   font-size: 27px;
   text-align: center;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 .contentBody {
@@ -41,10 +41,17 @@
   text-align: center;
 }
 
-.warning {
-  padding-top: 10px;
-  font-weight: bold;
-  color: var(--color-red);
+.inputBox {
+  margin-top: 10px;
+  padding: 0px 12px 0px 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border-width: 1px;
+  min-width: 100px;
+  width: calc(12vw + 100px);
+  height: 40px;
+  border-color: black;
+  border-style: solid;
 }
 
 .courseName {
@@ -61,27 +68,20 @@
   justify-content: space-evenly;
 }
 
-.actionsContainer button {
-  width: 16.67vh;
-  min-width: 160px;
-  height: 35px;
+.button {
+  background-color: var(--color-orange);
   padding: 11px 0 11px 0;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-  color: black;
-  font-weight: 500;
   font-size: 0.8rem;
-  border-color: var(--color-orange);
-  border-style: solid;
-  border-width: 3px;
-  border-radius: 25px;
-  background: white;
+  width: 16.67vh;
+  min-width: 180px;
+  border: none;
+  border-radius: 30px;
+  color: white;
+  outline: none;
+  text-align: center;
 }
 
-.actionsContainer button:hover {
+.button:hover {
   cursor: pointer;
-  background: var(--color-orange);
-  color: white;
+  background: var(--color-yellow-orange);
 }

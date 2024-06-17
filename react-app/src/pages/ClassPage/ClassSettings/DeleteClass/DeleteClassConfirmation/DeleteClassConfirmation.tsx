@@ -44,22 +44,25 @@ const DeleteClassConfirmation = ({
           <h2 className={styles.title}>Delete {courseName}</h2>
           <div className={styles.contentBody}>
             To confirm, type "{courseName}" in the box below
-            <input
-              className={styles.inputBox}
-              onChange={(event) => {
-                setConfirmText(event.target.value);
-              }}
-            ></input>
+            <div>
+              <input
+                className={styles.inputBox}
+                onChange={(event) => {
+                  setConfirmText(event.target.value);
+                }}
+              ></input>
+            </div>
           </div>
         </div>
         <div className={styles.actions}>
           <div className={styles.actionsContainer}>
             <button
+              className={styles.button}
               onClick={() => {
                 handleConfirm();
               }}
             >
-              Delete this course
+              Delete This Course
             </button>
           </div>
         </div>
