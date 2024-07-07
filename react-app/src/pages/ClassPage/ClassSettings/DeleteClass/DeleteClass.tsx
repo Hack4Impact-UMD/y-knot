@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import styles from './DeleteClass.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
-import DeleteClassConfirmation from './DeleteClassConfirmation/DeleteClassConfirmation';
 import x from '../../../../assets/x.svg';
 
 interface popupModalType {
@@ -17,8 +16,22 @@ const DeleteClass = ({
   courseId,
   courseName,
 }: popupModalType): React.ReactElement => {
-  const [openDeleteConfirmModal, setOpenDeleteConfirmModal] =
-    useState<boolean>(false);
+  const [confirmAgain, setConfirmAgain] = useState<boolean>(false);
+  const [disableButton, setDisableButton] = useState<boolean>(true);
+  let timer: NodeJS.Timeout | null = null;
+
+  const handleCheck = (e: any) => {
+    if (timer != null) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(function () {
+      e.target.value === courseName
+        ? setDisableButton(false)
+        : setDisableButton(true);
+    }, 500);
+  };
+
+  function handleConfirm() {}
 
   return (
     <Modal
@@ -26,6 +39,7 @@ const DeleteClass = ({
       open={open}
       onClose={() => {
         onClose();
+        setConfirmAgain(false);
       }}
     >
       <div>
@@ -35,49 +49,75 @@ const DeleteClass = ({
             className={styles.close}
             onClick={() => {
               onClose();
+              setConfirmAgain(false);
             }}
           >
             <img src={x} alt="Close popup" />
           </button>
         </div>
         <div className={styles.content}>
-          <h2 className={styles.title}>Delete {courseName}</h2>
+          <h2 className={styles.title}>Delete Course</h2>
           <div className={styles.contentBody}>
-            Are you sure you would like to delete
-            <span className={styles.courseName}> {courseName}</span>?
-            <div className={styles.warning}>
-              This will permanently delete the course and remove all data
-              associated with the course from enrolled students
-            </div>
+            {!confirmAgain ? (
+              <>
+                Are you sure you would like to delete
+                <span className={styles.courseName}> {courseName}</span>?
+                <div className={styles.warning}>
+                  This will permanently delete the course and remove all data
+                  associated with the course from enrolled students
+                </div>
+              </>
+            ) : (
+              <>
+                To confirm, type "{courseName}" in the box below
+                <div>
+                  <input
+                    className={styles.inputBox}
+                    onChange={(event) => {
+                      handleCheck(event);
+                    }}
+                  ></input>
+                </div>
+              </>
+            )}
           </div>
         </div>
         <div className={styles.actions}>
           <div className={styles.actionsContainer}>
-            <button
-              onClick={() => {
-                setOpenDeleteConfirmModal(true);
-              }}
-            >
-              Yes
-            </button>
-            <button
-              onClick={() => {
-                onClose();
-              }}
-            >
-              No
-            </button>
+            {!confirmAgain ? (
+              <>
+                <button
+                  className={styles.yesNoButton}
+                  onClick={() => {
+                    setConfirmAgain(true);
+                  }}
+                >
+                  Yes
+                </button>
+                <button
+                  className={styles.yesNoButton}
+                  onClick={() => {
+                    onClose();
+                    setConfirmAgain(false);
+                  }}
+                >
+                  No
+                </button>
+              </>
+            ) : (
+              <button
+                className={styles.confirmButton}
+                onClick={() => {
+                  handleConfirm();
+                }}
+                disabled={disableButton}
+              >
+                Delete This Course
+              </button>
+            )}
           </div>
         </div>
       </div>
-      <DeleteClassConfirmation
-        open={openDeleteConfirmModal}
-        onClose={() => {
-          setOpenDeleteConfirmModal(!openDeleteConfirmModal);
-        }}
-        courseId={courseId}
-        courseName={courseName}
-      />
     </Modal>
   );
 };
