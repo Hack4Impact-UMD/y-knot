@@ -119,5 +119,6 @@
 .confirmButton:disabled,
 .confirmButton[disabled] {
   background-color: var(--color-grey);
-  color: #666666;
+  color: #757575;
+  cursor: not-allowed;
 }
