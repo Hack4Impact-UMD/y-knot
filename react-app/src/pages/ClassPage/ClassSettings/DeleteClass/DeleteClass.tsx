@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { deleteCourse } from '../../../../backend/FirestoreCalls';
 import styles from './DeleteClass.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
 import x from '../../../../assets/x.svg';
@@ -6,8 +8,8 @@ import x from '../../../../assets/x.svg';
 interface popupModalType {
   onClose: () => void;
   open: any;
-  courseId: String;
-  courseName: String;
+  courseId: string;
+  courseName: string;
 }
 
 const DeleteClass = ({
@@ -16,8 +18,10 @@ const DeleteClass = ({
   courseId,
   courseName,
 }: popupModalType): React.ReactElement => {
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const [confirmAgain, setConfirmAgain] = useState<boolean>(false);
   const [disableButton, setDisableButton] = useState<boolean>(true);
+  const navigate = useNavigate();
   let timer: NodeJS.Timeout | null = null;
 
   const handleCheck = (e: any) => {
@@ -31,7 +35,15 @@ const DeleteClass = ({
     }, 500);
   };
 
-  function handleConfirm() {}
+  function handleConfirm() {
+    deleteCourse(courseId)
+      .then(() => {
+        navigate('/courses');
+      })
+      .catch((err) => {
+        setErrorMessage('*Course could not be deleted');
+      });
+  }
 
   return (
     <Modal
@@ -57,6 +69,11 @@ const DeleteClass = ({
         </div>
         <div className={styles.content}>
           <h2 className={styles.title}>Delete Course</h2>
+          {!confirmAgain ? (
+            <></>
+          ) : (
+            <p className={styles.error}>{errorMessage}</p>
+          )}
           <div className={styles.contentBody}>
             {!confirmAgain ? (
               <>

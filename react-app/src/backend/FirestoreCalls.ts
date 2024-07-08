@@ -499,9 +499,81 @@ export function addCourse(course: Course): Promise<void> {
   });
 }
 
-export function deleteCourse(id: string): Promise<void> {
+export function deleteCourse(courseId: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    deleteDoc(doc(db, 'Courses', id))
+    runTransaction(db, async (transaction) => {
+      // retrieve course
+      const courseRef = await transaction.get(doc(db, 'Courses', courseId));
+      if (!courseRef.exists()) {
+        throw 'Course does not exist!';
+      }
+      const course: Course = courseRef.data() as Course;
+
+      // retrieve course teachers
+      var teacherPromises = [];
+      const teacherIdList = course.teachers;
+      for (const teacherId of teacherIdList) {
+        teacherPromises.push(transaction.get(doc(db, 'Users', teacherId)));
+      }
+
+      var teacherRefList: any[] = [];
+      await Promise.all(teacherPromises)
+        .then((teacherRef) => {
+          teacherRefList = teacherRef;
+        })
+        .catch(() => {
+          reject(new Error('A teacher does not exist!'));
+        });
+
+      // retrieve course students
+      var studentPromises = [];
+      const studentIdList = course.students;
+      for (const studentId of studentIdList) {
+        studentPromises.push(transaction.get(doc(db, 'Students', studentId)));
+      }
+
+      var studentRefList: any[] = [];
+      await Promise.all(studentPromises)
+        .then((studentRef) => {
+          studentRefList = studentRef;
+        })
+        .catch(() => {
+          reject(new Error('A student does not exist!'));
+        });
+
+      // remove course from teachers
+      for (let i = 0; i < teacherRefList.length; i++) {
+        var teacherRef = teacherRefList[i];
+        const teacher: Teacher = teacherRef.data() as Teacher;
+        if (teacher.courses.includes(courseId)) {
+          teacher.courses = teacher.courses.filter(function (c) {
+            return c !== courseId;
+          });
+          await transaction.update(doc(db, 'Users', teacherIdList[i]), {
+            courses: teacher.courses,
+          });
+        }
+      }
+
+      // remove course from students
+      for (let i = 0; i < studentRefList.length; i++) {
+        var studentRef = studentRefList[i];
+        const student: Student = studentRef.data() as Student;
+        if (
+          student.courseInformation.find((student) => student.id === courseId)
+        ) {
+          student.courseInformation = student.courseInformation.filter(
+            (student) => student.id !== courseId,
+          );
+          await transaction.update(doc(db, 'Students', studentIdList[i]), {
+            courseInformation: student.courseInformation,
+          });
+        }
+      }
+
+      // delete course
+      await transaction.delete(doc(db, 'Courses', courseId));
+    })
       .then(() => {
         resolve();
       })

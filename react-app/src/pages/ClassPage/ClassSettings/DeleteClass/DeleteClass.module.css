@@ -31,11 +31,18 @@
   color: black;
   font-size: 27px;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+}
+
+.error {
+  height: 15px;
+  margin: 3px 0px;
+  padding: 0;
+  font-size: 0.8rem;
+  color: red;
 }
 
 .contentBody {
-  margin-bottom: 30px;
   margin-top: 0px;
   width: 75%;
   text-align: center;
@@ -88,6 +95,7 @@
 }
 
 .yesNoButton {
+  margin-top: 30px;
   color: black;
   border-color: var(--color-orange);
   border-style: solid;
@@ -103,6 +111,7 @@
 }
 
 .confirmButton {
+  margin-top: 20px;
   background-color: var(--color-orange);
   min-width: 180px;
   border: none;

@@ -118,8 +118,7 @@ function AddCoursePage({ setFormSubmitted }: any) {
         );
         setTeachers(partialTeachers);
       })
-      .catch((err) => {})
-      .finally(() => {});
+      .catch((err) => {});
   });
 
   useEffect(() => {
