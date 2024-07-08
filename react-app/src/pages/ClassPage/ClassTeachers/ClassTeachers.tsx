@@ -30,7 +30,7 @@ const ClassTeachers = (props: {
 
   const authContext = useAuth();
 
-  const handleRemoveTeacherModal = () => {
+  const handleAddTeacherModal = () => {
     setOpenAddTeacherModal(!openAddTeacherModal);
   };
 
@@ -95,7 +95,7 @@ const ClassTeachers = (props: {
         <div className={styles.teachersContainer}>{teacherList}</div>
       )}
       <div className={styles.bottomLevel}>
-        <button className={styles.addButton} onClick={handleRemoveTeacherModal}>
+        <button className={styles.addButton} onClick={handleAddTeacherModal}>
           Add Teacher
         </button>
       </div>

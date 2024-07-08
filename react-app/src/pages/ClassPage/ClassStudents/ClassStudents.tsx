@@ -6,6 +6,7 @@ import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import type { StudentID } from '../../../types/StudentType';
 import styles from './ClassStudents.module.css';
 import Loading from '../../../components/LoadingScreen/Loading';
+import AddStudentClass from './AddStudentClass/AddStudentClass';
 import DeleteStudentClassConfirmation from './DeleteStudentClassConfirmation/DeleteStudentClassConfirmation';
 import CertificateIcon from '../../../assets/certificate.svg';
 import EyeIcon from '../../../assets/view.svg';
@@ -20,12 +21,15 @@ const ClassStudents = (props: {
   const authContext = useAuth();
   const [students, setStudents] = useState<any[]>(props.students);
   const [studentList, setStudentList] = useState<any[]>([]);
+  const [openAddStudentModal, setOpenAddStudentModal] =
+    useState<boolean>(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupName, setPopupName] = useState<string>();
   const [popupEmail, setPopupEmail] = useState<string>();
   const [removeStudentId, setRemoveStudentId] = useState<string>();
   const [reloadList, setReloadList] = useState<Boolean>(false);
   const [removeSuccess, setRemoveSuccess] = useState<boolean>(false);
+  const [addSuccess, setAddSuccess] = useState<boolean>(false);
   const windowWidth = useWindowSize();
 
   function useWindowSize() {
@@ -109,6 +113,10 @@ const ClassStudents = (props: {
     setRemoveSuccess(false);
   };
 
+  const addPopupClose = () => {
+    setAddSuccess(false);
+  };
+
   const handleClick = () => {
     setShowPopup(true);
   };
@@ -129,6 +137,26 @@ const ClassStudents = (props: {
         // student roster
         <div className={styles.studentsContainer}>{studentList}</div>
       )}
+      <div className={styles.bottomLevel}>
+        <button
+          className={styles.addButton}
+          onClick={() => setOpenAddStudentModal(!openAddStudentModal)}
+        >
+          Add Student
+        </button>
+      </div>
+      <AddStudentClass
+        courseId={props.courseID}
+        open={openAddStudentModal}
+        onClose={() => {
+          setOpenAddStudentModal(!openAddStudentModal);
+        }}
+        setReloadList={setReloadList}
+        displayStudents={students}
+        setDisplayStudents={setStudents}
+        setClassStudents={props.setStudents}
+        setAddSuccess={setAddSuccess}
+      />
       {showPopup && (
         <DeleteStudentClassConfirmation
           open={showPopup}
@@ -158,6 +186,19 @@ const ClassStudents = (props: {
       >
         <Alert severity="success" sx={{ width: '100%' }}>
           Student was Successfully Removed
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{
+          horizontal: 'right',
+          vertical: 'bottom',
+        }}
+        open={addSuccess}
+        autoHideDuration={3000}
+        onClose={addPopupClose}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Student was Successfully Added
         </Alert>
       </Snackbar>
     </>
