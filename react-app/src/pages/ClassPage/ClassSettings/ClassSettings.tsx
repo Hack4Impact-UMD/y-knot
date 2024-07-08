@@ -16,6 +16,7 @@ import * as Yup from 'yup';
 const ClassPage = (props: {
   course: Course;
   courseID: string;
+  setCourseDeleted: any;
 }): JSX.Element => {
   const [course, setCourse] = useState<Course>(props.course);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -333,6 +334,7 @@ const ClassPage = (props: {
         }}
         courseId={props.courseID}
         courseName={course.name}
+        setCourseDeleted={props.setCourseDeleted}
       />
       <Snackbar
         anchorOrigin={{

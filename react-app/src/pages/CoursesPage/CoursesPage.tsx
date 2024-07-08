@@ -10,7 +10,12 @@ import CourseCard from '../../components/CourseCard/CourseCard';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
 
-const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
+const CoursesPage = ({
+  courseAdded,
+  setCourseAdded,
+  courseDeleted,
+  setCourseDeleted,
+}: any): JSX.Element => {
   const authContext = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
@@ -136,10 +141,6 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
     navigate('/courses/add');
   };
 
-  const handleToClose = () => {
-    setFormSubmitted(false);
-  };
-
   return (
     <>
       {authContext.loading ? (
@@ -247,12 +248,26 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
                 horizontal: 'right',
                 vertical: 'bottom',
               }}
-              open={formSubmitted}
+              open={courseAdded}
               autoHideDuration={3000}
-              onClose={handleToClose}
+              onClose={() => setCourseAdded(false)}
             >
               <Alert severity="success" sx={{ width: '100%' }}>
                 Course was Successfully Added
+              </Alert>
+            </Snackbar>
+
+            <Snackbar
+              anchorOrigin={{
+                horizontal: 'right',
+                vertical: 'bottom',
+              }}
+              open={courseDeleted}
+              autoHideDuration={3000}
+              onClose={() => setCourseDeleted(false)}
+            >
+              <Alert severity="success" sx={{ width: '100%' }}>
+                Course was Successfully Deleted
               </Alert>
             </Snackbar>
           </div>

@@ -47,7 +47,7 @@ const blankCourse: CourseID = {
   id: '',
 };
 
-const ClassPage = (): JSX.Element => {
+const ClassPage = ({ setCourseDeleted }: any): JSX.Element => {
   const [currentTab, setCurrentTab] = useState<Tab>(Tab.Main);
   const [course, setCourse] = useState<Course>(blankCourse);
   const [isLoading, setLoading] = useState<boolean>(true);
@@ -240,7 +240,11 @@ const ClassPage = (): JSX.Element => {
             />
           )}
           {currentTab === Tab.Settings && (
-            <ClassSettings course={course} courseID={courseID!} />
+            <ClassSettings
+              course={course}
+              courseID={courseID!}
+              setCourseDeleted={setCourseDeleted}
+            />
           )}
         </div>
       )}

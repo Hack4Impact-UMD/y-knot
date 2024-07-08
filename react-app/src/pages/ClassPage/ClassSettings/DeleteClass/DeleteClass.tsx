@@ -10,6 +10,7 @@ interface popupModalType {
   open: any;
   courseId: string;
   courseName: string;
+  setCourseDeleted: any;
 }
 
 const DeleteClass = ({
@@ -17,6 +18,7 @@ const DeleteClass = ({
   open,
   courseId,
   courseName,
+  setCourseDeleted,
 }: popupModalType): React.ReactElement => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [confirmAgain, setConfirmAgain] = useState<boolean>(false);
@@ -38,6 +40,7 @@ const DeleteClass = ({
   function handleConfirm() {
     deleteCourse(courseId)
       .then(() => {
+        setCourseDeleted(true);
         navigate('/courses');
       })
       .catch((err) => {

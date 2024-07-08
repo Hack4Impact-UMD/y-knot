@@ -34,7 +34,8 @@ import LeadershipApplicationPage from './pages/LeadershipApplicationPage/Leaders
 function App(): JSX.Element {
   const customTheme = theme;
 
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [courseAdded, setCourseAdded] = useState(false);
+  const [courseDeleted, setCourseDeleted] = useState(false);
 
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
@@ -64,8 +65,10 @@ function App(): JSX.Element {
                 element={
                   <RequireAuth>
                     <CoursesPage
-                      formSubmitted={formSubmitted}
-                      setFormSubmitted={setFormSubmitted}
+                      courseAdded={courseAdded}
+                      setCourseAdded={setCourseAdded}
+                      courseDeleted={courseDeleted}
+                      setCourseDeleted={setCourseDeleted}
                     />
                   </RequireAuth>
                 }
@@ -74,10 +77,7 @@ function App(): JSX.Element {
                 path="/courses/add"
                 element={
                   <RequireAuth>
-                    <AddCoursePage
-                      formSubmitted={formSubmitted}
-                      setFormSubmitted={setFormSubmitted}
-                    />
+                    <AddCoursePage setCourseAdded={setCourseAdded} />
                   </RequireAuth>
                 }
               />
@@ -85,7 +85,7 @@ function App(): JSX.Element {
                 path="/courses/:id"
                 element={
                   <RequireAuth>
-                    <ClassPage />
+                    <ClassPage setCourseDeleted={setCourseDeleted} />
                   </RequireAuth>
                 }
               />
