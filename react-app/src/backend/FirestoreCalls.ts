@@ -190,6 +190,82 @@ export function removeStudentCourse(
   });
 }
 
+export function addStudentCourseFromList(
+  studentIdList: Array<string>,
+  courseId: string,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    runTransaction(db, async (transaction) => {
+      const courseRef = await transaction.get(doc(db, 'Courses', courseId));
+      if (!courseRef.exists()) {
+        throw 'Course does not exist!';
+      }
+
+      const course: Course = courseRef.data() as Course;
+      var studentPromises = [];
+
+      for (const studentId of studentIdList) {
+        studentPromises.push(transaction.get(doc(db, 'Students', studentId)));
+      }
+
+      var studentRefList: any[] = [];
+      await Promise.all(studentPromises)
+        .then((studentRef) => {
+          studentRefList = studentRef;
+        })
+        .catch(() => {
+          reject(new Error('A student does not exist!'));
+        });
+
+      var updatePromises = [];
+
+      for (let i = 0; i < studentRefList.length; i++) {
+        var studentRef = studentRefList[i];
+        const student: Student = studentRef.data() as Student;
+        if (
+          !student.courseInformation.find(
+            (student) => student.id === courseId,
+          ) &&
+          !course.students.includes(studentIdList[i])
+        ) {
+          student.courseInformation.push({
+            id: courseId,
+            attendance: [],
+            homeworks: [],
+            progress: 'NA',
+          });
+          course.students.push(studentIdList[i]);
+          updatePromises.push(
+            transaction.update(doc(db, 'Students', studentIdList[i]), {
+              courseInformation: student.courseInformation,
+            }),
+          );
+        }
+      }
+
+      updatePromises.push(
+        transaction.update(doc(db, 'Courses', courseId), {
+          students: course.students,
+        }),
+      );
+
+      await Promise.all(updatePromises)
+        .then(() => {
+          resolve();
+        })
+        .catch(() => {
+          reject();
+        });
+    })
+      .then(() => {
+        resolve();
+      })
+      .catch(() => {
+        reject();
+      });
+  });
+}
+
 export function removeTeacherCourse(
   teacherId: string,
   courseId: string,
