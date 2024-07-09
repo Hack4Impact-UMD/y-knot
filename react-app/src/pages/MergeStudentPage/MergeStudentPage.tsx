@@ -16,32 +16,28 @@ import StudentInformationList from './StudentInformationList/StudentInformationL
 import MergedStudentInfoList from './MergedStudentInfoList/MergedStudentInfoList';
 
 interface MergedPropType {
-  student: string;
-  value: string;
+  name: string;
+  addr: string;
+  email: string;
+  phone: string;
+  birthDate: string;
+  gradeLevel: string;
+  schoolName: string;
+  guardianName: string;
+  guardianEmail: string;
+  guardianPhone: string;
 }
 
 interface MergedStudentType {
-  mergedStudentName: MergedPropType;
-  setMergedStudentName: React.Dispatch<React.SetStateAction<MergedPropType>>;
-  mergedStudentEmail: MergedPropType;
-  setMergedStudentEmail: React.Dispatch<React.SetStateAction<MergedPropType>>;
-  mergedStudentGrade: MergedPropType;
-  setMergedStudentGrade: React.Dispatch<React.SetStateAction<MergedPropType>>;
-  mergedStudentSchool: MergedPropType;
-  setMergedStudentSchool: React.Dispatch<React.SetStateAction<MergedPropType>>;
+  mergedStudent: MergedPropType;
+  setMergedStudent: React.Dispatch<React.SetStateAction<MergedPropType>>;
 }
-
-// Used to reset merged student state values
-export const EmptyMergedPropType = {
-  student: '',
-  value: '-',
-};
 
 // The Merged Student Context that other components may subscribe to.
 // Bypasses the need to pass state and setter to each of the components individually.
 const MergedStudentContext = createContext<MergedStudentType>(null!);
 
-// TODO: Add merge student functionality
+// TODO: Add merge student functionality + check that all fields are selected
 const MergeStudentPage = (): JSX.Element => {
   const authContext = useAuth();
   const navigate = useNavigate();
@@ -49,14 +45,18 @@ const MergeStudentPage = (): JSX.Element => {
   const windowWidth = useWindowSize();
   const [studentA, setStudentA] = useState<StudentID>();
   const [studentB, setStudentB] = useState<StudentID>();
-  const [mergedStudentName, setMergedStudentName] =
-    useState(EmptyMergedPropType);
-  const [mergedStudentEmail, setMergedStudentEmail] =
-    useState(EmptyMergedPropType);
-  const [mergedStudentGrade, setMergedStudentGrade] =
-    useState(EmptyMergedPropType);
-  const [mergedStudentSchool, setMergedStudentSchool] =
-    useState(EmptyMergedPropType);
+  const [mergedStudent, setMergedStudent] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    birthDate: '',
+    gradeLevel: '',
+    schoolName: '',
+    addr: '',
+    guardianName: '',
+    guardianEmail: '',
+    guardianPhone: '',
+  });
 
   useEffect(() => {
     // Get data from navigation state
@@ -116,14 +116,8 @@ const MergeStudentPage = (): JSX.Element => {
             <div className={styles.content}>
               <MergedStudentContext.Provider
                 value={{
-                  mergedStudentName,
-                  setMergedStudentName,
-                  mergedStudentEmail,
-                  setMergedStudentEmail,
-                  mergedStudentGrade,
-                  setMergedStudentGrade,
-                  mergedStudentSchool,
-                  setMergedStudentSchool,
+                  mergedStudent,
+                  setMergedStudent,
                 }}
               >
                 {windowWidth > 1000 ? (
@@ -206,7 +200,10 @@ const MergeStudentPage = (): JSX.Element => {
                 <div className={styles.mergedStudentContainer}>
                   <h2 className={styles.mergeTitle}>Merged Student Profile</h2>
                   <div className={styles.mergeContainer}>
-                    <MergedStudentInfoList />
+                    <MergedStudentInfoList
+                      studentA={studentA!}
+                      studentB={studentB!}
+                    />
                   </div>
                 </div>
               </MergedStudentContext.Provider>

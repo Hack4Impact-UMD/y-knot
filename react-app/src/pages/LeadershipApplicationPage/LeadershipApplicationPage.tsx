@@ -186,7 +186,8 @@ function LeadershipApplicationPage() {
             {/* Application Status Part */}
             <div className={styles.headerAppStatusDiv}>
               <h2 className={styles.name}>
-                {applicant.firstName} {applicant.middleName}{' '}
+                {applicant.firstName}{' '}
+                {applicant.middleName ? applicant.middleName + ' ' : ''}{' '}
                 {applicant.lastName}
               </h2>
               <div className={styles.statusLabel}>
@@ -277,29 +278,29 @@ function LeadershipApplicationPage() {
                   <div className={styles.infoBox}>
                     <div className={styles.box} id="Gender">
                       <div className={styles.boxTitle}>Gender</div>
-                      <div className={styles.boxData}>{applicant?.gender}</div>
+                      <div className={styles.boxData}>{applicant.gender}</div>
                     </div>
 
                     <div className={styles.box} id="Phone">
                       <div className={styles.boxTitle}>Phone</div>
-                      <div className={styles.boxData}>{applicant?.phone}</div>
+                      <div className={styles.boxData}>{applicant.phone}</div>
                     </div>
 
                     <div className={styles.box} id="Email">
                       <div className={styles.boxTitle}>Email</div>
-                      <div className={styles.boxData}>{applicant?.email}</div>
+                      <div className={styles.boxData}>{applicant.email}</div>
                     </div>
 
                     <div className={styles.bottomBox} id="Address">
                       <div className={styles.boxTitle}>Address</div>
                       <div className={styles.boxData}>
                         <div>
-                          {applicant?.addrFirstLine},{' '}
-                          {applicant?.addrSecondLine
-                            ? `${applicant?.addrSecondLine}, `
+                          {applicant.addrFirstLine},{' '}
+                          {applicant.addrSecondLine
+                            ? `${applicant.addrSecondLine}, `
                             : ''}
-                          {applicant?.city}, {applicant?.state}{' '}
-                          {applicant?.zipCode}
+                          {applicant.city}, {applicant.state}{' '}
+                          {applicant.zipCode}
                         </div>
                       </div>
                     </div>
@@ -321,20 +322,20 @@ function LeadershipApplicationPage() {
                     <div className={styles.box} id="SchoolName">
                       <div className={styles.boxTitle}>School Name</div>
                       <div className={styles.boxData}>
-                        {applicant?.schoolName}
+                        {applicant.schoolName ?? ''}
                       </div>
                     </div>
 
                     <div className={styles.box} id="Grade Level">
                       <div className={styles.boxTitle}>Grade Level</div>
                       <div className={styles.boxData}>
-                        {applicant?.gradeLevel}
+                        {applicant.gradeLevel ?? ''}
                       </div>
                     </div>
 
                     <div className={styles.box} id="GPA">
                       <div className={styles.boxTitle}>GPA</div>
-                      <div className={styles.boxData}>{applicant?.gpa}</div>
+                      <div className={styles.boxData}>{applicant.gpa}</div>
                     </div>
 
                     <div
@@ -382,22 +383,22 @@ function LeadershipApplicationPage() {
                     <div className={styles.box} id="Guardian Name">
                       <div className={styles.boxTitle}>Name</div>
                       <div className={styles.boxData}>
-                        {applicant?.guardianFirstName}{' '}
-                        {applicant?.guardianLastName}
+                        {applicant.guardianFirstName ?? ''}{' '}
+                        {applicant.guardianLastName ?? ''}
                       </div>
                     </div>
 
                     <div className={styles.box} id="Guardian Email">
                       <div className={styles.boxTitle}>Email</div>
                       <div className={styles.boxData}>
-                        {applicant?.guardianEmail}
+                        {applicant.guardianEmail ?? ''}
                       </div>
                     </div>
 
                     <div className={styles.bottomBox} id="Guardian Phone">
                       <div className={styles.boxTitle}>Phone</div>
                       <div className={styles.boxData}>
-                        {applicant?.guardianPhone}
+                        {applicant.guardianPhone ?? ''}
                       </div>
                     </div>
                   </div>

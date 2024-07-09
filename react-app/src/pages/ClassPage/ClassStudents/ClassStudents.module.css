@@ -79,6 +79,28 @@
     brightness(87%) contrast(104%);
 }
 
+.bottomLevel {
+  padding-top: 3%;
+  padding-bottom: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.addButton {
+  width: 150px;
+  height: 40px;
+  background: var(--color-orange);
+  color: white;
+  border-radius: 30px;
+  font-size: 1.05rem;
+  border: none;
+}
+
+.addButton:hover {
+  background: var(--color-yellow-orange);
+  cursor: pointer;
+}
+
 @media screen and (max-width: 600px) {
   .studentsContainer {
     font-size: 14px;

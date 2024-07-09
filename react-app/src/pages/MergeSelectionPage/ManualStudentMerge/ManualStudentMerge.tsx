@@ -407,7 +407,7 @@ const ManualStudentMerge = (): JSX.Element => {
         setSelectedStudentA(studentName);
         setSelectedStudentAId(studentId);
         setSelectedStudentADropdown({
-          value: studentId,
+          value: JSON.stringify(student),
           label: studentName,
         });
         student.addrFirstLine
@@ -448,17 +448,17 @@ const ManualStudentMerge = (): JSX.Element => {
   };
 
   const handleMerge = () => {
-    if (selectedStudents.length !== 2) {
+    if (
+      selectedStudents.length !== 2 ||
+      !selectedStudentADropdown ||
+      !selectedStudentBDropdown
+    ) {
       setAlertMsg('Please select 2 students to merge');
       setAlertOpen(true);
     } else {
       // Navigate to final merge page
-      const studentA = selectedStudentADropdown
-        ? JSON.parse(selectedStudentADropdown.value)
-        : undefined;
-      const studentB = selectedStudentBDropdown
-        ? JSON.parse(selectedStudentBDropdown.value)
-        : undefined;
+      const studentA = JSON.parse(selectedStudentADropdown!.value);
+      const studentB = JSON.parse(selectedStudentBDropdown!.value);
       navigate('/students/mergestudent', {
         state: {
           studentA: studentA,

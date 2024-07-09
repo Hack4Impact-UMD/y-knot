@@ -58,7 +58,7 @@ const InputOption: React.FC<OptionProps<any, true, any>> = ({
   );
 };
 
-function AddCoursePage({ setFormSubmitted }: any) {
+function AddCoursePage({ setCourseAdded }: any) {
   const dropdownOptions = ['Program', 'Academy', 'Club'];
   const navigate = useNavigate();
   const authContext = useAuth();
@@ -118,8 +118,7 @@ function AddCoursePage({ setFormSubmitted }: any) {
         );
         setTeachers(partialTeachers);
       })
-      .catch((err) => {})
-      .finally(() => {});
+      .catch((err) => {});
   });
 
   useEffect(() => {
@@ -376,7 +375,7 @@ function AddCoursePage({ setFormSubmitted }: any) {
                     .then(() => {
                       addCourse(course)
                         .then(() => {
-                          setFormSubmitted(true);
+                          setCourseAdded(true);
                           handleClose();
                         })
                         .catch(() => {})

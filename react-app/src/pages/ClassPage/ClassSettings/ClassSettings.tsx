@@ -7,18 +7,22 @@ import { updateCourse } from '../../../backend/FirestoreCalls';
 import { Snackbar, Alert } from '@mui/material';
 import styles from './ClassSettings.module.css';
 import Select from 'react-select';
+import DeleteClass from './DeleteClass/DeleteClass';
 import editImage from '../../../assets/edit.svg';
 import saveImage from '../../../assets/save.svg';
+import trashIcon from '../../../assets/trash.svg';
 import * as Yup from 'yup';
 
 const ClassPage = (props: {
   course: Course;
   courseID: string;
+  setCourseDeleted: any;
 }): JSX.Element => {
   const [course, setCourse] = useState<Course>(props.course);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [editing, setEditing] = useState<boolean>(false);
   const [courseUpdated, setCourseUpdated] = useState<boolean>(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const dropdownOptions = ['Program', 'Academy', 'Club'];
 
   const courseSchema = Yup.object().shape({
@@ -123,42 +127,40 @@ const ClassPage = (props: {
         <div className={styles.studentBox}>
           <p className={styles.boxTitle}>End Date</p>
           <div className={styles.inputContainer}>
-            <div className={styles.inputContainer}>
-              {editing ? (
-                <>
-                  <DatePicker
-                    label=""
-                    defaultValue={DateTime.fromISO(course.endDate)}
-                    onChange={(newValue: DateTime | null) =>
-                      setCourse({
-                        ...course,
-                        endDate: newValue ? formatDateToYYYYMMDD(newValue) : '',
-                      })
-                    }
-                    slotProps={{ textField: { size: 'small' } }}
-                    sx={{
-                      '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline':
-                        {
-                          border: '1px solid black',
-                        }, // at page load
-                      '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
-                        { border: '2px solid black' }, // at focused state
-                    }}
-                  />
-                  {'endDate' in fieldErrors ? (
-                    <div className={styles.errorMessage}>
-                      {fieldErrors.endDate}
-                    </div>
-                  ) : (
-                    <></>
-                  )}
-                </>
-              ) : (
-                <p className={styles.boxText}>
-                  {DateTime.fromISO(course.endDate).toFormat('LLLL dd, yyyy')}
-                </p>
-              )}
-            </div>
+            {editing ? (
+              <>
+                <DatePicker
+                  label=""
+                  defaultValue={DateTime.fromISO(course.endDate)}
+                  onChange={(newValue: DateTime | null) =>
+                    setCourse({
+                      ...course,
+                      endDate: newValue ? formatDateToYYYYMMDD(newValue) : '',
+                    })
+                  }
+                  slotProps={{ textField: { size: 'small' } }}
+                  sx={{
+                    '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline':
+                      {
+                        border: '1px solid black',
+                      }, // at page load
+                    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                      { border: '2px solid black' }, // at focused state
+                  }}
+                />
+                {'endDate' in fieldErrors ? (
+                  <div className={styles.errorMessage}>
+                    {fieldErrors.endDate}
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </>
+            ) : (
+              <p className={styles.boxText}>
+                {DateTime.fromISO(course.endDate).toFormat('LLLL dd, yyyy')}
+              </p>
+            )}
           </div>
         </div>
         <div className={styles.studentBox}>
@@ -264,8 +266,17 @@ const ClassPage = (props: {
           </div>
         </div>
       </div>
-      <div className={styles.bottomButtons}></div>
       <div className={styles.bottomButton}>
+        <ToolTip title={'Delete Course'} placement="top">
+          <button
+            className={styles.button}
+            onClick={() => {
+              setOpenDeleteModal(true);
+            }}
+          >
+            <img className={styles.icon} src={trashIcon} />
+          </button>
+        </ToolTip>
         <ToolTip title={editing ? 'Save' : 'Edit'} placement="top">
           <button
             className={styles.button}
@@ -316,6 +327,15 @@ const ClassPage = (props: {
           </button>
         </ToolTip>
       </div>
+      <DeleteClass
+        open={openDeleteModal}
+        onClose={() => {
+          setOpenDeleteModal(!openDeleteModal);
+        }}
+        courseId={props.courseID}
+        courseName={course.name}
+        setCourseDeleted={props.setCourseDeleted}
+      />
       <Snackbar
         anchorOrigin={{
           horizontal: 'right',

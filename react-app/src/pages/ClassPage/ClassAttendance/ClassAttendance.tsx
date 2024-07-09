@@ -130,12 +130,16 @@ const ClassAttendance = (props: {
   useEffect(() => {
     let list: string[] = [];
     props.students.forEach((student) => {
-      const studentAttendance = student.courseInformation
-        .find((c) => c.id === props.courseID)
-        ?.attendance.find((att) => att.date === selectedDate);
-      // Add student id to list if student attendance for date is true
-      if (studentAttendance && studentAttendance.attended) {
-        list.push(student.id);
+      const studentCourseInfo = student.courseInformation.find(
+        (c) => c.id === props.courseID,
+      );
+      if (studentCourseInfo) {
+        const studentAttendance = studentCourseInfo.attendance.find(
+          (att) => att.date === selectedDate,
+        ); // Add student id to list if student attendance for date is true
+        if (studentAttendance && studentAttendance.attended) {
+          list.push(student.id);
+        }
       }
     });
     setCheckedCheckboxes(list);

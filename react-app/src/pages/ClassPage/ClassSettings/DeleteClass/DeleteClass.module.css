@@ -1,0 +1,133 @@
+.header {
+  background: white;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.close {
+  height: 0.5rem;
+  margin: 0.5rem 1rem 0.3rem 0;
+  align-self: end;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: black;
+}
+
+.title {
+  width: 100%;
+  color: black;
+  font-size: 27px;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.error {
+  height: 15px;
+  margin: 3px 0px;
+  padding: 0;
+  font-size: 0.8rem;
+  color: red;
+}
+
+.contentBody {
+  margin-top: 0px;
+  width: 75%;
+  text-align: center;
+}
+
+.inputBox {
+  margin-top: 20px;
+  padding: 0px 12px 0px 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border-width: 1px;
+  min-width: 100px;
+  width: calc(12vw + 100px);
+  height: 40px;
+  border-color: black;
+  border-style: solid;
+}
+
+.warning {
+  padding-top: 10px;
+  font-weight: bold;
+  color: var(--color-red);
+}
+
+.courseName {
+  font-weight: bold;
+}
+
+.actions {
+  width: 100%;
+}
+
+.actionsContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.actionsContainer button {
+  width: 16.67vh;
+  min-width: 160px;
+  height: 35px;
+  padding: 11px 0 11px 0;
+  font-weight: 500;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.yesNoButton {
+  margin-top: 30px;
+  color: black;
+  border-color: var(--color-orange);
+  border-style: solid;
+  border-width: 3px;
+  border-radius: 25px;
+  background: white;
+}
+
+.yesNoButton:hover {
+  cursor: pointer;
+  background: var(--color-orange);
+  color: white;
+}
+
+.confirmButton {
+  margin-top: 20px;
+  background-color: var(--color-orange);
+  min-width: 180px;
+  border: none;
+  border-radius: 30px;
+  color: white;
+  outline: none;
+}
+
+.confirmButton:hover {
+  cursor: pointer;
+  background: var(--color-yellow-orange);
+}
+
+.confirmButton:disabled,
+.confirmButton[disabled] {
+  background-color: var(--color-grey);
+  color: #757575;
+  cursor: not-allowed;
+}
