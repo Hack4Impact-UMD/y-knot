@@ -139,15 +139,15 @@ const AddStudentClass = ({
       addStudentCourseFromList(selectedStudents, courseId)
         .then(() => {
           selectedStudents.forEach((studentId) => {
-            const existingTeacher = displayStudents.find(
+            const existingStudent = displayStudents.find(
               (student) => student.id === studentId,
             );
-            if (!existingTeacher) {
-              const foundTeacher = students.find(
+            if (!existingStudent) {
+              const foundStudent = students.find(
                 (student) => student.id === studentId,
               );
-              if (foundTeacher) {
-                displayStudents.push(foundTeacher);
+              if (foundStudent) {
+                displayStudents.push(foundStudent);
               }
             }
           });
