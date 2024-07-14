@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
+import editIcon from '../../assets/gray-pencil.svg';
 import { useAuth } from '../../auth/AuthProvider';
-import { getTeacherWithAuth, updateUser } from '../../backend/FirestoreCalls';
-import { type TeacherID } from '../../types/UserType';
-import { ToolTip } from '../../components/ToolTip/ToolTip';
-import styles from './SettingsPage.module.css';
-import ResetEmail from './ResetEmail/ResetEmail';
-import ResetPassword from './ResetPassword/ResetPassword';
+import { getTeacherWithAuth } from '../../backend/FirestoreCalls';
 import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
-import editIcon from '../../assets/gray-pencil.svg';
-import saveIcon from '../../assets/save.svg';
+import { ToolTip } from '../../components/ToolTip/ToolTip';
+import { type TeacherID } from '../../types/UserType';
+import ResetEmail from './ResetEmail/ResetEmail';
+import ResetPassword from './ResetPassword/ResetPassword';
+import styles from './SettingsPage.module.css';
 
 const SettingsPage = (): JSX.Element => {
   const [editName, setEditName] = useState<boolean>(false);
@@ -56,53 +55,7 @@ const SettingsPage = (): JSX.Element => {
               // Display name if the user is not an admin
               <div className={styles.box} id="Name">
                 <a className={styles.boxTitle}>Name</a>
-                <a className={styles.boxData}>
-                  {editName ? (
-                    <input
-                      type="text"
-                      className={styles.nameInput}
-                      onChange={(event) => {
-                        setUpdatedName(event.target.value);
-                      }}
-                      value={updatedName}
-                    ></input>
-                  ) : (
-                    name
-                  )}
-                </a>
-                <ToolTip title={editName ? 'Save' : 'Edit'} placement="top">
-                  <button
-                    className={styles.editButton}
-                    onClick={() => {
-                      if (!editName) {
-                        setUpdatedName(name);
-                      } else {
-                        if (updatedName !== name) {
-                          setName(updatedName);
-                          updateUser(
-                            { ...teacher!, name: updatedName },
-                            teacher!.id,
-                          );
-                        }
-                      }
-                      setEditName(!editName);
-                    }}
-                  >
-                    {editName ? (
-                      <img
-                        src={saveIcon}
-                        alt="Save"
-                        className={styles.editIcon}
-                      />
-                    ) : (
-                      <img
-                        src={editIcon}
-                        alt="Edit"
-                        className={styles.editIcon}
-                      />
-                    )}
-                  </button>
-                </ToolTip>
+                <a className={styles.boxData}>{name}</a>
               </div>
             ) : (
               <></>
@@ -131,7 +84,7 @@ const SettingsPage = (): JSX.Element => {
 
             <div className={styles.bottomBox} id="Password">
               <a className={styles.boxTitle}>Password</a>
-              <a className={styles.boxData}>******************</a>
+              <a className={styles.boxData}>********</a>
               <ToolTip title="Edit" placement="top">
                 <button
                   className={styles.editButton}

@@ -1,35 +1,30 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './auth/AuthProvider';
 import { ThemeProvider } from '@mui/material/styles';
-import { theme } from './muiTheme';
-import {
-  addSampleCourse,
-  addSampleStudent,
-  addStudentInCourse,
-} from './backendTesting/test';
-import RequireAuth from './auth/RequireAuth/RequireAuth';
-import MergeSelectionPage from './pages/MergeSelectionPage/MergeSelectionPage';
-import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
-import LoginPage from './pages/LoginPage/LoginPage';
-import SettingsPage from './pages/SettingsPage/SettingsPage';
-import CoursesPage from './pages/CoursesPage/CoursesPage';
-import StudentRosterPage from './pages/StudentRosterPage/StudentRosterPage';
-import ClassPage from './pages/ClassPage/ClassPage';
-import StudentProfilePage from './pages/StudentProfilePage/StudentProfilePage';
-import TeacherProfilePage from './pages/TeacherProfilePage/TeacherProfilePage';
-import TranscriptPage from './pages/TranscriptPage/TranscriptPage';
-import CertificatePage from './pages/CertificatePage/CertificatePage';
-import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
-import NavigationBar from './components/NavigationBar/NavigationBar';
-import TeacherRosterPage from './pages/TeacherRosterPage/TeacherRosterPage';
-import MergeStudentPage from './pages/MergeStudentPage/MergeStudentPage';
-import { createUser } from './backend/CloudFunctionsCalls';
-import { addCourse, addTeacherCourse } from './backend/FirestoreCalls';
-import AddCoursePage from './pages/AddCoursesPage/AddCoursePage';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { useState } from 'react';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { AuthProvider } from './auth/AuthProvider';
+import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
+import RequireAuth from './auth/RequireAuth/RequireAuth';
+import { addTeacherCourse } from './backend/FirestoreCalls';
+import FileUpload from './components/FileUpload/FileUpload';
+import NavigationBar from './components/NavigationBar/NavigationBar';
+import { theme } from './muiTheme';
+import AddCoursePage from './pages/AddCoursesPage/AddCoursePage';
+import CertificatePage from './pages/CertificatePage/CertificatePage';
+import ClassPage from './pages/ClassPage/ClassPage';
+import CoursesPage from './pages/CoursesPage/CoursesPage';
 import LeadershipApplicationPage from './pages/LeadershipApplicationPage/LeadershipApplicationPage';
+import LoginPage from './pages/LoginPage/LoginPage';
+import MergeSelectionPage from './pages/MergeSelectionPage/MergeSelectionPage';
+import MergeStudentPage from './pages/MergeStudentPage/MergeStudentPage';
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
+import SettingsPage from './pages/SettingsPage/SettingsPage';
+import StudentProfilePage from './pages/StudentProfilePage/StudentProfilePage';
+import StudentRosterPage from './pages/StudentRosterPage/StudentRosterPage';
+import TeacherProfilePage from './pages/TeacherProfilePage/TeacherProfilePage';
+import TeacherRosterPage from './pages/TeacherRosterPage/TeacherRosterPage';
+import TranscriptPage from './pages/TranscriptPage/TranscriptPage';
 
 function App(): JSX.Element {
   const customTheme = theme;
@@ -43,6 +38,7 @@ function App(): JSX.Element {
         <AuthProvider>
           <BrowserRouter>
             <Routes>
+              <Route path="/fileTest" element={<FileUpload />} />
               <Route path="/login" element={<LoginPage />} />
               <Route
                 path="/"

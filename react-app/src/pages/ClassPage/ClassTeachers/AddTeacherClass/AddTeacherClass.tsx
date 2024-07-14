@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import {
-  getAllTeachers,
-  addTeacherCourseFromList,
-} from '../../../../backend/FirestoreCalls';
-import { type TeacherID } from '../../../../types/UserType';
 import Select, { type OptionProps } from 'react-select';
-import styles from './AddTeacherClass.module.css';
-import Modal from '../../../../components/ModalWrapper/Modal';
 import x from '../../../../assets/x.svg';
+import {
+  addTeacherCourseFromList,
+  getAllTeachers,
+} from '../../../../backend/FirestoreCalls';
+import Modal from '../../../../components/ModalWrapper/Modal';
+import { type TeacherID } from '../../../../types/UserType';
+import styles from './AddTeacherClass.module.css';
 
 interface modalType {
   courseId: string;
@@ -18,6 +18,7 @@ interface modalType {
   setDisplayTeachers: Function;
   setClassTeachers: Function;
   setAddSuccess: Function;
+  currentTeachers: any;
 }
 
 const InputOption: React.FC<OptionProps<any, true, any>> = ({
@@ -75,6 +76,7 @@ const AddTeacherClass = ({
   setDisplayTeachers,
   setClassTeachers,
   setAddSuccess,
+  currentTeachers,
 }: modalType): React.ReactElement => {
   const [teachers, setTeachers] = useState<Array<Partial<TeacherID>>>([]);
   const [teacherList, setTeacherList] = useState<Array<Partial<TeacherID>>>([]);
@@ -124,7 +126,7 @@ const AddTeacherClass = ({
       })
       .catch(() => {})
       .finally(() => {});
-  });
+  }, []);
 
   useEffect(() => {
     setTeacherList(teachers);

@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { useAuth } from '../../auth/AuthProvider';
-import { useNavigate } from 'react-router-dom';
-import type { Course } from '../../types/CourseType';
-import { type TeacherID } from '../../types/UserType';
-import { getAllTeachers, addCourse } from '../../backend/FirestoreCalls';
-import { DateTime } from 'luxon';
 import { DatePicker } from '@mui/x-date-pickers';
-import NavigationBar from '../../components/NavigationBar/NavigationBar';
-import styles from './AddCoursePage.module.css';
-import Loading from '../../components/LoadingScreen/Loading';
+import { DateTime } from 'luxon';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Select, { type OptionProps } from 'react-select';
 import * as Yup from 'yup';
+import { useAuth } from '../../auth/AuthProvider';
+import { addCourse, getAllTeachers } from '../../backend/FirestoreCalls';
+import Loading from '../../components/LoadingScreen/Loading';
+import NavigationBar from '../../components/NavigationBar/NavigationBar';
+import { Course } from '../../types/CourseType';
+import { type TeacherID } from '../../types/UserType';
+import styles from './AddCoursePage.module.css';
 
 const InputOption: React.FC<OptionProps<any, true, any>> = ({
   isSelected,
@@ -59,7 +59,6 @@ const InputOption: React.FC<OptionProps<any, true, any>> = ({
 };
 
 function AddCoursePage({ setCourseAdded }: any) {
-  const dropdownOptions = ['Program', 'Academy', 'Club'];
   const navigate = useNavigate();
   const authContext = useAuth();
 
@@ -69,9 +68,6 @@ function AddCoursePage({ setCourseAdded }: any) {
     endDate: Yup.date()
       .required('*Required')
       .min(Yup.ref('startDate'), '*End date must be after start date'),
-    courseType: Yup.string()
-      .required('*Required')
-      .oneOf(['PROGRAM', 'ACADEMY', 'CLUB'], '*Invalid course type'),
     leadershipApp: Yup.boolean().required('*Required'),
     formId: Yup.string().required('*Required'),
   });
@@ -83,7 +79,6 @@ function AddCoursePage({ setCourseAdded }: any) {
     students: [],
     teachers: [],
     leadershipApp: false, // is this a leadership class, which requires an application
-    courseType: 'PROGRAM',
     formId: '',
     introEmail: { content: '', files: [] },
     attendance: [],
@@ -225,50 +220,7 @@ function AddCoursePage({ setCourseAdded }: any) {
                   </div>
                 </div>
               </div>
-              <div className={styles.studentBox}>
-                <p className={styles.name}>Course Type</p>
-                <div className={styles.inputContainer}>
-                  <Select
-                    placeholder="Select Program"
-                    className={styles.dateSelection}
-                    styles={{
-                      control: (baseStyles) => ({
-                        ...baseStyles,
-                        width: 'calc(12vw + 100px)',
-                        minWidth: '30px',
-                        height: '40px',
-                        borderColor: 'black',
-                        boxShadow: 'none',
-                        '&:focus-within': {
-                          border: '2px solid black',
-                        },
-                        '&:hover': {
-                          border: '1px solid black',
-                        },
-                      }),
-                    }}
-                    options={dropdownOptions.map((option) => {
-                      return { value: option, label: option };
-                    })}
-                    theme={(theme) => ({
-                      ...theme,
-                      colors: {
-                        ...theme.colors,
-                        primary25: 'var(--color-pastel-orange)',
-                        primary50: 'var(--color-bright-orange)',
-                        primary: 'var(--color-orange)',
-                      },
-                    })}
-                    onChange={(newValue) => {
-                      setCourse({
-                        ...course,
-                        endDate: newValue ? newValue.value.toUpperCase() : '',
-                      });
-                    }}
-                    defaultValue={{ value: 'Program', label: 'Program' }}
-                  />
-                </div>
-              </div>
+
               <div className={styles.studentBox}>
                 <p className={styles.name}>Teacher(s)</p>
                 <div className={styles.inputContainer}>

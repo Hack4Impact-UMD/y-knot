@@ -42,21 +42,21 @@ export interface StudentHomework {
 }
 
 export interface LeadershipApplicant extends Student {
-  idx: number; // display order index
-  dateApplied: string; // "YYYY-MM-DD"
+  classId: string;
+  involvement: string;
+  recFiles: LeadershipFile[];
+  whyJoin: string;
+  transcriptFiles: LeadershipFile[];
   gpa: string;
   gender: string;
-  textAnswer1: string;
-  transcript: LeadershipFile;
-  recLetter: LeadershipFile;
-  textAnswer2: string;
   status: LeadershipStatus;
   statusNote: string;
+  firebaseID: string;
 }
 
 export interface LeadershipFile {
   name: string;
-  path: string;
+  ref: string;
   downloadURL: string;
 }
 

@@ -14,13 +14,17 @@
   },
   "main": "index.js",
   "dependencies": {
+    "axios": "^1.7.2",
     "busboy": "^1.6.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.3.1",
+    "fetch-base64": "^2.1.2",
+    "firebase": "^10.12.3",
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^4.5.0",
     "googleapis": "^129.0.0",
+    "mime-types": "^2.1.35",
     "nodemailer": "^6.9.8",
     "string-similarity": "^4.0.4"
   },

@@ -9,6 +9,8 @@ const dotenv = require("dotenv");
 const nodemailer = require("nodemailer");
 const stringSimilarity = require("string-similarity");
 const { WriteBatch } = require("firebase-admin/firestore");
+const { getStorage } = require("firebase-admin/storage");
+const axios = require("axios");
 const OAuth2 = google.auth.OAuth2;
 admin.initializeApp();
 const db = admin.firestore();
@@ -384,15 +386,14 @@ exports.newSubmission = onRequest(
             },
           ],
         };
-
         // Update the current student's course information if there is a match
         if (matchingStudent) {
           student.courseInformation = matchingStudent.data().courseInformation;
+
           const studentClass = matchingStudent
             .data()
-            .courseInformation.find((course) => {
-              course.id == selectedClass.id;
-            });
+            .courseInformation.find((course) => course.id == selectedClass.id);
+
           if (!studentClass) {
             student.courseInformation.push({
               id: selectedClass.id,
@@ -438,6 +439,198 @@ exports.newSubmission = onRequest(
           );
         });
 
+        res.end();
+      });
+      busboy.end(req.rawBody);
+    } catch (error) {
+      res.end();
+    }
+  }
+);
+
+exports.newLeadershipSubmission = onRequest(
+  { region: "us-east4", cors: true },
+  async (req, res) => {
+    let submissionId = undefined;
+    let formId = undefined;
+    try {
+      if (req.method != "POST") {
+        throw new Error();
+      }
+      const busboy = Busboy({ headers: req.headers });
+      const fields = [];
+      busboy.on("field", (field, val) => {
+        fields[field] = val;
+      });
+
+      busboy.on("finish", async () => {
+        // Once all the fields have been read, we can start processing
+        const data = JSON.parse(fields["rawRequest"]);
+        submissionId = fields["submissionID"];
+        formId = fields["formID"];
+        const transcriptFiles = [];
+        for (var i = 0; i < (data["transcript"]?.length || 0); i++) {
+          // Jotform redirects the given file url to a different one, so we manually create the url
+          const trans = data["transcript"][i];
+          const fileNameParsed = trans.split("/").at(-1).split(".");
+          let fileExtension = "";
+          if (fileNameParsed.length > 1) {
+            fileExtension = "." + fileNameParsed.at(-1);
+          }
+          const file = await axios
+            .get(trans, { responseType: "arraybuffer" })
+
+            .catch(async (error) => {
+              await sendNewSubmissionErrorEmail(formId, submissionId).finally(
+                () => {
+                  throw new Error();
+                }
+              );
+            });
+
+          // Upload file to firebase storage
+          const bucket = admin.storage().bucket();
+          const fileName = crypto.randomUUID();
+          await bucket
+            .file(fileName + fileExtension)
+            .save(Buffer.from(file.data, "binary"));
+          transcriptFiles.push({
+            ref: fileName + fileExtension,
+            name: "transcript" + i + fileExtension,
+            downloadURL: "",
+          });
+        }
+
+        const recFiles = [];
+        for (var i = 0; i < (data["lettersOf"]?.length || 0); i++) {
+          // Jotform redirects the given file url to a different one, so we manually create the url
+          const letters = data["lettersOf"][i];
+          const fileNameParsed = letters.split("/").at(-1).split(".");
+          let fileExtension = "";
+          if (fileNameParsed.length > 1) {
+            fileExtension = "." + fileNameParsed.at(-1);
+          }
+          const file = await axios
+            .get(letters, { responseType: "arraybuffer" })
+
+            .catch(async (error) => {
+              await sendNewSubmissionErrorEmail(formId, submissionId).finally(
+                () => {
+                  throw new Error();
+                }
+              );
+            });
+
+          // Upload file to firebase storage
+          const bucket = admin.storage().bucket();
+          const fileName = crypto.randomUUID();
+          await bucket
+            .file(fileName + fileExtension)
+            .save(Buffer.from(file.data, "binary"));
+          recFiles.push({
+            ref: fileName + fileExtension,
+            name: "Recommendation" + i + fileExtension,
+            downloadURL: "",
+          });
+        }
+
+        // First find the class with the corresponding form id
+        const selectedClass = await db
+          .collection("Courses")
+          .where("formId", "==", formId)
+          .get()
+          .then(async (querySnapshot) => {
+            if (querySnapshot.docs.length == 0) {
+              await sendNewSubmissionErrorEmail(formId, submissionId).finally(
+                () => {
+                  throw new Error();
+                }
+              );
+            } else {
+              // We make sure that the class is an upcoming one
+              const matchingClass = querySnapshot.docs.find((doc) => {
+                const sampleClass = doc.data();
+
+                // This finds the current date in the EST timezone
+                const currentAmericanDate = new Date().toLocaleDateString(
+                  "en-US",
+                  {
+                    timeZone: "America/New_York",
+                  }
+                );
+                const currentFormattedDate = new Date(
+                  currentAmericanDate
+                ).toLocaleDateString("fr-CA");
+                if (
+                  sampleClass.startDate.toString() >=
+                    currentFormattedDate.toString() &&
+                  sampleClass.leadershipApp
+                ) {
+                  return sampleClass;
+                }
+              });
+              if (matchingClass) {
+                return matchingClass;
+              }
+              // No class found, throw an error
+              await sendNewSubmissionErrorEmail(formId, submissionId).finally(
+                () => {
+                  throw new Error();
+                }
+              );
+            }
+          });
+        const leadershipObject = {
+          firstName: data["q3_name"]["first"],
+          middleName: data["q3_name"]["middle"],
+          lastName: data["q3_name"]["last"],
+          birthDate:
+            data["q19_dateOf"]["year"] +
+            "-" +
+            data["q19_dateOf"]["month"] +
+            "-" +
+            data["q19_dateOf"]["day"], // "YYYY-MM-DD"
+          addrFirstLine: data["q4_address"]["addr_line1"],
+          addrSecondLine: data["q4_address"]["addr_line2"],
+          city: data["q4_address"]["city"],
+          state: data["q4_address"]["state"],
+          zipCode: data["q4_address"]["postal"],
+          email: data["q5_email"],
+          phone: parseInt(
+            data["q6_phoneNumber"]["full"].replace(/[\(\)-\s]/g, "")
+          ),
+          gradeLevel: data["q10_grade"],
+          schoolName: data["q8_school"],
+          gpa: data["q9_gpa"],
+          gender: data["q11_gender"],
+          involvement: data["q12_listYour"],
+          guardianFirstName: data["q14_parentsName"]["first"],
+          guardianLastName: data["q14_parentsName"]["last"],
+          guardianEmail: data["q15_email15"],
+          guardianPhone: parseInt(
+            data["q16_phoneNumber16"]["full"].replace(/[\(\)-\s]/g, "")
+          ),
+          whyJoin: data["q18_whyU"],
+          transcriptFiles: transcriptFiles,
+          recFiles: recFiles,
+          classId: selectedClass.id,
+          status: "PENDING",
+          statusNote: "",
+          courseInformation: [],
+        };
+        await db
+          .collection("LeadershipApplications")
+          .add(leadershipObject)
+          .then(() => {})
+          .catch(async (error) => {
+            console.log(error);
+            // No class found, throw an error
+            await sendNewSubmissionErrorEmail(formId, submissionId).finally(
+              () => {
+                throw new Error();
+              }
+            );
+          });
         res.end();
       });
       busboy.end(req.rawBody);

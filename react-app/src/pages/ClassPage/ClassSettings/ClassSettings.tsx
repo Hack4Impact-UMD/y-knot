@@ -1,17 +1,16 @@
-import { useState } from 'react';
-import { ToolTip } from '../../../components/ToolTip/ToolTip';
-import type { Course } from '../../../types/CourseType';
+import { Alert, Snackbar } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTime } from 'luxon';
-import { updateCourse } from '../../../backend/FirestoreCalls';
-import { Snackbar, Alert } from '@mui/material';
-import styles from './ClassSettings.module.css';
-import Select from 'react-select';
-import DeleteClass from './DeleteClass/DeleteClass';
+import { useState } from 'react';
+import * as Yup from 'yup';
 import editImage from '../../../assets/edit.svg';
 import saveImage from '../../../assets/save.svg';
 import trashIcon from '../../../assets/trash.svg';
-import * as Yup from 'yup';
+import { updateCourse } from '../../../backend/FirestoreCalls';
+import { ToolTip } from '../../../components/ToolTip/ToolTip';
+import type { Course } from '../../../types/CourseType';
+import styles from './ClassSettings.module.css';
+import DeleteClass from './DeleteClass/DeleteClass';
 
 const ClassPage = (props: {
   course: Course;
@@ -31,9 +30,6 @@ const ClassPage = (props: {
     endDate: Yup.date()
       .required('*Required')
       .min(Yup.ref('startDate'), '*End date must be after start date'),
-    courseType: Yup.string()
-      .required('*Required')
-      .oneOf(['PROGRAM', 'ACADEMY', 'CLUB'], '*Invalid course type'),
     leadershipApp: Yup.boolean().required('*Required'),
     formId: Yup.string().required('*Required'),
   });
@@ -163,59 +159,7 @@ const ClassPage = (props: {
             )}
           </div>
         </div>
-        <div className={styles.studentBox}>
-          <p className={styles.boxTitle}>Course Type</p>
-          <div className={styles.inputContainer}>
-            {editing ? (
-              <Select
-                placeholder="Select Program"
-                className={styles.dateSelection}
-                styles={{
-                  control: (baseStyles) => ({
-                    ...baseStyles,
-                    minWidth: '30px',
-                    width: 'calc(12vw + 100px)',
-                    height: '40px',
-                    borderColor: 'black',
-                    boxShadow: 'none',
-                    '&:focus-within': {
-                      border: '2px solid black',
-                    },
-                    '&:hover': {
-                      border: '1px solid black',
-                    },
-                  }),
-                }}
-                options={dropdownOptions.map((option) => {
-                  return { value: option, label: option };
-                })}
-                theme={(theme) => ({
-                  ...theme,
-                  colors: {
-                    ...theme.colors,
-                    primary25: 'var(--color-pastel-orange)',
-                    primary50: 'var(--color-bright-orange)',
-                    primary: 'var(--color-orange)',
-                  },
-                })}
-                onChange={(newValue) => {
-                  setCourse({
-                    ...course,
-                    endDate: newValue ? newValue.value.toUpperCase() : '',
-                  });
-                }}
-                defaultValue={{
-                  value: titleCase(course.courseType.toString()),
-                  label: titleCase(course.courseType.toString()),
-                }}
-              />
-            ) : (
-              <p className={styles.boxText}>
-                {titleCase(course.courseType.toString())}
-              </p>
-            )}
-          </div>
-        </div>
+
         <div className={styles.studentBox}>
           <p className={styles.boxTitle}>Leadership Academy</p>
           <div className={styles.inputContainer}>
@@ -288,8 +232,11 @@ const ClassPage = (props: {
                     updateCourse(course, props.courseID)
                       .then(() => {
                         setCourseUpdated(true);
+                        window.location.reload();
                       })
-                      .catch(() => {})
+                      .catch((error) => {
+                        console.log(error);
+                      })
                       .finally(() => {
                         setFieldErrors({});
                         setEditing(!editing);

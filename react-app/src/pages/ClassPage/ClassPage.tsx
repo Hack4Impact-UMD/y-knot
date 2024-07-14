@@ -1,25 +1,25 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '../../auth/AuthProvider';
+import { DateTime } from 'luxon';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import type { Course, CourseID } from '../../types/CourseType';
-import type { StudentID } from '../../types/StudentType';
-import type { TeacherID } from '../../types/UserType';
+import { useAuth } from '../../auth/AuthProvider';
 import {
   getCourse,
   getStudentsFromList,
   getTeachersFromList,
 } from '../../backend/FirestoreCalls';
-import { DateTime } from 'luxon';
-import styles from '../../pages/ClassPage/ClassPage.module.css';
-import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
-import ClassMain from './ClassMain/ClassMain';
+import NavigationBar from '../../components/NavigationBar/NavigationBar';
+import styles from '../../pages/ClassPage/ClassPage.module.css';
+import type { Course, CourseID } from '../../types/CourseType';
+import type { StudentID } from '../../types/StudentType';
+import type { TeacherID } from '../../types/UserType';
 import ClassAcademy from './ClassAcademy/ClassAcademy';
 import ClassAttendance from './ClassAttendance/ClassAttendance';
 import ClassHomework from './ClassHomework/ClassHomework';
-import ClassTeachers from './ClassTeachers/ClassTeachers';
-import ClassStudents from './ClassStudents/ClassStudents';
+import ClassMain from './ClassMain/ClassMain';
 import ClassSettings from './ClassSettings/ClassSettings';
+import ClassStudents from './ClassStudents/ClassStudents';
+import ClassTeachers from './ClassTeachers/ClassTeachers';
 
 enum Tab {
   Main = 'Main',
@@ -39,7 +39,6 @@ const blankCourse: CourseID = {
   students: [],
   teachers: [],
   leadershipApp: false,
-  courseType: 'ACADEMY',
   formId: '',
   introEmail: { content: '', files: [] },
   attendance: [],
@@ -105,9 +104,6 @@ const ClassPage = ({ setCourseDeleted }: any): JSX.Element => {
                 dateFormat,
               )} - ${DateTime.fromISO(course.endDate).toFormat(dateFormat)}`}
             </h2>
-            <h2 className={styles.time}>
-              {titleCase(course.courseType.toString())}
-            </h2>
           </div>
 
           <div className={styles.content}>
@@ -121,7 +117,7 @@ const ClassPage = ({ setCourseDeleted }: any): JSX.Element => {
             >
               Main
             </button>
-            {course.courseType === 'ACADEMY' ? (
+            {course.leadershipApp ? (
               <button
                 className={
                   currentTab === Tab.Academy ? styles.selectedTab : styles.tab

@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '../../../auth/AuthProvider';
-import { TeacherID } from '../../../types/UserType';
-import { Snackbar, Alert } from '@mui/material';
-import { ToolTip } from '../../../components/ToolTip/ToolTip';
+import { Alert, Snackbar } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import TrashIcon from '../../../assets/trash.svg';
+import EyeIcon from '../../../assets/view.svg';
+import { useAuth } from '../../../auth/AuthProvider';
+import { ToolTip } from '../../../components/ToolTip/ToolTip';
+import { TeacherID } from '../../../types/UserType';
 import styles from '../ClassTeachers/ClassTeachers.module.css';
 import AddTeacherClass from './AddTeacherClass/AddTeacherClass';
 import DeleteTeacherClassConfirmation from './DeleteTeacherClassConfirmation/DeleteTeacherClassConfirmation';
-import EyeIcon from '../../../assets/view.svg';
-import TrashIcon from '../../../assets/trash.svg';
 
 const ClassTeachers = (props: {
   teachers: Array<TeacherID>;
@@ -110,6 +110,7 @@ const ClassTeachers = (props: {
         setDisplayTeachers={setTeachers}
         setClassTeachers={props.setTeachers}
         setAddSuccess={setAddSuccess}
+        currentTeachers={teacherList}
       />
       {showPopup && (
         <DeleteTeacherClassConfirmation

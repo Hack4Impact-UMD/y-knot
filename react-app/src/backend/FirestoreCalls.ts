@@ -1,29 +1,34 @@
+import dayjs from 'dayjs';
+import { diceCoefficient } from 'dice-coefficient';
 import {
-  collection,
-  doc,
   addDoc,
+  collection,
   deleteDoc,
-  getDocs,
+  doc,
+  DocumentReference,
   getDoc,
-  updateDoc,
+  getDocs,
   query,
-  where,
   runTransaction,
+  updateDoc,
+  where,
+  writeBatch,
 } from 'firebase/firestore';
+import { deleteObject, getStorage, ref } from 'firebase/storage';
 import { db } from '../config/firebase';
-import {
-  StudentAttendance,
-  type StudentID,
-  type Student,
-} from '../types/StudentType';
 import {
   Attendance,
   Homework,
   type Course,
   type CourseID,
 } from '../types/CourseType';
+import {
+  LeadershipApplicant,
+  StudentAttendance,
+  type Student,
+  type StudentID,
+} from '../types/StudentType';
 import { TeacherID, type Teacher, type YKNOTUser } from '../types/UserType';
-import dayjs from 'dayjs';
 
 export function getAllStudents(): Promise<StudentID[]> {
   const studentsRef = collection(db, 'Students');
@@ -37,6 +42,245 @@ export function getAllStudents(): Promise<StudentID[]> {
           allStudents.push(newStudent);
         });
         resolve(allStudents);
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+}
+
+export function getAcademyApplications(
+  classId: string,
+): Promise<LeadershipApplicant[]> {
+  const leadershipRef = collection(db, 'LeadershipApplications');
+  const filter = query(leadershipRef, where('classId', '==', classId));
+
+  return new Promise((resolve, reject) => {
+    getDocs(filter)
+      .then((snapshot) => {
+        const allApplications: LeadershipApplicant[] = [];
+        snapshot.docs.map((doc) => {
+          const application = {
+            ...doc.data(),
+            firebaseID: doc.id,
+          } as LeadershipApplicant;
+          allApplications.push(application);
+        });
+        resolve(allApplications);
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+}
+
+export function rejectLeadershipApplication(
+  currentApplicant: LeadershipApplicant,
+): Promise<void> {
+  return new Promise(async (resolve, reject) => {
+    // Delete the Leadership Application
+    const applicationRef = doc(
+      db,
+      'LeadershipApplications',
+      currentApplicant.firebaseID,
+    );
+    await deleteDoc(applicationRef)
+      .then(() => {
+        resolve();
+      })
+      .catch(() => reject());
+
+    // Delete files from the storage
+    const storage = getStorage();
+    for (
+      let j = 0;
+      j < (currentApplicant['transcriptFiles']?.length || 0);
+      j++
+    ) {
+      const pathReference = ref(
+        storage,
+        currentApplicant['transcriptFiles'][j]['ref'],
+      );
+      await deleteObject(pathReference).catch((error) => {});
+    }
+
+    for (let j = 0; j < (currentApplicant['recFiles']?.length || 0); j++) {
+      const pathReference = ref(
+        storage,
+        currentApplicant['recFiles'][j]['ref'],
+      );
+      await deleteObject(pathReference).catch((error) => {});
+    }
+  });
+}
+
+export function acceptLeadershipApplication(
+  currentApplicant: LeadershipApplicant,
+): Promise<void> {
+  return new Promise(async (resolve, reject) => {
+    // Next we check if the student exists in the database
+    const studentRef = collection(db, 'Students');
+    const filter = query(
+      studentRef,
+      where('birthDate', '==', currentApplicant.birthDate),
+    );
+    let possibleStudentMatches: any[] = [];
+    const matchingStudent = await getDocs(filter)
+      .then((snapshot) => {
+        if (snapshot.docs.length == 0) {
+          return undefined;
+        }
+        const student = snapshot.docs.find((doc) => {
+          const studentData = doc.data();
+          const formName =
+            currentApplicant.firstName.toLowerCase() +
+            (currentApplicant?.middleName?.toLowerCase() || '') +
+            currentApplicant.lastName.toLowerCase();
+          const databaseName =
+            studentData.firstName.toLowerCase() +
+            (studentData.middleName || '').toLowerCase() +
+            studentData.lastName.toLowerCase();
+
+          // We check for similarity in order to suggest whether two students might be the same
+          const similarity = diceCoefficient(formName, databaseName);
+          if (similarity == 1) {
+            return doc;
+          } else if (similarity > 0.35) {
+            possibleStudentMatches.push(doc.id);
+          }
+        });
+        if (student) {
+          /* If the student already exists, we don't need to indicate possible matches
+           as that was already done when the student was first created
+        */
+          possibleStudentMatches = [];
+        }
+        return student;
+      })
+      .catch((e) => {});
+
+    const student: Student = {
+      firstName: currentApplicant.firstName,
+      middleName: currentApplicant.middleName,
+      lastName: currentApplicant.lastName,
+      addrFirstLine: currentApplicant.addrFirstLine,
+      addrSecondLine: currentApplicant.addrSecondLine,
+      city: currentApplicant.city,
+      state: currentApplicant.state,
+      zipCode: currentApplicant.zipCode,
+      email: currentApplicant.email,
+      phone: currentApplicant.phone,
+      guardianFirstName: currentApplicant.guardianFirstName,
+      guardianLastName: currentApplicant.guardianLastName,
+      guardianEmail: currentApplicant.guardianEmail,
+      guardianPhone: currentApplicant.guardianPhone,
+      birthDate: currentApplicant.birthDate, // "YYYY-MM-DD"
+      gradeLevel: currentApplicant.gradeLevel,
+      schoolName: currentApplicant.schoolName,
+      courseInformation: [
+        {
+          id: currentApplicant.classId,
+          attendance: [],
+          homeworks: [],
+          progress: 'NA',
+        },
+      ],
+    };
+    console.log(student.courseInformation);
+    // Update the current student's course information if there is a match
+    if (matchingStudent) {
+      student.courseInformation = matchingStudent.data().courseInformation;
+      console.log(student.courseInformation);
+
+      const studentClass = matchingStudent
+        .data()
+        .courseInformation.find((course: any) => {
+          if (course.id == currentApplicant.classId) {
+            return course;
+          }
+        });
+
+      if (!studentClass) {
+        student.courseInformation.push({
+          id: currentApplicant.classId,
+          attendance: [],
+          homeworks: [],
+          progress: 'NA',
+        });
+      }
+    }
+
+    const selectedCourse: void | { course: Course; id: DocumentReference } =
+      await getDoc(doc(db, 'Courses', currentApplicant.classId))
+        .then((classSnapshot) => {
+          if (classSnapshot.exists()) {
+            return {
+              course: classSnapshot.data() as Course,
+              id: classSnapshot.ref,
+            };
+          } else {
+            reject();
+          }
+        })
+        .catch((e) => {
+          reject(e);
+        });
+
+    const batch = writeBatch(db);
+
+    // Creates a new auto-generated id
+    const autoID = matchingStudent
+      ? matchingStudent.ref
+      : doc(collection(db, 'Students'));
+
+    batch.set(autoID, student);
+    const studentId = matchingStudent ? matchingStudent.id : autoID.id;
+
+    // Update the class's students
+    const classStudents = selectedCourse?.course.students || [];
+    if (!classStudents.includes(studentId)) {
+      classStudents.push(studentId);
+    }
+
+    batch.update(selectedCourse?.id!, { students: classStudents });
+
+    if (possibleStudentMatches.length > 0) {
+      const docRef = doc(collection(db, 'StudentMatches'));
+      batch.set(docRef, {
+        studentOne: studentId,
+        matches: possibleStudentMatches,
+      });
+    }
+
+    await batch
+      .commit()
+      .then()
+      .catch(async () => {
+        reject();
+      });
+
+    // Delete the Leadership Application
+    rejectLeadershipApplication(currentApplicant)
+      .then(() => {
+        resolve();
+      })
+      .catch(() => {
+        reject();
+      });
+  });
+}
+
+export function updateAcademyNote(newNote: string, id: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (id === '' || !id) {
+      reject(new Error('Invalid id'));
+      return;
+    }
+
+    const courseRef = doc(db, 'LeadershipApplications', id);
+    updateDoc(courseRef, { statusNote: newNote })
+      .then(() => {
+        resolve();
       })
       .catch((e) => {
         reject(e);
@@ -107,36 +351,36 @@ export function deleteStudent(id: string): Promise<void> {
         await transaction.get(doc(db, 'Students', id))
       ).data() as Student;
       const idOrder: string[] = [];
-      const students: string[][] = [];
-      await Promise.all(
-        studentRef.courseInformation.map(async (course) => {
-          idOrder.push(course.id);
-          return (
-            await transaction.get(doc(db, 'Courses', course.id))
-          ).data() as Course;
-        }),
-      ).then((result) => {
-        result.forEach((course) => {
-          students.push(course.students);
+      let students: string[][] = [];
+      const studentCourses: any[] = [];
+      studentRef.courseInformation.map(async (course) => {
+        idOrder.push(course.id);
+        studentCourses.push(transaction.get(doc(db, 'Courses', course.id)));
+      }),
+        await Promise.all(studentCourses).then((result) => {
+          result.forEach((course) => {
+            students.push((course.data() as Course).students);
+          });
         });
+      students = students.map((student, index) => {
+        return student.filter((s) => s !== id);
       });
-      students.forEach((studentList) => {
-        studentList = studentList.filter((student) => {
-          return student !== id;
-        });
-      });
+      const promisesList = [];
       idOrder.map((id, index) => {
-        transaction.update(doc(db, 'Courses', id), {
-          students: students[index],
-        });
+        promisesList.push(
+          transaction.update(doc(db, 'Courses', id), {
+            students: students[index],
+          }),
+        );
       });
-      transaction.delete(doc(db, 'Students', id));
+      promisesList.push(transaction.delete(doc(db, 'Students', id)));
+      await Promise.all(promisesList);
     })
       .then(() => {
         resolve();
       })
-      .catch(() => {
-        reject();
+      .catch((error) => {
+        reject(error);
       });
   });
 }
