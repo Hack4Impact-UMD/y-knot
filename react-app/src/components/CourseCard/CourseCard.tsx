@@ -1,6 +1,6 @@
+import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../../src/auth/AuthProvider';
-import { DateTime } from 'luxon';
 import { getTeacher } from '../../backend/FirestoreCalls';
 import type { Teacher } from '../../types/UserType';
 import styles from './CourseCard.module.css';
@@ -27,6 +27,12 @@ const CourseCard = ({
   const authContext = useAuth();
 
   useEffect(() => {
+    if (
+      authContext.loading ||
+      authContext.token?.claims.role.toUpperCase() !== 'ADMIN'
+    ) {
+      return;
+    }
     const fetchData = async () => {
       const teacherInfo = await Promise.all(
         teacher.map(async (teach) => {

@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
-import { ToolTip } from '../../../components/ToolTip/ToolTip';
-import type { StudentID } from '../../../types/StudentType';
-import type { Course, Homework } from '../../../types/CourseType';
-import { Snackbar, Alert } from '@mui/material';
-import { updateStudentHomeworks } from '../../../backend/FirestoreCalls';
+import { Alert, Snackbar } from '@mui/material';
+import { useEffect, useState } from 'react';
 import Select from 'react-select';
-import styles from './ClassHomework.module.css';
 import noteIcon from '../../../assets/note.svg';
+import { updateStudentHomeworks } from '../../../backend/FirestoreCalls';
+import { ToolTip } from '../../../components/ToolTip/ToolTip';
+import type { Course, Homework } from '../../../types/CourseType';
+import type { StudentID } from '../../../types/StudentType';
 import AddHomework from './AddHomework/AddHomework';
-import RemoveHomework from './RemoveHomework/RemoveHomework';
 import AddNote from './AddNote/AddNote';
+import styles from './ClassHomework.module.css';
+import RemoveHomework from './RemoveHomework/RemoveHomework';
 
 const ClassHomework = (props: {
   homeworks: Array<Homework>;
@@ -21,7 +21,7 @@ const ClassHomework = (props: {
 }): JSX.Element => {
   const [selectComponentValue, setSelectComponentValue] = useState<any>({
     value: props.homeworks.slice(-1)[0]?.name.toString() ?? '',
-    label: props.homeworks.slice(-1)[0]?.name.toString() ?? 'Assignment',
+    label: props.homeworks.slice(-1)[0]?.name.toString() ?? 'Select Homework',
   });
   const [selectedHomeworkName, setHomeworkName] = useState<string>(
     props.homeworks.slice(-1)[0]?.name.toString() ?? '',
@@ -99,14 +99,32 @@ const ClassHomework = (props: {
     let options = props.homeworks.map((assignment) => {
       return { value: assignment.name, label: assignment.name };
     });
-    setDropdownOptions(options);
+    setDropdownOptions(options || []);
     setSelectComponentValue({
       value: props.homeworks.slice(-1)[0]?.name.toString() ?? '',
-      label: props.homeworks.slice(-1)[0]?.name.toString() ?? 'Assignment',
+      label: props.homeworks.slice(-1)[0]?.name.toString() ?? 'Select Homework',
     });
     setHomeworkName(props.homeworks.slice(-1)[0]?.name.toString() ?? '');
     setHomeworkNote(props.homeworks.slice(-1)[0]?.notes.toString() ?? '');
   }, [props.homeworks]);
+
+  useEffect(() => {
+    let list: string[] = [];
+    props.students.forEach((student) => {
+      const studentCourseInfo = student.courseInformation.find(
+        (c) => c.id === props.courseID,
+      );
+      if (studentCourseInfo) {
+        const studentHomework = studentCourseInfo.homeworks.find(
+          (hw) => hw.name === selectedHomeworkName,
+        ); // Add student id to list if student attendance for date is true
+        if (studentHomework && studentHomework.completed) {
+          list.push(student.id);
+        }
+      }
+    });
+    setCheckedCheckboxes(list);
+  }, [selectedHomeworkName]);
 
   return (
     <div className={styles.mainContainer}>
@@ -123,6 +141,7 @@ const ClassHomework = (props: {
             setSelectComponentValue(option);
             parseHomework(option?.label.toString() ?? '');
           }}
+          placeholder="Select Homework"
           styles={{
             control: (baseStyles) => ({
               ...baseStyles,
@@ -151,6 +170,8 @@ const ClassHomework = (props: {
       </div>
       {props.students.length === 0 ? (
         <h4 className={styles.noStudent}>No Students Currently in Roster</h4>
+      ) : dropdownOptions?.length == 0 ? (
+        <h4 className={styles.noStudent}>No Homeworks Created</h4>
       ) : (
         <div className={styles.inputs}>
           {props.students.map(function (student, i) {

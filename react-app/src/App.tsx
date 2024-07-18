@@ -6,12 +6,9 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './auth/AuthProvider';
 import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
 import RequireAuth from './auth/RequireAuth/RequireAuth';
-import { addTeacherCourse } from './backend/FirestoreCalls';
 import FileUpload from './components/FileUpload/FileUpload';
-import NavigationBar from './components/NavigationBar/NavigationBar';
 import { theme } from './muiTheme';
 import AddCoursePage from './pages/AddCoursesPage/AddCoursePage';
-import CertificatePage from './pages/CertificatePage/CertificatePage';
 import ClassPage from './pages/ClassPage/ClassPage';
 import CoursesPage from './pages/CoursesPage/CoursesPage';
 import LeadershipApplicationPage from './pages/LeadershipApplicationPage/LeadershipApplicationPage';
@@ -48,14 +45,7 @@ function App(): JSX.Element {
                   </RequireAuth>
                 }
               />
-              <Route
-                path="*"
-                element={
-                  <RequireAuth>
-                    <NotFoundPage />
-                  </RequireAuth>
-                }
-              />
+
               <Route
                 path="/courses"
                 element={
@@ -149,14 +139,7 @@ function App(): JSX.Element {
                   </RequireAuth>
                 }
               />
-              <Route
-                path="/nav"
-                element={
-                  <RequireAuth>
-                    <NavigationBar />
-                  </RequireAuth>
-                }
-              />
+
               <Route
                 path="/transcript/:id"
                 element={
@@ -165,44 +148,12 @@ function App(): JSX.Element {
                   </RequireAuth>
                 }
               />
+
               <Route
-                path="/certificate/:id"
+                path="*"
                 element={
                   <RequireAuth>
-                    <CertificatePage name="Fiona Love" course="Math" />
-                  </RequireAuth>
-                }
-              />
-              <Route
-                path="/testfunctions"
-                element={
-                  <RequireAuth>
-                    <button
-                      onClick={
-                        () => {
-                          addTeacherCourse(
-                            'Li3x7GK5XwAk8UqhskKV',
-                            '629B8D6g5MFK8CoupeIt',
-                          );
-                        }
-                        //   async () => {
-                        //   const course = addCourse({
-                        //     name: 'Digital Marketing',
-                        //     startDate: '2022-08-14',
-                        //     endDate: '2023-10-30',
-                        //     students: [],
-                        //     courseType: 'PROGRAM',
-                        //     teachers: [],
-                        //     leadershipApp: false,
-                        //     formId: '',
-                        //     introEmail: { content: 'this is an intro email.', files: [] },
-                        //     attendance: [],
-                        //     homeworks: []
-                        //   })
-                        //   addStudentInCourse(await course);
-                        // }
-                      }
-                    ></button>
+                    <NotFoundPage />
                   </RequireAuth>
                 }
               />

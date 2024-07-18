@@ -87,8 +87,9 @@ const AddTeacherClass = ({
     control: (provided: any, state: any) => ({
       ...provided,
       width: '300px',
+      maxHeight: '75px',
       height: 'fit-content',
-      overflow: 'hidden',
+      overflowY: 'auto',
       fontSize: 'large',
       marginBottom: 'auto',
       boxShadow: 'none',

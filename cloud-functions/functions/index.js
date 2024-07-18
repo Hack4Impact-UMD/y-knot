@@ -87,7 +87,8 @@ exports.createUser = onCall(
                 }
                 await db
                   .collection("Users")
-                  .add(collectionObject)
+                  .doc(userRecord.uid)
+                  .set(collectionObject)
                   .then(async () => {
                     const msg = {
                       from: '"Y-KNOT" <info@yknotinc.org>', // sender address
@@ -176,6 +177,75 @@ exports.createUser = onCall(
         throw new functions.https.HttpsError(
           "permission-denied",
           "Only an admin user can create users. If you are an admin, make sure the email and name passed into the function are correct."
+        );
+      }
+    });
+  }
+);
+
+// Sends a certificate
+const sendCertificate = async (email, file) => {
+  const msg = {
+    from: '"Y-KNOT" <info@yknotinc.org>', // sender address
+    to: email, // list of receivers
+    subject: "YKnot Course Completed!", // Subject line
+
+    html: `
+      <div>
+          <div style="max-width: 600px; margin: auto">
+              <br><br><br>
+              <p style="font-size: 16px">
+              Hello,<br>
+              <br>
+              Congrats on completing your course! Attached is your certificate of completion.
+              <br>
+              
+          <div>
+      </div>
+          
+      `, // html body
+    attachments: [
+      {
+        filename: "Certificate.pdf",
+        content: file,
+      },
+    ],
+  };
+  await transporter.sendMail(msg).catch((error) => {
+    console.log(
+      "Error occured with new submission. Email also could not be sent."
+    );
+    console.log(error);
+  });
+};
+
+exports.sendCertificateEmail = onCall(
+  { region: "us-east4", cors: true },
+  async ({ auth, data }) => {
+    return new Promise(async (resolve, reject) => {
+      const authorization = admin.auth();
+      if (
+        (data.email != null &&
+          data.file != null &&
+          auth &&
+          auth.token &&
+          auth.token.role.toLowerCase() == "admin") ||
+        auth.token.role.toLowerCase() == "teacher"
+      ) {
+        await sendCertificate(
+          data.email,
+          Buffer.from(JSON.stringify(data.file))
+        )
+          .then(() => resolve())
+          .catch(() => reject());
+      } else {
+        reject({
+          reason: "Permissions",
+          text: "You do not have the correct permissions to update email. If you think you do, please make sure the new email is not already in use.",
+        });
+        throw new functions.https.HttpsError(
+          "permission-denied",
+          "You do not have the correct permissions to update email."
         );
       }
     });
@@ -395,10 +465,18 @@ exports.newSubmission = onRequest(
             .courseInformation.find((course) => course.id == selectedClass.id);
 
           if (!studentClass) {
+            const attendances = [];
+            const homeworks = [];
+            selectedClass.data().attendance.forEach((day) => {
+              attendances.push({ date: day.date, attended: false });
+            });
+            selectedClass.data().homeworks.forEach((homework) => {
+              homeworks.push({ name: homework.name, completed: false });
+            });
             student.courseInformation.push({
               id: selectedClass.id,
-              attendance: [],
-              homeworks: [],
+              attendance: attendances,
+              homeworks: homeworks,
               progress: "NA",
             });
           }
@@ -422,7 +500,6 @@ exports.newSubmission = onRequest(
         }
 
         batch.update(selectedClass.ref, { students: classStudents });
-
         if (possibleStudentMatches.length > 0) {
           const docRef = db.collection("StudentMatches").doc();
           batch.set(docRef, {
