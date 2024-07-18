@@ -13,7 +13,7 @@ interface studentDetails {
   course: string;
 }
 
-const CertificatePage = ({ name, course }: studentDetails): JSX.Element => {
+const Certificate = ({ name, course }: studentDetails): JSX.Element => {
   return (
     <Document style={styles.doc}>
       <Page style={styles.page} orientation="landscape">
@@ -47,4 +47,4 @@ const CertificatePage = ({ name, course }: studentDetails): JSX.Element => {
   );
 };
 
-export default CertificatePage;
+export default Certificate;

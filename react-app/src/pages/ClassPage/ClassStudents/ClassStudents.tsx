@@ -7,10 +7,10 @@ import TrashIcon from '../../../assets/trash.svg';
 import EyeIcon from '../../../assets/view.svg';
 import { useAuth } from '../../../auth/AuthProvider';
 import { sendCertificateEmail } from '../../../backend/CloudFunctionsCalls';
+import Certificate from '../../../components/Certificate/Certificate';
 import Loading from '../../../components/LoadingScreen/Loading';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import type { StudentID } from '../../../types/StudentType';
-import CertificatePage from '../../CertificatePage/CertificatePage';
 import AddStudentClass from './AddStudentClass/AddStudentClass';
 import styles from './ClassStudents.module.css';
 import DeleteStudentClassConfirmation from './DeleteStudentClassConfirmation/DeleteStudentClassConfirmation';
@@ -33,6 +33,8 @@ const ClassStudents = (props: {
   const [reloadList, setReloadList] = useState<Boolean>(false);
   const [removeSuccess, setRemoveSuccess] = useState<boolean>(false);
   const [addSuccess, setAddSuccess] = useState<boolean>(false);
+  const [certEmailSuccess, setCertEmailSuccess] = useState<boolean>(false);
+
   const windowWidth = useWindowSize();
 
   function useWindowSize() {
@@ -85,6 +87,7 @@ const ClassStudents = (props: {
                 className={styles.button}
                 onClick={() =>
                   sendCertificate(
+                    student.email,
                     `${student.firstName} ${
                       student?.middleName ? student.middleName[0] + '.' : ''
                     } ${student.lastName}`,
@@ -138,16 +141,19 @@ const ClassStudents = (props: {
     setShowPopup(true);
   };
 
-  const sendCertificate = async (name: string) => {
+  const sendCertificate = async (email: string, name: string) => {
+    email = 'sgaba9778@gmail.com';
     try {
-      console.log('rasasasdasanasdeload');
+      if (email == '') {
+        alert('The student does not have a valid email.');
+        return;
+      }
       const blob = await pdf(
-        <CertificatePage name={name} course={props.courseName} />,
+        <Certificate name={name} course={props.courseName} />,
       ).toBlob();
       const blobBuffer = await blob.arrayBuffer();
-      await sendCertificateEmail('sgaba9778@gmail.com', blobBuffer)
-        .then(() => console.log('done'))
-        .catch(() => console.log('error'));
+      await sendCertificateEmail(email, blobBuffer);
+      setCertEmailSuccess(true);
     } catch (e) {
       console.log(e);
     }
@@ -230,6 +236,32 @@ const ClassStudents = (props: {
       >
         <Alert severity="success" sx={{ width: '100%' }}>
           Student was Successfully Added
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{
+          horizontal: 'right',
+          vertical: 'bottom',
+        }}
+        open={addSuccess}
+        autoHideDuration={3000}
+        onClose={addPopupClose}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Student was Successfully Added
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{
+          horizontal: 'right',
+          vertical: 'bottom',
+        }}
+        open={certEmailSuccess}
+        autoHideDuration={3000}
+        onClose={() => setCertEmailSuccess(false)}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Certificate was Successfully Sent
         </Alert>
       </Snackbar>
     </>

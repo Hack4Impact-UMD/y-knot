@@ -51,7 +51,6 @@ const CoursesPage = ({
       authContext.token?.claims.role.toLowerCase() == 'teacher'
         ? authContext.user.uid
         : undefined;
-
     getAllCourses(param)
       .then((courses) => {
         const now = DateTime.now();
