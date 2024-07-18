@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../src/auth/AuthProvider';
-import { type CourseID } from '../../types/CourseType';
-import { getAllCourses } from '../../../src/backend/FirestoreCalls';
 import { Alert, Snackbar } from '@mui/material';
 import { DateTime } from 'luxon';
-import styles from './CoursesPage.module.css';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../src/auth/AuthProvider';
+import { getAllCourses } from '../../../src/backend/FirestoreCalls';
 import CourseCard from '../../components/CourseCard/CourseCard';
-import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
+import NavigationBar from '../../components/NavigationBar/NavigationBar';
+import { type CourseID } from '../../types/CourseType';
+import styles from './CoursesPage.module.css';
 
 const CoursesPage = ({
   courseAdded,
@@ -44,7 +44,15 @@ const CoursesPage = ({
   // Used to detect time in between keystrokes when using the search bar
   let timer: NodeJS.Timeout | null = null;
   useEffect(() => {
-    getAllCourses()
+    if (authContext.loading) {
+      return;
+    }
+    const param =
+      authContext.token?.claims.role.toLowerCase() == 'teacher'
+        ? authContext.user.uid
+        : undefined;
+
+    getAllCourses(param)
       .then((courses) => {
         const now = DateTime.now();
         const tempAllUpcomingCourses = courses.filter(
@@ -73,7 +81,7 @@ const CoursesPage = ({
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [authContext]);
 
   const displayCourseCards = (courses: CourseID[]) => {
     return courses.map((course, i) => {
@@ -206,26 +214,20 @@ const CoursesPage = ({
                   )}
                 </div>
 
-                {authContext?.token?.claims.role === 'ADMIN' ? (
-                  <>
-                    <div className={styles.courseHeader}>
-                      <h1 className={styles.courseStatus}>Past Courses</h1>
-                    </div>
-                    <div className={styles.cardLayout}>
-                      {allPastCourses.length === 0 ? (
-                        <h4 className={styles.noStudent}>No Past Courses</h4>
-                      ) : filteredPastCourses.length === 0 ? (
-                        <h4 className={styles.noStudent}>
-                          No Past Courses Matching "{search}"
-                        </h4>
-                      ) : (
-                        displayCourseCards(filteredPastCourses)
-                      )}
-                    </div>
-                  </>
-                ) : (
-                  <></>
-                )}
+                <div className={styles.courseHeader}>
+                  <h1 className={styles.courseStatus}>Past Courses</h1>
+                </div>
+                <div className={styles.cardLayout}>
+                  {allPastCourses.length === 0 ? (
+                    <h4 className={styles.noStudent}>No Past Courses</h4>
+                  ) : filteredPastCourses.length === 0 ? (
+                    <h4 className={styles.noStudent}>
+                      No Past Courses Matching "{search}"
+                    </h4>
+                  ) : (
+                    displayCourseCards(filteredPastCourses)
+                  )}
+                </div>
 
                 <div className={styles.courseHeader}>
                   <h1 className={styles.courseStatus}>Upcoming Courses</h1>

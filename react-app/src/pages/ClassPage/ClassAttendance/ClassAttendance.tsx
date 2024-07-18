@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';
-import { ToolTip } from '../../../components/ToolTip/ToolTip';
-import type { StudentID } from '../../../types/StudentType';
-import type { Course } from '../../../types/CourseType';
-import { Snackbar, Alert } from '@mui/material';
+import { Alert, Snackbar } from '@mui/material';
 import { DateTime } from 'luxon';
-import { updateStudentAttendance } from '../../../backend/FirestoreCalls';
+import { useEffect, useState } from 'react';
 import Select from 'react-select';
-import styles from './ClassAttendance.module.css';
 import noteIcon from '../../../assets/note.svg';
-import AddNote from './AddNote/AddNote';
-import RemoveAttendance from './RemoveAttendance/RemoveAttendance';
+import { updateStudentAttendance } from '../../../backend/FirestoreCalls';
+import { ToolTip } from '../../../components/ToolTip/ToolTip';
+import type { Course } from '../../../types/CourseType';
+import type { StudentID } from '../../../types/StudentType';
 import AddAttendance from './AddAttendance/AddAttendance';
+import AddNote from './AddNote/AddNote';
+import styles from './ClassAttendance.module.css';
+import RemoveAttendance from './RemoveAttendance/RemoveAttendance';
 
 const dateFormat = 'LLL dd, yyyy';
 
@@ -111,7 +111,7 @@ const ClassAttendance = (props: {
         label: DateTime.fromISO(attendance.date).toFormat(dateFormat),
       };
     });
-    setDropdownOptions(options);
+    setDropdownOptions(options || []);
     setSelectComponentValue({
       value: props.course.attendance.slice(-1)[0]?.date.toString() ?? '',
       label:
@@ -186,8 +186,10 @@ const ClassAttendance = (props: {
           })}
         />
       </div>
-      {props.students.length === 0 ? (
+      {props.students?.length === 0 ? (
         <h4 className={styles.noStudent}>No Students Currently in Roster</h4>
+      ) : dropdownOptions?.length == 0 ? (
+        <h4 className={styles.noStudent}>No Attendances Created</h4>
       ) : (
         <div className={styles.inputs}>
           {props.students.map(function (student, i) {

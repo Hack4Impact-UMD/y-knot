@@ -1,7 +1,6 @@
-import app, { functions } from '../config/firebase';
-import { httpsCallable } from 'firebase/functions';
 import { getAuth, sendPasswordResetEmail } from '@firebase/auth';
-import firebase from '../config/firebase';
+import { httpsCallable } from 'firebase/functions';
+import app, { functions } from '../config/firebase';
 
 /*
  * Creates a user and sends a password reset email to that user.
@@ -89,4 +88,22 @@ export function updateUserEmail(
       });
   });
 }
+
+/*
+ * Sends a certificate to a student
+ */
+export function sendCertificateEmail(email: string, file: any): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const sendCert = httpsCallable(functions, 'sendCertificateEmail');
+
+    sendCert({ email: email, file: file })
+      .then(() => {
+        resolve();
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
+
 export default {};

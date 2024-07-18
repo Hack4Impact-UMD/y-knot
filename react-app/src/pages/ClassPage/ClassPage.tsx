@@ -60,6 +60,9 @@ const ClassPage = ({ setCourseDeleted }: any): JSX.Element => {
   };
 
   useEffect(() => {
+    if (authContext.loading) {
+      return;
+    }
     if (courseID !== undefined) {
       getCourse(courseID)
         .then(async (courseData) => {
@@ -78,7 +81,7 @@ const ClassPage = ({ setCourseDeleted }: any): JSX.Element => {
           setLoading(false);
         });
     }
-  }, []);
+  }, [authContext.loading]);
 
   function titleCase(str: string) {
     return str && str[0].toUpperCase() + str.slice(1).toLowerCase();
@@ -117,7 +120,8 @@ const ClassPage = ({ setCourseDeleted }: any): JSX.Element => {
             >
               Main
             </button>
-            {course.leadershipApp ? (
+            {course.leadershipApp &&
+            authContext?.token?.claims.role.toUpperCase() === 'ADMIN' ? (
               <button
                 className={
                   currentTab === Tab.Academy ? styles.selectedTab : styles.tab

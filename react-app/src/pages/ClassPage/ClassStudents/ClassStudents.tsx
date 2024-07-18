@@ -1,16 +1,19 @@
-import { useEffect, useState, useLayoutEffect } from 'react';
-import { useAuth } from '../../../auth/AuthProvider';
+import { Alert, Snackbar } from '@mui/material';
+import { pdf } from '@react-pdf/renderer';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Snackbar, Alert } from '@mui/material';
+import CertificateIcon from '../../../assets/certificate.svg';
+import TrashIcon from '../../../assets/trash.svg';
+import EyeIcon from '../../../assets/view.svg';
+import { useAuth } from '../../../auth/AuthProvider';
+import { sendCertificateEmail } from '../../../backend/CloudFunctionsCalls';
+import Loading from '../../../components/LoadingScreen/Loading';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import type { StudentID } from '../../../types/StudentType';
-import styles from './ClassStudents.module.css';
-import Loading from '../../../components/LoadingScreen/Loading';
+import CertificatePage from '../../CertificatePage/CertificatePage';
 import AddStudentClass from './AddStudentClass/AddStudentClass';
+import styles from './ClassStudents.module.css';
 import DeleteStudentClassConfirmation from './DeleteStudentClassConfirmation/DeleteStudentClassConfirmation';
-import CertificateIcon from '../../../assets/certificate.svg';
-import EyeIcon from '../../../assets/view.svg';
-import TrashIcon from '../../../assets/trash.svg';
 
 const ClassStudents = (props: {
   students: Array<StudentID>;
@@ -56,7 +59,9 @@ const ClassStudents = (props: {
           {windowWidth < 600 ? (
             <span className={styles.nameEmail}>
               <div className={styles.studentName}>
-                <p>{`${student.firstName} ${student.lastName}`}</p>
+                <p>{`${student.firstName} ${
+                  student?.middleName ? student.middleName[0] + '.' : ''
+                } ${student.lastName}`}</p>
               </div>
               <div className={styles.studentEmail}>
                 <p>{student.email}</p>
@@ -65,7 +70,9 @@ const ClassStudents = (props: {
           ) : (
             <>
               <div className={styles.studentName}>
-                <p>{`${student.firstName} ${student.lastName}`}</p>
+                <p>{`${student.firstName} ${
+                  student?.middleName ? student.middleName[0] + '.' : ''
+                } ${student.lastName}`}</p>
               </div>
               <div className={styles.studentEmail}>
                 <p>{student.email}</p>
@@ -74,33 +81,43 @@ const ClassStudents = (props: {
           )}
           <div className={styles.icons}>
             <ToolTip title="Send Certificate" placement="top">
-              <button className={styles.button} onClick={sendCertificate}>
+              <button
+                className={styles.button}
+                onClick={() =>
+                  sendCertificate(
+                    `${student.firstName} ${
+                      student?.middleName ? student.middleName[0] + '.' : ''
+                    } ${student.lastName}`,
+                  )
+                }
+              >
                 <img src={CertificateIcon} className={styles.certificateIcon} />
               </button>
             </ToolTip>
             {authContext?.token?.claims.role === 'ADMIN' && (
-              // See student profile only if admin
-              <Link to={`/students/${student.id}`}>
-                <ToolTip title="View Profile" placement="top">
-                  <button className={styles.button}>
-                    <img src={EyeIcon} className={styles.profileIcon} />
+              <>
+                <Link to={`/students/${student.id}`}>
+                  <ToolTip title="View Profile" placement="top">
+                    <button className={styles.button}>
+                      <img src={EyeIcon} className={styles.profileIcon} />
+                    </button>
+                  </ToolTip>
+                </Link>
+                <ToolTip title="Remove" placement="top">
+                  <button
+                    className={styles.button}
+                    onClick={() => {
+                      setPopupEmail(student.email);
+                      setPopupName(`${student.firstName} ${student.lastName}`);
+                      setRemoveStudentId(student.id);
+                      handleClick();
+                    }}
+                  >
+                    <img src={TrashIcon} className={styles.trashIcon} />
                   </button>
                 </ToolTip>
-              </Link>
+              </>
             )}
-            <ToolTip title="Remove" placement="top">
-              <button
-                className={styles.button}
-                onClick={() => {
-                  setPopupEmail(student.email);
-                  setPopupName(`${student.firstName} ${student.lastName}`);
-                  setRemoveStudentId(student.id);
-                  handleClick();
-                }}
-              >
-                <img src={TrashIcon} className={styles.trashIcon} />
-              </button>
-            </ToolTip>
           </div>
         </div>,
       );
@@ -121,8 +138,19 @@ const ClassStudents = (props: {
     setShowPopup(true);
   };
 
-  const sendCertificate = () => {
-    // TODO: Populate and send certificate with student and course name
+  const sendCertificate = async (name: string) => {
+    try {
+      console.log('rasasasdasanasdeload');
+      const blob = await pdf(
+        <CertificatePage name={name} course={props.courseName} />,
+      ).toBlob();
+      const blobBuffer = await blob.arrayBuffer();
+      await sendCertificateEmail('sgaba9778@gmail.com', blobBuffer)
+        .then(() => console.log('done'))
+        .catch(() => console.log('error'));
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -137,14 +165,17 @@ const ClassStudents = (props: {
         // student roster
         <div className={styles.studentsContainer}>{studentList}</div>
       )}
-      <div className={styles.bottomLevel}>
-        <button
-          className={styles.addButton}
-          onClick={() => setOpenAddStudentModal(!openAddStudentModal)}
-        >
-          Add Student
-        </button>
-      </div>
+      {authContext?.token?.claims.role.toUpperCase() === 'ADMIN' && (
+        <div className={styles.bottomLevel}>
+          <button
+            className={styles.addButton}
+            onClick={() => setOpenAddStudentModal(!openAddStudentModal)}
+          >
+            Add Student
+          </button>
+        </div>
+      )}
+
       <AddStudentClass
         courseId={props.courseID}
         open={openAddStudentModal}

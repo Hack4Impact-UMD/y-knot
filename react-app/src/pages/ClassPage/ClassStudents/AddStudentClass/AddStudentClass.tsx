@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import {
-  getAllStudents,
-  addStudentCourseFromList,
-} from '../../../../backend/FirestoreCalls';
-import { StudentID } from '../../../../types/StudentType';
 import Select, { type OptionProps } from 'react-select';
-import styles from './AddStudentClass.module.css';
-import Modal from '../../../../components/ModalWrapper/Modal';
 import x from '../../../../assets/x.svg';
+import {
+  addStudentCourseFromList,
+  getAllStudents,
+} from '../../../../backend/FirestoreCalls';
+import Modal from '../../../../components/ModalWrapper/Modal';
+import { StudentID } from '../../../../types/StudentType';
+import styles from './AddStudentClass.module.css';
 
 interface modalType {
   courseId: string;
@@ -85,8 +85,9 @@ const AddStudentClass = ({
     control: (provided: any, state: any) => ({
       ...provided,
       width: '300px',
+      maxHeight: '75px',
       height: 'fit-content',
-      overflow: 'hidden',
+      overflowY: 'auto',
       fontSize: 'large',
       marginBottom: 'auto',
       boxShadow: 'none',
@@ -113,10 +114,11 @@ const AddStudentClass = ({
 
   useEffect(() => {
     getAllStudents()
-      .then((allStudnets) => {
-        const partialStudents: Array<Partial<StudentID>> = allStudnets.map(
+      .then((allStudents) => {
+        const partialStudents: Array<Partial<StudentID>> = allStudents.map(
           (currStudent) => ({
             firstName: currStudent.firstName,
+            middleName: currStudent?.middleName,
             lastName: currStudent.lastName,
             id: currStudent.id,
             email: currStudent.email,
@@ -126,7 +128,7 @@ const AddStudentClass = ({
       })
       .catch(() => {})
       .finally(() => {});
-  });
+  }, []);
 
   useEffect(() => {
     setStudentList(students);
@@ -156,6 +158,9 @@ const AddStudentClass = ({
           handleOnClose();
           setReloadList(true);
           setAddSuccess(true);
+          setTimeout(() => {
+            window.location.reload();
+          }, 2500);
         })
         .catch((err) => {
           setErrorMessage('*Student(s) could not be added.');
@@ -202,7 +207,11 @@ const AddStudentClass = ({
             }}
             options={studentList.map((student) => ({
               value: student.id,
-              label: student.firstName + ' ' + student.lastName,
+              label:
+                student.firstName +
+                ' ' +
+                (student?.middleName ? student.middleName[0] + '. ' : '') +
+                student.lastName,
             }))}
             components={{
               Option: InputOption,
