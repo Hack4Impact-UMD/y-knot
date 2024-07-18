@@ -16,10 +16,68 @@
   width: calc(100% - 250px);
 }
 
+.header {
+  position: relative;
+  width: 80%;
+  display: flex;
+  align-items: flex-end;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .title {
   text-align: center;
   font-size: calc(1vw + 1rem);
   width: 100%;
+}
+
+.topButtons {
+  gap: 15px;
+  position: absolute;
+  right: 0;
+  display: flex;
+}
+
+.button {
+  width: calc(1.5vw + 3rem);
+  max-height: 50px;
+  min-height: 25px;
+  height: calc(1vw + 2rem);
+  margin-bottom: 15px;
+  border-radius: 15px;
+  border: none;
+  background-color: var(--color-orange);
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: var(--color-yellow-orange);
+}
+
+.icon {
+  width: calc(0.5vw + 1.5rem);
+}
+
+.group {
+  width: 100%;
+  display: flex;
+  gap: 5px;
+}
+
+.inputBox {
+  padding: 0px 12px 0px 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border-width: 1px;
+  width: 70%;
+  height: 40px;
+}
+
+.errorMessage {
+  font: 26;
+  color: red;
+  text-align: center;
+  font-size: 0.8rem;
 }
 
 .inputs {

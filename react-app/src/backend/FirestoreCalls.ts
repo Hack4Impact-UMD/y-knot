@@ -1761,6 +1761,7 @@ export function updateStudentHomeworks(
     });
   });
 }
+
 export function updateUser(YKNOTUser: YKNOTUser, id: string): Promise<void> {
   return new Promise((resolve, reject) => {
     if (id === '' || !id) {
