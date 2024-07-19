@@ -16,20 +16,16 @@ import {
 } from 'firebase/firestore';
 import { deleteObject, getStorage, ref } from 'firebase/storage';
 import { db } from '../config/firebase';
-import {
-  Attendance,
-  Homework,
-  type Course,
-  type CourseID,
-} from '../types/CourseType';
+import { Attendance, Homework, Course, CourseID } from '../types/CourseType';
 import {
   LeadershipApplicant,
   StudentAttendance,
   StudentHomework,
-  type Student,
-  type StudentID,
+  StudentMatch,
+  Student,
+  StudentID,
 } from '../types/StudentType';
-import { TeacherID, type Teacher, type YKNOTUser } from '../types/UserType';
+import { TeacherID, Teacher, YKNOTUser } from '../types/UserType';
 
 export function getAllStudents(): Promise<StudentID[]> {
   const studentsRef = collection(db, 'Students');
@@ -295,6 +291,24 @@ export function updateAcademyNote(newNote: string, id: string): Promise<void> {
   });
 }
 
+export function getAllStudentMatches(): Promise<StudentMatch[]> {
+  const studentsRef = collection(db, 'StudentMatches');
+  return new Promise((resolve, reject) => {
+    getDocs(studentsRef)
+      .then((snapshot) => {
+        const allStudentMatches: StudentMatch[] = [];
+        const students = snapshot.docs.map((doc) => {
+          const studentMatch: StudentMatch = doc.data() as StudentMatch;
+          allStudentMatches.push(studentMatch);
+        });
+        resolve(allStudentMatches);
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+}
+
 export function getAllTeachers(): Promise<TeacherID[]> {
   const teachersRef = query(
     collection(db, 'Users'),
@@ -337,6 +351,54 @@ export function getAllCourses(auth_id?: string): Promise<CourseID[]> {
       })
       .catch((e) => {
         reject(e);
+      });
+  });
+}
+
+export function deleteStudentMatch(
+  studentOneId: string,
+  studentTwoId: string,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const studentMatchesRef = collection(db, 'StudentMatches');
+    const filter = query(
+      studentMatchesRef,
+      where('studentOne', '==', studentOneId),
+    );
+    getDocs(filter)
+      .then((snapshot) => {
+        snapshot.docs.map((doc) => {
+          const studentMatch: StudentMatch = doc.data() as StudentMatch;
+
+          // Remove entries in studentOne matching studentTwo
+          if (studentMatch.matches.includes(studentTwoId)) {
+            const newMatches = studentMatch.matches.filter(
+              (id) => id !== studentTwoId,
+            );
+
+            // If studentMatch.matches is empty, delete the document. Otherwise, update the document.
+            if (newMatches.length === 0) {
+              deleteDoc(doc.ref)
+                .then(() => {
+                  resolve();
+                })
+                .catch(() => {
+                  reject();
+                });
+            } else {
+              updateDoc(doc.ref, { matches: newMatches })
+                .then(() => {
+                  resolve();
+                })
+                .catch(() => {
+                  reject();
+                });
+            }
+          }
+        });
+      })
+      .catch(() => {
+        reject();
       });
   });
 }
