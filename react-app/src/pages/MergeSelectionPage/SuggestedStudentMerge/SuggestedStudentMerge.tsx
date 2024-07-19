@@ -10,8 +10,8 @@ import MergeStudentCard from './MergeStudentCard/MergeStudentCard';
 import Loading from '../../../components/LoadingScreen/Loading';
 
 interface StudentPair {
-  studentAId: StudentID;
-  studentBId: StudentID;
+  studentA: StudentID;
+  studentB: StudentID;
 }
 
 const SuggestedStudentMerge = (): JSX.Element => {
@@ -22,28 +22,6 @@ const SuggestedStudentMerge = (): JSX.Element => {
   const [removeSuccess, setRemoveSuccess] = useState<boolean>(false);
   const [removeError, setRemoveError] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   getAllStudentMatches()
-  //     .then((allMatches) => {
-  //       const studentPairs: Array<StudentPair> = [];
-  //       allMatches.forEach((studentMatch) => {
-  //         studentMatch.matches.forEach((student) => {
-  //           studentPairs.push({
-  //             studentAId: studentMatch.studentOne,
-  //             studentBId: student,
-  //           });
-  //         });
-  //       });
-  //       setStudentMatches(studentPairs);
-  //     })
-  //     .catch(() => {
-  //       setError(true);
-  //     })
-  //     .finally(() => {
-  //       setLoading(false);
-  //     });
-  // }, []);
-
   useEffect(() => {
     getAllStudentMatches()
       .then((allMatches) => {
@@ -52,8 +30,8 @@ const SuggestedStudentMerge = (): JSX.Element => {
             const matchPromises = studentMatch.matches.map((studentTwoId) => {
               return getStudent(studentTwoId).then((studentTwo) => {
                 return {
-                  studentAId: { ...studentOne, id: studentMatch.studentOne },
-                  studentBId: { ...studentTwo, id: studentTwoId },
+                  studentA: { ...studentOne, id: studentMatch.studentOne },
+                  studentB: { ...studentTwo, id: studentTwoId },
                 };
               });
             });
@@ -75,22 +53,18 @@ const SuggestedStudentMerge = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    console.log('useeffect');
-    console.log(studentMatches);
-    const matchCards = studentMatches.map(
-      ({ studentAId, studentBId }, index) => (
-        <div key={index} className={styles.cardContainer}>
-          <MergeStudentCard
-            studentAId={studentAId}
-            studentBId={studentBId}
-            studentMatches={studentMatches}
-            setStudentMatches={setStudentMatches}
-            setRemoveSuccess={setRemoveSuccess}
-            setRemoveError={setRemoveError}
-          />
-        </div>
-      ),
-    );
+    const matchCards = studentMatches.map(({ studentA, studentB }, index) => (
+      <div key={index} className={styles.cardContainer}>
+        <MergeStudentCard
+          studentA={studentA}
+          studentB={studentB}
+          studentMatches={studentMatches}
+          setStudentMatches={setStudentMatches}
+          setRemoveSuccess={setRemoveSuccess}
+          setRemoveError={setRemoveError}
+        />
+      </div>
+    ));
     setSuggestedMatches(matchCards);
   }, [removeSuccess, studentMatches]);
 
@@ -106,18 +80,6 @@ const SuggestedStudentMerge = (): JSX.Element => {
         </h4>
       ) : (
         <>
-          {/* {studentMatches.map(({ studentAId, studentBId }, index) => (
-            <div key={index} className={styles.cardContainer}>
-              <MergeStudentCard
-                studentAId={studentAId}
-                studentBId={studentBId}
-                studentMatches={studentMatches}
-                setStudentMatches={setStudentMatches}
-                setRemoveSuccess={setRemoveSuccess}
-                setRemoveError={setRemoveError}
-              />
-            </div>
-          ))} */}
           {suggestedMatches}
           <Snackbar
             anchorOrigin={{
