@@ -4,11 +4,11 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './auth/AuthProvider';
+import { theme } from './muiTheme';
 import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
 import RequireAuth from './auth/RequireAuth/RequireAuth';
 import Certificate from './components/Certificate/Certificate';
 import FileUpload from './components/FileUpload/FileUpload';
-import { theme } from './muiTheme';
 import AddCoursePage from './pages/AddCoursesPage/AddCoursePage';
 import ClassPage from './pages/ClassPage/ClassPage';
 import CoursesPage from './pages/CoursesPage/CoursesPage';
@@ -20,6 +20,7 @@ import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import SettingsPage from './pages/SettingsPage/SettingsPage';
 import StudentProfilePage from './pages/StudentProfilePage/StudentProfilePage';
 import StudentRosterPage from './pages/StudentRosterPage/StudentRosterPage';
+import AddStudentPage from './pages/AddStudentPage/AddStudentPage';
 import TeacherProfilePage from './pages/TeacherProfilePage/TeacherProfilePage';
 import TeacherRosterPage from './pages/TeacherRosterPage/TeacherRosterPage';
 import TranscriptPage from './pages/TranscriptPage/TranscriptPage';
@@ -29,6 +30,8 @@ function App(): JSX.Element {
 
   const [courseAdded, setCourseAdded] = useState(false);
   const [courseDeleted, setCourseDeleted] = useState(false);
+  const [studentAdded, setStudentAdded] = useState(false);
+  const [studentMerged, setStudentMerged] = useState(false);
 
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
@@ -71,9 +74,9 @@ function App(): JSX.Element {
               <Route
                 path="/courses/add"
                 element={
-                  <RequireAuth>
+                  <RequireAdminAuth>
                     <AddCoursePage setCourseAdded={setCourseAdded} />
-                  </RequireAuth>
+                  </RequireAdminAuth>
                 }
               />
               <Route
@@ -96,8 +99,19 @@ function App(): JSX.Element {
                 path="/students"
                 element={
                   <RequireAuth>
-                    <StudentRosterPage />
+                    <StudentRosterPage
+                      studentAdded={studentAdded}
+                      setStudentAdded={setStudentAdded}
+                    />
                   </RequireAuth>
+                }
+              />
+              <Route
+                path="/students/add"
+                element={
+                  <RequireAdminAuth>
+                    <AddStudentPage setStudentAdded={setStudentAdded} />
+                  </RequireAdminAuth>
                 }
               />
               <Route
@@ -112,7 +126,10 @@ function App(): JSX.Element {
                 path="/students/merge"
                 element={
                   <RequireAdminAuth>
-                    <MergeSelectionPage />
+                    <MergeSelectionPage
+                      studentMerged={studentMerged}
+                      setStudentMerged={setStudentMerged}
+                    />
                   </RequireAdminAuth>
                 }
               />
@@ -120,7 +137,7 @@ function App(): JSX.Element {
                 path="/students/mergestudent"
                 element={
                   <RequireAdminAuth>
-                    <MergeStudentPage />
+                    <MergeStudentPage setStudentMerged={setStudentMerged} />
                   </RequireAdminAuth>
                 }
               />

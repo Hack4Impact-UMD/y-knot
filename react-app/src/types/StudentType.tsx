@@ -60,6 +60,11 @@ export interface LeadershipFile {
   downloadURL: string;
 }
 
+export interface StudentMatch {
+  matches: string[];
+  studentOne: string;
+}
+
 export type Progress = 'INPROGRESS' | 'PASS' | 'FAIL' | 'NA';
 
 export type LeadershipStatus = 'ACCEPTED' | 'PENDING' | 'REJECTED' | 'NA';

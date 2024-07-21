@@ -50,10 +50,34 @@
   background-color: var(--color-yellow-orange);
 }
 
+.studentHeader {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
 .heading {
   font-size: calc(0.5vw + 1.5rem);
   width: 100%;
   text-align: center;
+  margin-left: 2vw;
+}
+
+.addStudent {
+  border-radius: 30px;
+  border: none;
+  background-color: var(--color-orange);
+  font-size: calc(0.2vw + 0.9rem);
+  width: calc(1.5vw + 7rem);
+  height: 40px;
+  color: white;
+  margin-left: -200px;
+  margin-right: 10%;
+  cursor: pointer;
+}
+
+.addStudent:hover {
+  background-color: var(--color-yellow-orange);
 }
 
 .failureMessage {

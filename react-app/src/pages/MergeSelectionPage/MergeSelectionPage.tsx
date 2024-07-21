@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Alert, Snackbar } from '@mui/material';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import styles from './MergeSelectionPage.module.css';
 import WestRounded from '@mui/icons-material/WestRounded';
@@ -11,7 +12,10 @@ enum Tab {
   Manual = 'Manual',
 }
 
-const MergeSelectionPage = (): JSX.Element => {
+const MergeSelectionPage = ({
+  studentMerged,
+  setStudentMerged,
+}: any): JSX.Element => {
   const navigate = useNavigate();
   const [currentTab, setCurrentTab] = useState<Tab>(Tab.Suggested);
 
@@ -62,6 +66,19 @@ const MergeSelectionPage = (): JSX.Element => {
         {currentTab === Tab.Suggested && <SuggestedStudentMerge />}
         {currentTab === Tab.Manual && <ManualStudentMerge />}
       </div>
+      <Snackbar
+        anchorOrigin={{
+          horizontal: 'right',
+          vertical: 'bottom',
+        }}
+        open={studentMerged}
+        autoHideDuration={3000}
+        onClose={() => setStudentMerged(false)}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          Student was Successfully Merged
+        </Alert>
+      </Snackbar>
     </>
   );
 };
