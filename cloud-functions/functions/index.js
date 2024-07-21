@@ -10,14 +10,11 @@ const nodemailer = require("nodemailer");
 const stringSimilarity = require("string-similarity");
 const { WriteBatch } = require("firebase-admin/firestore");
 const { getStorage } = require("firebase-admin/storage");
-const { onSchedule } = require("firebase-functions/v2/scheduler");
 const axios = require("axios");
 const OAuth2 = google.auth.OAuth2;
 admin.initializeApp();
 const db = admin.firestore();
 dotenv.config();
-const { PDFDocument, rgb, StandardFonts } = require("pdf-lib");
-const fs = require("fs");
 
 const oauth2Client = new OAuth2(
   process.env.OAUTH_CLIENT_ID, // ClientID
@@ -228,18 +225,19 @@ exports.sendCertificateEmail = onCall(
   async ({ auth, data }) => {
     return new Promise(async (resolve, reject) => {
       const authorization = admin.auth();
-
       if (
         (data.email != null &&
-          data.attachment != null &&
+          data.file != null &&
           auth &&
           auth.token &&
           auth.token.role.toLowerCase() == "admin") ||
         auth.token.role.toLowerCase() == "teacher"
       ) {
+        console.log(data.file);
+        console.log(Buffer.from(JSON.stringify(data.file)));
         await sendCertificate(
           data.email,
-          Buffer.from(data.attachment, "base64")
+          Buffer.from(JSON.stringify(data.file))
         )
           .then(() => resolve())
           .catch(() => reject());
@@ -696,7 +694,7 @@ exports.newLeadershipSubmission = onRequest(
           transcriptFiles: transcriptFiles,
           recFiles: recFiles,
           classId: selectedClass.id,
-          status: "PENDING",
+          status: "NA",
           statusNote: "",
           courseInformation: [],
         };
@@ -963,143 +961,6 @@ exports.setUserRole = onCall(
         "permission-denied",
         "Only an admin user can change roles. If you are an admin, make sure the arguments passed into the function are correct."
       );
-    }
-  }
-);
-
-async function createAndModifyPdf(studentName, courseName) {
-  // Load an existing PDF
-  const existingPdfBytes = fs.readFileSync("pdfTemplate.pdf"); // Your existing PDF template
-  const pdfDoc = await PDFDocument.load(existingPdfBytes);
-
-  // Embed the font
-  const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
-
-  // Get the first page of the document
-  const pages = pdfDoc.getPages();
-  const firstPage = pages[0];
-  const { width, height } = firstPage.getSize();
-
-  // Get the width of the text
-  const nameWidth = helveticaFont.widthOfTextAtSize(studentName, 30);
-  const courseWidth = helveticaFont.widthOfTextAtSize(courseName, 30);
-
-  // Draw the text on the PDF
-  firstPage.drawText(studentName, {
-    x: width / 2 - nameWidth / 2,
-    y: height / 2 + 40,
-    size: 30,
-    font: helveticaFont,
-    color: rgb(0, 0, 0),
-  });
-  // Draw the text on the PDF
-  firstPage.drawText(courseName, {
-    x: width / 2 - courseWidth / 2,
-    y: height / 2 - 55,
-    size: 30,
-    font: helveticaFont,
-    color: rgb(0, 0, 0),
-  });
-
-  firstPage.drawLine({
-    start: { x: width / 2 - nameWidth / 2, y: height / 2 + 37 },
-    end: { x: width / 2 + nameWidth / 2, y: height / 2 + 37 },
-    thickness: 3,
-    color: rgb(0, 0, 0),
-  });
-
-  // Save the modified PDF
-  const pdfBytes = await pdfDoc.save();
-  return pdfBytes;
-}
-
-exports.updateCourses = onSchedule(
-  {
-    schedule: "every day 05:00",
-    region: "us-east4",
-    timeoutSeconds: 1200, // Increase timeout to 9 minutes
-    memory: "2GB", // Optionally increase the memory allocation if needed
-    timeZone: "America/New_York",
-  },
-  async (event) => {
-    try {
-      const recentlyStarted = [];
-      const recentlyEnded = [];
-      const currentDate = new Date().toLocaleTimeString("en-US", {
-        timeZone: "America/New_York",
-      });
-      await db
-        .collection("Courses")
-        .get()
-        .then((snapshot) => {
-          snapshot.docs.map((doc) => {
-            const course = doc.data();
-            const endDate = new Date(course.endDate + "T00:00:00.000-04:00");
-            const endTimeDiff = currentDate.getTime() - endDate.getTime();
-            //  Find the courses that recently ended
-            if (
-              endTimeDiff < 1000 * 3600 * 48 &&
-              endTimeDiff > 1000 * 3600 * 24
-            ) {
-              recentlyEnded.push({ ...course, id: doc.id });
-              return;
-            }
-
-            const startDate = new Date(
-              course.startDate + "T00:00:00.000-04:00"
-            );
-
-            // Find the courses that recently started
-            const startTimeDiff = currentDate.getTime() - startDate.getTime();
-            if (startTimeDiff < 1000 * 3600 * 72 && startTimeDiff > 0) {
-              recentlyStarted.push({ ...course, id: doc.id });
-            }
-          });
-        });
-
-      const studentMap = {};
-      await db
-        .collection("Students")
-        .get()
-        .then((snapshot) => {
-          snapshot.docs.map((doc) => {
-            const student = doc.data();
-            studentMap[doc.id] = student;
-          });
-        });
-      const changedIDs = [];
-      const sendCertificate = [];
-      recentlyStarted.map((course) => {
-        course.students.map((student) => {
-          const studentData = studentMap[student];
-          for (const specCourse in studentData.courseInformation) {
-            if (
-              specCourse.id == course.id &&
-              specCourse.progress != "INPROGRESS"
-            ) {
-              specCourse.progress = "INPROGRESS";
-              changedIDs.push(student);
-              return;
-            }
-          }
-        });
-      });
-      recentlyEnded.map((course) => {
-        course.students.map((student) => {
-          const studentData = studentMap[student];
-          for (const specCourse in studentData.courseInformation) {
-            if (specCourse.id == course.id) {
-            }
-          }
-        });
-      });
-      // loop throuhg all courses and find ones which ended in the last 2 days and update stundets
-
-      // now find remaining ones that started in last 2 days and update accordingly
-
-      // now loop through all students and update
-    } catch (error) {
-      functions.logger.log("Error while fetching chapter data: ", error);
     }
   }
 );

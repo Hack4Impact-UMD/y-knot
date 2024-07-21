@@ -1738,6 +1738,42 @@ export function getAcademyApplications(
   });
 }
 
+export function updateAcademyNote(newNote: string, id: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (id === '' || !id) {
+      reject(new Error('Invalid id'));
+      return;
+    }
+
+    const courseRef = doc(db, 'LeadershipApplications', id);
+    updateDoc(courseRef, { statusNote: newNote })
+      .then(() => {
+        resolve();
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+}
+
+export function pendingLeadershipApplication(id: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (id === '' || !id) {
+      reject(new Error('Invalid id'));
+      return;
+    }
+
+    const courseRef = doc(db, 'LeadershipApplications', id);
+    updateDoc(courseRef, { status: 'PENDING' })
+      .then(() => {
+        resolve();
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
+}
+
 export function rejectLeadershipApplication(
   currentApplicant: LeadershipApplicant,
 ): Promise<void> {
@@ -1938,24 +1974,6 @@ export function acceptLeadershipApplication(
       })
       .catch(() => {
         reject();
-      });
-  });
-}
-
-export function updateAcademyNote(newNote: string, id: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    if (id === '' || !id) {
-      reject(new Error('Invalid id'));
-      return;
-    }
-
-    const courseRef = doc(db, 'LeadershipApplications', id);
-    updateDoc(courseRef, { statusNote: newNote })
-      .then(() => {
-        resolve();
-      })
-      .catch((e) => {
-        reject(e);
       });
   });
 }
