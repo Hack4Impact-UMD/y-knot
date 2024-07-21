@@ -39,6 +39,28 @@
   margin-right: auto;
 }
 
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  margin-top: 20px;
+}
+
+.selectAllButton {
+  border-radius: 30px;
+  border: none;
+  background-color: var(--color-orange);
+  font-size: 1.05rem;
+  width: 150px;
+  height: 40px;
+  color: white;
+  cursor: pointer;
+}
+
+.selectAllButton:hover {
+  background-color: var(--color-yellow-orange);
+}
+
 @media screen and (max-width: 1000px) {
   .inputs {
     width: 100%;

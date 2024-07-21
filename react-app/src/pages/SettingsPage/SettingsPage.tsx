@@ -5,17 +5,13 @@ import { getTeacherWithAuth } from '../../backend/FirestoreCalls';
 import Loading from '../../components/LoadingScreen/Loading';
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import { ToolTip } from '../../components/ToolTip/ToolTip';
-import { type TeacherID } from '../../types/UserType';
 import ResetEmail from './ResetEmail/ResetEmail';
 import ResetPassword from './ResetPassword/ResetPassword';
 import styles from './SettingsPage.module.css';
 
 const SettingsPage = (): JSX.Element => {
-  const [editName, setEditName] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [teacher, setTeacher] = useState<TeacherID>();
   const [name, setName] = useState<string>('');
-  const [updatedName, setUpdatedName] = useState<string>('');
   const [openEmailModal, setOpenEmailModal] = useState<boolean>(false);
   const [openPasswordModal, setOpenPasswordModal] = useState<boolean>(false);
 
@@ -25,7 +21,6 @@ const SettingsPage = (): JSX.Element => {
       getTeacherWithAuth(authContext.user.uid)
         .then((teacher) => {
           setName(teacher.name);
-          setTeacher(teacher);
         })
         .catch((error) => {
           console.log(error);

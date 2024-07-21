@@ -92,10 +92,9 @@ const BpCheckedIcon = styled(BpIcon)({
 });
 
 const ManualStudentMerge = (): JSX.Element => {
-  const [students, setStudents] = useState<Array<Partial<StudentID>>>([]);
+  const [students, setStudents] = useState<Array<StudentID>>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
-  const [search, setSearch] = useState<string>('');
   const [studentList, setStudentList] = useState<any[]>([]);
   const [selectedStudents, setSelectedStudents] = useState<string[]>([]);
   const [selectedStudentA, setSelectedStudentA] = useState<string | null>(null);
@@ -186,21 +185,9 @@ const ManualStudentMerge = (): JSX.Element => {
 
     getAllStudents()
       .then((allStudents) => {
-        const partialStudents: Array<Partial<StudentID>> = [];
-        allStudents.forEach((currStudent) => {
-          const newStudent: Partial<StudentID> = {
-            id: currStudent.id,
-            firstName: currStudent.firstName,
-            middleName: currStudent.middleName,
-            lastName: currStudent.lastName,
-            email: currStudent.email,
-            addrFirstLine: currStudent.addrFirstLine,
-          };
-          partialStudents.push(newStudent);
-        });
-        setStudents(partialStudents);
+        setStudents(allStudents);
       })
-      .catch((err) => {
+      .catch(() => {
         setError(true);
       })
       .finally(() => {
@@ -216,47 +203,45 @@ const ManualStudentMerge = (): JSX.Element => {
       const lastName = student.lastName ? student.lastName + ' ' : '';
       const fullName = firstName + middleName + lastName;
       const id = student.id?.toString();
-      if (fullName.toLowerCase().includes(search.toLowerCase())) {
-        result.push(
-          <div
-            key={i}
-            className={
-              result.length === 0 ? styles.studentBoxTop : styles.studentBox
-            }
-          >
-            <p className={styles.name}>{fullName}</p>
-            <div className={styles.icons}>
-              <ToolTip title="View Profile" placement="top">
-                <button className={`${styles.button} ${styles.profileIcon}`}>
-                  <img
-                    src={eyeIcon}
-                    alt="View Profile"
-                    onClick={() => {
-                      navigate(`/students/${id}`);
-                    }}
-                  />
-                </button>
-              </ToolTip>
+      result.push(
+        <div
+          key={i}
+          className={
+            result.length === 0 ? styles.studentBoxTop : styles.studentBox
+          }
+        >
+          <p className={styles.name}>{fullName}</p>
+          <div className={styles.icons}>
+            <ToolTip title="View Profile" placement="top">
+              <button className={`${styles.button} ${styles.profileIcon}`}>
+                <img
+                  src={eyeIcon}
+                  alt="View Profile"
+                  onClick={() => {
+                    navigate(`/students/${id}`);
+                  }}
+                />
+              </button>
+            </ToolTip>
 
-              <Checkbox
-                sx={{
-                  '&:hover': { bgcolor: 'transparent' },
-                }}
-                disableRipple
-                color="default"
-                checked={selectedStudents.includes(id || '')}
-                checkedIcon={<BpCheckedIcon />}
-                icon={<BpIcon />}
-                onChange={() => handleCheck(student)}
-              />
-            </div>
-          </div>,
-        );
-      }
+            <Checkbox
+              sx={{
+                '&:hover': { bgcolor: 'transparent' },
+              }}
+              disableRipple
+              color="default"
+              checked={selectedStudents.includes(id || '')}
+              checkedIcon={<BpCheckedIcon />}
+              icon={<BpIcon />}
+              onChange={() => handleCheck(student)}
+            />
+          </div>
+        </div>,
+      );
       return result;
     }, []);
     setStudentList(list);
-  }, [search, students, selectedStudents]);
+  }, [students, selectedStudents]);
 
   const resetStudentA = () => {
     setSelectedStudentADropdown(null);
@@ -475,6 +460,10 @@ const ManualStudentMerge = (): JSX.Element => {
         <div className={styles.loading}>
           <Loading />
         </div>
+      ) : error ? (
+        <h4 className={styles.failureMessage}>
+          Error retrieving student matches. Please try again later.
+        </h4>
       ) : (
         <>
           <div className={styles.mainMerge}>

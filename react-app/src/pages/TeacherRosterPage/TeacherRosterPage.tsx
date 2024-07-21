@@ -91,7 +91,7 @@ const TeacherRosterPage = (): JSX.Element => {
             </div>
 
             <div className={styles.teacherHeader}>
-              <h1 className={styles.heading}>Teacher Roster </h1>
+              <h1 className={styles.heading}>Teacher Roster</h1>
               <button
                 className={styles.addTeacher}
                 onClick={() => {
