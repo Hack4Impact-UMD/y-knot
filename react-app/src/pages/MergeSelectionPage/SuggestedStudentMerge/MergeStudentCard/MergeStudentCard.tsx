@@ -26,7 +26,6 @@ const MergeStudentCard = (props: {
         studentB: props.studentB,
       },
     });
-    // TODO: handle merge (will there be automation?)
   };
 
   const deleteSuggestion = () => {

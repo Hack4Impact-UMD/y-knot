@@ -4,10 +4,10 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './auth/AuthProvider';
+import { theme } from './muiTheme';
 import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
 import RequireAuth from './auth/RequireAuth/RequireAuth';
 import FileUpload from './components/FileUpload/FileUpload';
-import { theme } from './muiTheme';
 import AddCoursePage from './pages/AddCoursesPage/AddCoursePage';
 import ClassPage from './pages/ClassPage/ClassPage';
 import CoursesPage from './pages/CoursesPage/CoursesPage';
@@ -28,6 +28,7 @@ function App(): JSX.Element {
 
   const [courseAdded, setCourseAdded] = useState(false);
   const [courseDeleted, setCourseDeleted] = useState(false);
+  const [studentMerged, setStudentMerged] = useState(false);
 
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
@@ -103,7 +104,10 @@ function App(): JSX.Element {
                 path="/students/merge"
                 element={
                   <RequireAdminAuth>
-                    <MergeSelectionPage />
+                    <MergeSelectionPage
+                      studentMerged={studentMerged}
+                      setStudentMerged={setStudentMerged}
+                    />
                   </RequireAdminAuth>
                 }
               />
@@ -111,7 +115,7 @@ function App(): JSX.Element {
                 path="/students/mergestudent"
                 element={
                   <RequireAdminAuth>
-                    <MergeStudentPage />
+                    <MergeStudentPage setStudentMerged={setStudentMerged} />
                   </RequireAdminAuth>
                 }
               />
