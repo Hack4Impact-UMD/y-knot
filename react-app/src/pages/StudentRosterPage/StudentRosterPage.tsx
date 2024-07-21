@@ -9,7 +9,10 @@ import NavigationBar from '../../components/NavigationBar/NavigationBar';
 import Loading from '../../components/LoadingScreen/Loading';
 import StudentList from './StudentList/StudentList';
 
-const StudentRosterPage = (): JSX.Element => {
+const StudentRosterPage = ({
+  studentAdded,
+  setStudentAdded,
+}: any): JSX.Element => {
   const [students, setStudents] = useState<Array<Partial<StudentID>>>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
@@ -104,7 +107,18 @@ const StudentRosterPage = (): JSX.Element => {
               )}
             </div>
 
-            <h1 className={styles.heading}>Student Roster</h1>
+            <div className={styles.studentHeader}>
+              <h1 className={styles.heading}>Student Roster</h1>
+              <button
+                className={styles.addStudent}
+                onClick={() => {
+                  navigate(`/students/add`);
+                }}
+              >
+                Add Student
+              </button>
+            </div>
+
             {loading ? (
               // Used to center the loading spinner
               <div className={styles.failureMessage}>
@@ -134,6 +148,19 @@ const StudentRosterPage = (): JSX.Element => {
           >
             <Alert severity="success" sx={{ width: '100%' }}>
               Student was Successfully Removed
+            </Alert>
+          </Snackbar>
+          <Snackbar
+            anchorOrigin={{
+              horizontal: 'right',
+              vertical: 'bottom',
+            }}
+            open={studentAdded}
+            autoHideDuration={3000}
+            onClose={() => setStudentAdded(false)}
+          >
+            <Alert severity="success" sx={{ width: '100%' }}>
+              Student was Successfully Added
             </Alert>
           </Snackbar>
         </>
