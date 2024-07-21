@@ -3,6 +3,8 @@ import { pdf } from '@react-pdf/renderer';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import CertificateIcon from '../../../assets/certificate.svg';
+import TranscriptIcon from '../../../assets/transcript.svg';
+
 import TrashIcon from '../../../assets/trash.svg';
 import EyeIcon from '../../../assets/view.svg';
 import { useAuth } from '../../../auth/AuthProvider';
@@ -14,6 +16,7 @@ import type { StudentID } from '../../../types/StudentType';
 import AddStudentClass from './AddStudentClass/AddStudentClass';
 import styles from './ClassStudents.module.css';
 import DeleteStudentClassConfirmation from './DeleteStudentClassConfirmation/DeleteStudentClassConfirmation';
+import StudentPerformance from './StudentPerformance/StudentPerformance';
 
 const ClassStudents = (props: {
   students: Array<StudentID>;
@@ -34,6 +37,9 @@ const ClassStudents = (props: {
   const [removeSuccess, setRemoveSuccess] = useState<boolean>(false);
   const [addSuccess, setAddSuccess] = useState<boolean>(false);
   const [certEmailSuccess, setCertEmailSuccess] = useState<boolean>(false);
+  const [showStudentPerf, setShowStudentPerf] = useState<StudentID | undefined>(
+    undefined,
+  );
 
   const windowWidth = useWindowSize();
 
@@ -82,6 +88,16 @@ const ClassStudents = (props: {
             </>
           )}
           <div className={styles.icons}>
+            <ToolTip title="See Class Progress" placement="top">
+              <button
+                className={styles.button}
+                onClick={() => {
+                  setShowStudentPerf(student);
+                }}
+              >
+                <img src={TranscriptIcon} className={styles.transcriptIcon} />
+              </button>
+            </ToolTip>
             <ToolTip title="Send Certificate" placement="top">
               <button
                 className={styles.button}
@@ -142,7 +158,6 @@ const ClassStudents = (props: {
   };
 
   const sendCertificate = async (email: string, name: string) => {
-    email = 'sgaba9778@gmail.com';
     try {
       if (email == '') {
         alert('The student does not have a valid email.');
@@ -151,8 +166,16 @@ const ClassStudents = (props: {
       const blob = await pdf(
         <Certificate name={name} course={props.courseName} />,
       ).toBlob();
+
       const blobBuffer = await blob.arrayBuffer();
-      await sendCertificateEmail(email, blobBuffer);
+      const base64 = window.btoa(
+        new Uint8Array(blobBuffer).reduce(
+          (data, byte) => data + String.fromCharCode(byte),
+          '',
+        ),
+      );
+
+      await sendCertificateEmail(email, base64);
       setCertEmailSuccess(true);
     } catch (e) {
       console.log(e);
@@ -210,6 +233,18 @@ const ClassStudents = (props: {
           setStudents={setStudents}
           setClassStudents={props.setStudents}
           setRemoveSuccess={setRemoveSuccess}
+        />
+      )}
+      {showStudentPerf && (
+        <StudentPerformance
+          open={showStudentPerf}
+          onClose={() => {
+            if (showStudentPerf) {
+              setShowStudentPerf(undefined);
+            }
+          }}
+          classId={props.courseID}
+          student={showStudentPerf}
         />
       )}
       <Snackbar

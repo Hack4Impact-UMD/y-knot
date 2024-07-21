@@ -6,6 +6,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './auth/AuthProvider';
 import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
 import RequireAuth from './auth/RequireAuth/RequireAuth';
+import Certificate from './components/Certificate/Certificate';
 import FileUpload from './components/FileUpload/FileUpload';
 import { theme } from './muiTheme';
 import AddCoursePage from './pages/AddCoursesPage/AddCoursePage';
@@ -42,6 +43,14 @@ function App(): JSX.Element {
                 element={
                   <RequireAuth>
                     <Navigate to="/courses" />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/cert"
+                element={
+                  <RequireAuth>
+                    <Certificate name="" course="" />
                   </RequireAuth>
                 }
               />

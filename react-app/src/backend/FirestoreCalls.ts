@@ -205,7 +205,6 @@ export function acceptLeadershipApplication(
     // Update the current student's course information if there is a match
     if (matchingStudent) {
       student.courseInformation = matchingStudent.data().courseInformation;
-      console.log(student.courseInformation);
 
       const studentClass = matchingStudent
         .data()
@@ -329,7 +328,6 @@ export function getAllCourses(auth_id?: string): Promise<CourseID[]> {
       .then((snapshot) => {
         const courseID: CourseID[] = [];
         const courses = snapshot.docs.map((doc) => {
-          console.log(doc.data());
           const course = doc.data() as Course;
           courseID.push({ ...course, id: doc.id });
         });
@@ -388,6 +386,50 @@ export function deleteStudent(id: string): Promise<void> {
         );
       });
       promisesList.push(transaction.delete(doc(db, 'Students', id)));
+      await Promise.all(promisesList);
+    })
+      .then(() => {
+        resolve();
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
+
+export function deleteTeacher(id: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    /* runTransaction provides protection against race conditions where
+       2 people are modifying the data at once. It also ensures that either
+       all of these writes succeed or none of them do.
+    */
+    runTransaction(db, async (transaction) => {
+      const teacherRef: Teacher = (
+        await transaction.get(doc(db, 'Users', id))
+      ).data() as Teacher;
+      const idOrder: string[] = [];
+      let teachers: string[][] = [];
+      const teacherCourses: any[] = [];
+      teacherRef.courses.map(async (course) => {
+        idOrder.push(course);
+        teacherCourses.push(transaction.get(doc(db, 'Courses', course)));
+      });
+      await Promise.all(teacherCourses).then((result) => {
+        result.forEach((course) => {
+          teachers.push((course.data() as Course).teachers);
+        });
+      });
+      teachers = teachers.map((teacher, index) => {
+        return teacher.filter((s) => s !== id);
+      });
+      const promisesList: any[] = [];
+      idOrder.map((id, index) => {
+        promisesList.push(
+          transaction.update(doc(db, 'Courses', id), {
+            teachers: teachers[index],
+          }),
+        );
+      });
       await Promise.all(promisesList);
     })
       .then(() => {

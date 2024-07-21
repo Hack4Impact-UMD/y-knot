@@ -23,9 +23,11 @@
     "firebase": "^10.12.3",
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^4.5.0",
+    "fs": "^0.0.1-security",
     "googleapis": "^129.0.0",
     "mime-types": "^2.1.35",
     "nodemailer": "^6.9.8",
+    "pdf-lib": "^1.17.1",
     "string-similarity": "^4.0.4"
   },
   "devDependencies": {

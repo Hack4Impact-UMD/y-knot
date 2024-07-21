@@ -183,9 +183,9 @@ const ClassHomework = (props: {
                 className={`${styles.box} ${roundTop} ${roundBottom}`}
                 key={student.id}
               >
-                <p
-                  className={styles.boxTitle}
-                >{`${student.firstName} ${student.lastName}`}</p>
+                <p className={styles.boxTitle}>{`${student.firstName} ${
+                  student?.middleName ? student.middleName[0] + '.' : ''
+                } ${student.lastName}`}</p>
                 <div className={styles.icons}>
                   <label className={styles.checkboxContainer}>
                     <input

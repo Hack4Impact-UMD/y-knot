@@ -73,11 +73,15 @@ const ClassAttendance = (props: {
       studentIdList,
       checkedCheckboxes,
       selectedDate,
-    ).then((students) => {
-      props.setStudents(students);
-      setOpenAlert(true);
-    });
-    setAlertMessage('Attendance successfully saved');
+    )
+      .then((students) => {
+        props.setStudents(students);
+        setOpenAlert(true);
+        setAlertMessage('Attendance successfully saved');
+      })
+      .catch((error) => {
+        setAlertMessage('Failed to save attendance');
+      });
   };
 
   const parseAttendance = (date: string): void => {
@@ -202,9 +206,9 @@ const ClassAttendance = (props: {
                 className={`${styles.box} ${roundTop} ${roundBottom}`}
                 key={student.id}
               >
-                <p
-                  className={styles.boxTitle}
-                >{`${student.firstName} ${student.lastName}`}</p>
+                <p className={styles.boxTitle}>{`${student.firstName} ${
+                  student?.middleName ? student.middleName[0] + '.' : ''
+                } ${student.lastName}`}</p>
                 <div className={styles.icons}>
                   <label className={styles.checkboxContainer}>
                     <input

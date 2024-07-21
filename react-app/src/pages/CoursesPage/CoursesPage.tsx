@@ -212,22 +212,6 @@ const CoursesPage = ({
                     displayCourseCards(filteredCurrentCourses)
                   )}
                 </div>
-
-                <div className={styles.courseHeader}>
-                  <h1 className={styles.courseStatus}>Past Courses</h1>
-                </div>
-                <div className={styles.cardLayout}>
-                  {allPastCourses.length === 0 ? (
-                    <h4 className={styles.noStudent}>No Past Courses</h4>
-                  ) : filteredPastCourses.length === 0 ? (
-                    <h4 className={styles.noStudent}>
-                      No Past Courses Matching "{search}"
-                    </h4>
-                  ) : (
-                    displayCourseCards(filteredPastCourses)
-                  )}
-                </div>
-
                 <div className={styles.courseHeader}>
                   <h1 className={styles.courseStatus}>Upcoming Courses</h1>
                 </div>
@@ -240,6 +224,20 @@ const CoursesPage = ({
                     </h4>
                   ) : (
                     displayCourseCards(filteredUpcomingCourses)
+                  )}
+                </div>
+                <div className={styles.courseHeader}>
+                  <h1 className={styles.courseStatus}>Past Courses</h1>
+                </div>
+                <div className={styles.cardLayout}>
+                  {allPastCourses.length === 0 ? (
+                    <h4 className={styles.noStudent}>No Past Courses</h4>
+                  ) : filteredPastCourses.length === 0 ? (
+                    <h4 className={styles.noStudent}>
+                      No Past Courses Matching "{search}"
+                    </h4>
+                  ) : (
+                    displayCourseCards(filteredPastCourses)
                   )}
                 </div>
               </>

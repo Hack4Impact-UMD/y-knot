@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { TeacherID } from '../../../../types/UserType';
+import x from '../../../../assets/x.svg';
 import { deleteUser } from '../../../../backend/CloudFunctionsCalls';
 import { removeAllTeacherCourses } from '../../../../backend/FirestoreCalls';
-import styles from './DeleteTeacherConfirmation.module.css';
-import Modal from '../../../../components/ModalWrapper/Modal';
 import Loading from '../../../../components/LoadingScreen/Loading';
-import x from '../../../../assets/x.svg';
+import Modal from '../../../../components/ModalWrapper/Modal';
+import { TeacherID } from '../../../../types/UserType';
+import styles from './DeleteTeacherConfirmation.module.css';
 
 interface popupModalType {
   onClose: () => void;
@@ -53,7 +53,8 @@ const DeleteTeacherConfirmation = ({
               setReloadList(true);
               setOpenSuccess(true);
             })
-            .catch(() => {
+            .catch((err) => {
+              console.log(err);
               setErrorMessage('*Teacher could not be removed');
             })
             .finally(() => {

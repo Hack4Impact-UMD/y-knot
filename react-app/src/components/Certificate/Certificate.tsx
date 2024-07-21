@@ -12,7 +12,6 @@ interface studentDetails {
   name: string;
   course: string;
 }
-
 const Certificate = ({ name, course }: studentDetails): JSX.Element => {
   return (
     <Document style={styles.doc}>

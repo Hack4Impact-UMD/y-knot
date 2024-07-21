@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
-import { Course } from '../../../../types/CourseType';
-import { StudentID } from '../../../../types/StudentType';
+import React, { useState } from 'react';
+import x from '../../../../assets/x.svg';
 import {
   addCourseAttendance,
   getStudentsFromList,
 } from '../../../../backend/FirestoreCalls';
-import styles from './AddAttendance.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
-import x from '../../../../assets/x.svg';
+import { Course } from '../../../../types/CourseType';
+import { StudentID } from '../../../../types/StudentType';
+import styles from './AddAttendance.module.css';
 
 const AddAttendance = (props: {
   open: boolean;

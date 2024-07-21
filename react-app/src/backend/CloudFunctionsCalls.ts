@@ -1,6 +1,7 @@
 import { getAuth, sendPasswordResetEmail } from '@firebase/auth';
 import { httpsCallable } from 'firebase/functions';
 import app, { functions } from '../config/firebase';
+import { deleteTeacher } from './FirestoreCalls';
 
 /*
  * Creates a user and sends a password reset email to that user.
@@ -58,9 +59,9 @@ export function setUserRole(auth_id: string, newRole: string): Promise<void> {
 export function deleteUser(auth_id: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const deleteUserCloudFunction = httpsCallable(functions, 'deleteUser');
-
-    deleteUserCloudFunction({ firebase_id: auth_id })
-      .then(() => {
+    deleteTeacher(auth_id)
+      .then(async () => {
+        await deleteUserCloudFunction({ firebase_id: auth_id });
         resolve();
       })
       .catch((error) => {
@@ -96,7 +97,7 @@ export function sendCertificateEmail(email: string, file: any): Promise<void> {
   return new Promise((resolve, reject) => {
     const sendCert = httpsCallable(functions, 'sendCertificateEmail');
 
-    sendCert({ email: email, file: file })
+    sendCert({ email: email, attachment: file })
       .then(() => {
         resolve();
       })
