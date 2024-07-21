@@ -2,13 +2,26 @@
 
 ## Summer 2024 Hack4Impact-UMD 
 - Completed mobile responsive work
+- Connected Jotform to retrieve students
  
 ### Individual Courses:
 - Populated course's main tab and added functionality to attendance and homework tabs and popups
+- Added functionality to delete course
+- Added functionality to manually add students to course
+- Added functionality to email certificates and class intros to students
 
 ### Leadership Academy:
-- Created UI for academy tab to individual courses with leadership academy applications
-- Created UI for leadership academy application page
+- Created academy tab to individual courses with leadership academy applications
+- Created individual leadership academy applicant page
+- Connected to Jotform to retrieve leadership applicants
+
+### Student Merging:
+- Created suggested and manual student merging selection
+- Created final student merging page
+
+### Students/Teachers:
+- Added functionality to manually add new student
+- Added functionality to allow admins to edit teacher name
 
 --- 
 
