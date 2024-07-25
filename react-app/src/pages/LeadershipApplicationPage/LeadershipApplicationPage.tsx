@@ -16,6 +16,7 @@ import saveIcon from '../../assets/save.svg';
 import { useAuth } from '../../auth/AuthProvider';
 import {
   acceptLeadershipApplication,
+  pendingLeadershipApplication,
   rejectLeadershipApplication,
   updateAcademyNote,
 } from '../../backend/FirestoreCalls';
@@ -221,6 +222,28 @@ function LeadershipApplicationPage() {
                 >
                   {loading ? <Loading /> : 'Accept'}
                 </button>
+
+                <button
+                  className={`${styles.statusButton} ${styles.pendingButton}`}
+                  onClick={() => {
+                    setLoading(true);
+                    pendingLeadershipApplication(
+                      applicant?.applicantInfo.firebaseID!,
+                    )
+                      .then(() => {
+                        navigate(location.pathname.split('applicant')[0]);
+                      })
+                      .catch((error) => {
+                        window.location.reload();
+                      })
+                      .finally(() => {
+                        setLoading(false);
+                      });
+                  }}
+                >
+                  {loading ? <Loading /> : 'Pending'}
+                </button>
+
                 <button
                   className={`${styles.statusButton} ${styles.rejectButton}`}
                   onClick={() => {

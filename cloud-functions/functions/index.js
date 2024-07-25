@@ -10,14 +10,11 @@ const nodemailer = require("nodemailer");
 const stringSimilarity = require("string-similarity");
 const { WriteBatch } = require("firebase-admin/firestore");
 const { getStorage } = require("firebase-admin/storage");
-const { onSchedule } = require("firebase-functions/v2/scheduler");
 const axios = require("axios");
 const OAuth2 = google.auth.OAuth2;
 admin.initializeApp();
 const db = admin.firestore();
 dotenv.config();
-const { PDFDocument, rgb, StandardFonts } = require("pdf-lib");
-const fs = require("fs");
 
 const oauth2Client = new OAuth2(
   process.env.OAUTH_CLIENT_ID, // ClientID
@@ -228,18 +225,19 @@ exports.sendCertificateEmail = onCall(
   async ({ auth, data }) => {
     return new Promise(async (resolve, reject) => {
       const authorization = admin.auth();
-
       if (
         (data.email != null &&
-          data.attachment != null &&
+          data.file != null &&
           auth &&
           auth.token &&
           auth.token.role.toLowerCase() == "admin") ||
         auth.token.role.toLowerCase() == "teacher"
       ) {
+        console.log(data.file);
+        console.log(Buffer.from(JSON.stringify(data.file)));
         await sendCertificate(
           data.email,
-          Buffer.from(data.attachment, "base64")
+          Buffer.from(JSON.stringify(data.file))
         )
           .then(() => resolve())
           .catch(() => reject());
@@ -696,7 +694,7 @@ exports.newLeadershipSubmission = onRequest(
           transcriptFiles: transcriptFiles,
           recFiles: recFiles,
           classId: selectedClass.id,
-          status: "PENDING",
+          status: "NA",
           statusNote: "",
           courseInformation: [],
         };
