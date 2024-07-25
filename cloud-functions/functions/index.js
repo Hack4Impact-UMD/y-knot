@@ -1068,7 +1068,7 @@ exports.updateCourses = onSchedule(
           });
         });
       const changedIDs = [];
-      const sendCertificate = [];
+      const certificates = [];
       recentlyStarted.map((course) => {
         course.students.map((student) => {
           const studentData = studentMap[student];
@@ -1078,7 +1078,10 @@ exports.updateCourses = onSchedule(
               specCourse.progress != "INPROGRESS"
             ) {
               specCourse.progress = "INPROGRESS";
-              changedIDs.push(student);
+              if (!changedIDs.includes(student)) {
+                changedIDs.push(student);
+              }
+
               return;
             }
           }
@@ -1088,18 +1091,53 @@ exports.updateCourses = onSchedule(
         course.students.map((student) => {
           const studentData = studentMap[student];
           for (const specCourse in studentData.courseInformation) {
-            if (specCourse.id == course.id) {
+            if (
+              specCourse.id == course.id &&
+              !(specCourse.progress == "PASS" || specCourse.progress == "FAIL")
+            ) {
+              if (!changedIDs.includes(student)) {
+                changedIDs.push(student);
+              }
+              let attended = 0;
+              specCourse.attendance.map((day) => {
+                attended += day.attended ? 1 : 0;
+              });
+              attended = attended / specCourse.attendance.length;
+              if (attended < 0.85) {
+                specCourse.progress = "FAIL";
+              } else {
+                specCourse.progress = "PASS";
+                certificates.push({
+                  email: studentData.email,
+                  studentName:
+                    studentData.firstName +
+                    " " +
+                    (studentData?.middleName || "") +
+                    " " +
+                    studentData.lastName,
+                  courseName: course.name,
+                });
+              }
             }
           }
         });
       });
-      // loop throuhg all courses and find ones which ended in the last 2 days and update stundets
 
-      // now find remaining ones that started in last 2 days and update accordingly
+      const promises = [];
+      for (const student in changedIDs) {
+        const studentData = studentMap[student];
+        promises.push(
+          db.collection("Students").doc(student).update(studentData)
+        );
+      }
+      for (const cert in certificates) {
+        const pdf = await createAndModifyPdf(cert.studentName, cert.courseName);
+        promises.push(sendCertificate(cert.email, pdf));
+      }
 
-      // now loop through all students and update
+      await Promise.all(promises);
     } catch (error) {
-      functions.logger.log("Error while fetching chapter data: ", error);
+      functions.logger.log("Error while updating course data: ", error);
     }
   }
 );
