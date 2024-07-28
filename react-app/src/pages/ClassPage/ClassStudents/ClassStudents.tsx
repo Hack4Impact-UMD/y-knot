@@ -1,5 +1,4 @@
 import { Alert, Snackbar } from '@mui/material';
-import { pdf } from '@react-pdf/renderer';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import CertificateIcon from '../../../assets/certificate.svg';
@@ -9,7 +8,6 @@ import TrashIcon from '../../../assets/trash.svg';
 import EyeIcon from '../../../assets/view.svg';
 import { useAuth } from '../../../auth/AuthProvider';
 import { sendCertificateEmail } from '../../../backend/CloudFunctionsCalls';
-import Certificate from '../../../components/Certificate/Certificate';
 import Loading from '../../../components/LoadingScreen/Loading';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
 import type { StudentID } from '../../../types/StudentType';
@@ -163,19 +161,8 @@ const ClassStudents = (props: {
         alert('The student does not have a valid email.');
         return;
       }
-      const blob = await pdf(
-        <Certificate name={name} course={props.courseName} />,
-      ).toBlob();
 
-      const blobBuffer = await blob.arrayBuffer();
-      const base64 = window.btoa(
-        new Uint8Array(blobBuffer).reduce(
-          (data, byte) => data + String.fromCharCode(byte),
-          '',
-        ),
-      );
-
-      await sendCertificateEmail(email, base64);
+      await sendCertificateEmail(email, name, props.courseName);
       setCertEmailSuccess(true);
     } catch (e) {
       console.log(e);

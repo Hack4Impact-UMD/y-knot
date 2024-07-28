@@ -15,6 +15,9 @@ const OAuth2 = google.auth.OAuth2;
 admin.initializeApp();
 const db = admin.firestore();
 dotenv.config();
+const { onSchedule } = require("firebase-functions/v2/scheduler");
+const fs = require("fs");
+const pdfLib = require("pdf-lib");
 
 const oauth2Client = new OAuth2(
   process.env.OAUTH_CLIENT_ID, // ClientID
@@ -226,29 +229,99 @@ exports.sendCertificateEmail = onCall(
     return new Promise(async (resolve, reject) => {
       const authorization = admin.auth();
       if (
-        (data.email != null &&
-          data.file != null &&
-          auth &&
-          auth.token &&
-          auth.token.role.toLowerCase() == "admin") ||
-        auth.token.role.toLowerCase() == "teacher"
+        data.email != null &&
+        data.studentName != null &&
+        data.courseName != null &&
+        auth &&
+        auth.token &&
+        (auth.token.role.toLowerCase() == "admin" ||
+          auth.token.role.toLowerCase() == "teacher")
       ) {
-        console.log(data.file);
-        console.log(Buffer.from(JSON.stringify(data.file)));
-        await sendCertificate(
-          data.email,
-          Buffer.from(JSON.stringify(data.file))
-        )
+        const pdf = await createAndModifyPdf(data.studentName, data.courseName);
+        await sendCertificate(data.email, pdf)
           .then(() => resolve())
           .catch(() => reject());
       } else {
         reject({
           reason: "Permissions",
-          text: "You do not have the correct permissions to update email. If you think you do, please make sure the new email is not already in use.",
+          text: "You do not have the correct permissions to send an email. If you think you do, please make sure the new email is not already in use.",
         });
         throw new functions.https.HttpsError(
           "permission-denied",
-          "You do not have the correct permissions to update email."
+          "You do not have the correct permissions to send an email."
+        );
+      }
+    });
+  }
+);
+
+const sendEmailToStudent = async (email, courseName, text, attach) => {
+  const msg = {
+    from: '"Y-KNOT" <info@yknotinc.org>', // sender address
+    to: email, // list of receivers
+    subject: `YKnot ${courseName}`, // Subject line
+
+    html: `
+      <div>
+          <div style="max-width: 600px; margin: auto">
+              <br><br><br>
+              <p style="font-size: 16px">
+              Hello,<br>
+              <br>
+              ${text}
+              <br>
+              
+          <div>
+      </div>
+          
+      `, // html body
+    attachments: attach,
+  };
+  await transporter.sendMail(msg).catch((error) => {
+    console.log(
+      "Error occured with new submission. Email also could not be sent."
+    );
+    console.log(error);
+  });
+};
+exports.sendEmail = onCall(
+  { region: "us-east4", cors: true },
+  async ({ auth, data }) => {
+    return new Promise(async (resolve, reject) => {
+      const authorization = admin.auth();
+      if (
+        data.email != null &&
+        data.courseName != null &&
+        (data.text != null || data.attachments != null) &&
+        auth &&
+        auth.token &&
+        (auth.token.role.toLowerCase() == "admin" ||
+          auth.token.role.toLowerCase() == "teacher")
+      ) {
+        const attach = [];
+        if (data.attachments) {
+          data.attachments.map(async (attachment) => {
+            attach.push({
+              filename: attachment.name,
+              content: Buffer.from(attachment.content, "base64"),
+            });
+          });
+        }
+        sendEmailToStudent(data.email, data.courseName, data.text, attach)
+          .then(() => {
+            resolve();
+          })
+          .catch((error) => {
+            reject();
+          });
+      } else {
+        reject({
+          reason: "Permissions",
+          text: "You do not have the correct permissions to send an email. If you think you do, please make sure the new email is not already in use.",
+        });
+        throw new functions.https.HttpsError(
+          "permission-denied",
+          "You do not have the correct permissions to send an email."
         );
       }
     });
@@ -968,10 +1041,10 @@ exports.setUserRole = onCall(
 async function createAndModifyPdf(studentName, courseName) {
   // Load an existing PDF
   const existingPdfBytes = fs.readFileSync("pdfTemplate.pdf"); // Your existing PDF template
-  const pdfDoc = await PDFDocument.load(existingPdfBytes);
+  const pdfDoc = await pdfLib.PDFDocument.load(existingPdfBytes);
 
   // Embed the font
-  const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const helveticaFont = await pdfDoc.embedFont(pdfLib.StandardFonts.Helvetica);
 
   // Get the first page of the document
   const pages = pdfDoc.getPages();
@@ -988,7 +1061,7 @@ async function createAndModifyPdf(studentName, courseName) {
     y: height / 2 + 40,
     size: 30,
     font: helveticaFont,
-    color: rgb(0, 0, 0),
+    color: pdfLib.rgb(0, 0, 0),
   });
   // Draw the text on the PDF
   firstPage.drawText(courseName, {
@@ -996,16 +1069,15 @@ async function createAndModifyPdf(studentName, courseName) {
     y: height / 2 - 55,
     size: 30,
     font: helveticaFont,
-    color: rgb(0, 0, 0),
+    color: pdfLib.rgb(0, 0, 0),
   });
 
   firstPage.drawLine({
     start: { x: width / 2 - nameWidth / 2, y: height / 2 + 37 },
     end: { x: width / 2 + nameWidth / 2, y: height / 2 + 37 },
     thickness: 3,
-    color: rgb(0, 0, 0),
+    color: pdfLib.rgb(0, 0, 0),
   });
-
   // Save the modified PDF
   const pdfBytes = await pdfDoc.save();
   return pdfBytes;
@@ -1023,9 +1095,7 @@ exports.updateCourses = onSchedule(
     try {
       const recentlyStarted = [];
       const recentlyEnded = [];
-      const currentDate = new Date().toLocaleTimeString("en-US", {
-        timeZone: "America/New_York",
-      });
+      const currentDate = new Date();
       await db
         .collection("Courses")
         .get()
@@ -1054,7 +1124,6 @@ exports.updateCourses = onSchedule(
             }
           });
         });
-
       const studentMap = {};
       await db
         .collection("Students")
@@ -1070,7 +1139,7 @@ exports.updateCourses = onSchedule(
       recentlyStarted.map((course) => {
         course.students.map((student) => {
           const studentData = studentMap[student];
-          for (const specCourse in studentData.courseInformation) {
+          for (const specCourse of studentData.courseInformation) {
             if (
               specCourse.id == course.id &&
               specCourse.progress != "INPROGRESS"
@@ -1088,7 +1157,7 @@ exports.updateCourses = onSchedule(
       recentlyEnded.map((course) => {
         course.students.map((student) => {
           const studentData = studentMap[student];
-          for (const specCourse in studentData.courseInformation) {
+          for (const specCourse of studentData.courseInformation) {
             if (
               specCourse.id == course.id &&
               !(specCourse.progress == "PASS" || specCourse.progress == "FAIL")
@@ -1122,16 +1191,16 @@ exports.updateCourses = onSchedule(
       });
 
       const promises = [];
-      for (const student in changedIDs) {
+      for (const student of changedIDs) {
         const studentData = studentMap[student];
         promises.push(
           db.collection("Students").doc(student).update(studentData)
         );
       }
-      for (const cert in certificates) {
+      certificates.map(async (cert) => {
         const pdf = await createAndModifyPdf(cert.studentName, cert.courseName);
         promises.push(sendCertificate(cert.email, pdf));
-      }
+      });
 
       await Promise.all(promises);
     } catch (error) {

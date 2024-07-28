@@ -780,7 +780,6 @@ export function getAllCourses(auth_id?: string): Promise<CourseID[]> {
       .then((snapshot) => {
         const courseID: CourseID[] = [];
         const courses = snapshot.docs.map((doc) => {
-          console.log(doc.data());
           const course = doc.data() as Course;
           courseID.push({ ...course, id: doc.id });
         });
@@ -960,7 +959,10 @@ export function deleteCourse(courseId: string): Promise<void> {
   });
 }
 
-export function updateCourse(course: Course, id: string): Promise<void> {
+export function updateCourse(
+  course: Partial<Course>,
+  id: string,
+): Promise<void> {
   return new Promise((resolve, reject) => {
     if (id === '' || !id) {
       reject(new Error('Invalid id'));
@@ -1906,7 +1908,6 @@ export function acceptLeadershipApplication(
     // Update the current student's course information if there is a match
     if (matchingStudent) {
       student.courseInformation = matchingStudent.data().courseInformation;
-      console.log(student.courseInformation);
 
       const studentClass = matchingStudent
         .data()

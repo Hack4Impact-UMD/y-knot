@@ -4,12 +4,13 @@ import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { useState } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './auth/AuthProvider';
-import { theme } from './muiTheme';
 import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
 import RequireAuth from './auth/RequireAuth/RequireAuth';
 import Certificate from './components/Certificate/Certificate';
 import FileUpload from './components/FileUpload/FileUpload';
+import { theme } from './muiTheme';
 import AddCoursePage from './pages/AddCoursesPage/AddCoursePage';
+import AddStudentPage from './pages/AddStudentPage/AddStudentPage';
 import ClassPage from './pages/ClassPage/ClassPage';
 import CoursesPage from './pages/CoursesPage/CoursesPage';
 import LeadershipApplicationPage from './pages/LeadershipApplicationPage/LeadershipApplicationPage';
@@ -20,7 +21,6 @@ import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import SettingsPage from './pages/SettingsPage/SettingsPage';
 import StudentProfilePage from './pages/StudentProfilePage/StudentProfilePage';
 import StudentRosterPage from './pages/StudentRosterPage/StudentRosterPage';
-import AddStudentPage from './pages/AddStudentPage/AddStudentPage';
 import TeacherProfilePage from './pages/TeacherProfilePage/TeacherProfilePage';
 import TeacherRosterPage from './pages/TeacherRosterPage/TeacherRosterPage';
 import TranscriptPage from './pages/TranscriptPage/TranscriptPage';
@@ -40,6 +40,7 @@ function App(): JSX.Element {
           <BrowserRouter>
             <Routes>
               <Route path="/fileTest" element={<FileUpload />} />
+
               <Route path="/login" element={<LoginPage />} />
               <Route
                 path="/"

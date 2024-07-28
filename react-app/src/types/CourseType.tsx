@@ -23,6 +23,7 @@ export interface IntroEmail {
 
 export interface IntroEmailFile {
   name: string;
+  ref: string;
   downloadURL: string;
 }
 

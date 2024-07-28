@@ -77,9 +77,11 @@
   margin: 0 15px 15px 15px;
   padding: 10px;
   max-width: 100%;
+  width: 90%;
   height: 100%;
   color: #838383;
   overflow-y: auto;
+  resize: none;
 }
 
 .editing {
@@ -147,4 +149,10 @@
 
 .informationText:hover {
   text-decoration: underline;
+}
+
+@media screen and (max-width: 600px) {
+  .introText {
+    width: 80%;
+  }
 }

@@ -201,6 +201,7 @@ const ClassPage = ({ setCourseDeleted }: any): JSX.Element => {
               course={course}
               courseID={courseID!}
               setCourse={setCourse}
+              students={students}
             />
           )}
           {currentTab === Tab.Academy && <ClassAcademy courseID={courseID!} />}

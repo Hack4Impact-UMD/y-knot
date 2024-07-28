@@ -93,11 +93,38 @@ export function updateUserEmail(
 /*
  * Sends a certificate to a student
  */
-export function sendCertificateEmail(email: string, file: any): Promise<void> {
+export function sendCertificateEmail(
+  email: string,
+  studentName: string,
+  courseName: string,
+): Promise<void> {
   return new Promise((resolve, reject) => {
     const sendCert = httpsCallable(functions, 'sendCertificateEmail');
 
-    sendCert({ email: email, attachment: file })
+    sendCert({ email: email, studentName: studentName, courseName: courseName })
+      .then(() => {
+        resolve();
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
+
+export function sendEmail(
+  email: string,
+  courseName: string,
+  text: string,
+  attachments: any[],
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const sendMail = httpsCallable(functions, 'sendEmail');
+    sendMail({
+      email: email,
+      courseName: courseName,
+      text: text,
+      attachments: attachments,
+    })
       .then(() => {
         resolve();
       })
