@@ -9,7 +9,7 @@ const dotenv = require("dotenv");
 const nodemailer = require("nodemailer");
 const stringSimilarity = require("string-similarity");
 const { WriteBatch } = require("firebase-admin/firestore");
-const { getStorage } = require("firebase-admin/storage");
+const { getStorage, getDownloadURL } = require("firebase-admin/storage");
 const axios = require("axios");
 const OAuth2 = google.auth.OAuth2;
 admin.initializeApp();
@@ -584,13 +584,39 @@ exports.newSubmission = onRequest(
           });
         }
 
-        await batch.commit().catch(async () => {
-          await sendNewSubmissionErrorEmail(formId, submissionId).finally(
-            () => {
-              throw new Error();
+        await batch
+          .commit()
+          .then(async () => {
+            const fileFormatted = [];
+            for (const file of selectedClass.data().introEmail.files) {
+              const buffer = await axios({
+                url: file.downloadURL,
+                method: "GET",
+                responseType: "arraybuffer",
+              }).then((response) => {
+                return Buffer.from(response.data, "binary");
+              });
+
+              fileFormatted.push({
+                filename: file.name,
+                content: buffer,
+              });
             }
-          );
-        });
+
+            await sendEmailToStudent(
+              student.email,
+              selectedClass.data().name,
+              selectedClass.data().introEmail.content,
+              fileFormatted
+            );
+          })
+          .catch(async () => {
+            await sendNewSubmissionErrorEmail(formId, submissionId).finally(
+              () => {
+                throw new Error();
+              }
+            );
+          });
 
         res.end();
       });
@@ -622,17 +648,22 @@ exports.newLeadershipSubmission = onRequest(
         submissionId = fields["submissionID"];
         formId = fields["formID"];
         const transcriptFiles = [];
-        for (var i = 0; i < (data["transcript"]?.length || 0); i++) {
+        for (var i = 0; i < (data["transcriptunofficial"]?.length || 0); i++) {
           // Jotform redirects the given file url to a different one, so we manually create the url
-          const trans = data["transcript"][i];
+          const trans = data["transcriptunofficial"][i];
           const fileNameParsed = trans.split("/").at(-1).split(".");
           let fileExtension = "";
           if (fileNameParsed.length > 1) {
             fileExtension = "." + fileNameParsed.at(-1);
           }
-          const file = await axios
-            .get(trans, { responseType: "arraybuffer" })
-
+          const buffer = await axios({
+            url: trans,
+            method: "GET",
+            responseType: "arraybuffer",
+          })
+            .then((response) => {
+              return Buffer.from(response.data, "binary");
+            })
             .catch(async (error) => {
               await sendNewSubmissionErrorEmail(formId, submissionId).finally(
                 () => {
@@ -644,9 +675,7 @@ exports.newLeadershipSubmission = onRequest(
           // Upload file to firebase storage
           const bucket = admin.storage().bucket();
           const fileName = crypto.randomUUID();
-          await bucket
-            .file(fileName + fileExtension)
-            .save(Buffer.from(file.data, "binary"));
+          await bucket.file(fileName + fileExtension).save(buffer);
           transcriptFiles.push({
             ref: fileName + fileExtension,
             name: "transcript" + i + fileExtension,
@@ -756,14 +785,14 @@ exports.newLeadershipSubmission = onRequest(
           schoolName: data["q8_school"],
           gpa: data["q9_gpa"],
           gender: data["q11_gender"],
-          involvement: data["q12_listYour"],
+          involvement: data["q12_brieflyList"],
           guardianFirstName: data["q14_parentsName"]["first"],
           guardianLastName: data["q14_parentsName"]["last"],
           guardianEmail: data["q15_email15"],
           guardianPhone: parseInt(
             data["q16_phoneNumber16"]["full"].replace(/[\(\)-\s]/g, "")
           ),
-          whyJoin: data["q18_whyU"],
+          whyJoin: data["q18_whyWould"],
           transcriptFiles: transcriptFiles,
           recFiles: recFiles,
           classId: selectedClass.id,
@@ -774,7 +803,7 @@ exports.newLeadershipSubmission = onRequest(
         await db
           .collection("LeadershipApplications")
           .add(leadershipObject)
-          .then(() => {})
+          .then(async () => {})
           .catch(async (error) => {
             console.log(error);
             // No class found, throw an error

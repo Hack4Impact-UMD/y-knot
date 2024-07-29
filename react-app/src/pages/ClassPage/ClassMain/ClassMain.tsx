@@ -12,6 +12,7 @@ import certificateIcon from '../../../assets/certificate.svg';
 import emailIcon from '../../../assets/email.svg';
 import editIcon from '../../../assets/gray-pencil.svg';
 import saveIcon from '../../../assets/save.svg';
+import sendEmailIcon from '../../../assets/send-email.svg';
 import transcriptIcon from '../../../assets/transcript.svg';
 import uploadIcon from '../../../assets/upload.svg';
 import x from '../../../assets/x.svg';
@@ -103,7 +104,6 @@ const ClassMain = (props: {
           setAlertMessage('Emails Sent');
           setInnerText('');
           setFiles([]);
-          setEditText(!editText);
         })
         .catch((error) => {
           setAlertMessage('Error Sending Emails');
@@ -156,7 +156,7 @@ const ClassMain = (props: {
         props.courseID,
       )
         .then(() => {
-          setAlertMessage('Changed Course Intro Sent');
+          setAlertMessage('Changed Course Intro');
           props.setCourse({
             ...props.course,
             introEmail: { content: innerText, files: changedFiles },
@@ -196,7 +196,7 @@ const ClassMain = (props: {
     <div className={styles.container}>
       <div className={styles.introCard}>
         <div className={styles.introHeader}>
-          <p>{emailMode ? 'Draft Email' : 'Class Intro'}</p>
+          <p>{emailMode ? 'New Class Email' : 'Class Intro'}</p>
           <div className={styles.introButtons}>
             {editText && (
               <ToolTip title="Upload File" placement="top">
@@ -257,11 +257,19 @@ const ClassMain = (props: {
             >
               <button className={styles.editButton} onClick={handleEdit}>
                 {editText ? (
-                  <img
-                    src={saveIcon}
-                    alt={emailMode ? 'Send Email' : 'Save Changes'}
-                    className={styles.icon}
-                  />
+                  !emailMode ? (
+                    <img
+                      src={saveIcon}
+                      alt={'Save Changes'}
+                      className={styles.icon}
+                    />
+                  ) : (
+                    <img
+                      src={sendEmailIcon}
+                      alt={'Send Email'}
+                      className={styles.icon}
+                    />
+                  )
                 ) : (
                   <img src={editIcon} alt="Edit Text" className={styles.icon} />
                 )}
@@ -327,19 +335,20 @@ const ClassMain = (props: {
           </button>
         </ToolTip>
         <ToolTip
-          title={emailMode ? 'Set Class Intro' : 'Draft Email'}
+          title={emailMode ? 'Set Class Intro' : 'New Class Email'}
           placement="top"
         >
           <button
             className={styles.email}
             onClick={() => {
-              setEditText(false);
               if (emailMode) {
                 setInnerText(props.course.introEmail.content);
                 setFiles(props.course.introEmail.files);
+                setEditText(false);
               } else {
                 setInnerText('');
                 setFiles([]);
+                setEditText(true);
               }
               setEmailMode(!emailMode);
             }}

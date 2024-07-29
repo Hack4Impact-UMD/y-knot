@@ -77,11 +77,12 @@
   margin: 0 15px 15px 15px;
   padding: 10px;
   max-width: 100%;
-  width: 90%;
+  width: 93%;
   height: 100%;
   color: #838383;
   overflow-y: auto;
   resize: none;
+  font-family: 'sans-serif';
 }
 
 .editing {
@@ -151,8 +152,14 @@
   text-decoration: underline;
 }
 
+@media screen and (max-width: 1000px) {
+  .introText {
+    width: 90%;
+  }
+}
+
 @media screen and (max-width: 600px) {
   .introText {
-    width: 80%;
+    width: 85%;
   }
 }
