@@ -106,7 +106,7 @@ exports.createUser = onCall(
                               Hello,<br>
                               <br>
                               Your account has been created. Welcome to the Y-KNOT Course Management Portal, as an teacher you will be able to track and manage Y-KNOT classes. 
-                              You can find your credentials listed below: <br>
+                              Here is a link to the portal: https://yknot-42027.web.app/. You can find your credentials listed below: <br>
                               <br>
                               <span style="font-weight: 600; text-decoration: underline">Course Management Portal Information</span><br>
                               <br>
@@ -117,7 +117,7 @@ exports.createUser = onCall(
                               Please look out for a reset password email which will allow you to reset your password for security purposes.
                               <br>
                               <br>
-                              Welcome to the Y-KNOT Course Management Portal!
+                              Welcome to the Y-KNOT Course Management Portal! 
                           <div>
                       </div>
                           

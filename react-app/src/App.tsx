@@ -7,7 +7,6 @@ import { AuthProvider } from './auth/AuthProvider';
 import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
 import RequireAuth from './auth/RequireAuth/RequireAuth';
 import Certificate from './components/Certificate/Certificate';
-import FileUpload from './components/FileUpload/FileUpload';
 import { theme } from './muiTheme';
 import AddCoursePage from './pages/AddCoursesPage/AddCoursePage';
 import AddStudentPage from './pages/AddStudentPage/AddStudentPage';
@@ -39,8 +38,6 @@ function App(): JSX.Element {
         <AuthProvider>
           <BrowserRouter>
             <Routes>
-              <Route path="/fileTest" element={<FileUpload />} />
-
               <Route path="/login" element={<LoginPage />} />
               <Route
                 path="/"
