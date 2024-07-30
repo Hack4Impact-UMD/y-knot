@@ -332,7 +332,7 @@ exports.sendEmail = onCall(
 const sendNewSubmissionErrorEmail = async (formId, submissionId) => {
   const msg = {
     from: '"Y-KNOT" <info@yknotinc.org>', // sender address
-    to: "sgaba@terpmail.umd.edu", // list of receivers
+    to: "info@yknotinc.org", // list of receivers
     subject: "YKnot Course Management Portal Submission Error", // Subject line
 
     html: `
@@ -671,7 +671,7 @@ exports.newLeadershipSubmission = onRequest(
                 }
               );
             });
-
+          console.log(buffer);
           // Upload file to firebase storage
           const bucket = admin.storage().bucket();
           const fileName = crypto.randomUUID();

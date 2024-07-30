@@ -211,6 +211,7 @@ const ClassPage = ({ setCourseDeleted }: any): JSX.Element => {
               setStudents={setStudents}
               courseID={courseID!}
               courseName={course.name}
+              courseIntro={course.introEmail}
             />
           )}
           {currentTab === Tab.Attendance && (

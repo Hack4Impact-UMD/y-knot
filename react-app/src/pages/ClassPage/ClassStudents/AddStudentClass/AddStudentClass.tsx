@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Select, { type OptionProps } from 'react-select';
 import x from '../../../../assets/x.svg';
+import { sendEmail } from '../../../../backend/CloudFunctionsCalls';
 import {
   addStudentCourseFromList,
   getAllStudents,
 } from '../../../../backend/FirestoreCalls';
 import Modal from '../../../../components/ModalWrapper/Modal';
+import { IntroEmail } from '../../../../types/CourseType';
 import { StudentID } from '../../../../types/StudentType';
 import styles from './AddStudentClass.module.css';
 
@@ -18,6 +20,8 @@ interface modalType {
   setDisplayStudents: Function;
   setClassStudents: Function;
   setAddSuccess: Function;
+  courseName: string;
+  courseIntro: IntroEmail;
 }
 
 const InputOption: React.FC<OptionProps<any, true, any>> = ({
@@ -75,6 +79,8 @@ const AddStudentClass = ({
   setDisplayStudents,
   setClassStudents,
   setAddSuccess,
+  courseName,
+  courseIntro,
 }: modalType): React.ReactElement => {
   const [students, setStudents] = useState<Array<Partial<StudentID>>>([]);
   const [studentList, setStudentList] = useState<Array<Partial<StudentID>>>([]);
@@ -139,7 +145,20 @@ const AddStudentClass = ({
       setErrorMessage('*Please select a student');
     } else {
       addStudentCourseFromList(selectedStudents, courseId)
-        .then(() => {
+        .then(async () => {
+          const sendIntroEmail: any[] = [];
+          const files: any[] = [];
+          for (const file of courseIntro.files) {
+            const response = await fetch(file.downloadURL);
+            const buffer = await response.arrayBuffer();
+            const uint8Array = new Uint8Array(buffer);
+            const binaryString = uint8Array.reduce(
+              (data, byte) => data + String.fromCharCode(byte),
+              '',
+            );
+            files.push({ name: file.name, content: btoa(binaryString) });
+          }
+
           selectedStudents.forEach((studentId) => {
             const existingStudent = displayStudents.find(
               (student) => student.id === studentId,
@@ -149,10 +168,20 @@ const AddStudentClass = ({
                 (student) => student.id === studentId,
               );
               if (foundStudent) {
+                sendIntroEmail.push(
+                  sendEmail(
+                    foundStudent.email!,
+                    courseName,
+                    courseIntro.content,
+                    files,
+                  ),
+                );
+
                 displayStudents.push(foundStudent);
               }
             }
           });
+          await Promise.all(sendIntroEmail);
           setDisplayStudents(displayStudents);
           setClassStudents(displayStudents);
           handleOnClose();
@@ -163,6 +192,7 @@ const AddStudentClass = ({
           }, 2500);
         })
         .catch((err) => {
+          console.log(err);
           setErrorMessage('*Student(s) could not be added.');
         });
     }

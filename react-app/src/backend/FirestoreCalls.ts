@@ -26,6 +26,7 @@ import {
   StudentMatch,
 } from '../types/StudentType';
 import { Teacher, TeacherID, YKNOTUser } from '../types/UserType';
+import { sendEmail } from './CloudFunctionsCalls';
 
 /***** TEACHER FUNCTIONS *****/
 
@@ -1812,6 +1813,7 @@ export function rejectLeadershipApplication(
         );
         await deleteObject(pathReference).catch((error) => {});
       }
+      resolve();
     } catch (e) {
       reject();
     }
@@ -1905,6 +1907,7 @@ export function acceptLeadershipApplication(
         .catch((e) => {
           reject(e);
         });
+
     // Update the current student's course information if there is a match
     if (matchingStudent) {
       student.courseInformation = matchingStudent.data().courseInformation;
@@ -1967,6 +1970,24 @@ export function acceptLeadershipApplication(
       .catch(async () => {
         reject();
       });
+    const sendIntroEmail: any[] = [];
+    const files: any[] = [];
+    for (const file of selectedCourse?.course.introEmail.files!) {
+      const response = await fetch(file.downloadURL);
+      const buffer = await response.arrayBuffer();
+      const uint8Array = new Uint8Array(buffer);
+      const binaryString = uint8Array.reduce(
+        (data, byte) => data + String.fromCharCode(byte),
+        '',
+      );
+      files.push({ name: file.name, content: btoa(binaryString) });
+    }
+    await sendEmail(
+      student.email!,
+      selectedCourse?.course.name!,
+      selectedCourse?.course.introEmail.content!,
+      files,
+    );
 
     // Delete the Leadership Application
     rejectLeadershipApplication(currentApplicant)

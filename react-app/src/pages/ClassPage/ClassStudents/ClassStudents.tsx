@@ -10,6 +10,7 @@ import { useAuth } from '../../../auth/AuthProvider';
 import { sendCertificateEmail } from '../../../backend/CloudFunctionsCalls';
 import Loading from '../../../components/LoadingScreen/Loading';
 import { ToolTip } from '../../../components/ToolTip/ToolTip';
+import { IntroEmail } from '../../../types/CourseType';
 import type { StudentID } from '../../../types/StudentType';
 import AddStudentClass from './AddStudentClass/AddStudentClass';
 import styles from './ClassStudents.module.css';
@@ -21,6 +22,7 @@ const ClassStudents = (props: {
   setStudents: Function;
   courseID: string;
   courseName: string;
+  courseIntro: IntroEmail;
 }): JSX.Element => {
   const authContext = useAuth();
   const [students, setStudents] = useState<any[]>(props.students);
@@ -194,6 +196,8 @@ const ClassStudents = (props: {
 
       <AddStudentClass
         courseId={props.courseID}
+        courseName={props.courseName}
+        courseIntro={props.courseIntro}
         open={openAddStudentModal}
         onClose={() => {
           setOpenAddStudentModal(!openAddStudentModal);
