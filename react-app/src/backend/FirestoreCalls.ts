@@ -717,6 +717,30 @@ export function getAllStudentMatches(): Promise<StudentMatch[]> {
   });
 }
 
+export function getCachedData() {
+  const collectionRef = collection(db, 'chapters');
+  return new Promise(async (resolve, reject) => {
+    const docs = await getDocsFromCache(collectionRef)
+      .then((snapshot) => {
+        return snapshot.docs.map((doc) => doc.data());
+      })
+      .catch((error) => {
+        reject(error);
+      });
+    if (docs.length > 0) {
+      resolve(docs);
+    } else {
+      getDocs(collectionRef)
+        .then((snapshot) => {
+          resolve(snapshot.docs.map((doc) => doc.data()));
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    }
+  });
+}
+
 export function deleteStudentMatch(
   studentOneId: string,
   studentTwoId: string,
