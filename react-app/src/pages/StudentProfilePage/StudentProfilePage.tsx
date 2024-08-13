@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useAuth } from '../../auth/AuthProvider';
 import {
@@ -8,7 +8,9 @@ import {
   getCourse,
 } from '../../backend/FirestoreCalls';
 import { type Student } from '../../types/StudentType';
+import { CourseID } from '../../types/CourseType';
 import { ToolTip } from '../../components/ToolTip/ToolTip';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTime } from 'luxon';
 import styles from './StudentProfilePage.module.css';
 import Loading from '../../components/LoadingScreen/Loading';
@@ -18,14 +20,8 @@ import saveImage from '../../assets/save.svg';
 import transcriptIcon from '../../assets/transcript.svg';
 import CourseCard from '../../components/CourseCard/CourseCard';
 import NotFoundPage from '../NotFoundPage/NotFoundPage';
-import { CourseID } from '../../types/CourseType';
 
 const StudentProfilePage = (): JSX.Element => {
-  const [editing, setEditing] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<boolean>(false);
-  const [pageError, setPageError] = useState<boolean>(false);
-
   const blankStudent: Student = {
     firstName: '',
     middleName: '',
@@ -45,12 +41,17 @@ const StudentProfilePage = (): JSX.Element => {
     schoolName: '',
     courseInformation: [],
   };
+
+  const [editing, setEditing] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<boolean>(false);
+  const [pageError, setPageError] = useState<boolean>(false);
   const [student, setStudent] = useState<Student>(blankStudent);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [courses, setCourses] = useState<CourseID[]>([]);
   const authContext = useAuth();
   const studentID = useParams().id;
-  const navigate = useNavigate();
-  const [courses, setCourses] = useState<CourseID[]>([]);
+
   const colors = [
     'var(--color-green)',
     'var(--color-orange)',
@@ -63,6 +64,15 @@ const StudentProfilePage = (): JSX.Element => {
       DateTime.fromISO(course1.startDate).toMillis() -
       DateTime.fromISO(course2.startDate).toMillis()
     );
+  };
+
+  const formatDateToYYYYMMDD = (dateTime: DateTime) => {
+    const date = dateTime.toJSDate();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   };
 
   useEffect(() => {
@@ -101,7 +111,7 @@ const StudentProfilePage = (): JSX.Element => {
       let isInSession = true;
       if (
         DateTime.fromISO(course.startDate) > now ||
-        DateTime.fromISO(course.endDate) < now
+        DateTime.fromISO(course.endDate) < now.minus({ days: 1 })
       ) {
         isInSession = false;
       }
@@ -119,16 +129,12 @@ const StudentProfilePage = (): JSX.Element => {
       const now = DateTime.now();
       if (
         DateTime.fromISO(course.startDate) > now ||
-        DateTime.fromISO(course.endDate) < now
+        DateTime.fromISO(course.endDate) < now.minus({ days: 1 })
       ) {
         color = 'gray';
       }
       return (
-        <Link
-          to={`/courses/class/${course.id}`}
-          key={i}
-          className={styles.card}
-        >
+        <Link to={`/courses/${course.id}`} key={i} className={styles.card}>
           <CourseCard
             teacher={course.teachers}
             course={course.name}
@@ -159,20 +165,17 @@ const StudentProfilePage = (): JSX.Element => {
       .min(1000000000, '*Enter a valid phone number')
       .max(10000000000, '*Enter a valid phone number')
       .required('*Required'),
-    guardianFirstName: Yup.string().required('*Required'),
-    guardianLastName: Yup.string().required('*Required'),
-    guardianEmail: Yup.string()
-      .email('*Enter a valid email')
-      .required('*Required'),
+    guardianFirstName: Yup.string(),
+    guardianLastName: Yup.string(),
+    guardianEmail: Yup.string().email('*Enter a valid email'),
     guardianPhone: Yup.number()
       .transform((value) => (isNaN(value) ? undefined : value))
       .nullable()
       .min(1000000000, '*Enter a valid phone number')
-      .max(10000000000, '*Enter a valid phone number')
-      .required('*Required'),
-    birthDate: Yup.string(),
-    gradeLevel: Yup.string().required('*Required'),
-    schoolName: Yup.string().required('*Required'),
+      .max(10000000000, '*Enter a valid phone number'),
+    birthDate: Yup.date().required('*Required'),
+    gradeLevel: Yup.string(),
+    schoolName: Yup.string(),
   });
 
   if (pageError) {
@@ -234,7 +237,11 @@ const StudentProfilePage = (): JSX.Element => {
                             const path = error.inner[i].path;
 
                             if (path !== undefined) {
-                              newErrors[path] = error.inner[i].message;
+                              newErrors[path] = error.inner[i].message.includes(
+                                'must be a `date` type',
+                              )
+                                ? '*Required'
+                                : error.inner[i].message;
                             }
                           }
                           setFieldErrors(newErrors);
@@ -372,6 +379,50 @@ const StudentProfilePage = (): JSX.Element => {
                   </div>
                 ) : (
                   student?.phone
+                )}
+              </a>
+            </div>
+
+            <div className={styles.box} id="Birthdate">
+              <a className={styles.boxTitle}>Birthdate</a>
+              <a className={styles.boxData}>
+                {editing ? (
+                  <div className={styles.group}>
+                    <DatePicker
+                      label=""
+                      defaultValue={
+                        student.birthDate
+                          ? DateTime.fromISO(student.birthDate)
+                          : null
+                      }
+                      onChange={(newValue: DateTime | null) =>
+                        setStudent({
+                          ...student,
+                          birthDate: newValue
+                            ? formatDateToYYYYMMDD(newValue)
+                            : '',
+                        })
+                      }
+                      slotProps={{ textField: { size: 'small' } }}
+                      sx={{
+                        '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline':
+                          {
+                            border: '1px solid black',
+                          }, // at page load
+                        '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                          { border: '2px solid black' }, // at focused state
+                      }}
+                    />
+                    {'birthDate' in fieldErrors ? (
+                      <div className={styles.errorMessage}>
+                        {fieldErrors.birthDate}
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                ) : (
+                  DateTime.fromISO(student?.birthDate).toFormat('LLLL dd, yyyy')
                 )}
               </a>
             </div>
@@ -567,7 +618,7 @@ const StudentProfilePage = (): JSX.Element => {
                           });
                         }}
                         placeholder="First"
-                        value={student.guardianFirstName}
+                        value={student.guardianFirstName ?? ''}
                       ></input>
                       {'guardianFirstName' in fieldErrors ? (
                         <div className={styles.errorMessage}>
@@ -587,7 +638,7 @@ const StudentProfilePage = (): JSX.Element => {
                           });
                         }}
                         placeholder="Last"
-                        value={student.guardianLastName}
+                        value={student.guardianLastName ?? ''}
                       ></input>
                       {'guardianLastName' in fieldErrors ? (
                         <div className={styles.errorMessage}>
@@ -599,7 +650,9 @@ const StudentProfilePage = (): JSX.Element => {
                     </div>
                   </div>
                 ) : (
-                  `${student?.guardianFirstName} ${student?.guardianLastName}`
+                  `${student?.guardianFirstName ?? ''} ${
+                    student?.guardianLastName ?? ''
+                  }`
                 )}
               </a>
             </div>
@@ -617,7 +670,7 @@ const StudentProfilePage = (): JSX.Element => {
                           guardianEmail: event.target.value,
                         });
                       }}
-                      value={student.guardianEmail}
+                      value={student.guardianEmail ?? ''}
                     ></input>
                     {'guardianEmail' in fieldErrors ? (
                       <div className={styles.errorMessage}>
@@ -628,7 +681,7 @@ const StudentProfilePage = (): JSX.Element => {
                     )}
                   </div>
                 ) : (
-                  student?.guardianEmail
+                  student?.guardianEmail ?? ''
                 )}
               </a>
             </div>
@@ -646,11 +699,7 @@ const StudentProfilePage = (): JSX.Element => {
                           guardianPhone: parseInt(event.target.value),
                         });
                       }}
-                      value={
-                        isNaN(student.guardianPhone)
-                          ? ''
-                          : student.guardianPhone
-                      }
+                      value={student.guardianPhone ?? ''}
                     ></input>
                     {'guardianPhone' in fieldErrors ? (
                       <div className={styles.errorMessage}>
@@ -661,7 +710,7 @@ const StudentProfilePage = (): JSX.Element => {
                     )}
                   </div>
                 ) : (
-                  student?.guardianPhone
+                  student?.guardianPhone ?? ''
                 )}
               </a>
             </div>

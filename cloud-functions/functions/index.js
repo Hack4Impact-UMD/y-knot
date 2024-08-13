@@ -1,16 +1,23 @@
 const cors = require("cors")({ origin: true });
 const crypto = require("crypto");
 const functions = require("firebase-functions");
-const { onCall } = require("firebase-functions/v2/https");
+const { onCall, onRequest } = require("firebase-functions/v2/https");
 const admin = require("firebase-admin");
 const Busboy = require("busboy");
 const { google } = require("googleapis");
 const dotenv = require("dotenv");
 const nodemailer = require("nodemailer");
+const stringSimilarity = require("string-similarity");
+const { WriteBatch } = require("firebase-admin/firestore");
+const { getStorage, getDownloadURL } = require("firebase-admin/storage");
+const axios = require("axios");
 const OAuth2 = google.auth.OAuth2;
 admin.initializeApp();
 const db = admin.firestore();
 dotenv.config();
+const { onSchedule } = require("firebase-functions/v2/scheduler");
+const fs = require("fs");
+const pdfLib = require("pdf-lib");
 
 const oauth2Client = new OAuth2(
   process.env.OAUTH_CLIENT_ID, // ClientID
@@ -27,7 +34,7 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     type: "OAuth2",
-    user: "info@yknotinc.org",
+    user: "yknotincmentors@gmail.com",
     clientId: process.env.OAUTH_CLIENT_ID,
     clientSecret: process.env.OAUTH_CLIENT_SECRET,
     refreshToken: process.env.OAUTH_REFRESH,
@@ -83,7 +90,8 @@ exports.createUser = onCall(
                 }
                 await db
                   .collection("Users")
-                  .add(collectionObject)
+                  .doc(userRecord.uid)
+                  .set(collectionObject)
                   .then(async () => {
                     const msg = {
                       from: '"Y-KNOT" <info@yknotinc.org>', // sender address
@@ -98,7 +106,7 @@ exports.createUser = onCall(
                               Hello,<br>
                               <br>
                               Your account has been created. Welcome to the Y-KNOT Course Management Portal, as an teacher you will be able to track and manage Y-KNOT classes. 
-                              You can find your credentials listed below: <br>
+                              Here is a link to the portal: https://yknot-42027.web.app/. You can find your credentials listed below: <br>
                               <br>
                               <span style="font-weight: 600; text-decoration: underline">Course Management Portal Information</span><br>
                               <br>
@@ -109,7 +117,7 @@ exports.createUser = onCall(
                               Please look out for a reset password email which will allow you to reset your password for security purposes.
                               <br>
                               <br>
-                              Welcome to the Y-KNOT Course Management Portal!
+                              Welcome to the Y-KNOT Course Management Portal! 
                           <div>
                       </div>
                           
@@ -178,70 +186,641 @@ exports.createUser = onCall(
   }
 );
 
-exports.newSubmission = functions.https.onRequest((req, res) => {
-  if (req.method != "POST") {
-    return res.status(405).end();
-  }
+// Sends a certificate
+const sendCertificate = async (email, file) => {
+  const msg = {
+    from: '"Y-KNOT" <info@yknotinc.org>', // sender address
+    to: email, // list of receivers
+    subject: "YKnot Course Completed!", // Subject line
 
-  const busboy = Busboy({ headers: req.headers });
-
-  const fields = [];
-  try {
-    busboy.on("field", (field, val) => {
-      fields[field] = val;
-    });
-  } catch (error) {
+    html: `
+      <div>
+          <div style="max-width: 600px; margin: auto">
+              <br><br><br>
+              <p style="font-size: 16px">
+              Hello,<br>
+              <br>
+              Congrats on completing your course! Attached is your certificate of completion.
+              <br>
+              
+          <div>
+      </div>
+          
+      `, // html body
+    attachments: [
+      {
+        filename: "Certificate.pdf",
+        contentType: "application/pdf",
+        content: file,
+      },
+    ],
+  };
+  await transporter.sendMail(msg).catch((error) => {
+    console.log(
+      "Error occured with new submission. Email also could not be sent."
+    );
     console.log(error);
-  }
-  functions.logger.log("going into finish");
-  busboy.on("finish", () => {
-    functions.logger.log("starting finsih");
-    const data = JSON.parse(fields["rawRequest"]);
-    functions.logger.log(data);
-    const submissionId = fields["submissionID"];
-    functions.logger.log(submissionId);
-    const formId = fields["formID"];
-    functions.logger.log(formId);
-    // const firstName = data["q3_nameOf3"]["first"];
-    // const lastName = data["q3_nameOf3"]["last"];
-    // const email = data["q7_email"];
-    // const phoneNumber = data["q6_phoneNumber"]["full"];
-    // const agePreference = data["q9_name9"];
-    // const interestsAndHobbies = data["q40_name40"];
-    // const bestDescribes = data["q41_name41"];
-    // const canHaveManyMentees = data["q39_canYou"];
-
-    // const user = {
-    //   submission_id: submissionId,
-    //   first_name: firstName,
-    //   last_name: lastName,
-    //   email: email,
-    //   phone_number: phoneNumber,
-    //   stage: "NEW",
-    //   age_preference: agePreference,
-    //   interests_hobbies: interestsAndHobbies,
-    //   best_describes: bestDescribes,
-    //   can_have_multiple_mentees: canHaveManyMentees,
-    //   createdAt: new Date().getTime(),
-    // };
-
-    // const db = admin.firestore();
-
-    // db.collection("applicants")
-    //   .doc(submissionId)
-    //   .set(user)
-    //   .then(() => {
-    //     console.log("Success");
-    //     return res.status(200).end();
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     return res.status(400).end();
-    //   });
   });
+};
 
-  busboy.end(req.rawBody);
-});
+exports.sendCertificateEmail = onCall(
+  { region: "us-east4", cors: true },
+  async ({ auth, data }) => {
+    return new Promise(async (resolve, reject) => {
+      const authorization = admin.auth();
+      if (
+        data.email != null &&
+        data.studentName != null &&
+        data.courseName != null &&
+        auth &&
+        auth.token &&
+        (auth.token.role.toLowerCase() == "admin" ||
+          auth.token.role.toLowerCase() == "teacher")
+      ) {
+        const pdf = await createAndModifyPdf(data.studentName, data.courseName);
+        await sendCertificate(data.email, pdf)
+          .then(() => resolve())
+          .catch(() => reject());
+      } else {
+        reject({
+          reason: "Permissions",
+          text: "You do not have the correct permissions to send an email. If you think you do, please make sure the new email is not already in use.",
+        });
+        throw new functions.https.HttpsError(
+          "permission-denied",
+          "You do not have the correct permissions to send an email."
+        );
+      }
+    });
+  }
+);
+
+const sendEmailToStudent = async (email, courseName, text, attach) => {
+  const msg = {
+    from: '"Y-KNOT" <info@yknotinc.org>', // sender address
+    to: email, // list of receivers
+    subject: `YKnot ${courseName}`, // Subject line
+
+    html: `
+      <div>
+          <div style="max-width: 600px; margin: auto">
+              <br><br><br>
+              <p style="font-size: 16px">
+              Hello,<br>
+              <br>
+              ${text}
+              <br>
+              
+          <div>
+      </div>
+          
+      `, // html body
+    attachments: attach,
+  };
+  await transporter.sendMail(msg).catch((error) => {
+    console.log(
+      "Error occured with new submission. Email also could not be sent."
+    );
+    console.log(error);
+  });
+};
+exports.sendEmail = onCall(
+  { region: "us-east4", cors: true },
+  async ({ auth, data }) => {
+    return new Promise(async (resolve, reject) => {
+      const authorization = admin.auth();
+      if (
+        data.email != null &&
+        data.courseName != null &&
+        (data.text != null || data.attachments != null) &&
+        auth &&
+        auth.token &&
+        (auth.token.role.toLowerCase() == "admin" ||
+          auth.token.role.toLowerCase() == "teacher")
+      ) {
+        const attach = [];
+        if (data.attachments) {
+          data.attachments.map(async (attachment) => {
+            attach.push({
+              filename: attachment.name,
+              content: Buffer.from(attachment.content, "base64"),
+            });
+          });
+        }
+        sendEmailToStudent(data.email, data.courseName, data.text, attach)
+          .then(() => {
+            resolve();
+          })
+          .catch((error) => {
+            reject();
+          });
+      } else {
+        reject({
+          reason: "Permissions",
+          text: "You do not have the correct permissions to send an email. If you think you do, please make sure the new email is not already in use.",
+        });
+        throw new functions.https.HttpsError(
+          "permission-denied",
+          "You do not have the correct permissions to send an email."
+        );
+      }
+    });
+  }
+);
+
+// Sends an email if the jotform submission handler catches an error
+const sendNewSubmissionErrorEmail = async (formId, submissionId) => {
+  const msg = {
+    from: '"Y-KNOT" <info@yknotinc.org>', // sender address
+    to: "info@yknotinc.org", // list of receivers
+    subject: "YKnot Course Management Portal Submission Error", // Subject line
+
+    html: `
+      <div>
+          <div style="max-width: 600px; margin: auto">
+              <br><br><br>
+              <p style="font-size: 16px">
+              Hello,<br>
+              <br>
+              A student who submitted the following form could not be added to a class
+              in the course management portal. There are many possible causes for this error such
+              as a class not existing, the student signing up after the class' start date, and more.
+              <br>
+              The form and submission ids of the submission are included below.
+              
+              
+              Form Id: ${formId}<br>
+              <br>
+              Submission Id: ${submissionId}<br>
+              <br>
+              Please try to add the student to the class manually.
+              <br>
+              <br>
+              
+          <div>
+      </div>
+          
+      `, // html body
+  };
+  await transporter.sendMail(msg).catch((error) => {
+    console.log(
+      "Error occured with new submission. Email also could not be sent."
+    );
+    console.log(error);
+  });
+};
+
+exports.newSubmission = onRequest(
+  { region: "us-east4", cors: true },
+  async (req, res) => {
+    let submissionId = undefined;
+    let formId = undefined;
+    try {
+      if (req.method != "POST") {
+        throw new Error();
+      }
+      const busboy = Busboy({ headers: req.headers });
+      const fields = [];
+      busboy.on("field", (field, val) => {
+        fields[field] = val;
+      });
+
+      busboy.on("finish", async () => {
+        // Once all the fields have been read, we can start processing
+        const data = JSON.parse(fields["rawRequest"]);
+        submissionId = fields["submissionID"];
+        formId = fields["formID"];
+
+        // First find the class with the corresponding form id
+        const selectedClass = await db
+          .collection("Courses")
+          .where("formId", "==", formId)
+          .get()
+          .then(async (querySnapshot) => {
+            if (querySnapshot.docs.length == 0) {
+              await sendNewSubmissionErrorEmail(formId, submissionId).finally(
+                () => {
+                  throw new Error();
+                }
+              );
+            } else {
+              // We make sure that the class is an upcoming one
+              const matchingClass = querySnapshot.docs.find((doc) => {
+                const sampleClass = doc.data();
+
+                // This finds the current date in the EST timezone
+                const currentAmericanDate = new Date().toLocaleDateString(
+                  "en-US",
+                  {
+                    timeZone: "America/New_York",
+                  }
+                );
+                const currentFormattedDate = new Date(
+                  currentAmericanDate
+                ).toLocaleDateString("fr-CA");
+                if (
+                  sampleClass.startDate.toString() >=
+                  currentFormattedDate.toString()
+                ) {
+                  return sampleClass;
+                }
+              });
+              if (matchingClass) {
+                return matchingClass;
+              }
+              // No class found, throw an error
+              await sendNewSubmissionErrorEmail(formId, submissionId).finally(
+                () => {
+                  throw new Error();
+                }
+              );
+            }
+          });
+
+        const studentBirth =
+          data["q15_dateOf"]["year"] +
+          "-" +
+          data["q15_dateOf"]["month"] +
+          "-" +
+          data["q15_dateOf"]["day"];
+
+        let possibleStudentMatches = [];
+
+        // Next we check if the student exists in the database
+        const matchingStudent = await db
+          .collection("Students")
+          .where("birthDate", "==", studentBirth)
+          .get()
+          .then(async (querySnapshot) => {
+            if (querySnapshot.docs.length == 0) {
+              return undefined;
+            } else {
+              const student = querySnapshot.docs.find((doc) => {
+                const studentData = doc.data();
+                const formName =
+                  data["q3_name"]["first"].toLowerCase() +
+                  data["q3_name"]["middle"].toLowerCase() +
+                  data["q3_name"]["last"].toLowerCase();
+                const databaseName =
+                  studentData.firstName.toLowerCase() +
+                  (studentData.middleName || "").toLowerCase() +
+                  studentData.lastName.toLowerCase();
+
+                // We check for similarity in order to suggest whether two students might be the same
+                const similarity = stringSimilarity.compareTwoStrings(
+                  formName,
+                  databaseName
+                );
+                if (similarity == 1) {
+                  return doc;
+                } else if (similarity > 0.35) {
+                  possibleStudentMatches.push(doc.id);
+                }
+              });
+              if (student) {
+                /* If the student already exists, we don't need to indicate possible matches
+                   as that was already done when the student was first created
+                */
+                possibleStudentMatches = [];
+              }
+              return student;
+            }
+          });
+        const student = {
+          firstName: data["q3_name"]["first"],
+          middleName: data["q3_name"]["middle"],
+          lastName: data["q3_name"]["last"],
+          addrFirstLine: data["q12_address"]["addr_line1"],
+          addrSecondLine: data["q12_address"]["addr_line2"],
+          city: data["q12_address"]["city"],
+          state: data["q12_address"]["state"],
+          zipCode: data["q12_address"]["postal"],
+          email: data["q4_email"],
+          phone: parseInt(
+            data["q5_phoneNumber"]["full"].replace(/[\(\)-\s]/g, "")
+          ),
+          guardianFirstName:
+            data["q14_areYou"] != "Minor"
+              ? ""
+              : data["q9_guardianName"]["first"],
+          guardianLastName:
+            data["q14_areYou"] != "Minor"
+              ? ""
+              : data["q9_guardianName"]["last"],
+          guardianEmail:
+            data["q14_areYou"] != "Minor" ? "" : data["q10_guardianEmail"],
+          guardianPhone:
+            data["q14_areYou"] != "Minor"
+              ? ""
+              : parseInt(
+                  data["q11_guardianPhone"]["full"].replace(/[\(\)-\s]/g, "")
+                ),
+          birthDate:
+            data["q15_dateOf"]["year"] +
+            "-" +
+            data["q15_dateOf"]["month"] +
+            "-" +
+            data["q15_dateOf"]["day"], // "YYYY-MM-DD"
+          gradeLevel: data["q14_areYou"] != "Minor" ? "" : data["q8_grade"],
+          schoolName: data["q14_areYou"] != "Minor" ? "" : data["q6_nameOf"],
+          courseInformation: [
+            {
+              id: selectedClass.id,
+              attendance: [],
+              homeworks: [],
+              progress: "NA",
+            },
+          ],
+        };
+        // Update the current student's course information if there is a match
+        if (matchingStudent) {
+          student.courseInformation = matchingStudent.data().courseInformation;
+
+          const studentClass = matchingStudent
+            .data()
+            .courseInformation.find((course) => course.id == selectedClass.id);
+
+          if (!studentClass) {
+            const attendances = [];
+            const homeworks = [];
+            selectedClass.data().attendance.forEach((day) => {
+              attendances.push({ date: day.date, attended: false });
+            });
+            selectedClass.data().homeworks.forEach((homework) => {
+              homeworks.push({ name: homework.name, completed: false });
+            });
+            student.courseInformation.push({
+              id: selectedClass.id,
+              attendance: attendances,
+              homeworks: homeworks,
+              progress: "NA",
+            });
+          }
+        }
+
+        const batch = new WriteBatch(db);
+        // Creates a new auto-generated id
+        const studentRef = matchingStudent
+          ? matchingStudent.ref
+          : db.collection("Students").doc();
+        batch.set(studentRef, student);
+
+        const studentId = matchingStudent
+          ? matchingStudent.id
+          : studentRef._path.segments[1];
+
+        // Update the class's students
+        const classStudents = selectedClass.data().students || [];
+        if (!classStudents.includes(studentId)) {
+          classStudents.push(studentId);
+        }
+
+        batch.update(selectedClass.ref, { students: classStudents });
+        if (possibleStudentMatches.length > 0) {
+          const docRef = db.collection("StudentMatches").doc();
+          batch.set(docRef, {
+            studentOne: studentId,
+            matches: possibleStudentMatches,
+          });
+        }
+
+        await batch
+          .commit()
+          .then(async () => {
+            const fileFormatted = [];
+            for (const file of selectedClass.data().introEmail.files) {
+              const buffer = await axios({
+                url: file.downloadURL,
+                method: "GET",
+                responseType: "arraybuffer",
+              }).then((response) => {
+                return Buffer.from(response.data, "binary");
+              });
+
+              fileFormatted.push({
+                filename: file.name,
+                content: buffer,
+              });
+            }
+
+            await sendEmailToStudent(
+              student.email,
+              selectedClass.data().name,
+              selectedClass.data().introEmail.content,
+              fileFormatted
+            );
+          })
+          .catch(async () => {
+            await sendNewSubmissionErrorEmail(formId, submissionId).finally(
+              () => {
+                throw new Error();
+              }
+            );
+          });
+
+        res.end();
+      });
+      busboy.end(req.rawBody);
+    } catch (error) {
+      res.end();
+    }
+  }
+);
+
+exports.newLeadershipSubmission = onRequest(
+  { region: "us-east4", cors: true },
+  async (req, res) => {
+    let submissionId = undefined;
+    let formId = undefined;
+    try {
+      if (req.method != "POST") {
+        throw new Error();
+      }
+      const busboy = Busboy({ headers: req.headers });
+      const fields = [];
+      busboy.on("field", (field, val) => {
+        fields[field] = val;
+      });
+
+      busboy.on("finish", async () => {
+        // Once all the fields have been read, we can start processing
+        const data = JSON.parse(fields["rawRequest"]);
+        submissionId = fields["submissionID"];
+        formId = fields["formID"];
+        const transcriptFiles = [];
+        for (var i = 0; i < (data["transcriptunofficial"]?.length || 0); i++) {
+          // Jotform redirects the given file url to a different one, so we manually create the url
+          const trans = data["transcriptunofficial"][i];
+          const fileNameParsed = trans.split("/").at(-1).split(".");
+          let fileExtension = "";
+          if (fileNameParsed.length > 1) {
+            fileExtension = "." + fileNameParsed.at(-1);
+          }
+          const buffer = await axios({
+            url: trans,
+            method: "GET",
+            responseType: "arraybuffer",
+          })
+            .then((response) => {
+              return Buffer.from(response.data, "binary");
+            })
+            .catch(async (error) => {
+              await sendNewSubmissionErrorEmail(formId, submissionId).finally(
+                () => {
+                  throw new Error();
+                }
+              );
+            });
+          console.log(buffer);
+          // Upload file to firebase storage
+          const bucket = admin.storage().bucket();
+          const fileName = crypto.randomUUID();
+          await bucket.file(fileName + fileExtension).save(buffer);
+          transcriptFiles.push({
+            ref: fileName + fileExtension,
+            name: "transcript" + i + fileExtension,
+            downloadURL: "",
+          });
+        }
+
+        const recFiles = [];
+        for (var i = 0; i < (data["lettersOf"]?.length || 0); i++) {
+          // Jotform redirects the given file url to a different one, so we manually create the url
+          const letters = data["lettersOf"][i];
+          const fileNameParsed = letters.split("/").at(-1).split(".");
+          let fileExtension = "";
+          if (fileNameParsed.length > 1) {
+            fileExtension = "." + fileNameParsed.at(-1);
+          }
+          const file = await axios
+            .get(letters, { responseType: "arraybuffer" })
+
+            .catch(async (error) => {
+              await sendNewSubmissionErrorEmail(formId, submissionId).finally(
+                () => {
+                  throw new Error();
+                }
+              );
+            });
+
+          // Upload file to firebase storage
+          const bucket = admin.storage().bucket();
+          const fileName = crypto.randomUUID();
+          await bucket
+            .file(fileName + fileExtension)
+            .save(Buffer.from(file.data, "binary"));
+          recFiles.push({
+            ref: fileName + fileExtension,
+            name: "Recommendation" + i + fileExtension,
+            downloadURL: "",
+          });
+        }
+
+        // First find the class with the corresponding form id
+        const selectedClass = await db
+          .collection("Courses")
+          .where("formId", "==", formId)
+          .get()
+          .then(async (querySnapshot) => {
+            if (querySnapshot.docs.length == 0) {
+              await sendNewSubmissionErrorEmail(formId, submissionId).finally(
+                () => {
+                  throw new Error();
+                }
+              );
+            } else {
+              // We make sure that the class is an upcoming one
+              const matchingClass = querySnapshot.docs.find((doc) => {
+                const sampleClass = doc.data();
+
+                // This finds the current date in the EST timezone
+                const currentAmericanDate = new Date().toLocaleDateString(
+                  "en-US",
+                  {
+                    timeZone: "America/New_York",
+                  }
+                );
+                const currentFormattedDate = new Date(
+                  currentAmericanDate
+                ).toLocaleDateString("fr-CA");
+                if (
+                  sampleClass.startDate.toString() >=
+                    currentFormattedDate.toString() &&
+                  sampleClass.leadershipApp
+                ) {
+                  return sampleClass;
+                }
+              });
+              if (matchingClass) {
+                return matchingClass;
+              }
+              // No class found, throw an error
+              await sendNewSubmissionErrorEmail(formId, submissionId).finally(
+                () => {
+                  throw new Error();
+                }
+              );
+            }
+          });
+        const leadershipObject = {
+          firstName: data["q3_name"]["first"],
+          middleName: data["q3_name"]["middle"],
+          lastName: data["q3_name"]["last"],
+          birthDate:
+            data["q19_dateOf"]["year"] +
+            "-" +
+            data["q19_dateOf"]["month"] +
+            "-" +
+            data["q19_dateOf"]["day"], // "YYYY-MM-DD"
+          addrFirstLine: data["q4_address"]["addr_line1"],
+          addrSecondLine: data["q4_address"]["addr_line2"],
+          city: data["q4_address"]["city"],
+          state: data["q4_address"]["state"],
+          zipCode: data["q4_address"]["postal"],
+          email: data["q5_email"],
+          phone: parseInt(
+            data["q6_phoneNumber"]["full"].replace(/[\(\)-\s]/g, "")
+          ),
+          gradeLevel: data["q10_grade"],
+          schoolName: data["q8_school"],
+          gpa: data["q9_gpa"],
+          gender: data["q11_gender"],
+          involvement: data["q12_brieflyList"],
+          guardianFirstName: data["q14_parentsName"]["first"],
+          guardianLastName: data["q14_parentsName"]["last"],
+          guardianEmail: data["q15_email15"],
+          guardianPhone: parseInt(
+            data["q16_phoneNumber16"]["full"].replace(/[\(\)-\s]/g, "")
+          ),
+          whyJoin: data["q18_whyWould"],
+          transcriptFiles: transcriptFiles,
+          recFiles: recFiles,
+          classId: selectedClass.id,
+          status: "NA",
+          statusNote: "",
+          courseInformation: [],
+        };
+        await db
+          .collection("LeadershipApplications")
+          .add(leadershipObject)
+          .then(async () => {})
+          .catch(async (error) => {
+            console.log(error);
+            // No class found, throw an error
+            await sendNewSubmissionErrorEmail(formId, submissionId).finally(
+              () => {
+                throw new Error();
+              }
+            );
+          });
+        res.end();
+      });
+      busboy.end(req.rawBody);
+    } catch (error) {
+      res.end();
+    }
+  }
+);
 /**
  * Deletes the user
  * Argument: firebase_id - the user's firebase_id
@@ -484,6 +1063,177 @@ exports.setUserRole = onCall(
         "permission-denied",
         "Only an admin user can change roles. If you are an admin, make sure the arguments passed into the function are correct."
       );
+    }
+  }
+);
+
+async function createAndModifyPdf(studentName, courseName) {
+  // Load an existing PDF
+  const existingPdfBytes = fs.readFileSync("pdfTemplate.pdf"); // Your existing PDF template
+  const pdfDoc = await pdfLib.PDFDocument.load(existingPdfBytes);
+
+  // Embed the font
+  const helveticaFont = await pdfDoc.embedFont(pdfLib.StandardFonts.Helvetica);
+
+  // Get the first page of the document
+  const pages = pdfDoc.getPages();
+  const firstPage = pages[0];
+  const { width, height } = firstPage.getSize();
+
+  // Get the width of the text
+  const nameWidth = helveticaFont.widthOfTextAtSize(studentName, 30);
+  const courseWidth = helveticaFont.widthOfTextAtSize(courseName, 30);
+
+  // Draw the text on the PDF
+  firstPage.drawText(studentName, {
+    x: width / 2 - nameWidth / 2,
+    y: height / 2 + 40,
+    size: 30,
+    font: helveticaFont,
+    color: pdfLib.rgb(0, 0, 0),
+  });
+  // Draw the text on the PDF
+  firstPage.drawText(courseName, {
+    x: width / 2 - courseWidth / 2,
+    y: height / 2 - 55,
+    size: 30,
+    font: helveticaFont,
+    color: pdfLib.rgb(0, 0, 0),
+  });
+
+  firstPage.drawLine({
+    start: { x: width / 2 - nameWidth / 2, y: height / 2 + 37 },
+    end: { x: width / 2 + nameWidth / 2, y: height / 2 + 37 },
+    thickness: 3,
+    color: pdfLib.rgb(0, 0, 0),
+  });
+  // Save the modified PDF
+  const pdfBytes = await pdfDoc.save();
+  return pdfBytes;
+}
+
+exports.updateCourses = onSchedule(
+  {
+    schedule: "every day 05:00",
+    region: "us-east4",
+    timeoutSeconds: 1200, // Increase timeout to 9 minutes
+    memory: "2GB", // Optionally increase the memory allocation if needed
+    timeZone: "America/New_York",
+  },
+  async (event) => {
+    try {
+      const recentlyStarted = [];
+      const recentlyEnded = [];
+      const currentDate = new Date();
+      await db
+        .collection("Courses")
+        .get()
+        .then((snapshot) => {
+          snapshot.docs.map((doc) => {
+            const course = doc.data();
+            const endDate = new Date(course.endDate + "T00:00:00.000-04:00");
+            const endTimeDiff = currentDate.getTime() - endDate.getTime();
+            //  Find the courses that recently ended
+            if (
+              endTimeDiff < 1000 * 3600 * 48 &&
+              endTimeDiff > 1000 * 3600 * 24
+            ) {
+              recentlyEnded.push({ ...course, id: doc.id });
+              return;
+            }
+
+            const startDate = new Date(
+              course.startDate + "T00:00:00.000-04:00"
+            );
+
+            // Find the courses that recently started
+            const startTimeDiff = currentDate.getTime() - startDate.getTime();
+            if (startTimeDiff < 1000 * 3600 * 72 && startTimeDiff > 0) {
+              recentlyStarted.push({ ...course, id: doc.id });
+            }
+          });
+        });
+      const studentMap = {};
+      await db
+        .collection("Students")
+        .get()
+        .then((snapshot) => {
+          snapshot.docs.map((doc) => {
+            const student = doc.data();
+            studentMap[doc.id] = student;
+          });
+        });
+      const changedIDs = [];
+      const certificates = [];
+      recentlyStarted.map((course) => {
+        course.students.map((student) => {
+          const studentData = studentMap[student];
+          for (const specCourse of studentData.courseInformation) {
+            if (
+              specCourse.id == course.id &&
+              specCourse.progress != "INPROGRESS"
+            ) {
+              specCourse.progress = "INPROGRESS";
+              if (!changedIDs.includes(student)) {
+                changedIDs.push(student);
+              }
+
+              return;
+            }
+          }
+        });
+      });
+      recentlyEnded.map((course) => {
+        course.students.map((student) => {
+          const studentData = studentMap[student];
+          for (const specCourse of studentData.courseInformation) {
+            if (
+              specCourse.id == course.id &&
+              !(specCourse.progress == "PASS" || specCourse.progress == "FAIL")
+            ) {
+              if (!changedIDs.includes(student)) {
+                changedIDs.push(student);
+              }
+              let attended = 0;
+              specCourse.attendance.map((day) => {
+                attended += day.attended ? 1 : 0;
+              });
+              attended = attended / specCourse.attendance.length;
+              if (attended < 0.85) {
+                specCourse.progress = "FAIL";
+              } else {
+                specCourse.progress = "PASS";
+                certificates.push({
+                  email: studentData.email,
+                  studentName:
+                    studentData.firstName +
+                    " " +
+                    (studentData?.middleName || "") +
+                    " " +
+                    studentData.lastName,
+                  courseName: course.name,
+                });
+              }
+            }
+          }
+        });
+      });
+
+      const promises = [];
+      for (const student of changedIDs) {
+        const studentData = studentMap[student];
+        promises.push(
+          db.collection("Students").doc(student).update(studentData)
+        );
+      }
+      certificates.map(async (cert) => {
+        const pdf = await createAndModifyPdf(cert.studentName, cert.courseName);
+        promises.push(sendCertificate(cert.email, pdf));
+      });
+
+      await Promise.all(promises);
+    } catch (error) {
+      functions.logger.log("Error while updating course data: ", error);
     }
   }
 );

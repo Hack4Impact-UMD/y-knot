@@ -1,51 +1,47 @@
-import React, { useState } from 'react';
-import styles from './AddAttendance.module.css';
-import Modal from '../../../../components/ModalWrapper/Modal';
-import x from '../../../../assets/x.svg';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
+import React, { useState } from 'react';
+import x from '../../../../assets/x.svg';
+import {
+  addCourseAttendance,
+  getStudentsFromList,
+} from '../../../../backend/FirestoreCalls';
+import Modal from '../../../../components/ModalWrapper/Modal';
 import { Course } from '../../../../types/CourseType';
 import { StudentID } from '../../../../types/StudentType';
-import {
-  addAttendance,
-  getStudentsFromList,
-  getCourse,
-} from '../../../../backend/FirestoreCalls';
+import styles from './AddAttendance.module.css';
 
 const AddAttendance = (props: {
   open: boolean;
   onClose: any;
+  setOpenAlert: React.Dispatch<React.SetStateAction<boolean>>;
   students: Array<StudentID>;
   setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
   course: Course;
   courseID: string;
-  setCourse: React.Dispatch<React.SetStateAction<Course>>;
+  setCourse: Function;
 }): React.ReactElement => {
-  const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(dayjs());
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
   const [note, setNote] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleAddAttendance = async () => {
     let date = selectedDate?.format('YYYY-MM-DD');
+    let studentIdList = props.students.map((student) => student.id);
     if (date !== undefined)
-      addAttendance(props.courseID, props.students, {
+      addCourseAttendance(props.courseID, studentIdList, {
         date: date,
         notes: note,
       })
-        .then(() => {
-          getCourse(props.courseID)
-            .then(async (courseData) => {
-              props.setCourse(courseData);
-              getStudentsFromList(courseData.students).then((data) => {
-                props.setStudents(data);
-              });
-              handleOnClose();
-            })
-            .catch(() => {
-              console.log('Failed to get Course Information in Class Page');
-            });
+        .then((courseData) => {
+          props.setCourse(courseData);
+          getStudentsFromList(courseData.students).then((data) => {
+            props.setStudents(data);
+          });
+          props.setOpenAlert(true);
+          handleOnClose();
         })
         .catch((e: Error) => {
           setErrorMessage(e.message + '**');
@@ -62,7 +58,7 @@ const AddAttendance = (props: {
     <Modal
       open={props.open}
       height={425}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+      onClose={() => {
         handleOnClose();
       }}
     >
@@ -88,6 +84,7 @@ const AddAttendance = (props: {
                 value={selectedDate}
                 onChange={(newDate) => setSelectedDate(newDate)}
                 slotProps={{ textField: { size: 'small' } }}
+                format="MMM DD, YYYY"
                 sx={{
                   backgroundColor: '#d9d9d9',
                   borderRadius: '10px',
@@ -111,7 +108,7 @@ const AddAttendance = (props: {
           />
           <button
             className={styles.button}
-            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+            onClick={() => {
               handleAddAttendance();
             }}
           >

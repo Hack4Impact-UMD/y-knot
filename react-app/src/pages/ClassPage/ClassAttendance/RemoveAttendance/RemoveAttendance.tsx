@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
+import { StudentID } from '../../../../types/StudentType';
+import { Course } from '../../../../types/CourseType';
+import {
+  getStudentsFromList,
+  removeCourseAttendance,
+} from '../../../../backend/FirestoreCalls';
+import { DateTime } from 'luxon';
 import styles from './RemoveAttendance.module.css';
 import Modal from '../../../../components/ModalWrapper/Modal';
 import Select from 'react-select';
 import x from '../../../../assets/x.svg';
-import { StudentID } from '../../../../types/StudentType';
-import { Course } from '../../../../types/CourseType';
-import {
-  removeAttendanceFromStudents,
-  removeCourseAttendance,
-} from '../../../../backend/FirestoreCalls';
 
 const RemoveAttendance = (props: {
   open: boolean;
   onClose: any;
+  setOpenAlert: React.Dispatch<React.SetStateAction<boolean>>;
   students: Array<StudentID>;
   setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
   course: Course;
@@ -22,26 +24,21 @@ const RemoveAttendance = (props: {
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [clicked, setClicked] = useState<boolean>(false);
+
   const handleRemoveAttendance = async () => {
+    let studentIdList = props.students.map((student) => student.id);
     if (selectedDate == '') {
       setErrorMessage('Please select an assignment**');
     } else {
-      removeCourseAttendance(props.course, props.courseID, selectedDate)
-        .then((newCourse) => {
-          removeAttendanceFromStudents(
-            props.courseID,
-            selectedDate,
-            props.students,
-          )
-            .then((newStudentList) => {
-              props.setCourse(newCourse);
-              props.setStudents(newStudentList);
-              handleOnClose();
-              setClicked(false);
-            })
-            .catch((e: Error) => {
-              setErrorMessage(e.message + '**');
-            });
+      removeCourseAttendance(props.courseID, studentIdList, selectedDate)
+        .then((courseData) => {
+          props.setCourse(courseData);
+          getStudentsFromList(courseData.students).then((data) => {
+            props.setStudents(data);
+          });
+          handleOnClose();
+          props.setOpenAlert(true);
+          setClicked(false);
         })
         .catch((e: Error) => {
           setErrorMessage(e.message + '**');
@@ -74,7 +71,7 @@ const RemoveAttendance = (props: {
     <Modal
       open={props.open}
       height={240}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+      onClose={() => {
         handleOnClose();
       }}
     >
@@ -99,7 +96,7 @@ const RemoveAttendance = (props: {
             onChange={(option) => {
               setErrorMessage('');
               setClicked(false);
-              setSelectedDate(option?.label.toString() ?? '');
+              setSelectedDate(option?.value.toString() ?? '');
             }}
             styles={{
               control: (baseStyles) => ({
@@ -116,7 +113,12 @@ const RemoveAttendance = (props: {
               }),
             }}
             options={props.course.attendance.map((attendance) => {
-              return { value: attendance.date, label: attendance.date };
+              return {
+                value: attendance.date,
+                label: DateTime.fromISO(attendance.date).toFormat(
+                  'LLL dd, yyyy',
+                ),
+              };
             })}
             theme={(theme) => ({
               ...theme,

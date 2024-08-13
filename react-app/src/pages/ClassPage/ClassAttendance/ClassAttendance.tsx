@@ -1,27 +1,34 @@
-import { useState } from 'react';
-import { ToolTip } from '../../../components/ToolTip/ToolTip';
+import { Alert, Snackbar } from '@mui/material';
+import { DateTime } from 'luxon';
+import { useEffect, useState } from 'react';
 import Select from 'react-select';
-import styles from './ClassAttendance.module.css';
 import noteIcon from '../../../assets/note.svg';
-import CheckboxWithLabel from '../CheckboxWithLabel/CheckboxWithLabel';
-import AddNote from './AddNote/AddNote';
-import RemoveAttendance from './RemoveAttendance/RemoveAttendance';
-import AddAttendance from './AddAttendance/AddAttendance';
+import { updateStudentAttendance } from '../../../backend/FirestoreCalls';
+import { ToolTip } from '../../../components/ToolTip/ToolTip';
+import type { Course } from '../../../types/CourseType';
 import type { StudentID } from '../../../types/StudentType';
-import type { Course, Attendance } from '../../../types/CourseType';
+import AddAttendance from './AddAttendance/AddAttendance';
+import AddNote from './AddNote/AddNote';
+import styles from './ClassAttendance.module.css';
+import RemoveAttendance from './RemoveAttendance/RemoveAttendance';
+
+const dateFormat = 'LLL dd, yyyy';
 
 const ClassAttendance = (props: {
   students: Array<StudentID>;
   setStudents: React.Dispatch<React.SetStateAction<Array<StudentID>>>;
   course: Course;
-  courseID: string | undefined;
+  courseID: string;
   setCourse: React.Dispatch<React.SetStateAction<Course>>;
 }): JSX.Element => {
   const [selectComponentValue, setSelectComponentValue] = useState<any>({
-    value: props.course.attendance.slice(-1)[0].date.toString() ?? '',
-    label: props.course.attendance.slice(-1)[0].date.toString() ?? 'Date',
+    value: props.course.attendance.slice(-1)[0]?.date.toString() ?? '',
+    label:
+      DateTime.fromISO(props.course.attendance.slice(-1)[0]?.date).toFormat(
+        dateFormat,
+      ) ?? 'Date',
   });
-  const [selectedAttDate, setSelectedDate] = useState<string>(
+  const [selectedDate, setSelectedDate] = useState<string>(
     props.course.attendance !== undefined && props.course.attendance.length > 0
       ? props.course.attendance.slice(-1)[0].date.toString()
       : '',
@@ -31,25 +38,50 @@ const ClassAttendance = (props: {
       ? props.course.attendance.slice(-1)[0].notes.toString()
       : '',
   );
-  const [selectAllChecked, setSelectAllChecked] = useState<boolean>(false);
-  const [openAddHwModal, setOpenAddHwModal] = useState<boolean>(false);
-  const [openRemoveHwModal, setOpenRemoveHwModal] = useState<boolean>(false);
+  const [openAddModal, setOpenAddModal] = useState<boolean>(false);
+  const [openRemoveModal, setOpenRemoveModal] = useState<boolean>(false);
   const [openAddNoteModal, setOpenAddNoteModal] = useState<boolean>(false);
+  const [openAlert, setOpenAlert] = useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = useState<string>('');
+  const [dropdownOptions, setDropdownOptions] = useState<any>();
+  const [checkedCheckboxes, setCheckedCheckboxes] = useState<string[]>([]);
 
   const handleSelectAllChange = () => {
-    setSelectAllChecked(true);
+    let studentIdList = props.students.map((student) => student.id);
+    setCheckedCheckboxes(studentIdList);
   };
 
   const handleAddModal = () => {
-    setOpenAddHwModal(!openAddHwModal);
+    setOpenAddModal(!openAddModal);
+    setAlertMessage('Attendance successfully added');
   };
 
   const handleRemoveModal = () => {
-    setOpenRemoveHwModal(!openRemoveHwModal);
+    setOpenRemoveModal(!openRemoveModal);
+    setAlertMessage('Attendance successfully removed');
   };
 
   const handleAddNoteModal = () => {
     setOpenAddNoteModal(!openAddNoteModal);
+    setAlertMessage('Attendance successfully updated');
+  };
+
+  const handleSave = () => {
+    let studentIdList = props.students.map((student) => student.id);
+    updateStudentAttendance(
+      props.courseID,
+      studentIdList,
+      checkedCheckboxes,
+      selectedDate,
+    )
+      .then((students) => {
+        props.setStudents(students);
+        setOpenAlert(true);
+        setAlertMessage('Attendance successfully saved');
+      })
+      .catch((error) => {
+        setAlertMessage('Failed to save attendance');
+      });
   };
 
   const parseAttendance = (date: string): void => {
@@ -62,6 +94,60 @@ const ClassAttendance = (props: {
       });
     }
   };
+
+  function handleCheckboxChange(studentID: string) {
+    // Add student to checkedCheckboxes if it's not already; Remove if it is
+    if (checkedCheckboxes.includes(studentID)) {
+      setCheckedCheckboxes(
+        checkedCheckboxes.filter((student) => {
+          return student !== studentID;
+        }),
+      );
+    } else {
+      setCheckedCheckboxes([...checkedCheckboxes, studentID]);
+    }
+  }
+
+  useEffect(() => {
+    let options = props.course.attendance.map((attendance) => {
+      return {
+        value: attendance.date,
+        label: DateTime.fromISO(attendance.date).toFormat(dateFormat),
+      };
+    });
+    setDropdownOptions(options || []);
+    setSelectComponentValue({
+      value: props.course.attendance.slice(-1)[0]?.date.toString() ?? '',
+      label:
+        DateTime.fromISO(props.course.attendance.slice(-1)[0]?.date).toFormat(
+          dateFormat,
+        ) ?? 'Date',
+    });
+    setSelectedDate(
+      props.course.attendance.slice(-1)[0]?.date.toString() ?? '',
+    );
+    setSelectedNote(
+      props.course.attendance.slice(-1)[0]?.notes.toString() ?? '',
+    );
+  }, [props.course]);
+
+  useEffect(() => {
+    let list: string[] = [];
+    props.students.forEach((student) => {
+      const studentCourseInfo = student.courseInformation.find(
+        (c) => c.id === props.courseID,
+      );
+      if (studentCourseInfo) {
+        const studentAttendance = studentCourseInfo.attendance.find(
+          (att) => att.date === selectedDate,
+        ); // Add student id to list if student attendance for date is true
+        if (studentAttendance && studentAttendance.attended) {
+          list.push(student.id);
+        }
+      }
+    });
+    setCheckedCheckboxes(list);
+  }, [selectedDate]);
 
   return (
     <div className={styles.mainContainer}>
@@ -76,7 +162,7 @@ const ClassAttendance = (props: {
           className={styles.dateSelection}
           onChange={(option) => {
             setSelectComponentValue(option);
-            parseAttendance(option?.label.toString() ?? '');
+            parseAttendance(option?.value.toString() ?? '');
           }}
           styles={{
             control: (baseStyles) => ({
@@ -92,9 +178,7 @@ const ClassAttendance = (props: {
               },
             }),
           }}
-          options={props.course.attendance.map((attendance) => {
-            return { value: attendance.date, label: attendance.date };
-          })}
+          options={dropdownOptions}
           theme={(theme) => ({
             ...theme,
             colors: {
@@ -106,8 +190,10 @@ const ClassAttendance = (props: {
           })}
         />
       </div>
-      {props.students.length === 0 ? (
+      {props.students?.length === 0 ? (
         <h4 className={styles.noStudent}>No Students Currently in Roster</h4>
+      ) : dropdownOptions?.length == 0 ? (
+        <h4 className={styles.noStudent}>No Attendances Created</h4>
       ) : (
         <div className={styles.inputs}>
           {props.students.map(function (student, i) {
@@ -118,18 +204,30 @@ const ClassAttendance = (props: {
             return (
               <div
                 className={`${styles.box} ${roundTop} ${roundBottom}`}
-                key={student.firstName}
+                key={student.id}
               >
-                <p
-                  className={styles.boxTitle}
-                >{`${student.firstName} ${student.lastName}`}</p>
-                <CheckboxWithLabel
-                  key={student.firstName}
-                  checkedText="Present"
-                  uncheckedText="Absent"
-                  isChecked={selectAllChecked}
-                  setIsChecked={setSelectAllChecked}
-                />
+                <p className={styles.boxTitle}>{`${student.firstName} ${
+                  student?.middleName ? student.middleName[0] + '.' : ''
+                } ${student.lastName}`}</p>
+                <div className={styles.icons}>
+                  <label className={styles.checkboxContainer}>
+                    <input
+                      type="checkbox"
+                      checked={checkedCheckboxes.some(
+                        (checkedCheckbox) => checkedCheckbox === student.id,
+                      )}
+                      onChange={() => handleCheckboxChange(student.id)}
+                    ></input>
+                    <span className={styles.checkmark}></span>
+                  </label>
+                  <label className={styles.statusLabel}>
+                    {checkedCheckboxes.some(
+                      (checkedCheckbox) => checkedCheckbox === student.id,
+                    )
+                      ? 'Present'
+                      : 'Absent'}
+                  </label>
+                </div>
               </div>
             );
           })}
@@ -145,13 +243,16 @@ const ClassAttendance = (props: {
         <button className={styles.bottomButton} onClick={handleSelectAllChange}>
           Select All
         </button>
-        <button className={styles.bottomButton}>Save</button>
+        <button className={styles.bottomButton} onClick={handleSave}>
+          Save
+        </button>
       </div>
       <RemoveAttendance
-        open={openRemoveHwModal}
+        open={openRemoveModal}
         onClose={() => {
-          setOpenRemoveHwModal(!openRemoveHwModal);
+          setOpenRemoveModal(!openRemoveModal);
         }}
+        setOpenAlert={setOpenAlert}
         students={props.students}
         setStudents={props.setStudents}
         course={props.course}
@@ -159,10 +260,11 @@ const ClassAttendance = (props: {
         courseID={props.courseID !== undefined ? props.courseID : ''}
       />
       <AddAttendance
-        open={openAddHwModal}
+        open={openAddModal}
         onClose={() => {
-          setOpenAddHwModal(!openAddHwModal);
+          setOpenAddModal(!openAddModal);
         }}
+        setOpenAlert={setOpenAlert}
         students={props.students}
         setStudents={props.setStudents}
         course={props.course}
@@ -170,11 +272,10 @@ const ClassAttendance = (props: {
         courseID={props.courseID !== undefined ? props.courseID : ''}
       />
       <AddNote
+        setOpenAlert={setOpenAlert}
         setSelectComponentValue={setSelectComponentValue}
         selectedDate={
-          selectedAttDate !== ''
-            ? selectedAttDate
-            : 'No attendance currently exists'
+          selectedDate !== '' ? selectedDate : 'No attendance currently exists'
         }
         setSelectedDate={setSelectedDate}
         selectedNote={selectedAttNote}
@@ -189,6 +290,19 @@ const ClassAttendance = (props: {
         courseID={props.courseID ?? ''}
         setCourse={props.setCourse}
       />
+      <Snackbar
+        anchorOrigin={{
+          horizontal: 'right',
+          vertical: 'bottom',
+        }}
+        open={openAlert}
+        autoHideDuration={3000}
+        onClose={() => setOpenAlert(false)}
+      >
+        <Alert severity="success" sx={{ width: '100%' }}>
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

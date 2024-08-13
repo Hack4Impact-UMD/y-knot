@@ -65,6 +65,14 @@
   cursor: pointer;
 }
 
+.animated-button:hover {
+  background: var(--color-yellow-orange);
+}
+
 .clicked {
   background-color: var(--color-red);
+}
+
+.clicked:hover {
+  background-color: #dc3a46;
 }

@@ -37,7 +37,7 @@ const LogOutConfirmation = ({
     <Modal
       height={200}
       open={open}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+      onClose={() => {
         handleOnClose();
       }}
     >
@@ -68,14 +68,14 @@ const LogOutConfirmation = ({
             ) : (
               <>
                 <button
-                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  onClick={() => {
                     handleConfirm();
                   }}
                 >
                   Yes
                 </button>
                 <button
-                  onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                  onClick={() => {
                     handleOnClose();
                   }}
                 >

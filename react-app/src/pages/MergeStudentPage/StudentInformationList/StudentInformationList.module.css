@@ -1,0 +1,68 @@
+.inputs {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border: 1px solid black;
+  border-radius: 20px;
+  width: 325px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1%;
+  font-size: 0.85rem;
+}
+
+.box {
+  border-bottom: 1px solid black;
+  display: flex;
+  padding: 10px 20px 10px 10px;
+  align-items: center;
+}
+
+.roundTop {
+  border-radius: none;
+}
+
+.roundBottom {
+  border: none;
+}
+
+.boxTitle {
+  padding-left: 25px;
+  width: 50px;
+  padding-right: 20px;
+  font-weight: 600;
+}
+
+.boxContent {
+  font-style: italic;
+  margin-right: auto;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  margin-top: 20px;
+}
+
+.selectAllButton {
+  border-radius: 30px;
+  border: none;
+  background-color: var(--color-orange);
+  font-size: 1.05rem;
+  width: 150px;
+  height: 40px;
+  color: white;
+  cursor: pointer;
+}
+
+.selectAllButton:hover {
+  background-color: var(--color-yellow-orange);
+}
+
+@media screen and (max-width: 1000px) {
+  .inputs {
+    width: 100%;
+  }
+}

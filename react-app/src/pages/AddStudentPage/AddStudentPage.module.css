@@ -1,0 +1,192 @@
+.loadingContainer {
+  height: 100vh;
+  margin-left: 200px;
+  width: calc(100% - 250px);
+  z-index: -1;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.rightPane {
+  float: right;
+  width: calc(100% - 250px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.errorMessage {
+  font: 26;
+  color: red;
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+.group {
+  width: 100%;
+  display: flex;
+  gap: 5px;
+}
+
+.header {
+  margin-top: 30px;
+}
+
+.title {
+  width: 80%;
+  margin: 0 auto 30px auto;
+}
+
+.topButtons {
+  gap: 15px;
+  position: absolute;
+  right: 0;
+  display: flex;
+}
+
+.button {
+  width: calc(1.5vw + 3rem);
+  max-height: 50px;
+  min-height: 25px;
+  height: calc(1vw + 2rem);
+  margin-bottom: 15px;
+  border-radius: 15px;
+  border: none;
+  background-color: var(--color-orange);
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: var(--color-yellow-orange);
+}
+
+.icon {
+  width: calc(0.5vw + 1.5rem);
+}
+
+.inputs {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border: 1px solid black;
+  border-radius: 20px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.box {
+  border-bottom: 1px solid black;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bottomBox {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.boxTitle {
+  width: 200px;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  padding-left: 20px;
+  display: inline-block;
+}
+
+.boxData {
+  font-weight: 600;
+  font-size: calc(0.25vw + 1rem);
+  width: 70%;
+  display: flex;
+  font-style: italic;
+}
+
+.nameInputs {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+}
+
+.inputBox {
+  padding: 0px 12px 0px 12px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border-width: 1px;
+  width: 70%;
+  height: 40px;
+}
+
+.bottomButtons {
+  display: flex;
+  justify-content: center;
+  margin: 30px auto;
+}
+
+.createStudentButton {
+  width: 150px;
+  height: 40px;
+  background: var(--color-orange);
+  border-radius: 30px;
+  font-size: 17px;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.createStudentButton:hover {
+  background-color: var(--color-yellow-orange);
+}
+
+.cancelButton {
+  width: 150px;
+  height: 40px;
+  border-style: solid;
+  background: white;
+  border-color: black;
+  border-radius: 30px;
+  font-size: 17px;
+  margin-left: 3%;
+  cursor: pointer;
+}
+
+.cancelButton:hover {
+  border-color: var(--color-red);
+  color: var(--color-red);
+}
+
+@media screen and (min-width: 601px) and (max-width: 1150px) {
+  .rightPane {
+    width: calc(100% - 120px);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .rightPane,
+  .loadingContainer {
+    width: 100%;
+    position: absolute;
+    top: 80px;
+  }
+
+  .courseList {
+    display: inline-grid;
+    margin-left: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .card {
+    margin-bottom: 20px;
+    margin-right: 0;
+  }
+}

@@ -1,13 +1,11 @@
 import {
-  addStudent,
   addCourse,
-  updateCourse,
+  addStudent,
   getCourse,
-  updateStudent,
+  updateCourse,
 } from '../backend/FirestoreCalls';
-import { type StudentCourse, type Student } from '../types/StudentType';
-import { type Course, type CourseType } from '../types/CourseType';
-import { DateTime } from 'luxon';
+import { type Course } from '../types/CourseType';
+import { type Student, type StudentCourse } from '../types/StudentType';
 
 export const addSampleStudent = ({
   firstName = 'firstname',
@@ -65,7 +63,6 @@ export const addSampleCourse = ({
   students = [],
   teachers = [],
   leadershipApp = false,
-  courseType = 'PROGRAM' as CourseType,
   formId = 'test123',
   introEmail = { content: 'This is an intro email.', files: [] },
   attendance = [{ date: '2023-04-26', notes: 'This is a note.' }],
@@ -78,7 +75,6 @@ export const addSampleCourse = ({
     students,
     teachers,
     leadershipApp,
-    courseType,
     formId,
     introEmail,
     attendance,

@@ -1,8 +1,7 @@
-import app, { functions } from '../config/firebase';
-
-import { httpsCallable } from 'firebase/functions';
 import { getAuth, sendPasswordResetEmail } from '@firebase/auth';
-import firebase from '../config/firebase';
+import { httpsCallable } from 'firebase/functions';
+import app, { functions } from '../config/firebase';
+import { deleteTeacher } from './FirestoreCalls';
 
 /*
  * Creates a user and sends a password reset email to that user.
@@ -30,7 +29,6 @@ export function createUser(
           });
       })
       .catch((error) => {
-        console.log(error);
         reject();
       });
   });
@@ -61,10 +59,9 @@ export function setUserRole(auth_id: string, newRole: string): Promise<void> {
 export function deleteUser(auth_id: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const deleteUserCloudFunction = httpsCallable(functions, 'deleteUser');
-    console.log(auth_id);
-
-    deleteUserCloudFunction({ firebase_id: auth_id })
-      .then(() => {
+    deleteTeacher(auth_id)
+      .then(async () => {
+        await deleteUserCloudFunction({ firebase_id: auth_id });
         resolve();
       })
       .catch((error) => {
@@ -85,13 +82,56 @@ export function updateUserEmail(
 
     updateUserEmailCloudFunction({ email: oldEmail, newEmail: currentEmail })
       .then(async (res) => {
-        console.log(res.data);
         resolve();
       })
       .catch((error) => {
-        console.log(error);
         reject(error);
       });
   });
 }
+
+/*
+ * Sends a certificate to a student
+ */
+export function sendCertificateEmail(
+  email: string,
+  studentName: string,
+  courseName: string,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const sendCert = httpsCallable(functions, 'sendCertificateEmail');
+
+    sendCert({ email: email, studentName: studentName, courseName: courseName })
+      .then(() => {
+        resolve();
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
+
+export function sendEmail(
+  email: string,
+  courseName: string,
+  text: string,
+  attachments: any[],
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const sendMail = httpsCallable(functions, 'sendEmail');
+    sendMail({
+      email: email,
+      courseName: courseName,
+      text: text,
+      attachments: attachments,
+    })
+      .then(() => {
+        resolve();
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
+
 export default {};

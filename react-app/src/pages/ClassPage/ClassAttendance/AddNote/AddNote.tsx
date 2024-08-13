@@ -1,24 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import type { Course } from '../../../../types/CourseType';
 import { StudentID } from '../../../../types/StudentType';
-import styles from './AddNote.module.css';
-import Modal from '../../../../components/ModalWrapper/Modal';
-import x from '../../../../assets/x.svg';
-import editImage from '../../../../assets/edit.svg';
-import saveImage from '../../../../assets/save.svg';
+import { DateTime } from 'luxon';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import {
-  updateCourseAttendance,
-  updateAttendanceStudents,
+  updateCourseAttendanceDetails,
+  getStudentsFromList,
 } from '../../../../backend/FirestoreCalls';
 import { ToolTip } from '../../../../components/ToolTip/ToolTip';
+import styles from './AddNote.module.css';
+import Modal from '../../../../components/ModalWrapper/Modal';
+import x from '../../../../assets/x.svg';
+import editImage from '../../../../assets/edit.svg';
+import saveImage from '../../../../assets/save.svg';
 
 const AddNote = (props: {
   open: boolean;
   onClose: any;
+  setOpenAlert: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectComponentValue: React.Dispatch<React.SetStateAction<any>>;
   selectedDate: string;
   setSelectedDate: React.Dispatch<React.SetStateAction<string>>;
@@ -41,37 +43,30 @@ const AddNote = (props: {
     setErrorMessage('');
     setCanWrite(false);
     const newDate = datePickerDate?.format('YYYY-MM-DD');
+    let studentIdList = props.students.map((student) => student.id);
     if (note !== props.selectedNote || newDate !== props.selectedDate) {
-      updateCourseAttendance(
-        props.course,
+      updateCourseAttendanceDetails(
         props.courseID,
+        studentIdList,
         { date: props.selectedDate, notes: props.selectedNote },
         {
           date: newDate ? newDate : '',
           notes: note,
         },
       )
-        .then((newCourse) => {
-          updateAttendanceStudents(
-            props.courseID,
-            props.selectedDate,
-            newDate ? newDate : '',
-            props.students,
-          )
-            .then((newStudentList) => {
-              props.setSelectedDate(newDate ? newDate : '');
-              props.setSelectedNote(note);
-              props.setStudents(newStudentList);
-              props.setCourse(newCourse);
-              props.setSelectComponentValue({
-                value: newDate ?? '',
-                label: newDate ?? '',
-              });
-            })
-            .catch((e: Error) => {
-              setNote(props.selectedNote);
-              setErrorMessage(e.message + '**');
-            });
+        .then((courseData) => {
+          props.setCourse(courseData);
+          props.setSelectedDate(newDate ? newDate : '');
+          props.setSelectedNote(note);
+          props.setSelectComponentValue({
+            value: newDate ?? '',
+            label: newDate ?? '',
+          });
+          getStudentsFromList(courseData.students).then((data) => {
+            props.setStudents(data);
+          });
+          props.setOpenAlert(true);
+          handleOnClose();
         })
         .catch((e: Error) => {
           setNote(props.selectedNote);
@@ -96,7 +91,7 @@ const AddNote = (props: {
     <Modal
       open={props.open}
       height={375}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+      onClose={() => {
         handleOnClose();
       }}
     >
@@ -120,7 +115,7 @@ const AddNote = (props: {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label=""
-                  format="YYYY-MM-DD"
+                  format="MMM DD, YYYY"
                   slotProps={{ textField: { size: 'small' } }}
                   value={
                     props.selectedDate === ''
@@ -142,7 +137,9 @@ const AddNote = (props: {
                 />
               </LocalizationProvider>
             ) : (
-              <div className={styles.nameInput}>{props.selectedDate}</div>
+              <div className={styles.nameInput}>
+                {DateTime.fromISO(props.selectedDate).toFormat('LLL dd, yyyy')}
+              </div>
             )}
             <ToolTip title={canWrite ? 'Save' : 'Edit'} placement="top">
               <button

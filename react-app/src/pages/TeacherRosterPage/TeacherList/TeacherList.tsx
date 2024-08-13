@@ -12,13 +12,13 @@ const TeacherList = (props: {
   teachers: Array<Partial<TeacherID>>;
   setTeachers: Function;
   setOpenSuccess: Function;
-  setOpenFailure: Function;
 }) => {
   const [teacherList, setTeacherList] = useState<any[]>([]);
   const [showPopup, setShowPopup] = useState(false);
   const [popupName, setPopupName] = useState<string>();
   const [popupEmail, setPopupEmail] = useState<string>();
   const [removeTeacherId, setRemoveTeacherId] = useState<string>();
+  const [removeTeacherAuthId, setRemoveTeacherAuthId] = useState<string>();
   const [reloadList, setReloadList] = useState<boolean>(false);
   const [numToShow, setNumToShow] = useState<number>(50);
   const navigate = useNavigate();
@@ -62,7 +62,8 @@ const TeacherList = (props: {
                     onClick={() => {
                       setPopupEmail(email);
                       setPopupName(fullName);
-                      setRemoveTeacherId(teacher.auth_id);
+                      setRemoveTeacherAuthId(teacher.auth_id);
+                      setRemoveTeacherId(teacher.id);
                       handleClick();
                     }}
                   />
@@ -106,15 +107,16 @@ const TeacherList = (props: {
               }}
               popupName={popupName != null ? popupName : 'undefined'}
               popupEmail={popupEmail != null ? popupEmail : 'undefined'}
+              removeTeacherAuthId={
+                removeTeacherAuthId != null ? removeTeacherAuthId : 'undefined'
+              }
               removeTeacherId={
                 removeTeacherId != null ? removeTeacherId : 'undefined'
               }
               setReloadList={setReloadList}
-              reloadList={reloadList}
               teachers={props.teachers}
               setTeachers={props.setTeachers}
               setOpenSuccess={props.setOpenSuccess}
-              setOpenFailure={props.setOpenFailure}
             />
           )}
           {numToShow < props.teachers.length && (

@@ -10,6 +10,7 @@
   align-items: flex-end;
   margin-right: 10%;
   margin-bottom: 30px;
+  gap: 15px;
 }
 
 .button {
@@ -85,7 +86,8 @@
   font-size: 1rem;
   border-radius: 5px;
   border-width: 1px;
-  min-width: 276px;
+  min-width: 100px;
+  width: calc(12vw + 100px);
   height: 40px;
   border-color: black;
   border-style: solid;
@@ -156,4 +158,15 @@
   width: 100%;
   display: flex;
   gap: 5px;
+}
+
+@media screen and (max-width: 700px) {
+  .boxTitle {
+    margin-left: 0;
+  }
+
+  .studentBox,
+  .studentBoxTop {
+    gap: 15px;
+  }
 }

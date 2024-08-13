@@ -5,7 +5,6 @@
 For inquiries about the project, contact
 
 - Sophie Tsai (sophietsai31@gmail.com)
-- Shreenitha Chikyala (schikyal@terpmail.umd.edu)
 - Sahil Gaba (sgaba9778@gmail.com)
 
 # Project Info
@@ -18,10 +17,11 @@ Currently, Y-KNOT relies on various technologies including [Wix](https://www.wix
 
 - Our frontend is TypeScript, React, and CSS Modules.
 - Our backend is TypeScript and Firebase.
+- Jotform is an online form service used to register students for courses.
 
 Diagram of the current project infrastructure:
 <br/>
-<img src="Y-KNOT Infrastructure Diagram.png" alt="Y-KNOT infrastructure diagram" width=500>
+<img width="700" alt="Y-KNOT Infrastructure Diagram" src="https://github.com/user-attachments/assets/0289bd3d-82d1-440b-814e-50d61c51aee5">
 
 # Running the Repo Locally
 
@@ -44,12 +44,15 @@ Contact Sahil or Sophie to gain access to our Firebase Console.
 
 Once logged in to the Firebase Console, you can view our stored data by clicking on the "Firestore Database" tab.
 
-We currently have 3 collections that correspond to our project Types:
+We currently have 5 collections that correspond to our project Types:
 
 - Courses
+- LeadershipApplications
 - Students
+- StudentMatches (Suggested student merges)
 - Users (Teachers and Admin accounts)
-  <img width="1879" alt="Y-KNOT Types Diagram" src="https://user-images.githubusercontent.com/67646012/235238107-c9e9f27e-a696-4f3f-9675-5709ba47f6e0.png" width=1000>
+  <img width="1000" alt="Y-KNOT Types Diagram" src="https://github.com/user-attachments/assets/7512aa11-cd6d-4039-9688-a603b5a3bad2">
+
 
 ## File Organization & Preferred Practices
 

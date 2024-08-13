@@ -10,7 +10,6 @@ export interface Course {
   students: string[]; // list of student ids
   teachers: string[]; // list of teacher ids
   leadershipApp: boolean; // is this a leadership class, which requires an application
-  courseType: CourseType;
   formId: string;
   introEmail: IntroEmail;
   attendance: Attendance[];
@@ -24,7 +23,7 @@ export interface IntroEmail {
 
 export interface IntroEmailFile {
   name: string;
-  path: string;
+  ref: string;
   downloadURL: string;
 }
 
@@ -37,5 +36,3 @@ export interface Homework {
   name: string;
   notes: string;
 }
-
-export type CourseType = 'PROGRAM' | 'ACADEMY' | 'CLUB';

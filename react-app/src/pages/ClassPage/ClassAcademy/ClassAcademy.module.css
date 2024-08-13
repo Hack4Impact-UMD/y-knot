@@ -1,0 +1,24 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0 30px;
+}
+
+.table {
+  width: 80%;
+}
+
+.statusContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media screen and (min-width: 1500px) {
+  .statusContainer {
+    justify-content: flex-start;
+    gap: 20px;
+  }
+}

@@ -1,17 +1,23 @@
-import { useAuth } from '../../../src/auth/AuthProvider';
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { type CourseID } from '../../types/CourseType';
-import { getAllCourses } from '../../../src/backend/FirestoreCalls';
-import { DateTime } from 'luxon';
-import styles from './CoursesPage.module.css';
-import CourseCard from '../../components/CourseCard/CourseCard';
-import NavigationBar from '../../components/NavigationBar/NavigationBar';
-import Loading from '../../components/LoadingScreen/Loading';
 import { Alert, Snackbar } from '@mui/material';
+import { DateTime } from 'luxon';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../src/auth/AuthProvider';
+import { getAllCourses } from '../../../src/backend/FirestoreCalls';
+import CourseCard from '../../components/CourseCard/CourseCard';
+import Loading from '../../components/LoadingScreen/Loading';
+import NavigationBar from '../../components/NavigationBar/NavigationBar';
+import { type CourseID } from '../../types/CourseType';
+import styles from './CoursesPage.module.css';
 
-const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
+const CoursesPage = ({
+  courseAdded,
+  setCourseAdded,
+  courseDeleted,
+  setCourseDeleted,
+}: any): JSX.Element => {
   const authContext = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [filteredCurrentCourses, setFilteredCurrentCourses] = useState<
@@ -27,7 +33,6 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
   const [allCurrentCourses, setAllCurrentCourses] = useState<CourseID[]>([]);
   const [allPastCourses, setAllPastCourses] = useState<CourseID[]>([]);
   const [allUpcomingCourses, setAllUpcomingCourses] = useState<CourseID[]>([]);
-  const navigate = useNavigate();
 
   const colors = [
     'var(--color-green)',
@@ -39,8 +44,14 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
   // Used to detect time in between keystrokes when using the search bar
   let timer: NodeJS.Timeout | null = null;
   useEffect(() => {
-    console.log('formSubmitted: ', formSubmitted);
-    getAllCourses()
+    if (authContext.loading) {
+      return;
+    }
+    const param =
+      authContext.token?.claims.role.toLowerCase() == 'teacher'
+        ? authContext.user.uid
+        : undefined;
+    getAllCourses(param)
       .then((courses) => {
         const now = DateTime.now();
         const tempAllUpcomingCourses = courses.filter(
@@ -49,10 +60,10 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
         const tempAllCurrentCourses = courses.filter(
           (course) =>
             DateTime.fromISO(course.startDate) <= now &&
-            DateTime.fromISO(course.endDate) >= now,
+            DateTime.fromISO(course.endDate) >= now.minus({ days: 1 }),
         );
         const tempAllPastCourses = courses.filter(
-          (course) => DateTime.fromISO(course.endDate) < now,
+          (course) => DateTime.fromISO(course.endDate) < now.minus({ days: 1 }),
         );
 
         setAllPastCourses(tempAllPastCourses);
@@ -63,14 +74,13 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
         setFilteredUpcomingCourses(tempAllUpcomingCourses);
         setFilteredCurrentCourses(tempAllCurrentCourses);
       })
-      .catch((error) => {
+      .catch(() => {
         setError(true);
-        console.log(error);
       })
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [authContext]);
 
   const displayCourseCards = (courses: CourseID[]) => {
     return courses.map((course, i) => {
@@ -78,16 +88,12 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
       const now = DateTime.now();
       if (
         DateTime.fromISO(course.startDate) > now ||
-        DateTime.fromISO(course.endDate) < now
+        DateTime.fromISO(course.endDate) < now.minus({ days: 1 })
       ) {
         color = 'gray';
       }
       return (
-        <Link
-          to={`/courses/class/${course.id}`}
-          key={i}
-          className={styles.card}
-        >
+        <Link to={`/courses/${course.id}`} key={i} className={styles.card}>
           <CourseCard
             teacher={course.teachers}
             course={course.name}
@@ -142,11 +148,6 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
     navigate('/courses/add');
   };
 
-  const handleToClose = (event: any, reason: any) => {
-    console.log('closing');
-    setFormSubmitted(false);
-  };
-
   return (
     <>
       {authContext.loading ? (
@@ -177,7 +178,6 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
                     }}
                     onKeyDown={(event) => {
                       if (event.key === 'Enter') {
-                        // TODO: Connect backend
                         event.preventDefault();
                         handleSearch(event);
                       }
@@ -212,27 +212,9 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
                     displayCourseCards(filteredCurrentCourses)
                   )}
                 </div>
-
-                {authContext?.token?.claims.role != 'TEACHER' ? (
-                  <>
-                    <h1 className={styles.courseStatus}>Past Courses</h1>
-                    <div className={styles.cardLayout}>
-                      {allPastCourses.length === 0 ? (
-                        <h4 className={styles.noStudent}>No Past Courses</h4>
-                      ) : filteredPastCourses.length === 0 ? (
-                        <h4 className={styles.noStudent}>
-                          No Past Courses Matching "{search}"
-                        </h4>
-                      ) : (
-                        displayCourseCards(filteredPastCourses)
-                      )}
-                    </div>
-                  </>
-                ) : (
-                  <></>
-                )}
-
-                <h1 className={styles.courseStatus}>Upcoming Courses</h1>
+                <div className={styles.courseHeader}>
+                  <h1 className={styles.courseStatus}>Upcoming Courses</h1>
+                </div>
                 <div className={styles.cardLayout}>
                   {allUpcomingCourses.length === 0 ? (
                     <h4 className={styles.noStudent}>No Upcoming Courses</h4>
@@ -244,6 +226,20 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
                     displayCourseCards(filteredUpcomingCourses)
                   )}
                 </div>
+                <div className={styles.courseHeader}>
+                  <h1 className={styles.courseStatus}>Past Courses</h1>
+                </div>
+                <div className={styles.cardLayout}>
+                  {allPastCourses.length === 0 ? (
+                    <h4 className={styles.noStudent}>No Past Courses</h4>
+                  ) : filteredPastCourses.length === 0 ? (
+                    <h4 className={styles.noStudent}>
+                      No Past Courses Matching "{search}"
+                    </h4>
+                  ) : (
+                    displayCourseCards(filteredPastCourses)
+                  )}
+                </div>
               </>
             )}
             <Snackbar
@@ -251,12 +247,26 @@ const CoursesPage = ({ formSubmitted, setFormSubmitted }: any): JSX.Element => {
                 horizontal: 'right',
                 vertical: 'bottom',
               }}
-              open={formSubmitted}
+              open={courseAdded}
               autoHideDuration={3000}
-              onClose={handleToClose}
+              onClose={() => setCourseAdded(false)}
             >
               <Alert severity="success" sx={{ width: '100%' }}>
                 Course was Successfully Added
+              </Alert>
+            </Snackbar>
+
+            <Snackbar
+              anchorOrigin={{
+                horizontal: 'right',
+                vertical: 'bottom',
+              }}
+              open={courseDeleted}
+              autoHideDuration={3000}
+              onClose={() => setCourseDeleted(false)}
+            >
+              <Alert severity="success" sx={{ width: '100%' }}>
+                Course was Successfully Deleted
               </Alert>
             </Snackbar>
           </div>

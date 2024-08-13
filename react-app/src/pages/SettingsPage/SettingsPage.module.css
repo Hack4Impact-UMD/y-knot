@@ -14,6 +14,7 @@
 }
 
 .title {
+  font-size: calc(0.5vw + 1.5rem);
   text-align: center;
   width: 100%;
 }
@@ -54,17 +55,19 @@
 .boxTitle {
   font-style: normal;
   font-weight: 400;
-  font-size: 1.25rem;
-  width: 200px;
+  font-size: calc(0.25vw + 1rem);
+  width: calc(100px + 5.5vw);
   padding-left: 20px;
   display: inline-block;
 }
 
 .boxData {
-  float: center;
+  font-size: calc(0.2vw + 1rem);
   font-style: italic;
   font-weight: 500;
-  font-size: 1.25rem;
+  text-wrap: wrap;
+  word-break: break-all;
+  text-align: left;
 }
 
 .editButton {
@@ -87,6 +90,12 @@
   width: 25px;
   filter: brightness(0) saturate(100%) invert(72%) sepia(14%) saturate(6705%)
     hue-rotate(334deg) brightness(94%) contrast(89%);
+}
+
+@media screen and (min-width: 601px) and (max-width: 1150px) {
+  .settings {
+    width: calc(100% - 120px);
+  }
 }
 
 @media screen and (max-width: 600px) {

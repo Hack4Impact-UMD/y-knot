@@ -1,37 +1,36 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './auth/AuthProvider';
 import { ThemeProvider } from '@mui/material/styles';
-import { theme } from './muiTheme';
-import {
-  addSampleCourse,
-  addSampleStudent,
-  addStudentInCourse,
-} from './backendTesting/test';
-import RequireAuth from './auth/RequireAuth/RequireAuth';
-import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
-import LoginPage from './pages/LoginPage/LoginPage';
-import SettingsPage from './pages/SettingsPage/SettingsPage';
-import CoursesPage from './pages/CoursesPage/CoursesPage';
-import StudentRosterPage from './pages/StudentRosterPage/StudentRosterPage';
-import ClassPage from './pages/ClassPage/ClassPage';
-import StudentProfilePage from './pages/StudentProfilePage/StudentProfilePage';
-import TeacherProfilePage from './pages/TeacherProfilePage/TeacherProfilePage';
-import TranscriptPage from './pages/TranscriptPage/TranscriptPage';
-import CertificatePage from './pages/CertificatePage/CertificatePage';
-import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
-import NavigationBar from './components/NavigationBar/NavigationBar';
-import TeacherRosterPage from './pages/TeacherRosterPage/TeacherRosterPage';
-import { createUser } from './backend/CloudFunctionsCalls';
-import { addCourse, addTeacherCourse } from './backend/FirestoreCalls';
-import AddCoursePage from './pages/AddCoursesPage/AddCoursePage';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { useState } from 'react';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { AuthProvider } from './auth/AuthProvider';
+import RequireAdminAuth from './auth/RequireAdminAuth/RequireAdminAuth';
+import RequireAuth from './auth/RequireAuth/RequireAuth';
+import Certificate from './components/Certificate/Certificate';
+import { theme } from './muiTheme';
+import AddCoursePage from './pages/AddCoursesPage/AddCoursePage';
+import AddStudentPage from './pages/AddStudentPage/AddStudentPage';
+import ClassPage from './pages/ClassPage/ClassPage';
+import CoursesPage from './pages/CoursesPage/CoursesPage';
+import LeadershipApplicationPage from './pages/LeadershipApplicationPage/LeadershipApplicationPage';
+import LoginPage from './pages/LoginPage/LoginPage';
+import MergeSelectionPage from './pages/MergeSelectionPage/MergeSelectionPage';
+import MergeStudentPage from './pages/MergeStudentPage/MergeStudentPage';
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
+import SettingsPage from './pages/SettingsPage/SettingsPage';
+import StudentProfilePage from './pages/StudentProfilePage/StudentProfilePage';
+import StudentRosterPage from './pages/StudentRosterPage/StudentRosterPage';
+import TeacherProfilePage from './pages/TeacherProfilePage/TeacherProfilePage';
+import TeacherRosterPage from './pages/TeacherRosterPage/TeacherRosterPage';
+import TranscriptPage from './pages/TranscriptPage/TranscriptPage';
 
 function App(): JSX.Element {
   const customTheme = theme;
 
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [courseAdded, setCourseAdded] = useState(false);
+  const [courseDeleted, setCourseDeleted] = useState(false);
+  const [studentAdded, setStudentAdded] = useState(false);
+  const [studentMerged, setStudentMerged] = useState(false);
 
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
@@ -49,20 +48,23 @@ function App(): JSX.Element {
                 }
               />
               <Route
-                path="*"
+                path="/cert"
                 element={
                   <RequireAuth>
-                    <NotFoundPage />
+                    <Certificate name="" course="" />
                   </RequireAuth>
                 }
               />
+
               <Route
                 path="/courses"
                 element={
                   <RequireAuth>
                     <CoursesPage
-                      formSubmitted={formSubmitted}
-                      setFormSubmitted={setFormSubmitted}
+                      courseAdded={courseAdded}
+                      setCourseAdded={setCourseAdded}
+                      courseDeleted={courseDeleted}
+                      setCourseDeleted={setCourseDeleted}
                     />
                   </RequireAuth>
                 }
@@ -70,27 +72,70 @@ function App(): JSX.Element {
               <Route
                 path="/courses/add"
                 element={
+                  <RequireAdminAuth>
+                    <AddCoursePage setCourseAdded={setCourseAdded} />
+                  </RequireAdminAuth>
+                }
+              />
+              <Route
+                path="/courses/:id"
+                element={
                   <RequireAuth>
-                    <AddCoursePage
-                      formSubmitted={formSubmitted}
-                      setFormSubmitted={setFormSubmitted}
-                    />
+                    <ClassPage setCourseDeleted={setCourseDeleted} />
                   </RequireAuth>
                 }
               />
               <Route
-                path="/courses/class/:id"
+                path="/courses/:courseId/applicant/:appId"
                 element={
-                  <RequireAuth>
-                    <ClassPage />
-                  </RequireAuth>
+                  <RequireAdminAuth>
+                    <LeadershipApplicationPage />
+                  </RequireAdminAuth>
                 }
               />
               <Route
                 path="/students"
                 element={
+                  <RequireAuth>
+                    <StudentRosterPage
+                      studentAdded={studentAdded}
+                      setStudentAdded={setStudentAdded}
+                    />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/students/add"
+                element={
                   <RequireAdminAuth>
-                    <StudentRosterPage />
+                    <AddStudentPage setStudentAdded={setStudentAdded} />
+                  </RequireAdminAuth>
+                }
+              />
+              <Route
+                path="/students/:id"
+                element={
+                  <RequireAuth>
+                    <StudentProfilePage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/students/merge"
+                element={
+                  <RequireAdminAuth>
+                    <MergeSelectionPage
+                      studentMerged={studentMerged}
+                      setStudentMerged={setStudentMerged}
+                    />
+                  </RequireAdminAuth>
+                }
+              />
+              <Route
+                path="/students/mergestudent"
+                element={
+                  <RequireAdminAuth>
+                    <MergeStudentPage setStudentMerged={setStudentMerged} />
                   </RequireAdminAuth>
                 }
               />
@@ -103,63 +148,6 @@ function App(): JSX.Element {
                 }
               />
               <Route
-                path="/settings"
-                element={
-                  <RequireAuth>
-                    <SettingsPage />
-                  </RequireAuth>
-                }
-              />
-              <Route
-                path="/nav"
-                element={
-                  <RequireAuth>
-                    <NavigationBar />
-                  </RequireAuth>
-                }
-              />
-              <Route
-                path="/testfunctions"
-                element={
-                  <RequireAuth>
-                    <button
-                      onClick={
-                        () => {
-                          addTeacherCourse(
-                            'Li3x7GK5XwAk8UqhskKV',
-                            '629B8D6g5MFK8CoupeIt',
-                          );
-                        }
-                        //   async () => {
-                        //   const course = addCourse({
-                        //     name: 'Digital Marketing',
-                        //     startDate: '2022-08-14',
-                        //     endDate: '2023-10-30',
-                        //     students: [],
-                        //     courseType: 'PROGRAM',
-                        //     teachers: [],
-                        //     leadershipApp: false,
-                        //     formId: '',
-                        //     introEmail: { content: 'this is an intro email.', files: [] },
-                        //     attendance: [],
-                        //     homeworks: []
-                        //   })
-                        //   addStudentInCourse(await course);
-                        // }
-                      }
-                    ></button>
-                  </RequireAuth>
-                }
-              />
-              <Route
-                path="/students/:id"
-                element={
-                  <RequireAuth>
-                    <StudentProfilePage />
-                  </RequireAuth>
-                }
-              />
-              <Route
                 path="/teachers/:id"
                 element={
                   <RequireAdminAuth>
@@ -168,6 +156,15 @@ function App(): JSX.Element {
                 }
               />
               <Route
+                path="/settings"
+                element={
+                  <RequireAuth>
+                    <SettingsPage />
+                  </RequireAuth>
+                }
+              />
+
+              <Route
                 path="/transcript/:id"
                 element={
                   <RequireAuth>
@@ -175,11 +172,12 @@ function App(): JSX.Element {
                   </RequireAuth>
                 }
               />
+
               <Route
-                path="/certificate/:id"
+                path="*"
                 element={
                   <RequireAuth>
-                    <CertificatePage name="Fiona Love" course="Math" />
+                    <NotFoundPage />
                   </RequireAuth>
                 }
               />

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { authenticateUser } from '../../../backend/FirebaseCalls';
 import { updateUserPassword } from '../../../backend/AuthCalls';
 import styles from './ResetPassword.module.css';
 import Modal from '../../../components/ModalWrapper/Modal';
@@ -18,6 +17,7 @@ const ResetPassword = ({ open, onClose }: modalType): React.ReactElement => {
   const [errorPassword, setErrorPassword] = useState<string>('');
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [canClose, setCanClose] = useState<boolean>(true);
 
   const handlePasswordReset = async () => {
     setLoading(true);
@@ -32,6 +32,7 @@ const ResetPassword = ({ open, onClose }: modalType): React.ReactElement => {
     } else if (newPassword !== confirmNewPassword) {
       setErrorPassword('*Your new passwords must match.');
     } else {
+      setCanClose(false);
       await updateUserPassword(newPassword, originalPassword)
         .then(() => {
           setSubmitted(true);
@@ -42,6 +43,9 @@ const ResetPassword = ({ open, onClose }: modalType): React.ReactElement => {
           if (error.length > 50) {
             setSubmitted(true);
           }
+        })
+        .finally(() => {
+          setCanClose(true);
         });
     }
     setTimeout(() => {
@@ -50,20 +54,22 @@ const ResetPassword = ({ open, onClose }: modalType): React.ReactElement => {
   };
 
   const handleOnClose = (): void => {
-    onClose();
-    setSubmitted(false);
-    setOriginalPassword('');
-    setNewPassword('');
-    setConfirmNewPassword('');
-    setErrorPassword('');
-    setLoading(false);
+    if (canClose) {
+      onClose();
+      setSubmitted(false);
+      setOriginalPassword('');
+      setNewPassword('');
+      setConfirmNewPassword('');
+      setErrorPassword('');
+      setLoading(false);
+    }
   };
 
   return (
     <Modal
       height={325}
       open={open}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+      onClose={() => {
         handleOnClose();
       }}
     >
@@ -141,7 +147,7 @@ const ResetPassword = ({ open, onClose }: modalType): React.ReactElement => {
           <div className={styles.container}>
             <button
               className={styles.resetButton}
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+              onClick={() => {
                 handlePasswordReset();
               }}
               disabled={loading}

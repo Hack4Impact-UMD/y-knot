@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import styles from './AddTeacherClass.module.css';
-import Modal from '../../../../components/ModalWrapper/Modal';
+import Select, { type OptionProps } from 'react-select';
 import x from '../../../../assets/x.svg';
 import {
-  getAllTeachers,
   addTeacherCourseFromList,
+  getAllTeachers,
 } from '../../../../backend/FirestoreCalls';
+import Modal from '../../../../components/ModalWrapper/Modal';
 import { type TeacherID } from '../../../../types/UserType';
-import Select, { type OptionProps } from 'react-select';
+import styles from './AddTeacherClass.module.css';
 
 interface modalType {
   courseId: string;
@@ -18,6 +18,7 @@ interface modalType {
   setDisplayTeachers: Function;
   setClassTeachers: Function;
   setAddSuccess: Function;
+  currentTeachers: any;
 }
 
 const InputOption: React.FC<OptionProps<any, true, any>> = ({
@@ -75,6 +76,7 @@ const AddTeacherClass = ({
   setDisplayTeachers,
   setClassTeachers,
   setAddSuccess,
+  currentTeachers,
 }: modalType): React.ReactElement => {
   const [teachers, setTeachers] = useState<Array<Partial<TeacherID>>>([]);
   const [teacherList, setTeacherList] = useState<Array<Partial<TeacherID>>>([]);
@@ -85,8 +87,9 @@ const AddTeacherClass = ({
     control: (provided: any, state: any) => ({
       ...provided,
       width: '300px',
+      maxHeight: '75px',
       height: 'fit-content',
-      overflow: 'hidden',
+      overflowY: 'auto',
       fontSize: 'large',
       marginBottom: 'auto',
       boxShadow: 'none',
@@ -122,9 +125,9 @@ const AddTeacherClass = ({
         );
         setTeachers(partialTeachers);
       })
-      .catch((err) => {})
+      .catch(() => {})
       .finally(() => {});
-  });
+  }, []);
 
   useEffect(() => {
     setTeacherList(teachers);
@@ -171,7 +174,7 @@ const AddTeacherClass = ({
     <Modal
       open={open}
       height={250}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+      onClose={() => {
         handleOnClose();
       }}
     >
@@ -213,7 +216,7 @@ const AddTeacherClass = ({
           />
           <button
             className={styles.button}
-            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+            onClick={() => {
               handleAddTeacher();
             }}
           >

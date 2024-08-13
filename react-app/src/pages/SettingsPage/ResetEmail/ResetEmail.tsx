@@ -20,6 +20,7 @@ const ResetEmail = ({ open, onClose }: modalType): React.ReactElement => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [canClose, setCanClose] = useState<boolean>(true);
   const auth = useAuth();
   const navigate = useNavigate();
 
@@ -41,6 +42,7 @@ const ResetEmail = ({ open, onClose }: modalType): React.ReactElement => {
     ) {
       setErrorMessage('*Invalid email address.');
     } else {
+      setCanClose(false);
       await authenticateUser(auth.user.email!, password)
         .then(async () => {
           await updateUserEmail(auth.user.email!, confirmNewEmail)
@@ -51,8 +53,11 @@ const ResetEmail = ({ open, onClose }: modalType): React.ReactElement => {
               setErrorMessage('Failed to update email. Try again later.');
             });
         })
-        .catch((error) => {
+        .catch(() => {
           setErrorMessage('Password is incorrect');
+        })
+        .finally(() => {
+          setCanClose(true);
         });
     }
     setTimeout(() => {
@@ -61,22 +66,24 @@ const ResetEmail = ({ open, onClose }: modalType): React.ReactElement => {
   };
 
   const handleOnClose = (): void => {
-    if (submitted) {
-      navigate('../login');
+    if (canClose) {
+      if (submitted) {
+        navigate('../login');
+      }
+      onClose();
+      setSubmitted(false);
+      setNewEmail('');
+      setConfirmNewEmail('');
+      setErrorMessage('');
+      setLoading(false);
     }
-    onClose();
-    setSubmitted(false);
-    setNewEmail('');
-    setConfirmNewEmail('');
-    setErrorMessage('');
-    setLoading(false);
   };
 
   return (
     <Modal
       height={325}
       open={open}
-      onClose={(e: React.MouseEvent<HTMLButtonElement>) => {
+      onClose={() => {
         handleOnClose();
       }}
     >
@@ -159,7 +166,7 @@ const ResetEmail = ({ open, onClose }: modalType): React.ReactElement => {
           <div className={styles.container}>
             <button
               className={styles.resetButton}
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+              onClick={() => {
                 handleEmailChange();
               }}
               disabled={loading}

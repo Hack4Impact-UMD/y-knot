@@ -14,10 +14,10 @@ export interface Student {
   zipCode: string;
   email: string;
   phone: number;
-  guardianFirstName: string;
-  guardianLastName: string;
-  guardianEmail: string;
-  guardianPhone: number;
+  guardianFirstName?: string;
+  guardianLastName?: string;
+  guardianEmail?: string;
+  guardianPhone?: number;
   birthDate: string; // "YYYY-MM-DD"
   gradeLevel?: string;
   schoolName?: string;
@@ -42,22 +42,27 @@ export interface StudentHomework {
 }
 
 export interface LeadershipApplicant extends Student {
-  idx: number; // display order index
-  dateApplied: string; // "YYYY-MM-DD"
+  classId: string;
+  involvement: string;
+  recFiles: LeadershipFile[];
+  whyJoin: string;
+  transcriptFiles: LeadershipFile[];
   gpa: string;
   gender: string;
-  textAnswer1: string;
-  transcript: LeadershipFile;
-  recLetter: LeadershipFile;
-  textAnswer2: string;
   status: LeadershipStatus;
   statusNote: string;
+  firebaseID: string;
 }
 
 export interface LeadershipFile {
   name: string;
-  path: string;
+  ref: string;
   downloadURL: string;
+}
+
+export interface StudentMatch {
+  matches: string[];
+  studentOne: string;
 }
 
 export type Progress = 'INPROGRESS' | 'PASS' | 'FAIL' | 'NA';

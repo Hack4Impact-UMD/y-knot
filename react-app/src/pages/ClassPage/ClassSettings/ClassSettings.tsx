@@ -1,24 +1,27 @@
-import { useState } from 'react';
-import { ToolTip } from '../../../components/ToolTip/ToolTip';
-import type { Course } from '../../../types/CourseType';
+import { Alert, Snackbar } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTime } from 'luxon';
-import { updateCourse } from '../../../backend/FirestoreCalls';
-import { Snackbar, Alert } from '@mui/material';
-import styles from './ClassSettings.module.css';
-import Select from 'react-select';
+import { useState } from 'react';
+import * as Yup from 'yup';
 import editImage from '../../../assets/edit.svg';
 import saveImage from '../../../assets/save.svg';
-import * as Yup from 'yup';
+import trashIcon from '../../../assets/trash.svg';
+import { updateCourse } from '../../../backend/FirestoreCalls';
+import { ToolTip } from '../../../components/ToolTip/ToolTip';
+import type { Course } from '../../../types/CourseType';
+import styles from './ClassSettings.module.css';
+import DeleteClass from './DeleteClass/DeleteClass';
 
 const ClassPage = (props: {
   course: Course;
   courseID: string;
+  setCourseDeleted: any;
 }): JSX.Element => {
   const [course, setCourse] = useState<Course>(props.course);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [editing, setEditing] = useState<boolean>(false);
   const [courseUpdated, setCourseUpdated] = useState<boolean>(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const dropdownOptions = ['Program', 'Academy', 'Club'];
 
   const courseSchema = Yup.object().shape({
@@ -27,9 +30,6 @@ const ClassPage = (props: {
     endDate: Yup.date()
       .required('*Required')
       .min(Yup.ref('startDate'), '*End date must be after start date'),
-    courseType: Yup.string()
-      .required('*Required')
-      .oneOf(['PROGRAM', 'ACADEMY', 'CLUB'], '*Invalid course type'),
     leadershipApp: Yup.boolean().required('*Required'),
     formId: Yup.string().required('*Required'),
   });
@@ -47,7 +47,7 @@ const ClassPage = (props: {
     return str && str[0].toUpperCase() + str.slice(1).toLowerCase();
   }
 
-  const snackbarClose = (event: any, reason: any) => {
+  const snackbarClose = () => {
     setCourseUpdated(false);
   };
 
@@ -123,96 +123,43 @@ const ClassPage = (props: {
         <div className={styles.studentBox}>
           <p className={styles.boxTitle}>End Date</p>
           <div className={styles.inputContainer}>
-            <div className={styles.inputContainer}>
-              {editing ? (
-                <>
-                  <DatePicker
-                    label=""
-                    defaultValue={DateTime.fromISO(course.endDate)}
-                    onChange={(newValue: DateTime | null) =>
-                      setCourse({
-                        ...course,
-                        endDate: newValue ? formatDateToYYYYMMDD(newValue) : '',
-                      })
-                    }
-                    slotProps={{ textField: { size: 'small' } }}
-                    sx={{
-                      '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline':
-                        {
-                          border: '1px solid black',
-                        }, // at page load
-                      '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
-                        { border: '2px solid black' }, // at focused state
-                    }}
-                  />
-                  {'endDate' in fieldErrors ? (
-                    <div className={styles.errorMessage}>
-                      {fieldErrors.endDate}
-                    </div>
-                  ) : (
-                    <></>
-                  )}
-                </>
-              ) : (
-                <p className={styles.boxText}>
-                  {DateTime.fromISO(course.endDate).toFormat('LLLL dd, yyyy')}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className={styles.studentBox}>
-          <p className={styles.boxTitle}>Course Type</p>
-          <div className={styles.inputContainer}>
             {editing ? (
-              <Select
-                placeholder="Select Program"
-                className={styles.dateSelection}
-                styles={{
-                  control: (baseStyles) => ({
-                    ...baseStyles,
-                    minWidth: '300px',
-                    height: '40px',
-                    borderColor: 'black',
-                    boxShadow: 'none',
-                    '&:focus-within': {
-                      border: '2px solid black',
-                    },
-                    '&:hover': {
-                      border: '1px solid black',
-                    },
-                  }),
-                }}
-                options={dropdownOptions.map((option) => {
-                  return { value: option, label: option };
-                })}
-                theme={(theme) => ({
-                  ...theme,
-                  colors: {
-                    ...theme.colors,
-                    primary25: 'transparent',
-                    primary50: 'transparent',
-                    primary: 'var(--color-orange)',
-                  },
-                })}
-                onChange={(newValue) => {
-                  setCourse({
-                    ...course,
-                    endDate: newValue ? newValue.value.toUpperCase() : '',
-                  });
-                }}
-                defaultValue={{
-                  value: titleCase(course.courseType.toString()),
-                  label: titleCase(course.courseType.toString()),
-                }}
-              />
+              <>
+                <DatePicker
+                  label=""
+                  defaultValue={DateTime.fromISO(course.endDate)}
+                  onChange={(newValue: DateTime | null) =>
+                    setCourse({
+                      ...course,
+                      endDate: newValue ? formatDateToYYYYMMDD(newValue) : '',
+                    })
+                  }
+                  slotProps={{ textField: { size: 'small' } }}
+                  sx={{
+                    '& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline':
+                      {
+                        border: '1px solid black',
+                      }, // at page load
+                    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                      { border: '2px solid black' }, // at focused state
+                  }}
+                />
+                {'endDate' in fieldErrors ? (
+                  <div className={styles.errorMessage}>
+                    {fieldErrors.endDate}
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </>
             ) : (
               <p className={styles.boxText}>
-                {titleCase(course.courseType.toString())}
+                {DateTime.fromISO(course.endDate).toFormat('LLLL dd, yyyy')}
               </p>
             )}
           </div>
         </div>
+
         <div className={styles.studentBox}>
           <p className={styles.boxTitle}>Leadership Academy</p>
           <div className={styles.inputContainer}>
@@ -259,35 +206,21 @@ const ClassPage = (props: {
         <div className={styles.studentBox}>
           <p className={styles.boxTitle}>JotForm ID</p>
           <div className={styles.inputContainer}>
-            {editing ? (
-              <>
-                <input
-                  className={styles.inputBox}
-                  placeholder="Enter ID"
-                  value={course.formId}
-                  onChange={(event) => {
-                    setCourse({
-                      ...course,
-                      formId: event.target.value,
-                    });
-                  }}
-                ></input>
-                {'formId' in fieldErrors ? (
-                  <div className={styles.errorMessage}>
-                    {fieldErrors.formId}
-                  </div>
-                ) : (
-                  <></>
-                )}
-              </>
-            ) : (
-              <p className={styles.boxText}>{course.formId}</p>
-            )}
+            <p className={styles.boxText}>{course.formId}</p>
           </div>
         </div>
       </div>
-      <div className={styles.bottomButtons}></div>
       <div className={styles.bottomButton}>
+        <ToolTip title={'Delete Course'} placement="top">
+          <button
+            className={styles.button}
+            onClick={() => {
+              setOpenDeleteModal(true);
+            }}
+          >
+            <img className={styles.icon} src={trashIcon} />
+          </button>
+        </ToolTip>
         <ToolTip title={editing ? 'Save' : 'Edit'} placement="top">
           <button
             className={styles.button}
@@ -299,8 +232,11 @@ const ClassPage = (props: {
                     updateCourse(course, props.courseID)
                       .then(() => {
                         setCourseUpdated(true);
+                        window.location.reload();
                       })
-                      .catch((error) => {})
+                      .catch((error) => {
+                        console.log(error);
+                      })
                       .finally(() => {
                         setFieldErrors({});
                         setEditing(!editing);
@@ -338,6 +274,15 @@ const ClassPage = (props: {
           </button>
         </ToolTip>
       </div>
+      <DeleteClass
+        open={openDeleteModal}
+        onClose={() => {
+          setOpenDeleteModal(!openDeleteModal);
+        }}
+        courseId={props.courseID}
+        courseName={course.name}
+        setCourseDeleted={props.setCourseDeleted}
+      />
       <Snackbar
         anchorOrigin={{
           horizontal: 'right',

@@ -1,20 +1,20 @@
+import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { useAuth } from '../../auth/AuthProvider';
-import styles from './NavigationBar.module.css';
-import yKnotLogo from '../../assets/yknot-logo.png';
-import whiteHomeIcon from '../../assets/home-white.svg';
-import blackHomeIcon from '../../assets/home-black.svg';
-import whiteTeachersIcon from '../../assets/teachers-white.svg';
-import blackTeachersIcon from '../../assets/teachers-black.svg';
-import whiteCapIcon from '../../assets/cap-white.svg';
 import blackCapIcon from '../../assets/cap-black.svg';
-import whiteSettingsIcon from '../../assets/settings-white.svg';
-import blackSettingsIcon from '../../assets/settings-black.svg';
+import whiteCapIcon from '../../assets/cap-white.svg';
+import blackHomeIcon from '../../assets/home-black.svg';
+import whiteHomeIcon from '../../assets/home-white.svg';
 import blackLogoutIcon from '../../assets/logout-black.svg';
-import LogOutConfirmation from './LogOutConfirmation/LogOutConfirmation';
-import MenuIcon from '@mui/icons-material/Menu';
+import blackSettingsIcon from '../../assets/settings-black.svg';
+import whiteSettingsIcon from '../../assets/settings-white.svg';
+import blackTeachersIcon from '../../assets/teachers-black.svg';
+import whiteTeachersIcon from '../../assets/teachers-white.svg';
 import x from '../../assets/x.svg';
+import yKnotLogo from '../../assets/yknot-logo.png';
+import { useAuth } from '../../auth/AuthProvider';
+import LogOutConfirmation from './LogOutConfirmation/LogOutConfirmation';
+import styles from './NavigationBar.module.css';
 
 const NavigationBar = (): JSX.Element => {
   const authContext = useAuth();
@@ -63,7 +63,7 @@ const NavigationBar = (): JSX.Element => {
             </div>
             <div className={menuOpen ? styles.openMenu : styles.closedMenu}>
               <h2 className={styles.header}>
-                {authContext?.token?.claims.role === 'ADMIN'
+                {authContext?.token?.claims.role.toUpperCase() === 'ADMIN'
                   ? 'Admin'
                   : 'Teacher'}
               </h2>
@@ -104,59 +104,62 @@ const NavigationBar = (): JSX.Element => {
                   </NavLink>
                 </div>
                 {authContext?.token?.claims.role === 'ADMIN' ? (
-                  <div>
-                    <NavLink
-                      className={({ isActive }) =>
-                        isActive
-                          ? `${styles.linkOptions} ${styles.highlightOn}`
-                          : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
-                      }
-                      to="/teachers"
-                      id="teachers"
-                    >
-                      <div className={styles.tab}>
-                        <img
-                          className={styles.iconActive}
-                          src={whiteTeachersIcon}
-                          alt="People icon"
-                        />
-                        <img
-                          className={styles.iconInactive}
-                          src={blackTeachersIcon}
-                          alt="People icon"
-                        />
-                        Teachers
-                      </div>
-                    </NavLink>
-                  </div>
+                  <>
+                    <div>
+                      <NavLink
+                        className={({ isActive }) =>
+                          isActive
+                            ? `${styles.linkOptions} ${styles.highlightOn}`
+                            : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
+                        }
+                        to="/students"
+                        id="students"
+                      >
+                        <div className={styles.tab}>
+                          <img
+                            className={styles.iconActive}
+                            src={whiteCapIcon}
+                            alt="Graduation cap icon"
+                          />
+                          <img
+                            className={styles.iconInactive}
+                            src={blackCapIcon}
+                            alt="Graduation cap icon"
+                          />
+                          Students
+                        </div>
+                      </NavLink>
+                    </div>
+                    <div>
+                      <NavLink
+                        className={({ isActive }) =>
+                          isActive
+                            ? `${styles.linkOptions} ${styles.highlightOn}`
+                            : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
+                        }
+                        to="/teachers"
+                        id="teachers"
+                      >
+                        <div className={styles.tab}>
+                          <img
+                            className={styles.iconActive}
+                            src={whiteTeachersIcon}
+                            alt="People icon"
+                          />
+                          <img
+                            className={styles.iconInactive}
+                            src={blackTeachersIcon}
+                            alt="People icon"
+                          />
+                          Teachers
+                        </div>
+                      </NavLink>
+                    </div>
+                  </>
                 ) : (
                   <></>
                 )}
-                <div>
-                  <NavLink
-                    className={({ isActive }) =>
-                      isActive
-                        ? `${styles.linkOptions} ${styles.highlightOn}`
-                        : `${styles.linkOptionsUnselected} ${styles.highlightOff}`
-                    }
-                    to="/students"
-                    id="students"
-                  >
-                    <div className={styles.tab}>
-                      <img
-                        className={styles.iconActive}
-                        src={whiteCapIcon}
-                        alt="Graduation cap icon"
-                      />
-                      <img
-                        className={styles.iconInactive}
-                        src={blackCapIcon}
-                        alt="Graduation cap icon"
-                      />
-                      Students
-                    </div>
-                  </NavLink>
-                </div>
+
                 <div>
                   <NavLink
                     className={({ isActive }) =>
@@ -192,7 +195,11 @@ const NavigationBar = (): JSX.Element => {
                     end
                   >
                     <div className={styles.tab}>
-                      <img src={blackLogoutIcon} alt="Logout icon" />
+                      <img
+                        src={blackLogoutIcon}
+                        className={styles.logOutIcon}
+                        alt="Logout icon"
+                      />
                       Log Out
                     </div>
                   </NavLink>
