@@ -68,7 +68,6 @@ const ClassMain = (props: {
     xml: 'application/xml',
     xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   };
-
   const handleEdit = async () => {
     if (!editText) {
       setEditText(!editText);
